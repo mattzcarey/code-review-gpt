@@ -46,6 +46,7 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
 5. Install the application globally (optional):
 
    ```shell
+   npm run build
    npm install -g
    ```
 
@@ -57,9 +58,8 @@ Run `code-review-gpt` in the root directory of a git repository.
 
 ## Roadmap
 
-- [x] Make a more clever way to find the exact code to review
-- [x] Prompt engineering to refine the prompt
-- [x] Support different LLMs
-- [x] Use some embeddings and vector store to build a knowledge graph
-- [x] Cash in on the cloud offering
-
+- [ ] Make a more clever way to find the exact code to review
+- [ ] Prompt engineering to refine the prompt
+- [ ] Support different LLMs
+- [ ] Use some embeddings and vector store to build a knowledge graph
+- [ ] Cash in on the cloud offering
