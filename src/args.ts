@@ -1,4 +1,7 @@
 import yargs from "yargs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const argv = yargs
   .option("ci", {
@@ -7,14 +10,19 @@ const argv = yargs
     default: false,
   })
   .option("base_sha", {
-    description: "The base SHA",
+    description: "Base SHA",
     type: "string",
-    default: "",
+    default: undefined,
   })
   .option("github_sha", {
-    description: "The GitHub SHA",
+    description: "GitHub SHA",
     type: "string",
-    default: "",
+    default: undefined,
+  })
+  .option("openai_api_key", {
+    description: "OpenAI API key",
+    type: "string",
+    default: undefined,
   })
   .parseSync();
 
@@ -24,4 +32,16 @@ export const gitCommand = (): string => {
   } else {
     return "git diff --name-only --diff-filter=ACMRT --cached";
   }
+};
+
+export const openAIApiKey = (): string => {
+  if (argv.openai_api_key) {
+    return argv.openai_api_key;
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OpenAI API key not found");
+  }
+
+  return process.env.OPENAI_API_KEY;
 };

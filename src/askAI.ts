@@ -1,17 +1,9 @@
 import { OpenAIChat } from "langchain/llms/openai";
-import dotenv from "dotenv";
 import { completionPrompt } from "./constants";
-
-dotenv.config();
-
-const apiKey = process.env.OPENAI_API_KEY;
-
-if (!apiKey) {
-  throw new Error("Missing OPENAI_API_KEY environment variable");
-}
+import { openAIApiKey } from "./args";
 
 const model = new OpenAIChat({
-  openAIApiKey: apiKey,
+  openAIApiKey: openAIApiKey(),
   modelName: "gpt-4",
   temperature: 0.0,
 });
