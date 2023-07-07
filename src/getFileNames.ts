@@ -3,9 +3,12 @@ import { extname, join } from "path";
 import { supportedFiles } from "./constants";
 import { gitCommand } from "./args";
 
+const gitCommandString = gitCommand();
+console.log(gitCommandString);
+
 const getStagedFiles = (): Promise<string[]> => {
   return new Promise((resolve, reject) => {
-    exec(gitCommand(), (error, stdout, stderr) => {
+    exec(gitCommandString, (error, stdout, stderr) => {
       if (error) {
         reject(`Error executing command: ${error.message}`);
       } else if (stderr) {
@@ -15,7 +18,7 @@ const getStagedFiles = (): Promise<string[]> => {
           .split("\n")
           .filter((fileName) => fileName.trim() !== "")
           .map((fileName) => join(process.cwd(), fileName.trim()));
-        console.log(files)
+        console.log(files);
         resolve(files);
       }
     });
