@@ -6,7 +6,9 @@ const argv = yargs
     type: "boolean",
   })
   .parseSync();
+
 // test
+
 export const gitCommand = (): string => {
   if (argv.ci) {
     return "git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }}";
