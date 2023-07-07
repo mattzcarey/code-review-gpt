@@ -4,7 +4,6 @@ import { supportedFiles } from "./constants";
 import { gitCommand } from "./args";
 
 const gitCommandString = gitCommand();
-console.log(gitCommandString);
 
 const getStagedFiles = (): Promise<string[]> => {
   return new Promise((resolve, reject) => {
@@ -26,9 +25,11 @@ const getStagedFiles = (): Promise<string[]> => {
 };
 
 export const getFileNames = async (): Promise<string[]> => {
-  console.info("Getting staged files...");
+  console.info("Getting files...");
   try {
     const stagedFiles = await getStagedFiles();
+
+    console.debug(`Staged files: ${stagedFiles}`);
 
     const filteredFiles = stagedFiles.filter((fileName) => {
       const ext = extname(fileName);

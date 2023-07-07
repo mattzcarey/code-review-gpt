@@ -7,11 +7,9 @@ const argv = yargs
   })
   .parseSync();
 
-// test
-
 export const gitCommand = (): string => {
   if (argv.ci) {
-    return "git fetch origin main:main && git diff --name-only main";
+    return "git diff --name-only main ${{ github.event.pull_request.head.ref }}";
   } else {
     return "git diff --name-only --cached";
   }

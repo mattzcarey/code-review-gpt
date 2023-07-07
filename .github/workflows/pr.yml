@@ -10,11 +10,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
       - run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
       - uses: actions/setup-node@v3
         with:
           node-version: 18
       - run: npm ci
+
+      - name: Fetch target branch
+        run: git fetch origin main:main
 
       - name: Run code review script
         run: npm run start-ci
