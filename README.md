@@ -16,6 +16,12 @@ Please note that this is in alpha and should be used for fun only. It may provid
 - Node.js
 - Git
 
+## One-line Usage
+
+```shell
+npx code-review-gpt
+```
+
 ## Getting Started
 
 1. Clone the repository:
@@ -54,8 +60,13 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
 
 ## Usage
 
-Not installed globally: Run `npx code-review-gpt` in the root directory of a git repository.
-Installed globally: Run `npx code-review-gpt` in the root directory of a git repository.
+### Not installed globally
+
+Run `npx code-review-gpt` in the root directory of a git repository.
+
+### Installed globally
+
+Run `code-review-gpt` in the root directory of a git repository.
 
 ## Roadmap
 
