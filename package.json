@@ -9,6 +9,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
+    "start-ci": "ts-node ./src/index.ts --ci",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js",
     "prepublishOnly": "chmod +x ./dist/index.js"
