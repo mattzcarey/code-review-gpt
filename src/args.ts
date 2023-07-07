@@ -6,7 +6,7 @@ const argv = yargs
     type: "boolean",
   })
   .parseSync();
-
+// test
 export const gitCommand = (): string => {
   if (argv.ci) {
     return "git diff --name-only origin/main";
