@@ -15,6 +15,7 @@ const getStagedFiles = (): Promise<string[]> => {
           .split("\n")
           .filter((fileName) => fileName.trim() !== "")
           .map((fileName) => join(process.cwd(), fileName.trim()));
+        console.log(files)
         resolve(files);
       }
     });
