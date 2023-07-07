@@ -11,6 +11,11 @@ export const constructPromptsArray = async (
 ): Promise<string[]> => {
   console.info("Constructing prompt...");
 
+  if (fileNames.length === 0) {
+    console.error("No files to process. Exiting program...");
+    process.exit(0);
+  }
+
   const prompts: string[] = [instructionPrompt];
 
   for (const fileName of fileNames) {
