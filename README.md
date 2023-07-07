@@ -25,14 +25,13 @@ npx code-review-gpt
 ## CI Usage (GitHub Actions)
 
 ```yml
-- name: Add OPENAI_API_KEY to environment
-   run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
-
 - name: Install code-review-gpt
    run: npm install code-review-gpt
 
 - name: Run code review script
    run: npx code-review-gpt --ci --base_sha ${{ github.event.pull_request.base.sha }} --github_sha ${{ github.sha }}
+   env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 ## Getting Started
