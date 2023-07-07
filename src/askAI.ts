@@ -17,6 +17,7 @@ const model = new OpenAIChat({
 });
 
 export const askAI = async (text: string): Promise<string> => {
+  console.info("Asking the experts...");
   if (text.length <= 3000) {
     const res = await model.call(text);
     return res;
