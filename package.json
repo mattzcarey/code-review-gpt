@@ -5,11 +5,13 @@
   "bin": {
     "code-review-gpt": "./dist/index.js"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "build": "tsc",
-    "postbuild": "node addShebang.js"
-},
+    "build": "node utils/build.js",
+    "postbuild": "node utils/shebang.js"
+  },
   "keywords": [],
   "author": "Matt Carey",
   "license": "MIT",
@@ -19,7 +21,12 @@
   },
   "devDependencies": {
     "@types/node": "^20.4.0",
+    "esbuild": "^0.18.11",
+    "npm-dts": "^1.3.12",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "files": [
+    "dist/*"
+  ]
 }
