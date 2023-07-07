@@ -1,6 +1,6 @@
 {
   "name": "code-review-gpt",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Your AI code reviewer",
   "bin": {
     "code-review-gpt": "./dist/index.js"
@@ -10,7 +10,8 @@
   "scripts": {
     "start": "ts-node ./src/index.ts",
     "build": "node utils/build.js",
-    "postbuild": "node utils/shebang.js"
+    "postbuild": "node utils/shebang.js",
+    "prepublishOnly": "chmod +x ./dist/index.js"
   },
   "keywords": [],
   "author": "Matt Carey",

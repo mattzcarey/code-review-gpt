@@ -1,10 +1,10 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import dotenv from "dotenv";
+import { completionPrompt } from "./constants";
 
-// Load environment variables from .env file
 dotenv.config();
 
-let apiKey = process.env.OPENAI_API_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 
 if (!apiKey) {
   throw new Error("Missing OPENAI_API_KEY environment variable");
@@ -16,25 +16,43 @@ const model = new OpenAIChat({
   temperature: 0.0,
 });
 
-export const askAI = async (text: string): Promise<string> => {
+const callModel = async (prompt: string) => {
+  try {
+    const response = await model.call(prompt);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error(`Error in processing prompt ${prompt}`, error);
+    throw error;
+  }
+};
+
+export const askAI = async (prompts: string[]): Promise<void> => {
   console.info("Asking the experts...");
-  if (text.length <= 3000) {
-    const res = await model.call(text);
-    return res;
-  }
 
-  const delimiter = "------------------------"; // Specify the delimiter to split the text
-  const chunks = text.split(delimiter);
+  const feedbackPromises = prompts.map((prompt) => callModel(prompt));
 
-  const responses = [];
-  for (const chunk of chunks) {
+  const feedbacks: string[] = [];
+
+  const logAndCollectFeedback = async (
+    feedbackPromise: Promise<string>,
+    index: number
+  ): Promise<void> => {
     try {
-      const res = await model.call(chunk);
-      responses.push(res);
+      const feedback = await feedbackPromise;
+      console.log(feedback);
+      feedbacks.push(feedback);
     } catch (error) {
-      console.error(error);
+      console.error(`Error in processing prompt ${index + 1}`, error);
     }
-  }
+  };
 
-  return responses.join("");
+  await Promise.allSettled(feedbackPromises.map(logAndCollectFeedback));
+
+  const finalPrompt = completionPrompt.replace(
+    "{feedback}",
+    feedbacks.join("\n---\n")
+  );
+
+  console.log(await callModel(finalPrompt));
 };

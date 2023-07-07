@@ -13,7 +13,7 @@ Please note that this is in alpha and should be used for fun only. It may provid
 
 ## Prerequisites
 
-- Node.js (v12 or higher)
+- Node.js
 - Git
 
 ## Getting Started

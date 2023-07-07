@@ -27,10 +27,9 @@ export const getFileNames = async (): Promise<string[]> => {
 
     const filteredFiles = stagedFiles.filter((fileName) => {
       const ext = extname(fileName);
-      return supportedFiles.includes(ext);
+      return supportedFiles.has(ext);
     });
 
-    // Check if there are no file names
     if (filteredFiles.length === 0) {
       console.error("No supported files found to process. Exiting program...");
       process.exit(0);

@@ -1,26 +1,40 @@
-import { exec } from "child_process";
-import { promisify } from "util";
-import { instructionPrompt, filePromptTemplate } from "./constants";
+import {
+  instructionPrompt,
+  filePromptTemplate,
+  maxPromptLength,
+  continuationPrompt,
+} from "./constants";
+import { readFile } from "fs/promises";
 
-const execP = promisify(exec);
-
-export const constructPrompt = async (fileNames: string[]): Promise<string> => {
+export const constructPromptsArray = async (
+  fileNames: string[]
+): Promise<string[]> => {
   console.info("Constructing prompt...");
-  let fullPrompt = instructionPrompt;
+
+  const prompts: string[] = [instructionPrompt];
 
   for (const fileName of fileNames) {
     try {
-      const { stdout: fileContent } = await execP(`cat ${fileName}`);
-
+      const fileContents = await readFile(fileName, "utf8");
       const filePrompt = filePromptTemplate
-        .replace("{{fileName}}", fileName)
-        .replace("{fileContents}", fileContent);
+        .replace("{fileName}", fileName)
+        .replace("{fileContents}", fileContents);
 
-      fullPrompt += filePrompt;
+      if (filePrompt.length > maxPromptLength) {
+        console.warn(
+          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses.`
+        );
+      }
+
+      if ((prompts[prompts.length - 1] + filePrompt).length > maxPromptLength) {
+        prompts.push(continuationPrompt);
+      }
+
+      prompts[prompts.length - 1] += filePrompt;
     } catch (error) {
       console.error(`Failed to process file ${fileName}:`, error);
     }
   }
 
-  return fullPrompt;
+  return prompts;
 };
