@@ -1,10 +1,11 @@
 import { exec } from "child_process";
 import { extname, join } from "path";
 import { supportedFiles } from "./constants";
+import { gitCommand } from "./args";
 
 const getStagedFiles = (): Promise<string[]> => {
   return new Promise((resolve, reject) => {
-    exec("git diff --name-only --cached", (error, stdout, stderr) => {
+    exec(gitCommand(), (error, stdout, stderr) => {
       if (error) {
         reject(`Error executing command: ${error.message}`);
       } else if (stderr) {
