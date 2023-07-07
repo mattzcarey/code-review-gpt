@@ -1,7 +1,5 @@
 import yargs from "yargs";
 
-import yargs from "yargs";
-
 const argv = yargs
   .option("ci", {
     description: "Indicate that the script is running on a CI environment",
