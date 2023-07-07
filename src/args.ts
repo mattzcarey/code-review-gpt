@@ -11,7 +11,7 @@ const argv = yargs
 
 export const gitCommand = (): string => {
   if (argv.ci) {
-    return "git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }}";
+    return "git diff --name-only HEAD...base";
   } else {
     return "git diff --name-only --cached";
   }
