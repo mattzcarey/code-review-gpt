@@ -22,6 +22,16 @@ Please note that this is in alpha and should be used for fun only. It may provid
 npx code-review-gpt
 ```
 
+## CI Usage (GitHub Actions)
+
+```yml
+- name: Add OPENAI_API_KEY to environment
+   run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+   
+- name: Run code review script
+   run: npm run start-ci -- --base_sha ${{ github.event.pull_request.base.sha }} --github_sha ${{ github.sha }}
+```
+
 ## Getting Started
 
 1. Clone the repository:

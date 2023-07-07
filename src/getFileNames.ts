@@ -3,13 +3,15 @@ import { extname, join } from "path";
 import { supportedFiles } from "./constants";
 import { gitCommand } from "./args";
 
+const gitCommandString = gitCommand();
+
 const getStagedFiles = (): Promise<string[]> => {
   return new Promise((resolve, reject) => {
-    exec(gitCommand(), (error, stdout, stderr) => {
+    exec(gitCommandString, (error, stdout, stderr) => {
       if (error) {
-        reject(`Error executing command: ${error.message}`);
+        reject(new Error(error.message));
       } else if (stderr) {
-        reject(`Error: ${stderr}`);
+        reject(new Error(stderr));
       } else {
         const files = stdout
           .split("\n")
@@ -22,7 +24,7 @@ const getStagedFiles = (): Promise<string[]> => {
 };
 
 export const getFileNames = async (): Promise<string[]> => {
-  console.info("Getting staged files...");
+  console.info("Getting files...");
   try {
     const stagedFiles = await getStagedFiles();
 
@@ -32,8 +34,7 @@ export const getFileNames = async (): Promise<string[]> => {
     });
 
     if (filteredFiles.length === 0) {
-      console.error("No supported files found to process. Exiting program...");
-      process.exit(0);
+      throw new Error("No supported files to process. Exiting program...");
     }
 
     return filteredFiles;
