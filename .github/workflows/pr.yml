@@ -17,4 +17,4 @@ jobs:
       - run: npm ci
 
       - name: Run code review script
-        run: npx code-review-gpt --ci
+        run: npm i code-review-gpt && npm exec code-review-gpt --ci
