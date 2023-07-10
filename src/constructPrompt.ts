@@ -6,14 +6,15 @@ import {
 } from "./constants";
 import { readFile } from "fs/promises";
 
-const appendFilePrompt = (prompts: string[], filePrompt: string): string[] => {
+const appendToLastPrompt = (prompts: string[], text: string): string[] => {
   const newPrompts = [...prompts];
-  if (
-    (newPrompts[newPrompts.length - 1] + filePrompt).length > maxPromptLength
-  ) {
-    newPrompts.push(continuationPrompt);
+  const lastPromptIndex = newPrompts.length - 1;
+
+  if ((newPrompts[lastPromptIndex] + text).length > maxPromptLength) {
+    newPrompts.push(continuationPrompt + text);
+  } else {
+    newPrompts[lastPromptIndex] += text;
   }
-  newPrompts[newPrompts.length - 1] += filePrompt;
 
   return newPrompts;
 };
@@ -23,9 +24,9 @@ export const constructPromptsArray = async (
 ): Promise<string[]> => {
   console.info("Constructing prompt...");
 
-  const prompts: string[] = [instructionPrompt];
+  let prompts: string[] = [instructionPrompt];
 
-  const filePromises = fileNames.map(async (fileName) => {
+  for (const fileName of fileNames) {
     try {
       const fileContents = await readFile(fileName, "utf8");
       const filePrompt = filePromptTemplate
@@ -34,16 +35,17 @@ export const constructPromptsArray = async (
 
       if (filePrompt.length > maxPromptLength) {
         console.warn(
-          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses.`
+          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses. Skipping this file.`
         );
+        continue;
       }
 
-      return appendFilePrompt(prompts, filePrompt);
+      prompts = appendToLastPrompt(prompts, filePrompt);
     } catch (error) {
       console.error(`Failed to process file ${fileName}:`, error);
       throw error;
     }
-  });
+  }
 
-  return (await Promise.all(filePromises)).flat();
+  return prompts;
 };
