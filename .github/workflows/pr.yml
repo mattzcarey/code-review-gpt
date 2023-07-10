@@ -5,10 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  issues: write
-  actions: read
-  id-token: write
+  pull-requests: write
 
 jobs:
   build:
