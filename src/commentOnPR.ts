@@ -4,6 +4,10 @@ import { getGitHubEnvVariables } from "./args";
 export const commentOnPR = async (comment: string) => {
   try {
     const { GITHUB_TOKEN: githubToken } = getGitHubEnvVariables();
+
+    if (!githubToken) {
+      throw new Error("GITHUB_TOKEN is not set");
+    }
     const { payload, issue } = context;
 
     if (!payload.pull_request) {
