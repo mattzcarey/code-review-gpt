@@ -23,8 +23,6 @@ export const constructPromptsArray = async (
 ): Promise<string[]> => {
   console.info("Constructing prompt...");
 
-  const prompts: string[] = [instructionPrompt];
-
   const filePromises = fileNames.map(async (fileName) => {
     try {
       const fileContents = await readFile(fileName, "utf8");
@@ -34,16 +32,27 @@ export const constructPromptsArray = async (
 
       if (filePrompt.length > maxPromptLength) {
         console.warn(
-          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses.`
+          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses. Skipping this file.`
         );
+        // Skip this file and don't append the prompt.
+        return undefined;
       }
 
-      return appendFilePrompt(prompts, filePrompt);
+      return filePrompt;
     } catch (error) {
       console.error(`Failed to process file ${fileName}:`, error);
       throw error;
     }
   });
 
-  return (await Promise.all(filePromises)).flat();
+  const filePrompts = (await Promise.all(filePromises)).filter(
+    (filePrompt): filePrompt is string => filePrompt !== undefined
+  );
+
+  const prompts = [instructionPrompt];
+  filePrompts.forEach((filePrompt) => {
+    appendFilePrompt(prompts, filePrompt);
+  });
+
+  return prompts;
 };
