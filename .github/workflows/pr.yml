@@ -5,8 +5,10 @@ on:
     branches: [main]
 
 permissions:
-  contents: read # This is required for actions/checkout
-  issues: write # This is required for creating comments
+  contents: read
+  issues: write
+  actions: read
+  id-token: write
 
 jobs:
   build:
