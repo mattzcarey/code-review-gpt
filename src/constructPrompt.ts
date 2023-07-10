@@ -6,6 +6,18 @@ import {
 } from "./constants";
 import { readFile } from "fs/promises";
 
+const appendFilePrompt = (prompts: string[], filePrompt: string): string[] => {
+  const newPrompts = [...prompts];
+  if (
+    (newPrompts[newPrompts.length - 1] + filePrompt).length > maxPromptLength
+  ) {
+    newPrompts.push(continuationPrompt);
+  }
+  newPrompts[newPrompts.length - 1] += filePrompt;
+
+  return newPrompts;
+};
+
 export const constructPromptsArray = async (
   fileNames: string[]
 ): Promise<string[]> => {
@@ -17,7 +29,7 @@ export const constructPromptsArray = async (
 
   const prompts: string[] = [instructionPrompt];
 
-  for (const fileName of fileNames) {
+  const filePromises = fileNames.map(async (fileName) => {
     try {
       const fileContents = await readFile(fileName, "utf8");
       const filePrompt = filePromptTemplate
@@ -30,15 +42,12 @@ export const constructPromptsArray = async (
         );
       }
 
-      if ((prompts[prompts.length - 1] + filePrompt).length > maxPromptLength) {
-        prompts.push(continuationPrompt);
-      }
-
-      prompts[prompts.length - 1] += filePrompt;
+      return appendFilePrompt(prompts, filePrompt);
     } catch (error) {
       console.error(`Failed to process file ${fileName}:`, error);
+      throw error;
     }
-  }
+  });
 
-  return prompts;
+  return (await Promise.all(filePromises)).flat();
 };

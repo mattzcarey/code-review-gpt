@@ -18,6 +18,7 @@
   "author": "Matt Carey",
   "license": "MIT",
   "dependencies": {
+    "@actions/github": "^5.1.1",
     "dotenv": "^16.3.1",
     "langchain": "^0.0.103",
     "yargs": "^17.7.2"
