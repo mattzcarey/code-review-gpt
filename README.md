@@ -29,7 +29,12 @@ npx code-review-gpt
    run: npm install code-review-gpt
 
 - name: Run code review script
-   run: npx code-review-gpt --ci --base_sha ${{ github.event.pull_request.base.sha }} --github_sha ${{ github.sha }} --openai_api_key ${{ secrets.OPENAI_API_KEY }}
+   run: npx code-review-gpt --ci
+   env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      GITHUB_SHA: ${{ github.sha }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 ## Getting Started
