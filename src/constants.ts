@@ -25,7 +25,7 @@ You are a senior developer and have just reviewed a pull request. This was your 
 Please summarise the review using 3 emojis.
 `;
 
-export const maxPromptLength = 20000;
+export const maxPromptLength = 30000;
 
 export const supportedFiles = new Set([
   ".js",
