@@ -49,5 +49,5 @@ export const constructPromptsArray = async (
     }
   });
 
-  return (await Promise.allSettled(filePromises)).flat();
+  return (await Promise.all(filePromises)).flat();
 };
