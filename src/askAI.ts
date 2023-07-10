@@ -20,7 +20,7 @@ const createSummary = async (feedbacks: string[]): Promise<string> => {
 
   const emojis = await callModel(finalPrompt);
 
-  const summary = `${emojis}${signOff}`;
+  const summary = `\n${emojis}${signOff}`;
   console.log(summary);
 
   return summary;
