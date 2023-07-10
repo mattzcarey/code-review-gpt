@@ -3,7 +3,7 @@ import { getGitHubEnvVariables } from "./args";
 
 export const commentOnPR = async (comment: string) => {
   try {
-    const { GITHUB_TOKEN: githubToken } = getGitHubEnvVariables();
+    const { githubToken } = getGitHubEnvVariables();
 
     if (!githubToken) {
       throw new Error("GITHUB_TOKEN is not set");
