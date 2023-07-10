@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read # This is required for actions/checkout
+  issues: write # This is required for creating comments
+
 jobs:
   build:
     runs-on: ubuntu-latest
