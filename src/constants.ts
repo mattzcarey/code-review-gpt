@@ -25,7 +25,7 @@ You are a senior developer and have just reviewed a pull request. This was your 
 Please summarise the review using 3 emojis.
 `;
 
-export const signOff = `: powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)`;
+export const signOff = `\n---\n#### Powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)`;
 
 export const maxPromptLength = 30000; //max is 8k tokens which is about 40k characters
 
