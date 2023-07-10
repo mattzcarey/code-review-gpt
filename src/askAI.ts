@@ -1,5 +1,5 @@
 import { OpenAIChat } from "langchain/llms/openai";
-import { completionPrompt } from "./constants";
+import { completionPrompt, signOff } from "./constants";
 import { openAIApiKey } from "./args";
 
 const model = new OpenAIChat({
@@ -18,7 +18,9 @@ const createSummary = async (feedbacks: string[]): Promise<string> => {
     feedbacks.join("\n---\n")
   );
 
-  const summary = await callModel(finalPrompt);
+  const emojis = await callModel(finalPrompt);
+
+  const summary = `${emojis}${signOff}`;
   console.log(summary);
 
   return summary;
@@ -44,7 +46,6 @@ export const askAI = async (prompts: string[]): Promise<string> => {
     }
   };
 
-  
   await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback));
   const summary = await createSummary(feedbacks);
 
