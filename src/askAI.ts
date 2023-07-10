@@ -8,25 +8,30 @@ const model = new OpenAIChat({
   temperature: 0.0,
 });
 
-const callModel = async (prompt: string) => {
-  try {
-    const response = await model.call(prompt);
-    console.log(response);
-    return response;
-  } catch (error) {
-    console.error(`Error in processing prompt ${prompt}`, error);
-    throw error;
-  }
+const callModel = (prompt: string): Promise<string> => {
+  return model.call(prompt);
 };
 
-export const askAI = async (prompts: string[]): Promise<void> => {
+const createSummary = async (feedbacks: string[]): Promise<string> => {
+  const finalPrompt = completionPrompt.replace(
+    "{feedback}",
+    feedbacks.join("\n---\n")
+  );
+
+  const summary = await callModel(finalPrompt);
+  console.log(summary);
+
+  return summary;
+};
+
+export const askAI = async (prompts: string[]): Promise<string> => {
   console.info("Asking the experts...");
 
   const feedbackPromises = prompts.map((prompt) => callModel(prompt));
 
   const feedbacks: string[] = [];
 
-  const logAndCollectFeedback = async (
+  const collectAndLogFeedback = async (
     feedbackPromise: Promise<string>,
     index: number
   ): Promise<void> => {
@@ -39,12 +44,9 @@ export const askAI = async (prompts: string[]): Promise<void> => {
     }
   };
 
-  await Promise.allSettled(feedbackPromises.map(logAndCollectFeedback));
+  await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback));
 
-  const finalPrompt = completionPrompt.replace(
-    "{feedback}",
-    feedbacks.join("\n---\n")
-  );
+  const summary = await createSummary(feedbacks);
 
-  console.log(await callModel(finalPrompt));
+  return feedbacks.join("\n---\n") + "\n---\n" + summary;
 };
