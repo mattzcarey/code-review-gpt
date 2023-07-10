@@ -9,20 +9,16 @@ dotenv.config();
 const argv = getYargs();
 
 const main = async () => {
-  try {
-    const fileNames = await getFileNames();
-    const prompts = await constructPromptsArray(fileNames);
-    const response = await askAI(prompts);
+  const fileNames = await getFileNames();
+  const prompts = await constructPromptsArray(fileNames);
+  const response = await askAI(prompts);
 
-    if (argv.ci) {
-      await commentOnPR(response);
-    }
-  } catch (error) {
-    console.error(`Error: ${JSON.stringify(error)}`);
+  if (argv.ci) {
+    await commentOnPR(response);
   }
 };
 
 main().catch((error) => {
-  console.error(error);
+  console.error(`Error: ${error}`);
   process.exit(1);
 });
