@@ -4,11 +4,11 @@ import { getGitHubEnvVariables } from "./args";
 export const commentOnPR = async (comment: string) => {
   try {
     const { githubToken } = getGitHubEnvVariables();
+    const { payload, issue } = context;
 
     if (!githubToken) {
       throw new Error("GITHUB_TOKEN is not set");
     }
-    const { payload, issue } = context;
 
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
@@ -26,5 +26,6 @@ export const commentOnPR = async (comment: string) => {
     });
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
+    throw error;
   }
 };
