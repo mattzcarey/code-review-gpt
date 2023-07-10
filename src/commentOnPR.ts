@@ -10,6 +10,7 @@ export const commentOnPR = async (comment: string) => {
       throw new Error("GITHUB_TOKEN is not set");
     }
 
+    
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
       return;
