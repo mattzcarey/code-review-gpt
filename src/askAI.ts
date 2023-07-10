@@ -45,7 +45,6 @@ export const askAI = async (prompts: string[]): Promise<string> => {
   };
 
   await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback));
-
   const summary = await createSummary(feedbacks);
 
   return feedbacks.join("\n---\n") + "\n---\n" + summary;
