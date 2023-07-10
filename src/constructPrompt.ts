@@ -23,10 +23,6 @@ export const constructPromptsArray = async (
 ): Promise<string[]> => {
   console.info("Constructing prompt...");
 
-  if (fileNames.length === 0) {
-    throw new Error("No files to process. Exiting program...");
-  }
-
   const prompts: string[] = [instructionPrompt];
 
   const filePromises = fileNames.map(async (fileName) => {

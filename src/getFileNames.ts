@@ -34,7 +34,7 @@ export const getFileNames = async (): Promise<string[]> => {
     });
 
     if (filteredFiles.length === 0) {
-      throw new Error("No supported files to process. Exiting program...");
+      process.exit(0);
     }
 
     return filteredFiles;
