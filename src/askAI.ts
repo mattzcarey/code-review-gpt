@@ -18,9 +18,7 @@ const createSummary = async (feedbacks: string[]): Promise<string> => {
     feedbacks.join("\n---\n")
   );
 
-  const emojis = await callModel(finalPrompt);
-
-  const summary = `\n${emojis}`;
+  const summary = await callModel(finalPrompt);
   console.log(summary);
 
   return summary;
