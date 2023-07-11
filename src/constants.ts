@@ -1,7 +1,7 @@
 export const instructionPrompt = `As a senior developer, your task is to review a set of pull requests. 
 You are given a list of filenames and their partial contents, but note that you might not have the full context of the code.
 
-Begin your review by evaluating each code snippet using the LOGAF scale:
+Begin your review by evaluating each code snippet using the LOGAF scale. You do not need to include the definitions of the LOGAF scale in your review:
 1. Level 1: Major issues present, code cannot be accepted in current form.
 2. Level 2: Code functions, but has significant issues needing attention.
 3. Level 3: Generally good code, with areas for potential improvement.
