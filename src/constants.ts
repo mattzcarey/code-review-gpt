@@ -12,7 +12,7 @@ Do not include the definition of the LOGAF level selected in your review. If a c
 Focus on code functionality, readability, and performance. Flag any exposed API keys or secrets immediately.
 
 Ensure your feedback is brief, concise, accurate, and relevant. Do not give feedback on every possible change, only the most important. 
-Include example code snippets for your changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
+Include brief example code snippets for your changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
 
 Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return '\n'. Format your responses in Markdown. `;
 
