@@ -20,7 +20,7 @@ const createSummary = async (feedbacks: string[]): Promise<string> => {
 
   const emojis = await callModel(finalPrompt);
 
-  const summary = `\n\n${emojis}`;
+  const summary = `\n${emojis}`;
   console.log(summary);
 
   return summary;
@@ -49,5 +49,5 @@ export const askAI = async (prompts: string[]): Promise<string> => {
   await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback));
   const summary = await createSummary(feedbacks);
 
-  return feedbacks.join("\n---\n") + "\n---\n" + summary;
+  return feedbacks.join("\n---\n") + "\n\n---\n\n" + summary;
 };

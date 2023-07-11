@@ -8,7 +8,7 @@ Begin your review by evaluating each code snippet using the LOGAF scale:
 4. Level 4: High-quality code, requires only minor tweaks.
 5. Level 5: Excellent code, needs no changes.
 
-If a code snippet is at Level 4 or 5, it does not need further review and you should not include a review. For snippets at Levels 1 to 3, provide specific feedback. 
+If a code snippet is at Level 4 or 5, it does not need further review and you should not include a review or provide a response at all. For snippets at Levels 1 to 3, provide specific feedback. 
 Focus on code functionality, readability, and performance. Flag any exposed API keys or secrets immediately.
 
 Ensure your feedback is brief, concise, accurate, and relevant. Suggest code changes only when you're confident they're improvements, 
