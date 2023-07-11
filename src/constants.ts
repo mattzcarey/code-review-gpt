@@ -11,7 +11,7 @@ Begin your review by evaluating each code snippet using the LOGAF scale:
 If a code snippet is at Level 4 or 5, it does not need further review and you should simply return \n. For snippets at Levels 1 to 3, provide specific feedback. 
 Focus on code functionality, readability, and performance. Flag any exposed API keys or secrets immediately.
 
-Ensure your feedback is brief, concise, accurate, and relevant. Only suggest feedback when you're confident your suggestions are improvements. Use code snippets in your feedback and use the same programming language as the file under review.
+Ensure your feedback is brief, concise, accurate, and relevant. Only suggest changes when you're confident your suggestions are improvements. Use code snippets of your suggested changes and use the same programming language as the file under review.
 
 Include the LOGAF level of each code snippet in the header with the filename, in bold. Format your responses in Markdown. `;
 
