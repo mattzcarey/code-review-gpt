@@ -1,5 +1,6 @@
 import { context, getOctokit } from "@actions/github";
 import { getGitHubEnvVariables } from "./args";
+import { signOff } from "./constants";
 
 const getToken = () => {
   const { githubToken } = getGitHubEnvVariables();
@@ -20,15 +21,40 @@ export const commentOnPR = async (comment: string) => {
     }
 
     const octokit = getOctokit(githubToken);
-
     const { owner, repo, number: pull_number } = issue;
 
-    await octokit.rest.issues.createComment({
+    // Get all comments of the PR
+    const { data: comments } = await octokit.rest.issues.listComments({
       owner,
       repo,
       issue_number: pull_number,
-      body: comment,
     });
+
+    // Find the bot's comment if exists
+    const botComment = comments.find((comment) =>
+      comment?.body?.includes(signOff)
+    );
+
+    // The comment that the bot will post
+    const botCommentBody = `${comment}\n---\n${signOff}`;
+
+    // If the bot has already commented, update the comment
+    if (botComment) {
+      await octokit.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: botComment.id,
+        body: botCommentBody,
+      });
+    } else {
+      // If the bot has not commented yet, create a new comment
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: pull_number,
+        body: botCommentBody,
+      });
+    }
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
     throw error;
