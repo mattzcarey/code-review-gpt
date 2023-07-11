@@ -23,22 +23,18 @@ export const commentOnPR = async (comment: string) => {
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
-    // Get all comments of the PR
     const { data: comments } = await octokit.rest.issues.listComments({
       owner,
       repo,
       issue_number: pull_number,
     });
 
-    // Find the bot's comment if exists
     const botComment = comments.find((comment) =>
       comment?.body?.includes(signOff)
     );
 
-    // The comment that the bot will post
-    const botCommentBody = `${comment}\n---\n${signOff}`;
+    const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
 
-    // If the bot has already commented, update the comment
     if (botComment) {
       await octokit.rest.issues.updateComment({
         owner,
