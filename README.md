@@ -35,6 +35,8 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
+See .github/workflows/pr.yml for an example.
+
 ## Getting Started
 
 1. Clone the repository:
