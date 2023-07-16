@@ -1,6 +1,6 @@
 import { OpenAIChat } from "langchain/llms/openai";
-import { completionPrompt, signOff } from "./constants";
-import { openAIApiKey } from "./args";
+import { completionPrompt } from "./constants";
+import { openAIApiKey } from "../config";
 
 const model = new OpenAIChat({
   openAIApiKey: openAIApiKey(),

@@ -1,20 +1,20 @@
 import dotenv from "dotenv";
-import { getFileNames } from "./getFileNames";
-import { constructPromptsArray } from "./constructPrompt";
-import { askAI } from "./askAI";
 import { getYargs } from "./args";
-import { commentOnPR } from "./commentOnPR";
 
 dotenv.config();
-const argv = getYargs();
 
 const main = async () => {
-  const fileNames = await getFileNames();
-  const prompts = await constructPromptsArray(fileNames);
-  const response = await askAI(prompts);
+  const argv = await getYargs();
 
-  if (argv.ci) {
-    await commentOnPR(response);
+  if (argv._.includes("configure")) {
+    const { configure } = await import("./configure");
+    await configure();
+  } else if (argv._.includes("review")) {
+    const { review } = await import("./review");
+    await review(argv);
+  } else {
+    console.error("Unknown command");
+    process.exit(1);
   }
 };
 

@@ -19,15 +19,25 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
 
 - Node.js
 - Git
+- Github CLI (optional for setup tool)
 
-## CI Usage (GitHub Actions)
+## Easy Setup (Github Actions)
+
+In the root of your git repository run:
+
+```shell
+npm install code-review-gpt
+npx code-review-gpt configure
+```
+
+## Template CI Usage (GitHub Actions)
 
 ```yml
 - name: Install code-review-gpt
    run: npm install code-review-gpt
 
 - name: Run code review script
-   run: npx code-review-gpt --ci
+   run: npx code-review-gpt review --ci
    env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -35,7 +45,7 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-See .github/workflows/pr.yml for an example.
+See templates/pr.yml for an example.
 
 ## Getting Started
 
