@@ -86,6 +86,7 @@ Run `code-review-gpt` in the root directory of a git repository.
 ## Roadmap
 
 - [ ] Make a more clever way to find the exact code to review
+- [ ] VSCode extension
 - [ ] Use some embeddings and vector store to build a knowledge graph
 - [ ] Prompt engineering to refine the prompt
 - [ ] Support different LLMs
