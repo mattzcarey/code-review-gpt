@@ -14,10 +14,10 @@ export const getYargs = async () => {
     .command("configure", "Configure the script")
     .parseSync();
 
-  if (argv.ci && !argv._[0]) {
+  if (argv.ci) {
     argv._[0] = "review";
     console.info(
-      "Running in CI mode, defaulting to review. Please update the command to: npx code-review-gpt review"
+      "Running in CI mode, defaulting to review."
     );
     return argv;
   }
