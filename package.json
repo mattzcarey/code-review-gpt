@@ -8,11 +8,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
-    "start-ci": "ts-node ./src/index.ts --ci",
+    "start": "ts-node ./src/index.ts review",
+    "start-ci": "ts-node ./src/index.ts review --ci",
     "build": "node utils/build.js",
-    "postbuild": "node utils/shebang.js",
-    "prepublishOnly": "chmod +x ./dist/index.js"
+    "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
   "keywords": [],
   "author": "Matt Carey",
@@ -20,10 +19,12 @@
   "dependencies": {
     "@actions/github": "^5.1.1",
     "dotenv": "^16.3.1",
+    "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/inquirer": "^9.0.3",
     "@types/node": "^20.4.0",
     "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
