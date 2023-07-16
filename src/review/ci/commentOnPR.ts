@@ -35,12 +35,15 @@ export const commentOnPR = async (comment: string) => {
 
     Promise.all(
       matches.map(async (match) => {
-        await octokit.rest.pulls.createReviewComment({
+        const fullConfig = {
           ...baseCommentConfig,
           line: Number(match[2]),
           body: "a comment",
           path: match[1],
-        });
+        };
+        console.log(fullConfig);
+
+        await octokit.rest.pulls.createReviewComment(fullConfig);
       })
     );
 
