@@ -23,6 +23,27 @@ export const commentOnPR = async (comment: string) => {
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
+    const baseCommentConfig = {
+      pull_number,
+      repo,
+      owner,
+    };
+
+    const regex = /File: (.+): Line: (\d+)/g;
+
+    const matches = [...comment.matchAll(regex)];
+
+    Promise.all(
+      matches.map(async (match) => {
+        await octokit.rest.pulls.createReviewComment({
+          ...baseCommentConfig,
+          line: Number(match[2]),
+          body: "a comment",
+          path: match[1],
+        });
+      })
+    );
+
     const { data: comments } = await octokit.rest.issues.listComments({
       owner,
       repo,
