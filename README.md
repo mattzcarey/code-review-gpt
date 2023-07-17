@@ -93,14 +93,25 @@ Run `npm i code-review-gpt && npx code-review-gpt` in the root directory of a gi
 
 Run `code-review-gpt` in the root directory of a git repository.
 
+### Commands
+
+- `code-review-gpt review` - Runs the code review on the staged files.
+- `code-review-gpt configure` - Runs a setup tool to configure the application.
+
+### Options
+
+- `--ci` - Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
+
+- `--model` - The model to use for the review. Defaults to `gpt-4`. You can use any openai model you have access to.
+
 ## Roadmap
 
 - [ ] Make a more clever way to find the exact code to review
 - [ ] VSCode extension
-- [ ] Use some embeddings and vector store to build a knowledge graph
+- [ ] Use some embeddings and vector store to build a knowledge graph of the repo to make better suggestions
 - [ ] Prompt engineering to refine the prompt
-- [ ] Support different LLMs
-- [ ] Cash in on the cloud offering
+- [ ] Support different LLMs... Private, HuggingFace, Azure etc.
+- [ ] Build out the cloud offering
 
 ## Sponsors ❤️
 

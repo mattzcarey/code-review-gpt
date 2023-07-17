@@ -1,14 +1,14 @@
 import { exec } from "child_process";
 import { extname, join } from "path";
-import { supportedFiles } from "./constants";
-import { getGitHubEnvVariables } from "../config";
+import { supportedFiles } from "../constants";
+import { getGitHubEnvVariables } from "../../config";
 
 const gitCommand = async (isCi: boolean): Promise<string> => {
   if (isCi) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
-    return `git diff --name-only --diff-filter=ACMRT ${baseSha} ${githubSha}`;
+    return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
   } else {
-    return "git diff --name-only --diff-filter=ACMRT";
+    return "git diff --name-only --diff-filter=AMT --cached";
   }
 };
 

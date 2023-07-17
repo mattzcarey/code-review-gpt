@@ -1,8 +1,7 @@
-import { Argv } from "yargs";
-import { askAI } from "./askAI";
-import { commentOnPR } from "./commentOnPR";
-import { constructPromptsArray } from "./constructPrompt";
-import { getFileNames } from "./getFileNames";
+import { commentOnPR } from "./ci/commentOnPR";
+import { constructPromptsArray } from "./prompt/constructPrompt";
+import { getFileNames } from "./prompt/getFileNames";
+import { askAi } from "./llm/askAi";
 
 interface ReviewArgs {
   [x: string]: unknown;
@@ -13,10 +12,12 @@ interface ReviewArgs {
 
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
+  const modelName = yargs.model as string;
 
   const fileNames = await getFileNames(isCi);
   const prompts = await constructPromptsArray(fileNames);
-  const response = await askAI(prompts);
+
+  const response = await askAi(prompts, modelName);
 
   if (isCi) {
     await commentOnPR(response);

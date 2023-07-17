@@ -1,6 +1,6 @@
 import { context, getOctokit } from "@actions/github";
-import { getGitHubEnvVariables } from "../config";
-import { signOff } from "./constants";
+import { getGitHubEnvVariables } from "../../config";
+import { signOff } from "../constants";
 
 const getToken = () => {
   const { githubToken } = getGitHubEnvVariables();
