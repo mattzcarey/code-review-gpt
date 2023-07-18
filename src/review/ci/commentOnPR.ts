@@ -13,7 +13,7 @@ const getToken = () => {
 export const commentOnPR = async (comment: string) => {
   try {
     const githubToken = getToken();
-    const { payload, issue } = context;
+    const { payload, issue, sha } = context;
 
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
@@ -27,6 +27,7 @@ export const commentOnPR = async (comment: string) => {
       pull_number,
       repo,
       owner,
+      commit_id: sha,
     };
 
     const regex = /File: (.+): Line: (\d+): Comment: (.+)/g;
