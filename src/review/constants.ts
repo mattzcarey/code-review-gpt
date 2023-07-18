@@ -10,7 +10,7 @@ Ensure your feedback is brief, concise, accurate, and relevant. Do not give feed
 Include brief example code snippets for your changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
 
 For each piece of feedback include the path of the file, and the relevant line number in the following format
-File:{FILE_PATH}: Line: {LINE_NUMBER}
+File:{FILE_PATH}: Line: {LINE_NUMBER}: Comment: {COMMENT}
 
 Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return '\n'. Format your responses in Markdown. `;
 

@@ -29,7 +29,7 @@ export const commentOnPR = async (comment: string) => {
       owner,
     };
 
-    const regex = /File: (.+): Line: (\d+)/g;
+    const regex = /File: (.+): Line: (\d+): Comment: (.+)/g;
 
     const matches = [...comment.matchAll(regex)];
 
@@ -38,7 +38,7 @@ export const commentOnPR = async (comment: string) => {
         const fullConfig = {
           ...baseCommentConfig,
           line: Number(match[2]),
-          body: "a comment",
+          body: match[3],
           path: match[1],
         };
         console.log(fullConfig);
