@@ -60,4 +60,4 @@ export const supportedFiles = new Set([
   ".jsx",
 ]);
 
-export const maxFeedbackCount = 5;
+export const maxFeedbackCount = 3;
