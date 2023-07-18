@@ -16,7 +16,9 @@ export const askAI = async (
 
   const feedbacks = await processFeedbacks(model, prompts);
 
+  console.log(feedbacks.join("\n\n---\n\n"));
+
   const summary = await createSummary(model, feedbacks);
 
-  return `${feedbacks.join("\n---\n")}\n\n---\n\n${summary}`;
+  return `${feedbacks.join("\n\n---\n\n")}\n\n---\n\n${summary}`;
 };
