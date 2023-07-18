@@ -1,13 +1,22 @@
 import { exec } from "child_process";
 import { extname, join } from "path";
-import { supportedFiles } from "./constants";
-import { gitCommand } from "./args";
+import { supportedFiles } from "../constants";
+import { getGitHubEnvVariables } from "../../config";
 
-const gitCommandString = gitCommand();
+const gitCommand = async (isCi: boolean): Promise<string> => {
+  if (isCi) {
+    const { githubSha, baseSha } = getGitHubEnvVariables();
+    return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
+  } else {
+    return "git diff --name-only --diff-filter=AMT --cached";
+  }
+};
 
-const getStagedFiles = (): Promise<string[]> => {
+const getStagedFiles = async (isCi: boolean): Promise<string[]> => {
+  const commandString = await gitCommand(isCi);
+
   return new Promise((resolve, reject) => {
-    exec(gitCommandString, (error, stdout, stderr) => {
+    exec(commandString, (error, stdout, stderr) => {
       if (error) {
         reject(new Error(error.message));
       } else if (stderr) {
@@ -23,10 +32,10 @@ const getStagedFiles = (): Promise<string[]> => {
   });
 };
 
-export const getFileNames = async (): Promise<string[]> => {
+export const getFileNames = async (isCi: boolean): Promise<string[]> => {
   console.info("Getting files...");
   try {
-    const stagedFiles = await getStagedFiles();
+    const stagedFiles = await getStagedFiles(isCi);
 
     const filteredFiles = stagedFiles.filter((fileName) => {
       const ext = extname(fileName);

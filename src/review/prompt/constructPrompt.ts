@@ -3,7 +3,7 @@ import {
   filePromptTemplate,
   maxPromptLength,
   continuationPrompt,
-} from "./constants";
+} from "../constants";
 import { readFile } from "fs/promises";
 
 const appendToLastPrompt = (prompts: string[], text: string): string[] => {

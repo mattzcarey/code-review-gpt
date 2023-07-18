@@ -1,6 +1,8 @@
 const { build } = require("esbuild");
 const { dependencies } = require("../package.json");
 const { Generator } = require("npm-dts");
+const fs = require("fs");
+const path = require("path");
 
 new Generator({
   entry: "src/index.ts",
@@ -16,4 +18,10 @@ const sharedConfig = {
   outfile: "dist/index.js",
 };
 
-build(sharedConfig);
+build(sharedConfig).then(() => {
+  // Copy the ci template file to the dist folder after the build is complete
+  fs.copyFileSync(
+    path.join(__dirname, "../templates", "pr.yml"),
+    path.join(__dirname, "../dist", "pr.yml")
+  );
+});

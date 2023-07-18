@@ -1,6 +1,6 @@
 # Code Review GPT
 
-The Code Review GPT uses AI to suggest changes to code in files that are being staged for commit. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement. It can also be ran in your CI/CD pipeline to help speed up code reviews.
+Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement. 
 
 It should pick up on common issues such as:
 
@@ -8,6 +8,8 @@ It should pick up on common issues such as:
 - Exposed secrets
 - Slow or inefficient code
 - Unreadable code
+
+It can also be run locally in your command line to review staged files.
 
 Just so you know, this is in alpha and should be used for fun only. It may provide helpful suggestions or they may be completely wrong.
 
@@ -19,15 +21,25 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
 
 - Node.js
 - Git
+- Github CLI (optional for setup tool)
 
-## CI Usage (GitHub Actions)
+## Easy Setup (Github Actions)
+
+In the root of your git repository run:
+
+```shell
+npm install code-review-gpt
+npx code-review-gpt configure
+```
+
+## Template CI Usage (GitHub Actions)
 
 ```yml
 - name: Install code-review-gpt
    run: npm install code-review-gpt
 
 - name: Run code review script
-   run: npx code-review-gpt --ci
+   run: npx code-review-gpt review --ci
    env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -35,7 +47,7 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-See .github/workflows/pr.yml for an example.
+See templates/pr.yml for an example.
 
 ## Getting Started
 
@@ -83,14 +95,26 @@ Run `npm i code-review-gpt && npx code-review-gpt` in the root directory of a gi
 
 Run `code-review-gpt` in the root directory of a git repository.
 
+### Commands
+
+- `code-review-gpt review` - Runs the code review on the staged files.
+- `code-review-gpt configure` - Runs a setup tool to configure the application.
+
+### Options
+
+- `--ci` - Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
+
+- `--model` - The model to use for the review. Defaults to `gpt-4`. You can use any openai model you have access to.
+
 ## Roadmap
 
 - [ ] Make a more clever way to find the exact code to review
 - [ ] VSCode extension
-- [ ] Use some embeddings and vector store to build a knowledge graph
+- [ ] Use some embeddings and vector store to build a knowledge graph of the repo to make better suggestions
 - [ ] Prompt engineering to refine the prompt
-- [ ] Support different LLMs
-- [ ] Cash in on the cloud offering
+- [ ] Build a prompt analysis tool
+- [ ] Support different LLMs... Private, HuggingFace, Azure etc.
+- [ ] Build out the cloud offering
 
 ## Sponsors ❤️
 
