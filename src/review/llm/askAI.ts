@@ -2,7 +2,7 @@ import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import AIModel from "./AIModel";
 import { openAIApiKey } from "../../config";
 
-export const askAi = async (
+export const askAI = async (
   prompts: string[],
   modelName: string
 ): Promise<string> => {
