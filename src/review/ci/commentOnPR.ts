@@ -2,18 +2,16 @@ import { context, getOctokit } from "@actions/github";
 import { getGitHubEnvVariables } from "../../config";
 import { signOff } from "../constants";
 
-const getToken = () => {
-  const { githubToken } = getGitHubEnvVariables();
-  if (!githubToken) {
-    throw new Error("GITHUB_TOKEN is not set");
-  }
-  return githubToken;
-};
 
 export const commentOnPR = async (comment: string) => {
   try {
-    const githubToken = getToken();
-    const { payload, issue, sha } = context;
+    const { baseSha, githubToken } = getGitHubEnvVariables()
+
+    if (!githubToken) {
+      throw new Error("GITHUB_TOKEN is not set");
+    }
+
+    const { payload, issue } = context;
 
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
@@ -27,7 +25,7 @@ export const commentOnPR = async (comment: string) => {
       pull_number,
       repo,
       owner,
-      commit_id: sha,
+      commit_id: baseSha,
     };
 
     const regex = /File: (.+): Line: (\d+): Comment: (.+)/g;
