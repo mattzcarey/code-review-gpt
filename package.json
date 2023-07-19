@@ -10,6 +10,7 @@
   "scripts": {
     "start": "ts-node ./src/index.ts review",
     "start-ci": "ts-node ./src/index.ts review --ci",
+    "test": "ts-node ./src/index.ts test",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
@@ -31,6 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/github": "^5.1.1",
+    "chromadb": "^1.5.5",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",

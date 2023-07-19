@@ -1,22 +1,44 @@
+import { instructionPrompt } from "../constants";
 import { readFile } from "fs/promises";
-import { filePromptTemplate, instructionPrompt } from "../constants";
 
-const appendToLastPrompt = (
-  prompts: string[],
-  text: string,
-  maxPromptLength: number
-): string[] => {
-  const newPrompts = [...prompts];
-  const lastPromptIndex = newPrompts.length - 1;
+interface ReviewFile {
+  fileName: string;
+  fileContent: string;
+}
 
-  if ((newPrompts[lastPromptIndex] + text).length > maxPromptLength) {
-    newPrompts.push(instructionPrompt + text);
-  } else {
-    newPrompts[lastPromptIndex] += text;
-  }
+const getSizeOfReviewFile = (file: ReviewFile): number =>
+  file.fileName.length + file.fileContent.length;
 
-  return newPrompts;
-};
+const splitFilesIntoBatches = (
+  files: ReviewFile[],
+  maxBatchSize: number
+): ReviewFile[][] =>
+  files.reduce(
+    (batches: ReviewFile[][], currentFile: ReviewFile): ReviewFile[][] => {
+      if (batches.length === 0) {
+        batches.push([currentFile]);
+      } else {
+        const lastBatch = batches[batches.length - 1];
+
+        const currentBatchSize = lastBatch.reduce(
+          (totalSize: number, file: ReviewFile) =>
+            totalSize + getSizeOfReviewFile(file),
+          0
+        );
+
+        const currentFileSize = getSizeOfReviewFile(currentFile);
+
+        if (currentBatchSize + currentFileSize > maxBatchSize) {
+          batches.push([currentFile]);
+        }
+
+        lastBatch.push(currentFile);
+      }
+
+      return batches;
+    },
+    [[]] as ReviewFile[][]
+  );
 
 const splitFileContentsIntoChunks = (
   fileContents: string,
@@ -33,39 +55,30 @@ export const constructPromptsArray = async (
   fileNames: string[],
   maxPromptLength: number
 ): Promise<string[]> => {
-  console.info("Constructing prompt...");
-
-  let prompts: string[] = [instructionPrompt];
-
-  for (const fileName of fileNames) {
-    try {
-      const fileContents = await readFile(fileName, "utf8");
-      const fileChunks = splitFileContentsIntoChunks(
-        fileContents,
-        maxPromptLength
-      );
-
-      for (let i = 0; i < fileChunks.length; i++) {
-        const fileChunk = fileChunks[i];
-        let chunkFileName = fileName;
-        if (i !== 0) {
-          console.warn(
-            `File ${fileName} is too large to fit in a single prompt. Splitting into ${fileChunks.length} chunks.`
-          );
-          chunkFileName += ` Continued part ${i + 1}`;
-        }
-
-        const filePrompt = filePromptTemplate
-          .replace("{fileName}", chunkFileName)
-          .replace("{fileContents}", fileChunk);
-
-        prompts = appendToLastPrompt(prompts, filePrompt, maxPromptLength);
+  const filesToReview = await Promise.all(
+    fileNames.map(async (fileName: string): Promise<ReviewFile> => {
+      try {
+        const fileContent = await readFile(fileName, "utf8");
+        return {
+          fileName,
+          fileContent,
+        };
+      } catch (error) {
+        console.error(`Failed to process file ${fileName}:`, error);
+        throw error;
       }
-    } catch (error) {
-      console.error(`Failed to process file ${fileName}:`, error);
-      throw error;
-    }
-  }
+    })
+  );
+
+  const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
+  const promptPayloads = splitFilesIntoBatches(
+    filesToReview,
+    maxPromptPayloadLength
+  );
+
+  const prompts = promptPayloads.map((payload) => {
+    return instructionPrompt + JSON.stringify(payload);
+  });
 
   return prompts;
 };

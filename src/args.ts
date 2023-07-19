@@ -3,6 +3,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+export interface ReviewArgs {
+  [x: string]: unknown;
+  ci: boolean;
+  model: string;
+  _: (string | number)[];
+  $0: string;
+}
+
 const handleNoCommand = async () => {
   const inquirer = await import("inquirer");
   const questions = [
@@ -24,7 +32,7 @@ const handleNoCommand = async () => {
   return answers.command;
 };
 
-export const getYargs = async () => {
+export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
       description: "Indicate that the script is running on a CI environment",

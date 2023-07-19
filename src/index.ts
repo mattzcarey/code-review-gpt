@@ -6,15 +6,22 @@ dotenv.config();
 const main = async () => {
   const argv = await getYargs();
 
-  if (argv._.includes("configure")) {
-    const { configure } = await import("./configure");
-    await configure();
-  } else if (argv._.includes("review")) {
-    const { review } = await import("./review");
-    await review(argv);
-  } else {
-    console.error("Unknown command");
-    process.exit(1);
+  switch (argv._[0]) {
+    case "configure":
+      const { configure } = await import("./configure");
+      await configure();
+      break;
+    case "review":
+      const { review } = await import("./review");
+      await review(argv);
+      break;
+    case "test":
+      const { test } = await import("./test");
+      await test(argv);
+      break;
+    default:
+      console.error("Unknown command");
+      process.exit(1);
   }
 };
 
