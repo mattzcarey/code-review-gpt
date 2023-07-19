@@ -1,6 +1,7 @@
 import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import AIModel from "./AIModel";
 import { openAIApiKey } from "../../config";
+import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
   prompts: string[],
@@ -16,9 +17,7 @@ export const askAI = async (
 
   const feedbacks = await processFeedbacks(model, prompts);
 
-  console.log(feedbacks.join("\n\n---\n\n"));
-
   const summary = await createSummary(model, feedbacks);
 
-  return `${feedbacks.join("\n\n---\n\n")}\n\n---\n\n${summary}`;
+  return generateMarkdownReport(feedbacks, summary);
 };

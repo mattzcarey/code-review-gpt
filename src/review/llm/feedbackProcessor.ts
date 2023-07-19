@@ -1,17 +1,24 @@
 import AIModel from "./AIModel";
 import { completionPrompt, maxFeedbackCount, ratingPrompt } from "../constants";
 import PriorityQueue from "./PriorityQueue";
+import { formatFeedbacks } from "./generateMarkdownReport";
 
-interface IFeedback {
-  feedback: string;
+export interface IFeedback {
+  fileName: string;
+  logafScore: number;
+  details: string;
+}
+
+export interface IFeedbackWithRating extends IFeedback {
+  rating: number;
 }
 
 const collectAndLogFeedback = async (
-  feedbackPromise: Promise<string>
-): Promise<IFeedback> => {
+  feedbackPromise: Promise<IFeedback[]>
+): Promise<IFeedback[]> => {
   try {
-    const feedback = await feedbackPromise;
-    return { feedback };
+    const feedbacks = await feedbackPromise;
+    return feedbacks;
   } catch (error) {
     console.error(`Error in processing prompt`, error);
     throw error;
@@ -20,11 +27,11 @@ const collectAndLogFeedback = async (
 
 const createSummary = async (
   model: AIModel,
-  feedbacks: string[]
+  feedbacks: IFeedbackWithRating[]
 ): Promise<string> => {
   const finalPrompt = completionPrompt.replace(
     "{feedback}",
-    feedbacks.join("\n---\n")
+    JSON.stringify(feedbacks)
   );
 
   const summary = await model.callModel(finalPrompt);
@@ -32,36 +39,31 @@ const createSummary = async (
   return summary;
 };
 
-const getFeedbackRatings = async (
+const rateFeedbacks = async (
   model: AIModel,
-  feedbacks: string[]
-): Promise<number[]> => {
+  feedbacks: IFeedback[]
+): Promise<IFeedbackWithRating[]> => {
   const ratingPromptWithFeedbacks = ratingPrompt.replace(
     "{feedback}",
-    feedbacks.join("\n---\n")
+    JSON.stringify(feedbacks)
   );
 
-  const feedbackRatings = await model.callModel(ratingPromptWithFeedbacks);
-  const ratings = feedbackRatings.split(",").map((rating) => Number(rating));
-
-  return ratings;
+  return await model.callModelJSON<IFeedbackWithRating[]>(
+    ratingPromptWithFeedbacks
+  );
 };
 
 const pickBestFeedbacks = async (
   model: AIModel,
-  feedbacks: string[],
+  feedbacks: IFeedback[],
   limit: number
-): Promise<string[]> => {
-  const parsedFeedbacks = feedbacks.flatMap((feedback) =>
-    feedback.split("---")
-  );
+): Promise<IFeedbackWithRating[]> => {
+  const ratedFeedbacks = await rateFeedbacks(model, feedbacks);
 
-  const ratings = await getFeedbackRatings(model, parsedFeedbacks);
+  const ratingPriorityQueue = new PriorityQueue<IFeedbackWithRating>();
 
-  const ratingPriorityQueue = new PriorityQueue<string>();
-
-  parsedFeedbacks.forEach((feedback, index) => {
-    ratingPriorityQueue.enqueue(feedback, ratings[index]);
+  ratedFeedbacks.forEach((feedback) => {
+    ratingPriorityQueue.enqueue(feedback, feedback.rating);
     if (ratingPriorityQueue.size() > limit) {
       ratingPriorityQueue.dequeue();
     }
@@ -71,21 +73,23 @@ const pickBestFeedbacks = async (
 };
 
 const extractFulfilledFeedbacks = (
-  feedbackResults: PromiseSettledResult<IFeedback>[]
-): string[] => {
+  feedbackResults: PromiseSettledResult<IFeedback[]>[]
+): IFeedback[] => {
   return feedbackResults.reduce((accumulatedFeedbacks, feedbackResult) => {
     if (feedbackResult.status === "fulfilled") {
-      accumulatedFeedbacks.push(feedbackResult.value.feedback);
+      accumulatedFeedbacks.push(...feedbackResult.value);
     }
     return accumulatedFeedbacks;
-  }, [] as string[]);
+  }, [] as IFeedback[]);
 };
 
 const processFeedbacks = async (
   model: AIModel,
   prompts: string[]
-): Promise<string[]> => {
-  const feedbackPromises = prompts.map((prompt) => model.callModel(prompt));
+): Promise<IFeedbackWithRating[]> => {
+  const feedbackPromises = prompts.map((prompt) =>
+    model.callModelJSON<IFeedback[]>(prompt)
+  );
 
   const feedbackResults = await Promise.allSettled(
     feedbackPromises.map(collectAndLogFeedback)
@@ -93,7 +97,15 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  return pickBestFeedbacks(model, feedbacks, maxFeedbackCount);
+  const bestFeedbacks = await pickBestFeedbacks(
+    model,
+    feedbacks,
+    maxFeedbackCount
+  );
+
+  console.log(formatFeedbacks(bestFeedbacks));
+
+  return bestFeedbacks;
 };
 
 export { createSummary, processFeedbacks };
