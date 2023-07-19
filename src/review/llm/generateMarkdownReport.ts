@@ -1,7 +1,7 @@
 import { IFeedbackWithRating } from "./feedbackProcessor";
 
 const formatFeedback = (feedback: IFeedbackWithRating): string => `
-**LOGAL Level ${feedback.logafScore} - ${feedback.fileName}**
+**LOGAF Level ${feedback.logafScore} - ${feedback.fileName}**
 
 ${feedback.details}
 

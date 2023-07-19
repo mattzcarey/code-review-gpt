@@ -29,14 +29,6 @@ export const filePromptTemplate = `
   ------------------------
 `;
 
-export const continuationPrompt = `
-You are part way through reviewing a pull request. You have already reviewed the following files:
-{reviewedFileNames}
-This was your initial prompt:
-${instructionPrompt}
-Please continue to review to remaining files below.
-`;
-
 export const ratingPrompt = `
 You are a senior developer who submitted a pull request for review. Here is the feedback you received in a list of JSON objects:
 {feedback}

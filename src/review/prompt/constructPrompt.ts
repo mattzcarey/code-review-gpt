@@ -2,7 +2,6 @@ import {
   instructionPrompt,
   filePromptTemplate,
   maxPromptLength,
-  continuationPrompt,
 } from "../constants";
 import { readFile } from "fs/promises";
 
@@ -11,7 +10,7 @@ const appendToLastPrompt = (prompts: string[], text: string): string[] => {
   const lastPromptIndex = newPrompts.length - 1;
 
   if ((newPrompts[lastPromptIndex] + text).length > maxPromptLength) {
-    newPrompts.push(continuationPrompt + text);
+    newPrompts.push(instructionPrompt + text);
   } else {
     newPrompts[lastPromptIndex] += text;
   }
