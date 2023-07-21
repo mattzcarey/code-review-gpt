@@ -29,6 +29,19 @@ export const commentOnPR = async (comment: string) => {
       issue_number: pull_number,
     });
 
+    // Author is always the first comment
+    const author = comments.find((comment) => comment?.id)?.user?.login;
+
+
+    if(author === 'ankcorn') {
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: pull_number,
+        body: `Nice Work! LGTM :+1:`,
+      });
+      return;
+    }
     const botComment = comments.find((comment) =>
       comment?.body?.includes(signOff)
     );
