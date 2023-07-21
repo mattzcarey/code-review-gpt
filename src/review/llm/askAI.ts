@@ -1,6 +1,6 @@
-import { createSummary, processFeedbacks } from "./feedbackProcessor";
-import AIModel from "./AIModel";
 import { openAIApiKey } from "../../config";
+import AIModel from "./AIModel";
+import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (

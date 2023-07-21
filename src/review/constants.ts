@@ -20,7 +20,7 @@ Format the response in a valid JSON format as a list of feedbacks, where the val
     "logafScore": 3,
     "details": "I would suggest adding a comment to explain the purpose of the function."
   },
-}
+]
 `;
 
 export const filePromptTemplate = `
