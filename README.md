@@ -1,5 +1,7 @@
 # Code Review GPT
 
+## We give engineers their weekends back
+
 Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement. 
 
 It should pick up on common issues such as:
@@ -125,3 +127,8 @@ Run `code-review-gpt` in the root directory of a git repository.
 <a href="https://www.aleios.com/">
     <img src="https://github.com/mattzcarey/code-review-gpt/assets/77928207/a47c2460-b866-433f-a4c9-efb5737d4fed" alt="aleios logo" width="150" height="150">
 </a>
+
+## Star History ⭐️👀
+
+[![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/code-review-gpt&type=Date)](https://star-history.com/#mattzcarey/code-review-gpt&Date)
+
