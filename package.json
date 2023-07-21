@@ -13,7 +13,20 @@
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "code-review",
+    "review",
+    "chatgpt",
+    "gpt",
+    "gpt3",
+    "openai",
+    "gpt4",
+    "vertexai",
+    "huggingface",
+    "ai",
+    "genai",
+    "llama"
+  ],
   "author": "Matt Carey",
   "license": "MIT",
   "dependencies": {
