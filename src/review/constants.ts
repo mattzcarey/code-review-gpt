@@ -65,6 +65,7 @@ export const supportedFiles = new Set([
   ".rs",
   ".tsx",
   ".jsx",
+  ".dart",
 ]);
 
 export const maxFeedbackCount = 3;
