@@ -2,7 +2,7 @@ import { commentOnPR } from "./ci/commentOnPR";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
-import { getMaxPromptLength } from "./prompt/getMaxPromptLength";
+import { getMaxPromptLength } from "../model/getMaxPromptLength";
 
 interface ReviewArgs {
   [x: string]: unknown;

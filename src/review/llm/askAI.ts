@@ -1,5 +1,5 @@
 import { openAIApiKey } from "../../config";
-import AIModel from "./AIModel";
+import AIModel from "../../model/AIModel";
 import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
 

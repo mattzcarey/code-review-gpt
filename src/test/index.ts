@@ -1,17 +1,20 @@
 import path from "path";
 import { loadTestCases } from "./load/loadTestCases";
-import AIModel from "../review/llm/AIModel";
+import AIModel from "../model/AIModel";
 import { openAIApiKey } from "../config";
 import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 import { loadSnapshots } from "./load/loadSnapshots";
 import { ReviewArgs } from "../args";
+import { getMaxPromptLength } from "../model/getMaxPromptLength";
 
 export const test = async (yargs: ReviewArgs) => {
   // Run the review on code examples
   // Compare the results to the expected results
 
   const modelName = yargs.model;
+
+  const maxPromptLenght = getMaxPromptLength(modelName);
 
   // Fetch the test cases.
   const testCases = loadTestCases(path.join(__dirname, "cases"));
@@ -33,5 +36,10 @@ export const test = async (yargs: ReviewArgs) => {
   );
 
   // Run the review on the code snippets and compare the results to the expected results.
-  await runTests(testCasesWithSnippets, modelName, vectorStore);
+  await runTests(
+    testCasesWithSnippets,
+    modelName,
+    maxPromptLenght,
+    vectorStore
+  );
 };

@@ -1,7 +1,7 @@
 import path from "path";
 import { generateHash } from "./hash";
 import { readFileSync, writeFileSync } from "fs";
-import AIModel from "../../review/llm/AIModel";
+import AIModel from "../../model/AIModel";
 import { generateCodeSnippetsPrompt } from "../constants";
 import { TestCase } from "../types";
 

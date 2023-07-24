@@ -12,6 +12,7 @@ import chalk from "chalk";
 const runTest = async (
   testCase: TestCase,
   modelName: string,
+  maxPromptLength: number,
   vectorStore: MemoryVectorStore
 ): Promise<testResult> => {
   if (!testCase.snippet) {
@@ -21,7 +22,10 @@ const runTest = async (
   console.info(chalk.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
-  const prompts = await constructPromptsArray([testCase.snippet]);
+  const prompts = await constructPromptsArray(
+    [testCase.snippet],
+    maxPromptLength
+  );
   const reviewResponse = await askAI(prompts, modelName, false);
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
@@ -50,6 +54,7 @@ const runTest = async (
 export const runTests = async (
   testCases: TestCase[],
   modelName: string,
+  maxPromptLength: number,
   vectorStore: MemoryVectorStore
 ): Promise<void> => {
   if (testCases.length === 0) {
@@ -64,7 +69,12 @@ export const runTests = async (
 
   for (const testCase of testCases) {
     try {
-      const result = await runTest(testCase, modelName, vectorStore);
+      const result = await runTest(
+        testCase,
+        modelName,
+        maxPromptLength,
+        vectorStore
+      );
       testResults[testCase.name] = result;
     } catch (error) {
       console.error(`Error running test case ${testCase.name}:`, error);
