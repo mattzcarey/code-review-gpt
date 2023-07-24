@@ -40,35 +40,26 @@ const splitFilesIntoBatches = (
     [[]] as ReviewFile[][]
   );
 
-const splitFileContentsIntoChunks = (
-  fileContents: string,
-  maxChunkSize: number
-): string[] => {
-  const chunks = [];
-  for (let i = 0; i < fileContents.length; i += maxChunkSize) {
-    chunks.push(fileContents.slice(i, i + maxChunkSize));
+const readFiles = async (fileNames: string[]): Promise<ReviewFile[]> => {
+  const files: ReviewFile[] = [];
+
+  for (const fileName of fileNames) {
+    try {
+      const fileContent = await readFile(fileName, "utf8");
+      files.push({ fileName, fileContent });
+    } catch (error) {
+      console.error(`Failed to process file ${fileName}:`, error);
+    }
   }
-  return chunks;
+
+  return files;
 };
 
 export const constructPromptsArray = async (
   fileNames: string[],
   maxPromptLength: number
 ): Promise<string[]> => {
-  const filesToReview = await Promise.all(
-    fileNames.map(async (fileName: string): Promise<ReviewFile> => {
-      try {
-        const fileContent = await readFile(fileName, "utf8");
-        return {
-          fileName,
-          fileContent,
-        };
-      } catch (error) {
-        console.error(`Failed to process file ${fileName}:`, error);
-        throw error;
-      }
-    })
-  );
+  const filesToReview = await readFiles(fileNames);
 
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   const promptPayloads = splitFilesIntoBatches(
