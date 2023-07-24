@@ -1,11 +1,11 @@
-import {
-  instructionPrompt,
-  filePromptTemplate,
-  maxPromptLength,
-} from "../constants";
 import { readFile } from "fs/promises";
+import { filePromptTemplate, instructionPrompt } from "../constants";
 
-const appendToLastPrompt = (prompts: string[], text: string): string[] => {
+const appendToLastPrompt = (
+  prompts: string[],
+  text: string,
+  maxPromptLength: number
+): string[] => {
   const newPrompts = [...prompts];
   const lastPromptIndex = newPrompts.length - 1;
 
@@ -18,8 +18,20 @@ const appendToLastPrompt = (prompts: string[], text: string): string[] => {
   return newPrompts;
 };
 
+const splitFileContentsIntoChunks = (
+  fileContents: string,
+  maxChunkSize: number
+): string[] => {
+  const chunks = [];
+  for (let i = 0; i < fileContents.length; i += maxChunkSize) {
+    chunks.push(fileContents.slice(i, i + maxChunkSize));
+  }
+  return chunks;
+};
+
 export const constructPromptsArray = async (
-  fileNames: string[]
+  fileNames: string[],
+  maxPromptLength: number
 ): Promise<string[]> => {
   console.info("Constructing prompt...");
 
@@ -28,18 +40,27 @@ export const constructPromptsArray = async (
   for (const fileName of fileNames) {
     try {
       const fileContents = await readFile(fileName, "utf8");
-      const filePrompt = filePromptTemplate
-        .replace("{fileName}", fileName)
-        .replace("{fileContents}", fileContents);
+      const fileChunks = splitFileContentsIntoChunks(
+        fileContents,
+        maxPromptLength
+      );
 
-      if (filePrompt.length > maxPromptLength) {
-        console.warn(
-          `The file ${fileName} is too large and may cause unexpected behavior such as cut off responses. Skipping this file.`
-        );
-        continue;
+      for (let i = 0; i < fileChunks.length; i++) {
+        const fileChunk = fileChunks[i];
+        let chunkFileName = fileName;
+        if (i !== 0) {
+          console.warn(
+            `File ${fileName} is too large to fit in a single prompt. Splitting into ${fileChunks.length} chunks.`
+          );
+          chunkFileName += ` Continued part ${i + 1}`;
+        }
+
+        const filePrompt = filePromptTemplate
+          .replace("{fileName}", chunkFileName)
+          .replace("{fileContents}", fileChunk);
+
+        prompts = appendToLastPrompt(prompts, filePrompt, maxPromptLength);
       }
-
-      prompts = appendToLastPrompt(prompts, filePrompt);
     } catch (error) {
       console.error(`Failed to process file ${fileName}:`, error);
       throw error;
