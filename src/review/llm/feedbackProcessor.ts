@@ -1,5 +1,5 @@
 import AIModel from "./AIModel";
-import { completionPrompt, maxFeedbackCount, ratingPrompt } from "../constants";
+import { completionPrompt, maxFeedbackCount } from "../constants";
 import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
 
@@ -7,10 +7,6 @@ export interface IFeedback {
   fileName: string;
   logafScore: number;
   details: string;
-}
-
-export interface IFeedbackWithRating extends IFeedback {
-  rating: number;
 }
 
 const collectAndLogFeedback = async (
@@ -27,7 +23,7 @@ const collectAndLogFeedback = async (
 
 const createSummary = async (
   model: AIModel,
-  feedbacks: IFeedbackWithRating[]
+  feedbacks: IFeedback[]
 ): Promise<string> => {
   const finalPrompt = completionPrompt.replace(
     "{feedback}",
@@ -39,37 +35,29 @@ const createSummary = async (
   return summary;
 };
 
-const rateFeedbacks = async (
-  model: AIModel,
-  feedbacks: IFeedback[]
-): Promise<IFeedbackWithRating[]> => {
-  const ratingPromptWithFeedbacks = ratingPrompt.replace(
-    "{feedback}",
-    JSON.stringify(feedbacks)
-  );
-
-  return await model.callModelJSON<IFeedbackWithRating[]>(
-    ratingPromptWithFeedbacks
-  );
-};
-
 const pickBestFeedbacks = async (
-  model: AIModel,
   feedbacks: IFeedback[],
   limit: number
-): Promise<IFeedbackWithRating[]> => {
-  const ratedFeedbacks = await rateFeedbacks(model, feedbacks);
+): Promise<IFeedback[]> => {
+  // Filter out feedbacks with logafScore of 4 and 5, since we don't need to display them.
+  const filteredFeedbacks = feedbacks.filter(
+    (feedback) => feedback.logafScore < 4
+  );
 
-  const ratingPriorityQueue = new PriorityQueue<IFeedbackWithRating>();
+  // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add weights so that feedbacks with lower logafScore are more likely to be picked.
+  const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
-  ratedFeedbacks.forEach((feedback) => {
-    ratingPriorityQueue.enqueue(feedback, feedback.rating);
-    if (ratingPriorityQueue.size() > limit) {
-      ratingPriorityQueue.dequeue();
+  filteredFeedbacks.forEach((feedback) => {
+    pickingPriorityQueue.enqueue(
+      feedback,
+      1 / (1 + feedback.logafScore) + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is 1 / (1 + logafScore) so that feedbacks with lower logafScore are more likely to be picked.
+    );
+    if (pickingPriorityQueue.size() > limit) {
+      pickingPriorityQueue.dequeue();
     }
   });
 
-  return ratingPriorityQueue.getItems();
+  return pickingPriorityQueue.getItems();
 };
 
 const extractFulfilledFeedbacks = (
@@ -86,7 +74,7 @@ const extractFulfilledFeedbacks = (
 const processFeedbacks = async (
   model: AIModel,
   prompts: string[]
-): Promise<IFeedbackWithRating[]> => {
+): Promise<IFeedback[]> => {
   const feedbackPromises = prompts.map((prompt) =>
     model.callModelJSON<IFeedback[]>(prompt)
   );
@@ -97,11 +85,7 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  const bestFeedbacks = await pickBestFeedbacks(
-    model,
-    feedbacks,
-    maxFeedbackCount
-  );
+  const bestFeedbacks = await pickBestFeedbacks(feedbacks, maxFeedbackCount);
 
   console.log(formatFeedbacks(bestFeedbacks));
 
