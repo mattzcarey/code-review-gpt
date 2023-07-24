@@ -54,7 +54,24 @@ Please summarise the review using 3 emojis.
 export const signOff =
   "#### Powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)";
 
-export const maxPromptLength = 30000; //max is 8k tokens which is about 40k characters
+export const modelInfo = [
+  {
+    model: "gpt-4",
+    maxPromptLength: 21000, //8k tokens
+  },
+  {
+    model: "gpt-4-32k",
+    maxPromptLength: 90000, //32k tokens
+  },
+  {
+    model: "gpt-3.5-turbo",
+    maxPromptLength: 9000, //4k tokens
+  },
+  {
+    model: "gpt-3.5-turbo-16k",
+    maxPromptLength: 45000, //16k tokens
+  },
+]; // Response needs about 1k tokens ~= 3k characters
 
 export const supportedFiles = new Set([
   ".js",
