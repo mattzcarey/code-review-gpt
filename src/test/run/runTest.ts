@@ -9,6 +9,14 @@ import {
 } from "./generateTestReport";
 import chalk from "chalk";
 
+/**
+ * Run a single test case.
+ * @param testCase The test case.
+ * @param modelName The name of the model.
+ * @param maxPromptLength The maximum prompt length.
+ * @param vectorStore The vector store.
+ * @returns The test result.
+ */
 const runTest = async (
   testCase: TestCase,
   modelName: string,
@@ -51,6 +59,14 @@ const runTest = async (
   return result;
 };
 
+/**
+ * Run all the test cases.
+ * @param testCases The test cases.
+ * @param modelName The name of the model.
+ * @param maxPromptLength The maximum prompt length.
+ * @param vectorStore The vector store.
+ * @returns The test results.
+ */
 export const runTests = async (
   testCases: TestCase[],
   modelName: string,

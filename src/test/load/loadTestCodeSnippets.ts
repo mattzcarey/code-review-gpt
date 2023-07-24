@@ -5,6 +5,12 @@ import AIModel from "../../model/AIModel";
 import { generateCodeSnippetsPrompt } from "../constants";
 import { TestCase } from "../types";
 
+/**
+ * Generate a code snippet for a test case.
+ * @param testCase The test case to generate the code snippet for.
+ * @param model The model to use to generate the code snippet.
+ * @returns The code snippet.
+ */
 const generateCodeSnippet = async (
   testCase: TestCase,
   model: AIModel
@@ -18,6 +24,13 @@ const generateCodeSnippet = async (
   return modelResponse.replace("```typescript", "").replace("```", "");
 };
 
+/**
+ * Load a code snippet for a test case from the cache, or generate it if it is not found.
+ * @param testCase The test case to load the code snippet for.
+ * @param snippetCacheDir The directory containing the code snippet cache.
+ * @param model The model to use to generate the code snippet.
+ * @returns The test case with the code snippet.
+ */
 const loadOrGenerateCodeSnippet = async (
   testCase: TestCase,
   snippetCacheDir: string,
@@ -57,6 +70,13 @@ const loadOrGenerateCodeSnippet = async (
   }
 };
 
+/**
+ * Load all code snippets for a set of test cases from the cache, or generate them if they are not found.
+ * @param testCases The test cases to load the code snippets for.
+ * @param snippetCacheDir The directory containing the code snippet cache.
+ * @param model The model to use to generate the code snippets.
+ * @returns The test cases with the code snippets.
+ */
 export const loadOrGenerateCodeSnippets = async (
   testCases: TestCase[],
   snippetCacheDir: string,
