@@ -29,22 +29,6 @@ export const filePromptTemplate = `
   ------------------------
 `;
 
-export const ratingPrompt = `
-You are a senior developer who submitted a pull request for review. Here is the feedback you received in a list of JSON objects:
-{feedback}
-You don't have time to address all the feedback, so you decide to prioritise the feedback with the highest impact on security, performance or code readability.
-Please rate each feedback by priority on a scale of 1 to 100, where 1 is the smaller impact and 100 is the highest impact.
-Format the result as a valid JSON list of feedbacks, where the value is the same object as the input, but with an additional "rating" field. For example:
-[
-  {
-    "fileName": "src/review/llm/askAI.ts",
-    "logafScore": 3,
-    "details": "I would suggest adding a comment to explain the purpose of the function.",
-    "rating": 40
-  },
-]
-`;
-
 export const completionPrompt = `
 You are a senior developer and have just reviewed a pull request. This was your feedback:
 {feedback}
