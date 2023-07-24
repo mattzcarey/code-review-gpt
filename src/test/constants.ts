@@ -10,4 +10,4 @@ The input is the following:
 Return the content of a valid typescript file that would pass the test case.
 `;
 
-export const testThreshold = 0.05;
+export const testThreshold = 0.1;

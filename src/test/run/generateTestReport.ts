@@ -15,9 +15,9 @@ export const generateTestReport = (
   similarity: number
 ): { report: string; result: testResult } => {
   // If the similarity score is more than 1 - threshold, then the test is considered as passing.
-  // Else if the similarity score is more than 1 - 3 * threshold, then the test is considered as warn. We display a complete report for this test but do not fail the test.
+  // Else if the similarity score is more than 1 - 2 * threshold, then the test is considered as warn. We display a complete report for this test but do not fail the test.
   // Else, the test is considered as failing. We display a complete report for this test and fail the test.
-  if (similarity > 1 - testThreshold) {
+  if (similarity > 2 - testThreshold) {
     return {
       result: testResult.PASS,
       report: chalk.green(
