@@ -124,15 +124,15 @@ export const generateTestResultsSummary = (testResults: {
       };
     },
     {
-      detailedSummary: chalk.blue(`\nTest results summary:\n`),
+      detailedSummary: chalk.blue(`\n### Test results summary:\n`),
       counts: { PASS: 0, WARN: 0, FAIL: 0 },
     }
   );
 
   return (
     detailedSummary +
-    `\n SUMMARY: ${chalk.green(`PASS: ${counts.PASS}`)}, ${chalk.yellow(
-      `WARN: ${counts.WARN}`
-    )}, ${chalk.red(`FAIL: ${counts.FAIL}`)}\n`
+    `\n**SUMMARY: ${chalk.green(`✅ PASS: ${counts.PASS}`)}, ${chalk.yellow(
+      `⚠️ WARN: ${counts.WARN}`
+    )}, ${chalk.red(`❌ FAIL: ${counts.FAIL}`)}**\n`
   );
 };

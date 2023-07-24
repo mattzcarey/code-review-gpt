@@ -72,10 +72,9 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore
-): Promise<void> => {
+): Promise<string> => {
   if (testCases.length === 0) {
-    console.info("No test cases found.");
-    return;
+    return "No test cases found.";
   }
 
   console.info(`Running ${testCases.length} test cases...\n`);
@@ -96,9 +95,9 @@ export const runTests = async (
       console.error(`Error running test case ${testCase.name}:`, error);
     }
   }
+  const testSummary = generateTestResultsSummary(testResults);
 
-  // Display the test results.
-  const testResultsSummary = generateTestResultsSummary(testResults);
+  console.info(testSummary);
 
-  console.log(testResultsSummary);
+  return testSummary;
 };

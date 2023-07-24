@@ -1,8 +1,9 @@
-import { commentOnPR } from "./ci/commentOnPR";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
-import { getMaxPromptLength } from "../model/getMaxPromptLength";
+import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
+import { commentOnPR } from "../common/ci/commentOnPR";
+import { signOff } from "./constants";
 
 interface ReviewArgs {
   [x: string]: unknown;
@@ -23,6 +24,6 @@ export const review = async (yargs: ReviewArgs) => {
   const response = await askAI(prompts, modelName);
 
   if (isCi) {
-    await commentOnPR(response);
+    await commentOnPR(response, signOff);
   }
 };

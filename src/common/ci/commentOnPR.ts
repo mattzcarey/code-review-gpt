@@ -1,6 +1,5 @@
 import { context, getOctokit } from "@actions/github";
 import { getGitHubEnvVariables } from "../../config";
-import { signOff } from "../constants";
 
 const getToken = () => {
   const { githubToken } = getGitHubEnvVariables();
@@ -10,7 +9,14 @@ const getToken = () => {
   return githubToken;
 };
 
-export const commentOnPR = async (comment: string) => {
+/**
+ * Publish a comment on the pull request. If the bot has already commented (i.e. a comment with the same sign off exists), update the comment instead of creating a new one.
+ * The comment will be signed off with the provided sign off.
+ * @param comment The body of the comment to publish.
+ * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
+ * @returns
+ */
+export const commentOnPR = async (comment: string, signOff: string) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;

@@ -1,20 +1,17 @@
 import path from "path";
 import { loadTestCases } from "./load/loadTestCases";
-import AIModel from "../model/AIModel";
+import AIModel from "../common/model/AIModel";
 import { openAIApiKey } from "../config";
 import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 import { loadSnapshots } from "./load/loadSnapshots";
 import { ReviewArgs } from "../args";
-import { getMaxPromptLength } from "../model/getMaxPromptLength";
+import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
+import { commentOnPR } from "../common/ci/commentOnPR";
+import { signOff } from "./constants";
 
-export const test = async (yargs: ReviewArgs) => {
-  // Run the review on code examples
-  // Compare the results to the expected results
-
-  const modelName = yargs.model;
-
-  const maxPromptLenght = getMaxPromptLength(modelName);
+export const test = async ({ ci, model }: ReviewArgs) => {
+  const maxPromptLength = getMaxPromptLength(model);
 
   // Fetch the test cases.
   const testCases = loadTestCases(path.join(__dirname, "cases"));
@@ -24,7 +21,7 @@ export const test = async (yargs: ReviewArgs) => {
     testCases,
     path.join(__dirname, "cases/.cache"),
     new AIModel({
-      modelName: modelName,
+      modelName: model,
       temperature: 0.0,
       apiKey: openAIApiKey(),
     })
@@ -36,10 +33,14 @@ export const test = async (yargs: ReviewArgs) => {
   );
 
   // Run the review on the code snippets and compare the results to the expected results.
-  await runTests(
+  const testSummary = await runTests(
     testCasesWithSnippets,
-    modelName,
-    maxPromptLenght,
+    model,
+    maxPromptLength,
     vectorStore
   );
+
+  if (ci) {
+    await commentOnPR(testSummary, signOff);
+  }
 };

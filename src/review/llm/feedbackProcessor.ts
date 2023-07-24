@@ -1,4 +1,4 @@
-import AIModel from "../../model/AIModel";
+import AIModel from "../../common/model/AIModel";
 import { completionPrompt, maxFeedbackCount } from "../constants";
 import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";

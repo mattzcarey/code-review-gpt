@@ -48,12 +48,6 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .command("configure", "Configure the script")
     .parseSync();
 
-  if (argv.ci) {
-    argv._[0] = "review";
-    console.info("Running in CI mode, defaulting to review.");
-    return argv;
-  }
-
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
   }

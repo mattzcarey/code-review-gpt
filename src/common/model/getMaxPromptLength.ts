@@ -1,4 +1,4 @@
-import { modelInfo } from "../review/constants";
+import { modelInfo } from "../../review/constants";
 
 export const getMaxPromptLength = (modelName: string): number => {
   const maxPromptLength = modelInfo.find(
