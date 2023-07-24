@@ -23,7 +23,8 @@ const collectAndLogFeedback = async (
 
 const createSummary = async (
   model: AIModel,
-  feedbacks: IFeedback[]
+  feedbacks: IFeedback[],
+  verbose = true
 ): Promise<string> => {
   const finalPrompt = completionPrompt.replace(
     "{feedback}",
@@ -31,7 +32,11 @@ const createSummary = async (
   );
 
   const summary = await model.callModel(finalPrompt);
-  console.log(summary);
+
+  if (verbose) {
+    console.log(summary);
+  }
+
   return summary;
 };
 
@@ -73,7 +78,8 @@ const extractFulfilledFeedbacks = (
 
 const processFeedbacks = async (
   model: AIModel,
-  prompts: string[]
+  prompts: string[],
+  verbose = true
 ): Promise<IFeedback[]> => {
   const feedbackPromises = prompts.map((prompt) =>
     model.callModelJSON<IFeedback[]>(prompt)
@@ -87,7 +93,9 @@ const processFeedbacks = async (
 
   const bestFeedbacks = await pickBestFeedbacks(feedbacks, maxFeedbackCount);
 
-  console.log(formatFeedbacks(bestFeedbacks));
+  if (verbose) {
+    console.log(formatFeedbacks(bestFeedbacks));
+  }
 
   return bestFeedbacks;
 };

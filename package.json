@@ -32,7 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/github": "^5.1.1",
-    "chromadb": "^1.5.5",
+    "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",

@@ -2,19 +2,27 @@ import { askAI } from "../../review/llm/askAI";
 import { constructPromptsArray } from "../../review/prompt/constructPrompt";
 import { TestCase } from "../types";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { generateTestReport } from "./generateTestReport";
+import {
+  generateTestReport,
+  generateTestResultsSummary,
+  testResult,
+} from "./generateTestReport";
+import chalk from "chalk";
 
 const runTest = async (
   testCase: TestCase,
   modelName: string,
   vectorStore: MemoryVectorStore
-) => {
+): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
   }
+
+  console.info(chalk.blue(`Running test case ${testCase.name}...`));
+
   // First step: run the review on the code snippet.
   const prompts = await constructPromptsArray([testCase.snippet]);
-  const reviewResponse = await askAI(prompts, modelName);
+  const reviewResponse = await askAI(prompts, modelName, false);
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
     reviewResponse,
@@ -27,14 +35,16 @@ const runTest = async (
 
   const [similarDocument, similarity] = similarityResponse[0];
 
-  console.log(
-    generateTestReport(
-      testCase,
-      reviewResponse,
-      similarDocument.pageContent,
-      similarity
-    )
+  const { result, report } = generateTestReport(
+    testCase,
+    reviewResponse,
+    similarDocument.pageContent,
+    similarity
   );
+
+  console.log(report);
+
+  return result;
 };
 
 export const runTests = async (
@@ -47,11 +57,22 @@ export const runTests = async (
     return;
   }
 
+  console.info(`Running ${testCases.length} test cases...\n`);
+
+  // Keep track of all test results.
+  const testResults: { [key: string]: testResult } = {};
+
   for (const testCase of testCases) {
     try {
-      await runTest(testCase, modelName, vectorStore);
+      const result = await runTest(testCase, modelName, vectorStore);
+      testResults[testCase.name] = result;
     } catch (error) {
       console.error(`Error running test case ${testCase.name}:`, error);
     }
   }
+
+  // Display the test results.
+  const testResultsSummary = generateTestResultsSummary(testResults);
+
+  console.log(testResultsSummary);
 };
