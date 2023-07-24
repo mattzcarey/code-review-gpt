@@ -3,6 +3,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+export interface ReviewArgs {
+  [x: string]: unknown;
+  ci: boolean;
+  model: string;
+  _: (string | number)[];
+  $0: string;
+}
+
 const handleNoCommand = async () => {
   const inquirer = await import("inquirer");
   const questions = [
@@ -24,7 +32,7 @@ const handleNoCommand = async () => {
   return answers.command;
 };
 
-export const getYargs = async () => {
+export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
       description: "Indicate that the script is running on a CI environment",
@@ -39,12 +47,6 @@ export const getYargs = async () => {
     .command("review", "Review the pull request")
     .command("configure", "Configure the script")
     .parseSync();
-
-  if (argv.ci) {
-    argv._[0] = "review";
-    console.info("Running in CI mode, defaulting to review.");
-    return argv;
-  }
 
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();

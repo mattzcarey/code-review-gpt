@@ -8,25 +8,25 @@ Focus on code functionality, readability, and performance. Flag any exposed API 
 
 Use markdown formatting for the feedback details. Also do not include the filename or LOGAF level in the feedback details. Ensure the feedback details is brief, concise, accurate, and relevant. Do not give feedback on every possible change, only the most important.
 Include brief example code snippets in the feedback details for your changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
-If there are mutiple improvements you suggest in the feedback details, use an ordered list to indicate the priority of the changes.
+If there are multiple improvements you suggest in the feedback details, use an ordered list to indicate the priority of the changes.
 
-Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return to a newline. Separate the feedbacks with a separating line containing "---".
+Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return to a newline.
 
-Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename, LOGAF score and the feedback. For example:
-
-[
-  {
-    "fileName": "src/review/llm/askAI.ts",
-    "logafScore": 3,
-    "details": "I would suggest adding a comment to explain the purpose of the function."
+Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename ("fileName"), LOGAF score ("logafScore") and the feedback ("details"). The schema of the JSON feedback object must be:
+{
+  "fileName": {
+    "type": "string"
   },
-]
-`;
+  "logafScore": {
+    "type": "number"
+  },
+  "details": {
+    "type": "string"
+  }
+}
 
-export const filePromptTemplate = `
-  {fileName}:
-  {fileContents}
-  ------------------------
+The filenames and file contents to review are provided below as a list of JSON objects containing the filename and the file content:
+
 `;
 
 export const completionPrompt = `
