@@ -44,7 +44,7 @@ const pickBestFeedbacks = async (
     (feedback) => feedback.logafScore < 4
   );
 
-  // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add wights so that feedbacks with lower logafScore are more likely to be picked.
+  // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add weights so that feedbacks with lower logafScore are more likely to be picked.
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
   filteredFeedbacks.forEach((feedback) => {
