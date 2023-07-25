@@ -12,15 +12,15 @@ const getToken = () => {
 };
 
 /**
- * Publish in-line comments on the pull request. //? What happens when the bot has already commented on that line
+ * Publish in-line comments on the pull request. //? What happens when the bot has already commented on that file
  * @param feedbacks The JSON feedback from the AIModel.
  * @returns void
  */
-export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
+export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
-
+    console.log(`RepoName: ${issue.repo}`)
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
       return;
@@ -41,16 +41,20 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
       // Comment all feedback line by line
       for (const feedback of feedbacks) {
         try {
-          console.log(feedback.fileName)
-          console.log(feedback.line)
+          console.log(feedback.fileName);
+          console.log(feedback.start_line);
+          console.log(feedback.end_line);
+          console.log(`filename ${getRelativePath(feedback.fileName, issue.repo)}`);
+          const botCommentBody = `Line: ${feedback.start_line}-${feedback.end_line}\n\n ${feedback.details}\n\n---\n\n${signOff}`; //todo create a md formatter to make this prettier
+
           await octokit.rest.pulls.createReviewComment({
             owner,
             repo,
             pull_number,
-            body: feedback.details,
+            body: botCommentBody,
             commit_id,
-            path: 'src/common/ci/commentOnPRLineByLine.ts',
-            line: 1,
+            path: getRelativePath(feedback.fileName, issue.repo),
+            subject_type: 'file',
           });
         } catch (error) {
           console.error(
@@ -66,5 +70,15 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
     throw error;
+  }
+};
+
+export const getRelativePath = (fileName: string, repoName: string): string => {
+  const repoIndex = fileName.lastIndexOf(repoName);
+  if (repoIndex !== -1) {
+    return fileName.slice(repoIndex + repoName.length + 1); // +1 to skip the trailing slash after the repository name
+  } else {
+    // If the repository name is not found in the absolute path, return the original absolute path.
+    return fileName;
   }
 };

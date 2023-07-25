@@ -3,7 +3,7 @@ import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR } from "../common/ci/commentOnPR";
-import { commentOnPRLineByLine } from "../common/ci/commentOnPRLineByLine";
+import { commentOnPRFiles } from "../common/ci/commentOnPRFiles";
 import { signOff } from "./constants";
 
 interface ReviewArgs {
@@ -28,7 +28,7 @@ export const review = async (yargs: ReviewArgs) => {
   if (isCi) {
     await commentOnPR(response, signOff);
     if (isLineByLine) {
-      await commentOnPRLineByLine(feedbacks);
+      await commentOnPRFiles(feedbacks);
     }
   }
 };

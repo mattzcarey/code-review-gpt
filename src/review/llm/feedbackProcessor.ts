@@ -7,7 +7,8 @@ export interface IFeedback {
   fileName: string;
   logafScore: number;
   details: string;
-  line: number
+  start_line: number;
+  end_line: number;
 }
 
 const collectAndLogFeedback = async (
