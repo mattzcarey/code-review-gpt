@@ -42,10 +42,9 @@ export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
       for (const feedback of feedbacks) {
         try {
           console.log(feedback.fileName);
-          console.log(feedback.start_line);
-          console.log(feedback.end_line);
+          console.log(feedback.line);
           console.log(`filename ${getRelativePath(feedback.fileName, issue.repo)}`);
-          const botCommentBody = `Line: ${feedback.start_line}-${feedback.end_line}\n\n ${feedback.details}\n\n---\n\n${signOff}`; //todo create a md formatter to make this prettier
+          const botCommentBody = `Line: ${feedback.line}\n\n ${feedback.details}\n\n---\n\n${signOff}`; //todo create a md formatter to make this prettier
 
           await octokit.rest.pulls.createReviewComment({
             owner,

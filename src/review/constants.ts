@@ -9,11 +9,10 @@ Focus on code functionality, readability, and performance. Flag any exposed API 
 Use markdown formatting for the feedback details. Also do not include the filename or LOGAF level in the feedback details. Ensure the feedback details is brief, concise, accurate, and relevant. Do not give feedback on every possible change, only the most important.
 Include brief example code snippets in the feedback details for your changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
 If there are multiple improvements you suggest in the feedback details, use an ordered list to indicate the priority of the changes.
-In your feedback also include where the code is in the file that you are suggesting to change, do this by giving a line range. The range should only include the most important blob of code, so that the user can easily figure out where to make the change.
 
 Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return to a newline.
 
-Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename ("fileName"), LOGAF score ("logafScore"), the feedback ("details") and the first line number ("start_line") and the last line number ("end_line") of the code block . The schema of the JSON feedback object must be:
+Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename ("fileName"), LOGAF score ("logafScore"), the feedback ("details") and the line number ("line") of the code you are providing feedback on. The schema of the JSON feedback object must be:
 {
   "fileName": {
     "type": "string"
@@ -24,10 +23,7 @@ Format the response in a valid JSON format as a list of feedbacks, where the val
   "details": {
     "type": "string"
   },
-  "start_line": {
-    "type": "number"
-  },
-  "end_line": {
+  "line": {
     "type": "number"
   }
 }
