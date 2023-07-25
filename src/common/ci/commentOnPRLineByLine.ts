@@ -41,6 +41,8 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
       // Comment all feedback line by line
       for (const feedback of feedbacks) {
         try {
+          console.log(feedback.fileName)
+          console.log(feedback.line)
           await octokit.rest.pulls.createReviewComment({
             owner,
             repo,
