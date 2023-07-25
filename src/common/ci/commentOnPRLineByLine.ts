@@ -48,8 +48,7 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
             body: feedback.details,
             commit_id,
             path: feedback.fileName,
-            line: feedback.line,
-            side: "LEFT"
+            position: feedback.line,
           });
         } catch (error) {
           console.error(
