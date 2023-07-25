@@ -39,15 +39,21 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
 
     // Comment all feedback line by line
     for (const feedback of feedbacks) {
-      await octokit.rest.pulls.createReviewComment({
-        owner,
-        repo,
-        pull_number,
-        body: feedback.details,
-        commit_id,
-        path: feedback.fileName,
-        line: feedback.line,
-      });
+      try {
+        await octokit.rest.pulls.createReviewComment({
+          owner,
+          repo,
+          pull_number,
+          body: feedback.details,
+          commit_id,
+          path: feedback.fileName,
+          line: feedback.line,
+        });
+      } catch (error) {
+        console.error(
+          `Failed to comment on PR for feedback: ${feedback.details}. Error: ${error}`
+        );
+      }
     }
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
