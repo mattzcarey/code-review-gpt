@@ -48,7 +48,7 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
             body: feedback.details,
             commit_id,
             path: feedback.fileName,
-            position: feedback.line,
+            line: 1,
           });
         } catch (error) {
           console.error(
