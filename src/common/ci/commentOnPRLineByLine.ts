@@ -29,32 +29,38 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
-    // Get PR and commit_id
-    const pullRequest = await octokit.rest.pulls.get({
-      owner,
-      repo,
-      pull_number: pull_number,
-    });
-    const commit_id = pullRequest.data.head.sha;
+    try {
+      // Get PR and commit_id
+      const pullRequest = await octokit.rest.pulls.get({
+        owner,
+        repo,
+        pull_number: pull_number,
+      });
+      const commit_id = pullRequest.data.head.sha;
+
+      // Comment all feedback line by line
+      for (const feedback of feedbacks) {
+        try {
+          await octokit.rest.pulls.createReviewComment({
+            owner,
+            repo,
+            pull_number,
+            body: feedback.details,
+            commit_id,
+            path: feedback.fileName,
+            line: feedback.line,
+          });
+        } catch (error) {
+          console.error(
+            `Failed to comment on PR for feedback: ${feedback.details}. Error: ${error}`
+          );
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to get pull request: ${error}`);
+    }
 
     // Comment all feedback line by line
-    for (const feedback of feedbacks) {
-      try {
-        await octokit.rest.pulls.createReviewComment({
-          owner,
-          repo,
-          pull_number,
-          body: feedback.details,
-          commit_id,
-          path: feedback.fileName,
-          line: feedback.line,
-        });
-      } catch (error) {
-        console.error(
-          `Failed to comment on PR for feedback: ${feedback.details}. Error: ${error}`
-        );
-      }
-    }
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
     throw error;
