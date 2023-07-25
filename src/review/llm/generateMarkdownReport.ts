@@ -2,7 +2,6 @@ import { IFeedback } from "./feedbackProcessor";
 
 const formatFeedback = (feedback: IFeedback): string => `
 **LOGAF Level ${feedback.logafScore} - ${feedback.fileName}**
-Line: ${feedback.line}
 
 ${feedback.details}
 

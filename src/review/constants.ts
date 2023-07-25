@@ -12,7 +12,7 @@ If there are multiple improvements you suggest in the feedback details, use an o
 
 Include the LOGAF level together with the filename of each code snippet in the header, in bold. If the LOGAF level is 4 or 5 do not include it and simply return to a newline.
 
-Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename ("fileName"), LOGAF score ("logafScore"), the feedback ("details") and the line number ("line") of the code you are providing feedback on. The schema of the JSON feedback object must be:
+Format the response in a valid JSON format as a list of feedbacks, where the value is an object containing the filename ("fileName"), LOGAF score ("logafScore") and the feedback ("details"). The schema of the JSON feedback object must be:
 {
   "fileName": {
     "type": "string"
@@ -22,9 +22,6 @@ Format the response in a valid JSON format as a list of feedbacks, where the val
   },
   "details": {
     "type": "string"
-  },
-  "line": {
-    "type": "number"
   }
 }
 

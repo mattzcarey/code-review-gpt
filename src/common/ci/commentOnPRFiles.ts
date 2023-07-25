@@ -42,9 +42,8 @@ export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
       for (const feedback of feedbacks) {
         try {
           console.log(feedback.fileName);
-          console.log(feedback.line);
           console.log(`filename ${getRelativePath(feedback.fileName, issue.repo)}`);
-          const botCommentBody = `Line: ${feedback.line}\n\n ${feedback.details}\n\n---\n\n${signOff}`; //todo create a md formatter to make this prettier
+          const botCommentBody = `${feedback.details}\n\n---\n\n${signOff}`;
 
           await octokit.rest.pulls.createReviewComment({
             owner,
@@ -64,8 +63,6 @@ export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
     } catch (error) {
       console.error(`Failed to get pull request: ${error}`);
     }
-
-    // Comment all feedback line by line
   } catch (error) {
     console.error(`Failed to comment on PR: ${error}`);
     throw error;
@@ -75,7 +72,7 @@ export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
 export const getRelativePath = (fileName: string, repoName: string): string => {
   const repoIndex = fileName.lastIndexOf(repoName);
   if (repoIndex !== -1) {
-    return fileName.slice(repoIndex + repoName.length + 1); // +1 to skip the trailing slash after the repository name
+    return fileName.slice(repoIndex + repoName.length + 1);
   } else {
     // If the repository name is not found in the absolute path, return the original absolute path.
     return fileName;
