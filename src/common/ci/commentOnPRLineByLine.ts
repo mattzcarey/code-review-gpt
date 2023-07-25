@@ -49,7 +49,7 @@ export const commentOnPRLineByLine = async (feedbacks: IFeedback[]) => {
             pull_number,
             body: feedback.details,
             commit_id,
-            path: feedback.fileName,
+            path: 'src/common/ci/commentOnPRLineByLine.ts',
             line: 1,
           });
         } catch (error) {
