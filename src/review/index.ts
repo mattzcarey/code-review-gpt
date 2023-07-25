@@ -3,6 +3,7 @@ import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR } from "../common/ci/commentOnPR";
+import { commentOnPRLineByLine } from "../common/ci/commentOnPRLineByLine";
 import { signOff } from "./constants";
 
 interface ReviewArgs {
@@ -14,6 +15,7 @@ interface ReviewArgs {
 
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
+  const isLineByLine = yargs.ci; //todo create actual var
   const modelName = yargs.model as string;
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -21,9 +23,12 @@ export const review = async (yargs: ReviewArgs) => {
   const fileNames = await getFileNames(isCi);
   const prompts = await constructPromptsArray(fileNames, maxPromptLength);
 
-  const response = await askAI(prompts, modelName);
+  const {markdownReport: response, feedbacks} = await askAI(prompts, modelName);
 
   if (isCi) {
     await commentOnPR(response, signOff);
+    if (isLineByLine) {
+      await commentOnPRLineByLine(feedbacks);
+    }
   }
 };
