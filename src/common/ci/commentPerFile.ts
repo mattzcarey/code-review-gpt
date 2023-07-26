@@ -11,8 +11,9 @@ const getToken = () => {
   return githubToken;
 };
 
+// todo need to add testing to this
 /**
- * Publish in-line comments on the pull request. //? What happens when the bot has already commented on that file
+ * Publish in-line comments on the pull request. 
  * @param feedbacks The JSON feedback from the AIModel.
  * @returns void
  */
@@ -20,12 +21,12 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
-  
+
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
       return;
     }
-  
+
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
@@ -42,14 +43,15 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
       try {
         const botCommentBody = `${feedback.details}\n\n---\n\n${signOff}`;
 
-        const { data: comments } = await octokit.rest.issues.listComments({
+        const { data: comments } = await octokit.rest.pulls.listReviewComments({
           owner,
           repo,
-          issue_number: pull_number,
+          pull_number,
         });
 
+        const relativePath = getRelativePath(feedback.fileName, issue.repo);
         const botComment = comments.find((comment) =>
-          comment?.body?.includes(signOff)
+          comment?.body?.includes(signOff) && comment.path === relativePath
         );
 
         if (botComment) {
@@ -66,7 +68,7 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
             pull_number,
             body: botCommentBody,
             commit_id,
-            path: getRelativePath(feedback.fileName, issue.repo),
+            path: relativePath,
             subject_type: "file",
           });
         }
