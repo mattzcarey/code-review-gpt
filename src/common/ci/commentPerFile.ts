@@ -2,6 +2,7 @@ import { context, getOctokit } from "@actions/github";
 import { getGitHubEnvVariables } from "../../config";
 import { signOff } from "../../review/constants";
 import { IFeedback } from "../../review/llm/feedbackProcessor";
+import { getRelativePath } from "./utils";
 
 const getToken = () => {
   const { githubToken } = getGitHubEnvVariables();
@@ -80,15 +81,5 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
     }
   } catch (error) {
     console.error(`Failed to get pull request: ${error}`);
-  }
-};
-
-export const getRelativePath = (fileName: string, repoName: string): string => {
-  const repoIndex = fileName.lastIndexOf(repoName);
-  if (repoIndex !== -1) {
-    return fileName.slice(repoIndex + repoName.length + 1);
-  } else {
-    // If the repository name is not found in the absolute path, return the original absolute path.
-    return fileName;
   }
 };
