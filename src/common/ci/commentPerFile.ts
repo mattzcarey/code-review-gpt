@@ -1,24 +1,15 @@
 import { context, getOctokit } from "@actions/github";
-import { getGitHubEnvVariables } from "../../config";
-import { signOff } from "../../review/constants";
 import { IFeedback } from "../../review/llm/feedbackProcessor";
-import { getRelativePath } from "./utils";
+import { getRelativePath, getToken } from "./utils";
 
-const getToken = () => {
-  const { githubToken } = getGitHubEnvVariables();
-  if (!githubToken) {
-    throw new Error("GITHUB_TOKEN is not set");
-  }
-  return githubToken;
-};
-
-// todo need to add testing to this
 /**
- * Publish in-line comments on the pull request. 
+ * Publish comments on a file-by-file basis on the pull request. If the bot has already commented on a file (i.e. a comment with the same sign off exists on that file), update the comment instead of creating a new one.
+ * The comment will be signed off with the provided sign off.
  * @param feedbacks The JSON feedback from the AIModel.
+ * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
  * @returns void
  */
-export const commentPerFile = async (feedbacks: IFeedback[]) => {
+export const commentPerFile = async (feedbacks: IFeedback[], signOff: string) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
@@ -49,10 +40,11 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
           repo,
           pull_number,
         });
-
+        
+        // Check if bot has already commented on this file
         const relativePath = getRelativePath(feedback.fileName, issue.repo);
         const botComment = comments.find((comment) =>
-          comment?.body?.includes(signOff) && comment.path === relativePath
+        comment?.path === relativePath && comment?.body?.includes(signOff)
         );
 
         if (botComment) {

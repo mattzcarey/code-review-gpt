@@ -41,7 +41,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       default: false,
     })
     .option("commentPerFile", {
-      description: "When the script run the feedback is commented on the relevant files.",
+      description: "When the script is run the feedback is made on a file-by-file basis.",
       type: "boolean",
       default: false,
     })

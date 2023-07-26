@@ -29,7 +29,7 @@ export const review = async (yargs: ReviewArgs) => {
   if (isCi) {
     await commentOnPR(response, signOff);
     if (isLineByLine) {
-      await commentPerFile(feedbacks);
+      await commentPerFile(feedbacks, signOff);
     }
   }
 };
