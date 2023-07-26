@@ -9,7 +9,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts review",
-    "start-ci": "ts-node ./src/index.ts review --ci",
+    "start-ci": "ts-node ./src/index.ts review --ci --commentPerFile",
     "test": "ts-node ./src/index.ts test",
     "test-ci": "ts-node ./src/index.ts test --ci",
     "build": "node utils/build.js",

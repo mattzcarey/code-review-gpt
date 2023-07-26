@@ -16,7 +16,7 @@ const getToken = () => {
  * @param feedbacks The JSON feedback from the AIModel.
  * @returns void
  */
-export const commentOnPRFiles = async (feedbacks: IFeedback[]) => {
+export const commentPerFile = async (feedbacks: IFeedback[]) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;

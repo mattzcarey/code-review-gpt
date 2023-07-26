@@ -3,19 +3,20 @@ import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR } from "../common/ci/commentOnPR";
-import { commentOnPRFiles } from "../common/ci/commentOnPRFiles";
+import { commentPerFile } from "../common/ci/commentPerFile";
 import { signOff } from "./constants";
 
 interface ReviewArgs {
   [x: string]: unknown;
   ci: boolean;
+  commentPerFile: boolean;
   _: (string | number)[];
   $0: string;
 }
 
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
-  const isLineByLine = yargs.ci; //todo create actual var
+  const isLineByLine = yargs.commentPerFile;
   const modelName = yargs.model as string;
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -28,7 +29,7 @@ export const review = async (yargs: ReviewArgs) => {
   if (isCi) {
     await commentOnPR(response, signOff);
     if (isLineByLine) {
-      await commentOnPRFiles(feedbacks);
+      await commentPerFile(feedbacks);
     }
   }
 };

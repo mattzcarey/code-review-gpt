@@ -6,6 +6,7 @@ dotenv.config();
 export interface ReviewArgs {
   [x: string]: unknown;
   ci: boolean;
+  commentPerFile: boolean;
   model: string;
   _: (string | number)[];
   $0: string;
@@ -36,6 +37,11 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
       description: "Indicate that the script is running on a CI environment",
+      type: "boolean",
+      default: false,
+    })
+    .option("commentPerFile", {
+      description: "When the script run the feedback is commented on the relevant files.",
       type: "boolean",
       default: false,
     })
