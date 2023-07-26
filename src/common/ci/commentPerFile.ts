@@ -20,31 +20,46 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
-    console.log(`RepoName: ${issue.repo}`)
+  
     if (!payload.pull_request) {
       console.warn("Not a pull request. Skipping commenting on PR...");
       return;
     }
-
+  
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
-    try {
-      // Get PR and commit_id
-      const pullRequest = await octokit.rest.pulls.get({
-        owner,
-        repo,
-        pull_number: pull_number,
-      });
-      const commit_id = pullRequest.data.head.sha;
+    // Get PR and commit_id
+    const pullRequest = await octokit.rest.pulls.get({
+      owner,
+      repo,
+      pull_number: pull_number,
+    });
+    const commit_id = pullRequest.data.head.sha;
 
-      // Comment all feedback line by line
-      for (const feedback of feedbacks) {
-        try {
-          console.log(feedback.fileName);
-          console.log(`filename ${getRelativePath(feedback.fileName, issue.repo)}`);
-          const botCommentBody = `${feedback.details}\n\n---\n\n${signOff}`;
+    // Comment all feedback line by line
+    for (const feedback of feedbacks) {
+      try {
+        const botCommentBody = `${feedback.details}\n\n---\n\n${signOff}`;
 
+        const { data: comments } = await octokit.rest.issues.listComments({
+          owner,
+          repo,
+          issue_number: pull_number,
+        });
+
+        const botComment = comments.find((comment) =>
+          comment?.body?.includes(signOff)
+        );
+
+        if (botComment) {
+          octokit.rest.pulls.updateReviewComment({
+            owner,
+            repo,
+            comment_id: botComment.id,
+            body: botCommentBody,
+          });
+        } else {
           await octokit.rest.pulls.createReviewComment({
             owner,
             repo,
@@ -52,20 +67,17 @@ export const commentPerFile = async (feedbacks: IFeedback[]) => {
             body: botCommentBody,
             commit_id,
             path: getRelativePath(feedback.fileName, issue.repo),
-            subject_type: 'file',
+            subject_type: "file",
           });
-        } catch (error) {
-          console.error(
-            `Failed to comment on PR for feedback: ${feedback.details}. Error: ${error}`
-          );
         }
+      } catch (error) {
+        console.error(
+          `Failed to comment on PR for feedback: ${feedback.details}. Error: ${error}`
+        );
       }
-    } catch (error) {
-      console.error(`Failed to get pull request: ${error}`);
     }
   } catch (error) {
-    console.error(`Failed to comment on PR: ${error}`);
-    throw error;
+    console.error(`Failed to get pull request: ${error}`);
   }
 };
 
