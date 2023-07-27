@@ -37,7 +37,6 @@
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
-    "octokit": "^3.0.0",
     "ts-retry": "^4.2.1",
     "yargs": "^17.7.2"
   },
