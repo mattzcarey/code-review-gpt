@@ -37,7 +37,8 @@ export const test = async ({ ci, model }: ReviewArgs) => {
     testCasesWithSnippets,
     model,
     maxPromptLength,
-    vectorStore
+    vectorStore,
+    ci
   );
 
   if (ci) {

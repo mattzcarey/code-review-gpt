@@ -21,7 +21,8 @@ const runTest = async (
   testCase: TestCase,
   modelName: string,
   maxPromptLength: number,
-  vectorStore: MemoryVectorStore
+  vectorStore: MemoryVectorStore,
+  ci: boolean,
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -32,7 +33,8 @@ const runTest = async (
   // First step: run the review on the code snippet.
   const prompts = await constructPromptsArray(
     [testCase.snippet],
-    maxPromptLength
+    maxPromptLength,
+    ci,
   );
   const reviewResponse = await askAI(prompts, modelName, false);
 
@@ -71,7 +73,8 @@ export const runTests = async (
   testCases: TestCase[],
   modelName: string,
   maxPromptLength: number,
-  vectorStore: MemoryVectorStore
+  vectorStore: MemoryVectorStore,
+  ci: boolean
 ): Promise<string> => {
   if (testCases.length === 0) {
     return "No test cases found.";
@@ -88,7 +91,8 @@ export const runTests = async (
         testCase,
         modelName,
         maxPromptLength,
-        vectorStore
+        vectorStore,
+        ci
       );
       testResults[testCase.name] = result;
     } catch (error) {
