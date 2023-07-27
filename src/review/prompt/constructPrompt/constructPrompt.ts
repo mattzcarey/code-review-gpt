@@ -17,7 +17,7 @@ const splitFilesIntoBatches = async (
   for (const file of files) {
     const currentFileSize = getSizeOfReviewFile(file);
     if (currentFileSize > maxBatchSize) {
-      console.error(
+      console.warn(
         `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Attempting to slim the file...`
       );
       const slimmedFile = await makeSlimmedFile(file, maxBatchSize, isCi);
@@ -61,10 +61,6 @@ export const constructPromptsArray = async (
   isCi: boolean
 ): Promise<string[]> => {
   const filesToReview = await readFiles(fileNames);
-
-  console.log(
-    `Constructing prompts for ${filesToReview.length} files... ${fileNames}`
-  );
 
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   const promptPayloads = await splitFilesIntoBatches(

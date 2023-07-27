@@ -27,12 +27,12 @@ export const makeSlimmedFile = async (
   let splitter: RecursiveCharacterTextSplitter;
   if (!fileLanguage) {
     splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 32,
+      chunkSize: 100,
       chunkOverlap: 0,
     });
   } else {
     splitter = RecursiveCharacterTextSplitter.fromLanguage(fileLanguage, {
-      chunkSize: 32,
+      chunkSize: 100,
       chunkOverlap: 0,
     });
   }
