@@ -6,6 +6,7 @@ dotenv.config();
 export interface ReviewArgs {
   [x: string]: unknown;
   ci: boolean;
+  commentPerFile: boolean;
   model: string;
   _: (string | number)[];
   $0: string;
@@ -39,6 +40,11 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "boolean",
       default: false,
     })
+    .option("commentPerFile", {
+      description: "Enables feedback to be made on a file-by-file basis.",
+      type: "boolean",
+      default: false,
+    })
     .option("model", {
       description: "The model to use for generating the review",
       type: "string",
@@ -51,6 +57,10 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
   }
-
+  if (argv.shouldCommentPerFile && !argv.isCi) {
+    throw new Error(
+      "The 'commentPerFile' flag requires the 'ci' flag to be set."
+    );
+  }
   return argv;
 };

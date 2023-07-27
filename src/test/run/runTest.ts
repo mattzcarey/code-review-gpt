@@ -36,7 +36,7 @@ const runTest = async (
     maxPromptLength,
     ci,
   );
-  const reviewResponse = await askAI(prompts, modelName, false);
+  const {markdownReport: reviewResponse} = await askAI(prompts, modelName, false);
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
     reviewResponse,
