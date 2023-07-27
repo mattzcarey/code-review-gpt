@@ -1,13 +1,13 @@
-import { askAI } from "../../review/llm/askAI";
-import { constructPromptsArray } from "../../review/prompt/constructPrompt";
-import { TestCase } from "../types";
+import chalk from "chalk";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { askAI } from "../../review/llm/askAI";
+import { constructPromptsArray } from "../../review/prompt/constructPrompt/constructPrompt";
+import { TestCase } from "../types";
 import {
   generateTestReport,
   generateTestResultsSummary,
   testResult,
 } from "./generateTestReport";
-import chalk from "chalk";
 
 /**
  * Run a single test case.
