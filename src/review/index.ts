@@ -16,7 +16,7 @@ interface ReviewArgs {
 
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
-  const isLineByLine = yargs.commentPerFile;
+  const shouldCommentByFile = yargs.commentPerFile;
   const modelName = yargs.model as string;
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -28,7 +28,7 @@ export const review = async (yargs: ReviewArgs) => {
 
   if (isCi) {
     await commentOnPR(response, signOff);
-    if (isLineByLine) {
+    if (shouldCommentByFile) {
       await commentPerFile(feedbacks, signOff);
     }
   }
