@@ -12,32 +12,28 @@ export const commentPerFile = async (
   feedbacks: IFeedback[],
   signOff: string
 ) => {
-  try {
-    const octokitRepoDetails = getOctokitRepoDetails();
-    if (octokitRepoDetails) {
-      const { octokit, owner, repo, pull_number } = octokitRepoDetails;
+  const octokitRepoDetails = getOctokitRepoDetails();
+  if (octokitRepoDetails) {
+    const { octokit, owner, repo, pull_number } = octokitRepoDetails;
 
-      // Get PR and commit_id
-      const pullRequest = await octokit.rest.pulls.get({
+    // Get PR and commit_id
+    const pullRequest = await octokit.rest.pulls.get({
+      owner,
+      repo,
+      pull_number: pull_number,
+    });
+    const commit_id = pullRequest.data.head.sha;
+
+    // Comment all feedback file by file
+    for (const feedback of feedbacks) {
+      commentOnFile(octokit, {
+        feedback,
+        signOff,
         owner,
         repo,
-        pull_number: pull_number,
+        pull_number,
+        commit_id,
       });
-      const commit_id = pullRequest.data.head.sha;
-
-      // Comment all feedback file by file
-      for (const feedback of feedbacks) {
-        commentOnFile(octokit, {
-          feedback,
-          signOff,
-          owner,
-          repo,
-          pull_number,
-          commit_id,
-        });
-      }
     }
-  } catch (error) {
-    console.error(`Failed to get pull request: ${error}`);
   }
 };
