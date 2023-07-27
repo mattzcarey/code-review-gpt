@@ -1,24 +1,28 @@
-import { instructionPrompt } from "../constants";
 import { readFile } from "fs/promises";
-
-interface ReviewFile {
-  fileName: string;
-  fileContent: string;
-}
+import { makeSlimmedFile } from "../makeSlimmedFile";
+import { instructionPrompt } from "../prompts";
+import { ReviewFile } from "../types";
 
 const getSizeOfReviewFile = (file: ReviewFile): number =>
   file.fileName.length + file.fileContent.length;
 
-const splitFilesIntoBatches = (
+const splitFilesIntoBatches = async (
   files: ReviewFile[],
-  maxBatchSize: number
-): ReviewFile[][] => {
+  maxBatchSize: number,
+  isCi: boolean
+): Promise<ReviewFile[][]> => {
   const batches: ReviewFile[][] = [];
   let currentBatch: ReviewFile[] = [];
   let currentBatchSize = 0;
   for (const file of files) {
     const currentFileSize = getSizeOfReviewFile(file);
-    if (currentBatchSize + currentFileSize > maxBatchSize) {
+    if (currentFileSize > maxBatchSize) {
+      console.warn(
+        `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Attempting to slim the file...`
+      );
+      const slimmedFile = await makeSlimmedFile(file, maxBatchSize, isCi);
+      currentBatch.push(slimmedFile);
+    } else if (currentBatchSize + currentFileSize > maxBatchSize) {
       batches.push(currentBatch);
       currentBatch = [file];
       currentBatchSize = currentFileSize;
@@ -53,14 +57,16 @@ const readFiles = async (fileNames: string[]): Promise<ReviewFile[]> => {
 
 export const constructPromptsArray = async (
   fileNames: string[],
-  maxPromptLength: number
+  maxPromptLength: number,
+  isCi: boolean
 ): Promise<string[]> => {
   const filesToReview = await readFiles(fileNames);
 
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
-  const promptPayloads = splitFilesIntoBatches(
+  const promptPayloads = await splitFilesIntoBatches(
     filesToReview,
-    maxPromptPayloadLength
+    maxPromptPayloadLength,
+    isCi
   );
 
   const prompts = promptPayloads.map((payload) => {

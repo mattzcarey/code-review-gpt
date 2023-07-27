@@ -1,9 +1,9 @@
-import path from "path";
-import { generateHash } from "./hash";
 import { readFileSync, writeFileSync } from "fs";
+import path from "path";
 import AIModel from "../../common/model/AIModel";
 import { generateCodeSnippetsPrompt } from "../constants";
 import { TestCase } from "../types";
+import { generateHash } from "./hash";
 
 /**
  * Generate a code snippet for a test case.

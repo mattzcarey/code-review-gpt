@@ -1,10 +1,10 @@
-import { askAI } from "./llm/askAI";
-import { constructPromptsArray } from "./prompt/constructPrompt";
-import { getFileNames } from "./prompt/getFileNames";
-import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR } from "../common/ci/commentOnPR";
+import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentPerFile } from "../common/ci/commentPerFile";
 import { signOff } from "./constants";
+import { askAI } from "./llm/askAI";
+import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
+import { getFileNames } from "./prompt/filesNames/getFileNames";
 
 interface ReviewArgs {
   [x: string]: unknown;
@@ -23,7 +23,7 @@ export const review = async (yargs: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(modelName);
 
   const fileNames = await getFileNames(isCi);
-  const prompts = await constructPromptsArray(fileNames, maxPromptLength);
+  const prompts = await constructPromptsArray(fileNames, maxPromptLength, isCi);
 
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
