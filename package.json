@@ -10,6 +10,7 @@
   "scripts": {
     "start": "ts-node ./src/index.ts review",
     "start-ci": "ts-node ./src/index.ts review --ci",
+    "start-ci-file-comments": "ts-node ./src/index.ts review --ci --commentPerFile",
     "test": "ts-node ./src/index.ts test",
     "test-ci": "ts-node ./src/index.ts test --ci",
     "test-unit": "dotenv -e .env jest",
