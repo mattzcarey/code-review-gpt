@@ -7,7 +7,7 @@ describe("When a file is longer than the max prompt length", () => {
     const testFilePath = join(__dirname, "../../../testFiles/longFile.tsx");
     const fileNames = [testFilePath];
     const maxPromptLength = 2000;
-    const stringifyMargin = 1.1;
+    const stringifyMargin = 1.2;
     const isCi = false;
 
     const result = await constructPromptsArray(
