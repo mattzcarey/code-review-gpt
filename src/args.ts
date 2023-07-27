@@ -57,6 +57,10 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
   }
-
+  if (argv.shouldCommentPerFile && !argv.isCi) {
+    throw new Error(
+      "The 'commentPerFile' flag requires the 'ci' flag to be set."
+    );
+  }
   return argv;
 };

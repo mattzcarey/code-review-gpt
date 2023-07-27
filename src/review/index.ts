@@ -16,7 +16,8 @@ interface ReviewArgs {
 
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
-  const shouldCommentByFile = yargs.commentPerFile;
+  const shouldCommentPerFile = yargs.commentPerFile;
+
   const modelName = yargs.model as string;
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -24,12 +25,15 @@ export const review = async (yargs: ReviewArgs) => {
   const fileNames = await getFileNames(isCi);
   const prompts = await constructPromptsArray(fileNames, maxPromptLength);
 
-  const {markdownReport: response, feedbacks} = await askAI(prompts, modelName);
+  const { markdownReport: response, feedbacks } = await askAI(
+    prompts,
+    modelName
+  );
 
-  if (isCi) {
+  if (isCi && !shouldCommentPerFile) {
     await commentOnPR(response, signOff);
-    if (shouldCommentByFile) {
-      await commentPerFile(feedbacks, signOff);
-    }
+  }
+  if (isCi && shouldCommentPerFile) {
+    await commentPerFile(feedbacks, signOff);
   }
 };
