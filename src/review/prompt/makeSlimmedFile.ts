@@ -1,18 +1,16 @@
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { getChangedLines } from "./fileLines/getChangedLines";
 import { getLanguageOfFile } from "./getLanguageOfFile";
 import { slimmedContextPrompt } from "./prompts";
 import { ReviewFile } from "./types";
+import { File } from "../../common/types";
 
 export const makeSlimmedFile = async (
-  file: ReviewFile,
-  maxBatchSize: number,
-  isCi: boolean
+  file: File,
+  maxBatchSize: number
 ): Promise<ReviewFile> => {
-  let changedLines: string;
-  changedLines = await getChangedLines(file, isCi);
+  let changedLines: string = file.changedLines;
 
   if (changedLines.length > maxBatchSize) {
     console.error(
@@ -24,18 +22,15 @@ export const makeSlimmedFile = async (
 
   const fileLanguage = getLanguageOfFile(file.fileName);
 
-  let splitter: RecursiveCharacterTextSplitter;
-  if (!fileLanguage) {
-    splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 100,
-      chunkOverlap: 0,
-    });
-  } else {
-    splitter = RecursiveCharacterTextSplitter.fromLanguage(fileLanguage, {
-      chunkSize: 100,
-      chunkOverlap: 0,
-    });
-  }
+  const splitter = fileLanguage
+    ? RecursiveCharacterTextSplitter.fromLanguage(fileLanguage, {
+        chunkSize: 100,
+        chunkOverlap: 0,
+      })
+    : new RecursiveCharacterTextSplitter({
+        chunkSize: 100,
+        chunkOverlap: 0,
+      });
 
   const doc = await splitter.createDocuments([changedLines]);
 

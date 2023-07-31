@@ -1,15 +1,14 @@
-import { readFile } from "fs/promises";
 import { makeSlimmedFile } from "../makeSlimmedFile";
 import { instructionPrompt } from "../prompts";
+import { File } from "../../../common/types";
 import { ReviewFile } from "../types";
 
 const getSizeOfReviewFile = (file: ReviewFile): number =>
   file.fileName.length + file.fileContent.length;
 
 const splitFilesIntoBatches = async (
-  files: ReviewFile[],
-  maxBatchSize: number,
-  isCi: boolean
+  files: File[],
+  maxBatchSize: number
 ): Promise<ReviewFile[][]> => {
   const batches: ReviewFile[][] = [];
   let currentBatch: ReviewFile[] = [];
@@ -20,7 +19,7 @@ const splitFilesIntoBatches = async (
       console.warn(
         `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Attempting to slim the file...`
       );
-      const slimmedFile = await makeSlimmedFile(file, maxBatchSize, isCi);
+      const slimmedFile = await makeSlimmedFile(file, maxBatchSize);
       currentBatch.push(slimmedFile);
     } else if (currentBatchSize + currentFileSize > maxBatchSize) {
       batches.push(currentBatch);
@@ -40,33 +39,14 @@ const splitFilesIntoBatches = async (
   return batches;
 };
 
-const readFiles = async (fileNames: string[]): Promise<ReviewFile[]> => {
-  const files: ReviewFile[] = [];
-
-  for (const fileName of fileNames) {
-    try {
-      const fileContent = await readFile(fileName, "utf8");
-      files.push({ fileName, fileContent });
-    } catch (error) {
-      console.error(`Failed to process file ${fileName}: ${error}`);
-    }
-  }
-
-  return files;
-};
-
 export const constructPromptsArray = async (
-  fileNames: string[],
-  maxPromptLength: number,
-  isCi: boolean
+  files: File[],
+  maxPromptLength: number
 ): Promise<string[]> => {
-  const filesToReview = await readFiles(fileNames);
-
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   const promptPayloads = await splitFilesIntoBatches(
-    filesToReview,
-    maxPromptPayloadLength,
-    isCi
+    files,
+    maxPromptPayloadLength
   );
 
   const prompts = promptPayloads.map((payload) => {
