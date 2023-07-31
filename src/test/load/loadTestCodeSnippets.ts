@@ -42,12 +42,13 @@ const loadOrGenerateCodeSnippet = async (
 
   // Try to load the snippet from the cache, using the hashed description as the key
   const hashedDescription = generateHash(testCase.description);
+  const fileName = path.join(snippetCacheDir, `${hashedDescription}.ts`);
 
   try {
-    readFileSync(path.join(snippetCacheDir, `${hashedDescription}.ts`), "utf8");
+    const fileContent = readFileSync(fileName, "utf8");
     return {
       ...testCase,
-      snippet: path.join(snippetCacheDir, `${hashedDescription}.ts`),
+      snippet: { fileName, fileContent, changedLines: fileContent },
     };
   } catch (error) {
     console.info(
@@ -57,15 +58,11 @@ const loadOrGenerateCodeSnippet = async (
     const snippet = await generateCodeSnippet(testCase, model);
 
     // Save the snippet to the cache
-    writeFileSync(
-      path.join(snippetCacheDir, `${hashedDescription}.ts`),
-      snippet,
-      "utf8"
-    );
+    writeFileSync(fileName, snippet, "utf8");
 
     return {
       ...testCase,
-      snippet: path.join(snippetCacheDir, `${hashedDescription}.ts`),
+      snippet: { fileName, fileContent: snippet, changedLines: snippet },
     };
   }
 };
