@@ -23,10 +23,18 @@ const splitFilesIntoBatches = async (
       currentBatch.push(slimmedFile);
     } else if (currentBatchSize + currentFileSize > maxBatchSize) {
       batches.push(currentBatch);
-      currentBatch = [file];
+      currentBatch = [
+        {
+          fileName: file.fileName,
+          fileContent: file.fileContent,
+        },
+      ];
       currentBatchSize = currentFileSize;
     } else {
-      currentBatch.push(file);
+      currentBatch.push({
+        fileName: file.fileName,
+        fileContent: file.fileContent,
+      });
       currentBatchSize += currentFileSize;
     }
   }

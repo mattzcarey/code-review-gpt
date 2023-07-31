@@ -17,7 +17,7 @@ export const makeSlimmedFile = async (
       `The changed lines are ${changedLines.length} which is longer than ${maxBatchSize}. Consider using a model with a larger context window. Slicing the changed lines...`
     );
     changedLines = changedLines.slice(0, maxBatchSize);
-    return { ...file, fileContent: changedLines };
+    return { fileName: file.fileName, fileContent: changedLines };
   }
 
   const fileLanguage = getLanguageOfFile(file.fileName);
@@ -61,5 +61,5 @@ export const makeSlimmedFile = async (
     .replace("{context}", context);
 
   // return the file with the updated prompt
-  return { ...file, fileContent: prompt };
+  return { fileName: file.fileName, fileContent: prompt };
 };
