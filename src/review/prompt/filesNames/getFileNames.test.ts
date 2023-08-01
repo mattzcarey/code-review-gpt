@@ -23,8 +23,10 @@ describe("getFileNames unit test", () => {
       mockedGetFileNamesFromGit;
 
     const result = await getFileNames(false);
+    console.log("result -> ", result);
 
     expect(result).toEqual([
+      join(__dirname, "../../../testFiles", "initialFilesExample.ts"),
       join(__dirname, "../../../testFiles", "longFile.tsx"),
     ]);
   });
