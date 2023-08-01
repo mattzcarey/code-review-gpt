@@ -19,7 +19,7 @@ export const askAI = async (
   verbose = true
 ): Promise<AskAIResponse> => {
   if (verbose) {
-    logger.error("Asking the experts...");
+    logger.info("Asking the experts...");
   }
 
   const model = new AIModel({
