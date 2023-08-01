@@ -27,7 +27,16 @@ export const askAI = async (
 
   const feedbacks = await processFeedbacks(model, prompts);
 
+  logger.debug(
+    `Feedback received:\n ${feedbacks.map(
+      (feedback) =>
+        `Filename: ${feedback.fileName}, logafScore: ${feedback.logafScore}, details: ${feedback.details}\n`
+    )}`
+  );
+
   const summary = await createSummary(model, feedbacks);
+
+  logger.debug(`Summary of feedbacks: ${summary}`);
 
   return {
     markdownReport: generateMarkdownReport(feedbacks, summary),

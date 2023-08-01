@@ -21,6 +21,9 @@ const splitFilesIntoBatches = async (
         `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Attempting to slim the file...`
       );
       const slimmedFile = await makeSlimmedFile(file, maxBatchSize);
+
+      logger.debug(`Slimmed file: ${JSON.stringify(slimmedFile)}`);
+
       currentBatch.push(slimmedFile);
     } else if (currentBatchSize + currentFileSize > maxBatchSize) {
       batches.push(currentBatch);
