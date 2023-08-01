@@ -1,6 +1,4 @@
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { getChangedLines } from "./fileLines/getChangedLines";
 import { getLanguageOfFile } from "./getLanguageOfFile";
 import { slimmedContextPrompt } from "./prompts";
