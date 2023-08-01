@@ -8,6 +8,7 @@ export interface ReviewArgs {
   ci: boolean;
   commentPerFile: boolean;
   model: string;
+  debug: boolean;
   _: (string | number)[];
   $0: string;
 }
@@ -49,6 +50,11 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       description: "The model to use for generating the review",
       type: "string",
       default: "gpt-4",
+    })
+    .option("debug", {
+      description: "Enables debug logging",
+      type: "boolean",
+      default: false,
     })
     .command("review", "Review the pull request")
     .command("configure", "Configure the script")

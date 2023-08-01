@@ -15,12 +15,9 @@ type AskAIResponse = {
 
 export const askAI = async (
   prompts: string[],
-  modelName: string,
-  verbose = true
+  modelName: string
 ): Promise<AskAIResponse> => {
-  if (verbose) {
-    logger.info("Asking the experts...");
-  }
+  logger.info("Asking the experts...");
 
   const model = new AIModel({
     modelName: modelName,
@@ -28,9 +25,9 @@ export const askAI = async (
     apiKey: openAIApiKey(),
   });
 
-  const feedbacks = await processFeedbacks(model, prompts, verbose);
+  const feedbacks = await processFeedbacks(model, prompts);
 
-  const summary = await createSummary(model, feedbacks, verbose);
+  const summary = await createSummary(model, feedbacks);
 
   return {
     markdownReport: generateMarkdownReport(feedbacks, summary),

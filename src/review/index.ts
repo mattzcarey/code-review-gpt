@@ -11,6 +11,7 @@ interface ReviewArgs {
   [x: string]: unknown;
   ci: boolean;
   commentPerFile: boolean;
+  debug: boolean;
   _: (string | number)[];
   $0: string;
 }

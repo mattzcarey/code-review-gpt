@@ -11,6 +11,8 @@
     "start": "ts-node ./src/index.ts review",
     "start-ci": "ts-node ./src/index.ts review --ci",
     "start-ci-file-comments": "ts-node ./src/index.ts review --ci --commentPerFile",
+    "start-debug": "ts-node ./src/index.ts review --debug",
+    "start-ci-debug": "ts-node ./src/index.ts review --ci --debug",
     "test": "ts-node ./src/index.ts test",
     "test-ci": "ts-node ./src/index.ts test --ci",
     "test-unit": "dotenv -e .env jest",

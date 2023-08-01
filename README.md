@@ -2,7 +2,7 @@
 
 ## We give engineers their weekends back
 
-Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement. 
+Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement.
 
 It should pick up on common issues such as:
 
@@ -110,6 +110,8 @@ Run `code-review-gpt` in the root directory of a git repository.
 
 - `--model` - The model to use for the review. Defaults to `gpt-4`. You can use any openai model you have access to.
 
+- `--debug` - Runs the application in debug mode. This will enable debug logging.
+
 ## Roadmap
 
 - [ ] Make a more clever way to find the exact code to review
@@ -133,4 +135,3 @@ Run `code-review-gpt` in the root directory of a git repository.
 ## Star History ⭐️👀
 
 [![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/code-review-gpt&type=Date)](https://star-history.com/#mattzcarey/code-review-gpt&Date)
-
