@@ -2,6 +2,7 @@ import { makeSlimmedFile } from "../makeSlimmedFile";
 import { instructionPrompt } from "../prompts";
 import { File } from "../../../common/types";
 import { ReviewFile } from "../types";
+import { logger } from "../../../common/utils/logger";
 
 const getSizeOfReviewFile = (file: ReviewFile): number =>
   file.fileName.length + file.fileContent.length;
@@ -16,7 +17,7 @@ const splitFilesIntoBatches = async (
   for (const file of files) {
     const currentFileSize = getSizeOfReviewFile(file);
     if (currentFileSize > maxBatchSize) {
-      console.warn(
+      logger.warn(
         `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Attempting to slim the file...`
       );
       const slimmedFile = await makeSlimmedFile(file, maxBatchSize);

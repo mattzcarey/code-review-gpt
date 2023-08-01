@@ -1,5 +1,6 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import { retryAsync } from "ts-retry";
+import { logger } from "../utils/logger";
 
 interface IAIModel {
   modelName: string;
@@ -36,7 +37,7 @@ class AIModel {
       {
         maxTry: this.retryCount,
         onError: (error) => {
-          console.error(`Error in callModelJSON`, error);
+          logger.error(`Error in callModelJSON`, error);
         },
         onMaxRetryFunc: () => {
           throw new Error(

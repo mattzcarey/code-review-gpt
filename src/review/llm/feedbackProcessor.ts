@@ -3,6 +3,7 @@ import { maxFeedbackCount } from "../constants";
 import { completionPrompt } from "../prompt/prompts";
 import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
+import { logger } from "../../common/utils/logger";
 
 export interface IFeedback {
   fileName: string;
@@ -17,7 +18,7 @@ const collectAndLogFeedback = async (
     const feedbacks = await feedbackPromise;
     return feedbacks;
   } catch (error) {
-    console.error(`Error in processing prompt`, error);
+    logger.error(`Error in processing prompt`, error);
     throw error;
   }
 };
@@ -35,7 +36,7 @@ const createSummary = async (
   const summary = await model.callModel(finalPrompt);
 
   if (verbose) {
-    console.log(summary);
+    logger.info(summary);
   }
 
   return summary;
@@ -95,7 +96,7 @@ const processFeedbacks = async (
   const bestFeedbacks = await pickBestFeedbacks(feedbacks, maxFeedbackCount);
 
   if (verbose) {
-    console.log(formatFeedbacks(bestFeedbacks));
+    logger.info(formatFeedbacks(bestFeedbacks));
   }
 
   return bestFeedbacks;

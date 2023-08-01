@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { getYargs } from "./args";
+import { logger } from "./common/utils/logger";
 
 dotenv.config();
 
@@ -24,12 +25,12 @@ const main = async () => {
       await test(argv);
       break;
     default:
-      console.error("Unknown command");
+      logger.error("Unknown command");
       process.exit(1);
   }
 };
 
 main().catch((error) => {
-  console.error(`Error: ${error}`);
+  logger.error(`Error: ${error}`);
   process.exit(1);
 });

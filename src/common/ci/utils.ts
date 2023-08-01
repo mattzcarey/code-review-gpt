@@ -1,6 +1,7 @@
 import { getGitHubEnvVariables } from "../../config";
 import { context, getOctokit } from "@actions/github";
 import { IFeedback } from "../../review/llm/feedbackProcessor";
+import { logger } from "../utils/logger";
 
 export const getRelativePath = (fileName: string, repoName: string): string => {
   const repoIndex = fileName.lastIndexOf(repoName);
@@ -25,7 +26,7 @@ export const getOctokitRepoDetails = () => {
   const { payload, issue } = context;
 
   if (!payload.pull_request) {
-    console.warn("Not a pull request. Skipping commenting on PR...");
+    logger.warn("Not a pull request. Skipping commenting on PR...");
     return;
   }
   const octokit = getOctokit(githubToken);
@@ -72,7 +73,7 @@ export const commentOnFile = async (
       });
     }
   } catch (error) {
-    console.error(
+    logger.error(
       `Failed to comment on PR for feedback: ${data.feedback.details}. Error: ${error}`
     );
   }

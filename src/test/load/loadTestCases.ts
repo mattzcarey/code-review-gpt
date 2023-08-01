@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from "fs";
 import path from "path";
 import { TestCase } from "../types";
+import { logger } from "../../common/utils/logger";
 
 /**
  * Load a single test case defined in a JSON file.
@@ -12,7 +13,7 @@ const loadTestCase = (testCasePath: string): TestCase => {
     const fileData = readFileSync(testCasePath, "utf8");
     return JSON.parse(fileData) as TestCase;
   } catch (error) {
-    console.error(`Error loading test case: ${testCasePath}`);
+    logger.error(`Error loading test case: ${testCasePath}`);
     throw error;
   }
 };
@@ -30,7 +31,7 @@ export const loadTestCases = (testCasesDir: string): TestCase[] => {
 
     return testFiles.map((file) => loadTestCase(path.join(testCasesDir, file)));
   } catch (error) {
-    console.error(`Error loading test cases from: ${testCasesDir}`);
+    logger.error(`Error loading test cases from: ${testCasesDir}`);
     throw error;
   }
 };

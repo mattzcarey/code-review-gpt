@@ -5,6 +5,7 @@ import { getLanguageOfFile } from "./getLanguageOfFile";
 import { slimmedContextPrompt } from "./prompts";
 import { ReviewFile } from "./types";
 import { File } from "../../common/types";
+import { logger } from "../../common/utils/logger";
 
 export const makeSlimmedFile = async (
   file: File,
@@ -13,7 +14,7 @@ export const makeSlimmedFile = async (
   let changedLines: string = file.changedLines;
 
   if (changedLines.length > maxBatchSize) {
-    console.error(
+    logger.error(
       `The changed lines are ${changedLines.length} which is longer than ${maxBatchSize}. Consider using a model with a larger context window. Slicing the changed lines...`
     );
     changedLines = changedLines.slice(0, maxBatchSize);
@@ -49,7 +50,7 @@ export const makeSlimmedFile = async (
     .join("\n");
 
   if (context.length > maxBatchSize) {
-    console.error(
+    logger.error(
       `The context of the changed lines is ${context.length} which is longer than ${maxBatchSize}. Consider using a model with a larger context window. Slicing the context...`
     );
     context = context.slice(0, maxBatchSize);

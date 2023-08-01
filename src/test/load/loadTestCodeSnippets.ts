@@ -4,6 +4,7 @@ import AIModel from "../../common/model/AIModel";
 import { generateCodeSnippetsPrompt } from "../constants";
 import { TestCase } from "../types";
 import { generateHash } from "./hash";
+import { logger } from "../../common/utils/logger";
 
 /**
  * Generate a code snippet for a test case.
@@ -51,7 +52,7 @@ const loadOrGenerateCodeSnippet = async (
       snippet: { fileName, fileContent, changedLines: fileContent },
     };
   } catch (error) {
-    console.info(
+    logger.info(
       `Snippet not found in cache: ${testCase.name}. Generating it...`
     );
     // If the snippet is not found, generate it

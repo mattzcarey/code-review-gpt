@@ -6,6 +6,8 @@ In CI:
  * GITHUB_TOKEN
  */
 
+import { logger } from "./common/utils/logger";
+
 export const openAIApiKey = (): string => {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not set");
@@ -18,7 +20,7 @@ export const getGitHubEnvVariables = (): Record<string, string> => {
     (varName) => !process.env[varName]
   );
   if (missingVars.length > 0) {
-    console.error(`Missing environment variables: ${missingVars.join(", ")}`);
+    logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
     throw new Error("One or more GitHub environment variables are not set");
   }
   return {

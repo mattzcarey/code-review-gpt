@@ -8,6 +8,7 @@ import {
   generateTestResultsSummary,
   testResult,
 } from "./generateTestReport";
+import { logger } from "../../common/utils/logger";
 
 /**
  * Run a single test case.
@@ -28,7 +29,7 @@ const runTest = async (
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
   }
 
-  console.info(chalk.blue(`Running test case ${testCase.name}...`));
+  logger.info(chalk.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
   const prompts = await constructPromptsArray(
@@ -60,7 +61,7 @@ const runTest = async (
     similarity
   );
 
-  console.log(report);
+  logger.info(report);
 
   return result;
 };
@@ -84,7 +85,7 @@ export const runTests = async (
     return "No test cases found.";
   }
 
-  console.info(`Running ${testCases.length} test cases...\n`);
+  logger.info(`Running ${testCases.length} test cases...\n`);
 
   // Keep track of all test results.
   const testResults: { [key: string]: testResult } = {};
@@ -100,12 +101,12 @@ export const runTests = async (
       );
       testResults[testCase.name] = result;
     } catch (error) {
-      console.error(`Error running test case ${testCase.name}:`, error);
+      logger.error(`Error running test case ${testCase.name}:`, error);
     }
   }
   const testSummary = generateTestResultsSummary(testResults);
 
-  console.info(testSummary);
+  logger.info(testSummary);
 
   return testSummary;
 };
