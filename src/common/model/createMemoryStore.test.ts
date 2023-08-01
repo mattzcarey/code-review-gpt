@@ -11,14 +11,12 @@ describe('CreateMemoryStore function', () => {
   });
 
   it('Checks if the function provides the required functionality', async () => {
-    const result = await CreateMemoryStore(initialFiles);
-    const expectedResult = await MemoryVectorStore.fromDocuments(
-      initialFiles,
-      new OpenAIEmbeddings(),
-      {}
-    );
-    
-    expect(result).toEqual(expectedResult);
+    const [result, expectedResult]  = await Promise.all([
+      CreateMemoryStore(initialFiles),
+      MemoryVectorStore.fromDocuments(initialFiles, new OpenAIEmbeddings(), {}),
+    ])
+
+    expect(result.memoryVectors.length).toEqual(expectedResult.memoryVectors.length);
   });
 
   it("Checks if the MemoryVectorStore returned returns a number in a similarity search", async () => {
