@@ -14,7 +14,7 @@ export const test = async ({ ci, model }: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(model);
 
   // Fetch the test cases.
-  const testCases = loadTestCases(path.join(__dirname, "cases"));
+  const testCases = await loadTestCases(path.join(__dirname, "cases"));
 
   // Load the code snippets for the test cases. Generate them if they don't exist or are outdated.
   const testCasesWithSnippets = await loadOrGenerateCodeSnippets(

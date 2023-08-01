@@ -1,7 +1,12 @@
 import { openAIApiKey } from "../../config";
 import AIModel from "../../common/model/AIModel";
-import { createSummary, processFeedbacks, IFeedback } from "./feedbackProcessor";
+import {
+  createSummary,
+  processFeedbacks,
+  IFeedback,
+} from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
+import { logger } from "../../common/utils/logger";
 
 type AskAIResponse = {
   markdownReport: string;
@@ -14,7 +19,7 @@ export const askAI = async (
   verbose = true
 ): Promise<AskAIResponse> => {
   if (verbose) {
-    console.info("Asking the experts...");
+    logger.error("Asking the experts...");
   }
 
   const model = new AIModel({
