@@ -1,40 +1,35 @@
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { getChangedLines } from "./fileLines/getChangedLines";
 import { getLanguageOfFile } from "./getLanguageOfFile";
 import { slimmedContextPrompt } from "./prompts";
 import { ReviewFile } from "./types";
 import { CreateMemoryStore } from '../../common/model/createMemoryStore';
+import { File } from "../../common/types";
 
 export const makeSlimmedFile = async (
-  file: ReviewFile,
-  maxBatchSize: number,
-  isCi: boolean
+  file: File,
+  maxBatchSize: number
 ): Promise<ReviewFile> => {
-  let changedLines: string;
-  changedLines = await getChangedLines(file, isCi);
+  let changedLines: string = file.changedLines;
 
   if (changedLines.length > maxBatchSize) {
     console.error(
       `The changed lines are ${changedLines.length} which is longer than ${maxBatchSize}. Consider using a model with a larger context window. Slicing the changed lines...`
     );
     changedLines = changedLines.slice(0, maxBatchSize);
-    return { ...file, fileContent: changedLines };
+    return { fileName: file.fileName, fileContent: changedLines };
   }
 
   const fileLanguage = getLanguageOfFile(file.fileName);
 
-  let splitter: RecursiveCharacterTextSplitter;
-  if (!fileLanguage) {
-    splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 100,
-      chunkOverlap: 0,
-    });
-  } else {
-    splitter = RecursiveCharacterTextSplitter.fromLanguage(fileLanguage, {
-      chunkSize: 100,
-      chunkOverlap: 0,
-    });
-  }
+  const splitter = fileLanguage
+    ? RecursiveCharacterTextSplitter.fromLanguage(fileLanguage, {
+        chunkSize: 100,
+        chunkOverlap: 0,
+      })
+    : new RecursiveCharacterTextSplitter({
+        chunkSize: 100,
+        chunkOverlap: 0,
+      });
 
   const doc = await splitter.createDocuments([changedLines]);
 
@@ -62,5 +57,5 @@ export const makeSlimmedFile = async (
     .replace("{context}", context);
 
   // return the file with the updated prompt
-  return { ...file, fileContent: prompt };
+  return { fileName: file.fileName, fileContent: prompt };
 };

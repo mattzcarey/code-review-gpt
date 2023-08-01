@@ -4,7 +4,8 @@ import { commentPerFile } from "../common/ci/commentPerFile";
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { getFileNames } from "./prompt/filesNames/getFileNames";
+import { File } from "../common/types";
+import { filterFiles } from "./prompt/filterFiles";
 
 interface ReviewArgs {
   [x: string]: unknown;
@@ -14,16 +15,17 @@ interface ReviewArgs {
   $0: string;
 }
 
-export const review = async (yargs: ReviewArgs) => {
+export const review = async (yargs: ReviewArgs, files: File[]) => {
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
 
   const modelName = yargs.model as string;
 
+  const filteredFiles = filterFiles(files);
+
   const maxPromptLength = getMaxPromptLength(modelName);
 
-  const fileNames = await getFileNames(isCi);
-  const prompts = await constructPromptsArray(fileNames, maxPromptLength, isCi);
+  const prompts = await constructPromptsArray(filteredFiles, maxPromptLength);
 
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
