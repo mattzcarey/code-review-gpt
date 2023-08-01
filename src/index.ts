@@ -13,7 +13,11 @@ const main = async () => {
       break;
     case "review":
       const { review } = await import("./review");
-      await review(argv);
+      const { getFilesWithChanges } = await import(
+        "./common/git/getFilesWithChanges"
+      );
+      const files = await getFilesWithChanges(argv.ci);
+      await review(argv, files);
       break;
     case "test":
       const { test } = await import("./test");

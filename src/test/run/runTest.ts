@@ -22,7 +22,7 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  ci: boolean,
+  ci: boolean
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -33,10 +33,14 @@ const runTest = async (
   // First step: run the review on the code snippet.
   const prompts = await constructPromptsArray(
     [testCase.snippet],
-    maxPromptLength,
-    ci,
+    maxPromptLength
   );
-  const {markdownReport: reviewResponse} = await askAI(prompts, modelName, false);
+
+  const { markdownReport: reviewResponse } = await askAI(
+    prompts,
+    modelName,
+    false
+  );
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
     reviewResponse,
