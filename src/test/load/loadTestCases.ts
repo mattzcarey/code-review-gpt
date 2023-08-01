@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "fs";
+import { readFile, readdir } from "fs/promises";
 import path from "path";
 import { TestCase } from "../types";
 import { logger } from "../../common/utils/logger";
@@ -8,9 +8,9 @@ import { logger } from "../../common/utils/logger";
  * @param testCasePath The path to the JSON test case file.
  * @returns The test case.
  */
-const loadTestCase = (testCasePath: string): TestCase => {
+const loadTestCase = async (testCasePath: string): Promise<TestCase> => {
   try {
-    const fileData = readFileSync(testCasePath, "utf8");
+    const fileData = await readFile(testCasePath, "utf8");
     return JSON.parse(fileData) as TestCase;
   } catch (error) {
     logger.error(`Error loading test case: ${testCasePath}`);
@@ -23,13 +23,19 @@ const loadTestCase = (testCasePath: string): TestCase => {
  * @param testCasesDir The directory containing the test cases.
  * @returns The test cases.
  */
-export const loadTestCases = (testCasesDir: string): TestCase[] => {
+export const loadTestCases = async (
+  testCasesDir: string
+): Promise<TestCase[]> => {
   try {
-    const testFiles = readdirSync(testCasesDir).filter((file) =>
+    const testFiles = (await readdir(testCasesDir)).filter((file) =>
       file.endsWith(".json")
     );
 
-    return testFiles.map((file) => loadTestCase(path.join(testCasesDir, file)));
+    return Promise.all(
+      testFiles.map(
+        async (file) => await loadTestCase(path.join(testCasesDir, file))
+      )
+    );
   } catch (error) {
     logger.error(`Error loading test cases from: ${testCasesDir}`);
     throw error;
