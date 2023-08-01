@@ -7,8 +7,10 @@ import { runTests } from "./run/runTest";
 import { loadSnapshots } from "./load/loadSnapshots";
 import { ReviewArgs } from "../args";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
-import { commentOnPR } from "../common/ci/commentOnPR";
+import { commentOnPR as commentOnPRGitHub } from "../common/ci/github/commentOnPR";
+import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnPR";
 import { signOff } from "./constants";
+import { GITHUB, GITLAB } from "../review/constants";
 
 export const test = async ({ ci, model }: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(model);
@@ -41,7 +43,11 @@ export const test = async ({ ci, model }: ReviewArgs) => {
     ci
   );
 
-  if (ci) {
-    await commentOnPR(testSummary, signOff);
+  if (ci === GITHUB) {
+    await commentOnPRGitHub(testSummary, signOff);
+  }
+
+  if (ci === GITLAB) {
+    await commentOnPRGitLab(testSummary, signOff);
   }
 };

@@ -2,10 +2,21 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 import { logger } from "../common/utils/logger";
+import { ReviewArgs } from "../args";
+import { GITHUB, GITLAB } from "../review/constants";
 
-export const configure = async () => {
+export const configure = async (yargs: ReviewArgs) => {
+  if (yargs.ci === GITHUB) {
+    configureGitHub();
+  }
+  if (yargs.ci === GITLAB) {
+    configureGitLab();
+  }
+};
+
+const configureGitHub = async () => {
   const workflowContent = fs.readFileSync(
-    path.join(__dirname, "pr.yml"),
+    path.join(__dirname, "github-pr.yml"),
     "utf8"
   );
 
@@ -43,6 +54,49 @@ export const configure = async () => {
   } catch (error) {
     logger.error(
       "It seems that the GitHub CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY to the repo settings/Environment/Actions/Repository Secrets manually."
+    );
+  }
+};
+
+const configureGitLab = async () => {
+  const pipelineContent = fs.readFileSync(
+    path.join(__dirname, "gitlab-pr.yml"),
+    "utf8"
+  );
+
+  const pipelineDir = process.cwd();
+  fs.mkdirSync(pipelineDir, { recursive: true });
+
+  const pipelineFile = path.join(pipelineDir, ".gitlab-ci.yml");
+  fs.writeFileSync(pipelineFile, pipelineContent, "utf8");
+
+  logger.info(`Created GitLab CI at: ${pipelineFile}`);
+
+  const inquirer = await import("inquirer");
+  const { apiKey } = await inquirer.default.prompt([
+    {
+      type: "input",
+      name: "apiKey",
+      message: "Please input your OpenAI API key:",
+    },
+  ]);
+
+  if (!apiKey) {
+    logger.error(
+      "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitLab CI/CD environment variables for your repository."
+    );
+    return;
+  }
+
+  try {
+    execSync(`glab auth login`, { stdio: "inherit" });
+    execSync(`glab variable set OPENAI_API_KEY ${apiKey}`);
+    logger.info(
+      "Successfully added the OPENAI_API_KEY secret to your GitHub repository."
+    );
+  } catch (error) {
+    logger.error(
+      "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY to the repo settings/Environment/Actions/Repository Secrets manually."
     );
   }
 };

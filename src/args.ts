@@ -1,11 +1,13 @@
 import yargs from "yargs";
 import dotenv from "dotenv";
+import { GITLAB } from "./review/constants";
+import { logger } from "./common/utils/logger";
 
 dotenv.config();
 
 export interface ReviewArgs {
   [x: string]: unknown;
-  ci: boolean;
+  ci: string;
   commentPerFile: boolean;
   model: string;
   _: (string | number)[];
@@ -36,12 +38,15 @@ const handleNoCommand = async () => {
 export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
-      description: "Indicate that the script is running on a CI environment",
-      type: "boolean",
-      default: false,
+      description:
+        "Indicates that the script is running on a CI environment. Specify which platform the scrip is running on, 'github' or 'gitlab'.",
+      choices: ["github", "gitlab"],
+      type: "string",
+      default: "github",
     })
     .option("commentPerFile", {
-      description: "Enables feedback to be made on a file-by-file basis.",
+      description:
+        "Enables feedback to be made on a file-by-file basis. Only work when the script is running on GitHub.",
       type: "boolean",
       default: false,
     })
@@ -57,10 +62,18 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
   }
+
   if (argv.shouldCommentPerFile && !argv.isCi) {
     throw new Error(
       "The 'commentPerFile' flag requires the 'ci' flag to be set."
     );
   }
+
+  if (argv.isCi === GITLAB && argv.shouldCommentPerFile) {
+    logger.warn(
+      "The 'commentPerFile' flag only works for GitHub, not for GitLab the 'ci' flag to be set."
+    );
+  }
+
   return argv;
 };

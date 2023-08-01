@@ -10,7 +10,7 @@ const main = async () => {
   switch (argv._[0]) {
     case "configure":
       const { configure } = await import("./configure");
-      await configure();
+      await configure(argv);
       break;
     case "review":
       const { review } = await import("./review");

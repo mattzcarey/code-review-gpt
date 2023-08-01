@@ -23,7 +23,6 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  ci: boolean
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -79,7 +78,7 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  ci: boolean
+  ci: string
 ): Promise<string> => {
   if (testCases.length === 0) {
     return "No test cases found.";
@@ -97,7 +96,6 @@ export const runTests = async (
         modelName,
         maxPromptLength,
         vectorStore,
-        ci
       );
       testResults[testCase.name] = result;
     } catch (error) {

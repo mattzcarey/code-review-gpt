@@ -3,7 +3,7 @@ import { getChangedFileLines } from "./getChangedFileLines";
 import { getChangedFilesNames } from "./getChangedFilesNames";
 import { File } from "../types/File";
 
-export const getFilesWithChanges = async (isCi: boolean): Promise<File[]> => {
+export const getFilesWithChanges = async (isCi: string): Promise<File[]> => {
   try {
     const fileNames = await getChangedFilesNames(isCi);
 
