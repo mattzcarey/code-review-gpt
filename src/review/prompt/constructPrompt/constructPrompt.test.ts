@@ -21,7 +21,6 @@ describe("When a file is longer than the max prompt length", () => {
 
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBeGreaterThan(0);
-    console.log(result[0]);
 
     for (const prompt of result) {
       expect(prompt.length).toBeLessThanOrEqual(
