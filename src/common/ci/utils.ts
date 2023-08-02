@@ -1,7 +1,7 @@
 import { getGitHubEnvVariables } from "../../config";
 import { context, getOctokit } from "@actions/github";
-import { IFeedback } from "../../review/llm/feedbackProcessor";
 import { logger } from "../utils/logger";
+import { CreateFileCommentData } from "../types";
 
 export const getRelativePath = (fileName: string, repoName: string): string => {
   const repoIndex = fileName.lastIndexOf(repoName);
@@ -77,13 +77,4 @@ export const commentOnFile = async (
       `Failed to comment on PR for feedback: ${data.feedback.details}. Error: ${error}`
     );
   }
-};
-
-export type CreateFileCommentData = {
-  feedback: IFeedback;
-  signOff: string;
-  owner: string;
-  repo: string;
-  pull_number: number;
-  commit_id: string;
 };

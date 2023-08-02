@@ -3,15 +3,10 @@ import AIModel from "../../common/model/AIModel";
 import {
   createSummary,
   processFeedbacks,
-  IFeedback,
 } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
 import { logger } from "../../common/utils/logger";
-
-type AskAIResponse = {
-  markdownReport: string;
-  feedbacks: IFeedback[];
-};
+import { AskAIResponse } from "../../common/types";
 
 export const askAI = async (
   prompts: string[],

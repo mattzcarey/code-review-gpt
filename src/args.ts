@@ -1,18 +1,10 @@
 import yargs from "yargs";
 import dotenv from "dotenv";
-import { GITLAB } from "./review/constants";
 import { logger } from "./common/utils/logger";
+import { GITLAB } from "./constants";
+import { ReviewArgs } from "./common/types";
 
 dotenv.config();
-
-export interface ReviewArgs {
-  [x: string]: unknown;
-  ci: string;
-  commentPerFile: boolean;
-  model: string;
-  _: (string | number)[];
-  $0: string;
-}
 
 const handleNoCommand = async () => {
   const inquirer = await import("inquirer");

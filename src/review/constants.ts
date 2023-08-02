@@ -35,7 +35,3 @@ export const supportedFiles = new Set([
 export const excludedKeywords = new Set(["types"]);
 
 export const maxFeedbackCount = 3;
-
-// CI flag constants
-export const GITHUB = "github";
-export const GITLAB = "gitlab";

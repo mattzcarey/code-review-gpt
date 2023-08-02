@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 import { logger } from "../common/utils/logger";
-import { ReviewArgs } from "../args";
-import { GITHUB, GITLAB } from "../review/constants";
+import { GITHUB, GITLAB } from "../constants";
+import { ReviewArgs } from "../common/types";
 
 export const configure = async (yargs: ReviewArgs) => {
   if (yargs.ci === GITHUB) {

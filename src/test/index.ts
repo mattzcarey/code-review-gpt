@@ -5,12 +5,12 @@ import { openAIApiKey } from "../config";
 import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 import { loadSnapshots } from "./load/loadSnapshots";
-import { ReviewArgs } from "../args";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR as commentOnPRGitHub } from "../common/ci/github/commentOnPR";
 import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnPR";
 import { signOff } from "./constants";
-import { GITHUB, GITLAB } from "../review/constants";
+import { GITHUB, GITLAB } from "../constants";
+import { ReviewArgs } from "../common/types";
 
 export const test = async ({ ci, model }: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(model);

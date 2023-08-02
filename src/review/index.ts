@@ -2,19 +2,13 @@ import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
-import { GITHUB, GITLAB, signOff } from "./constants";
+import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
 import { File } from "../common/types";
 import { filterFiles } from "./prompt/filterFiles";
-
-interface ReviewArgs {
-  [x: string]: unknown;
-  ci: string;
-  commentPerFile: boolean;
-  _: (string | number)[];
-  $0: string;
-}
+import { ReviewArgs } from "../common/types";
+import { GITHUB, GITLAB } from "../constants";
 
 export const review = async (yargs: ReviewArgs, files: File[]) => {
   const isCi = yargs.ci;
