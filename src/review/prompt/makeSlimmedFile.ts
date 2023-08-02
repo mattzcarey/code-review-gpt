@@ -1,9 +1,8 @@
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { getLanguageOfFile } from "./getLanguageOfFile";
 import { slimmedContextPrompt } from "./prompts";
 import { ReviewFile } from "./types";
+import { CreateMemoryStore } from '../../common/model/createMemoryStore';
 import { File } from "../../common/types";
 import { logger } from "../../common/utils/logger";
 
@@ -36,10 +35,7 @@ export const makeSlimmedFile = async (
   const doc = await splitter.createDocuments([changedLines]);
 
   // Generate memory store with the whole file
-  const fileEmbeddings = await MemoryVectorStore.fromDocuments(
-    doc,
-    new OpenAIEmbeddings()
-  );
+  const fileEmbeddings = await CreateMemoryStore(doc);
 
   // Make a similarity search between the embeddings of the whole file
   // and the embeddings of the changed lines.

@@ -3,6 +3,7 @@ import path from "path";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { CreateMemoryStore } from '../../common/model/createMemoryStore';
 
 /**
  * Load a snapshot for a test from a file.
@@ -28,9 +29,6 @@ export const loadSnapshots = async (shapshotsDir: string) => {
       return loadSnapshot(path.join(shapshotsDir, snapshotFile));
     })
   );
-  return MemoryVectorStore.fromDocuments(
-    snapshots.flat(),
-    new OpenAIEmbeddings(),
-    {}
-  );
+
+  return await CreateMemoryStore(snapshots.flat());
 };
