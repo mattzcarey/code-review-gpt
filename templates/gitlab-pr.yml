@@ -2,6 +2,9 @@ stages:
   - build
   - test
 
+variables:
+  GIT_DEPTH: 0
+
 default:
   image: node
 
@@ -10,6 +13,7 @@ build-job:
   script:
     - npm ci
     - npm run build
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME --depth=1
     - npm run start-gitlab
   rules:
       - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
