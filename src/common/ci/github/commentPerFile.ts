@@ -1,4 +1,4 @@
-import { IFeedback } from "../../../review/llm/feedbackProcessor";
+import { IFeedback } from "../../types";
 import { getOctokitRepoDetails, commentOnFile } from "../utils";
 
 /**
