@@ -1,3 +1,3 @@
-// CI flag constants
+// --ci flag constants
 export const GITHUB = "github";
 export const GITLAB = "gitlab";
