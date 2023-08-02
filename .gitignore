@@ -2,9 +2,8 @@ node_modules
 .env
 dist
 **/.cache/*.ts
-.next/*
-.sst/*
-!.sst/types
+.next
+.sst
 !.sst/types/index.ts
 !sst-env.d.ts
 .open-next
