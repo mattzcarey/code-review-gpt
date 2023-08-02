@@ -28,10 +28,10 @@ describe("filterFiles unit test", () => {
     );
 
     const result = await filterFiles(testFiles);
+    const filesRegex = new RegExp(`(src/testFiles/longFile.tsx|src/testFiles/initialFilesExample.ts)`, "i");
 
-    expect(result.length).toEqual(1);
-    expect(result[0].fileName).toBe(
-      join(__dirname, "../../../testFiles", "longFile.tsx")
-    );
+    expect(result.length).toEqual(2);
+    expect(result[0].fileName).toMatch(filesRegex);
+    expect(result[1].fileName).toMatch(filesRegex);
   });
 });

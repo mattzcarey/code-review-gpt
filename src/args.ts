@@ -47,6 +47,11 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "string",
       default: "gpt-4",
     })
+    .option("debug", {
+      description: "Enables debug logging",
+      type: "boolean",
+      default: false,
+    })
     .command("review", "Review the pull request")
     .command("configure", "Configure the script")
     .parseSync();
