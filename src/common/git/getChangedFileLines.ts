@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
-import { GITHUB, GITLAB } from "../../constants";
+import { GITHUB, GITLAB } from "../constants";
 
 export const getChangesFileLinesCommand = async (
   isCi: string,

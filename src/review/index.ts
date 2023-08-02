@@ -8,7 +8,7 @@ import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt"
 import { File } from "../common/types";
 import { filterFiles } from "./prompt/filterFiles";
 import { ReviewArgs } from "../common/types";
-import { GITHUB, GITLAB } from "../constants";
+import { GITHUB, GITLAB } from "../common/constants";
 
 export const review = async (yargs: ReviewArgs, files: File[]) => {
   const isCi = yargs.ci;

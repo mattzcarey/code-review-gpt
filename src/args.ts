@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import dotenv from "dotenv";
 import { logger } from "./common/utils/logger";
-import { GITLAB } from "./constants";
+import { GITLAB } from "./common/constants";
 import { ReviewArgs } from "./common/types";
 
 dotenv.config();
