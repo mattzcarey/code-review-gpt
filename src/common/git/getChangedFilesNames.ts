@@ -11,8 +11,8 @@ export const getChangedFilesNamesCommand = (
     const { githubSha, baseSha } = getGitHubEnvVariables();
     return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
   } else if (isCi === PlatformOptions.GITLAB) {
-    const { mergeRequestBaseSha } = getGitLabEnvVariables();
-    return `git diff --name-only ${mergeRequestBaseSha}...HEAD`;
+    const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
+    return `git diff --name-only --diff-filter=AMT ${mergeRequestBaseSha} ${gitlabSha}`;
   }
   return "git diff --name-only --diff-filter=AMT --cached";
 };

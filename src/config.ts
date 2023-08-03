@@ -35,6 +35,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
     "CI_MERGE_REQUEST_DIFF_BASE_SHA",
     "CI_PROJECT_ID",
     "CI_MERGE_REQUEST_IID",
+    "CI_COMMIT_SHA",
     "GITLAB_TOKEN",
   ].filter((varName) => !process.env[varName]);
   if (missingVars.length > 0) {
@@ -43,6 +44,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
   }
   return {
     mergeRequestBaseSha: process.env.CI_MERGE_REQUEST_DIFF_BASE_SHA as string,
+    gitlabSha: process.env.CI_COMMIT_SHA as string,
     gitlabToken: process.env.GITLAB_TOKEN as string,
     projectId: process.env.CI_PROJECT_ID as string,
     mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID as string,
