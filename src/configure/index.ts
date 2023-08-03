@@ -6,10 +6,10 @@ import { GITHUB, GITLAB } from "../common/constants";
 import { ReviewArgs } from "../common/types";
 
 export const configure = async (yargs: ReviewArgs) => {
-  if (yargs.ci === GITHUB) {
+  if (yargs.setupTarget === GITHUB) {
     configureGitHub();
   }
-  if (yargs.ci === GITLAB) {
+  if (yargs.setupTarget === GITLAB) {
     configureGitLab();
   }
 };
@@ -92,11 +92,11 @@ const configureGitLab = async () => {
     execSync(`glab auth login`, { stdio: "inherit" });
     execSync(`glab variable set OPENAI_API_KEY ${apiKey}`);
     logger.info(
-      "Successfully added the OPENAI_API_KEY secret to your GitHub repository."
+      "Successfully added the OPENAI_API_KEY secret to your GitLab repository."
     );
   } catch (error) {
     logger.error(
-      "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY to the repo settings/Environment/Actions/Repository Secrets manually."
+      "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY to the repo's CI/CD Variables manually."
     );
   }
 };
