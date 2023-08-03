@@ -5,10 +5,11 @@ import { openAIApiKey } from "../config";
 import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 import { loadSnapshots } from "./load/loadSnapshots";
-import { ReviewArgs } from "../args";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
-import { commentOnPR } from "../common/ci/commentOnPR";
+import { commentOnPR as commentOnPRGitHub } from "../common/ci/github/commentOnPR";
+import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnPR";
 import { signOff } from "./constants";
+import { PlatformOptions, ReviewArgs } from "../common/types";
 
 export const test = async ({ ci, model }: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(model);
@@ -41,7 +42,11 @@ export const test = async ({ ci, model }: ReviewArgs) => {
     ci
   );
 
-  if (ci) {
-    await commentOnPR(testSummary, signOff);
+  if (ci === PlatformOptions.GITHUB) {
+    await commentOnPRGitHub(testSummary, signOff);
+  }
+
+  if (ci === PlatformOptions.GITLAB) {
+    await commentOnPRGitLab(testSummary, signOff);
   }
 };

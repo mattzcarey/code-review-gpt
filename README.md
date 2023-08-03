@@ -71,14 +71,15 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 
 ### Options
 
-- `--ci` - Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
+- `--ci` - Used with the `review` command. Options are --ci=("github" | "gitlab"). Defaults to "github" if no option is specified.  Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
 
-- `--commentPerFile` - Used when the `--ci` flag is set. It enables the bot to comment the feedback on a file-by-file basis. Defaults to false.
+- `--commentPerFile` - Used when the `--ci` flag is set. Defaults to false. It enables the bot to comment the feedback on a file-by-file basis. 
+
+- `--setupTarget` - Used with the `configure` command. Options are --setupTarget=("github" | "gitlab"). Defaults to "github" if no option is specified. Specifies for which platform ('github' or 'gitlab') the project should be configured for.
 
 - `--model` - The model to use for the review. Defaults to `gpt-4`. You can use any openai model you have access to.
 
 - `--debug` - Runs the application in debug mode. This will enable debug logging.
-
 ## Getting Started Contributing 💫
 
 1. Clone the repository:

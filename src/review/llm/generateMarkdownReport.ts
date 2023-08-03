@@ -1,4 +1,4 @@
-import { IFeedback } from "./feedbackProcessor";
+import { IFeedback } from "../../common/types";
 
 const formatFeedback = (feedback: IFeedback): string => `
 **LOGAF Level ${feedback.logafScore} - ${feedback.fileName}**

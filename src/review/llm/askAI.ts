@@ -1,17 +1,9 @@
 import { openAIApiKey } from "../../config";
 import AIModel from "../../common/model/AIModel";
-import {
-  createSummary,
-  processFeedbacks,
-  IFeedback,
-} from "./feedbackProcessor";
+import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
 import { logger } from "../../common/utils/logger";
-
-type AskAIResponse = {
-  markdownReport: string;
-  feedbacks: IFeedback[];
-};
+import { AskAIResponse } from "../../common/types";
 
 export const askAI = async (
   prompts: string[],
@@ -33,7 +25,6 @@ export const askAI = async (
         `Filename: ${feedback.fileName}, logafScore: ${feedback.logafScore}, details: ${feedback.details}\n`
     )}`
   );
-
   const summary = await createSummary(model, feedbacks);
 
   logger.debug(`Summary of feedbacks: ${summary}`);

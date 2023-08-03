@@ -4,12 +4,7 @@ import { completionPrompt } from "../prompt/prompts";
 import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
 import { logger } from "../../common/utils/logger";
-
-export interface IFeedback {
-  fileName: string;
-  logafScore: number;
-  details: string;
-}
+import { IFeedback } from "../../common/types";
 
 const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>

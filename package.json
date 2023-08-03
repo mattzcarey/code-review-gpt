@@ -9,13 +9,13 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts review",
-    "start-ci": "ts-node ./src/index.ts review --ci",
-    "start-ci-file-comments": "ts-node ./src/index.ts review --ci --commentPerFile",
-    "start-debug": "ts-node ./src/index.ts review --debug",
-    "start-ci-debug": "ts-node ./src/index.ts review --ci --debug",
+    "start-github": "ts-node ./src/index.ts review --ci",
+    "start-gitlab": "ts-node ./src/index.ts review --ci=gitlab",
+    "start-github-file-comments": "ts-node ./src/index.ts review --ci --commentPerFile",
     "test": "ts-node ./src/index.ts test",
-    "test-ci": "ts-node ./src/index.ts test --ci",
     "test-unit": "dotenv -e .env jest",
+    "test-ci-github": "ts-node ./src/index.ts test --ci=github",
+    "test-ci-gitlab": "ts-node ./src/index.ts test --ci=gitlab",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
@@ -37,6 +37,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/github": "^5.1.1",
+    "@gitbeaker/rest": "^39.10.2",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.8",

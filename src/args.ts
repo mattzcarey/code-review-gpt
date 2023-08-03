@@ -1,17 +1,9 @@
 import yargs from "yargs";
 import dotenv from "dotenv";
+import { logger } from "./common/utils/logger";
+import { PlatformOptions, ReviewArgs } from "./common/types";
 
 dotenv.config();
-
-export interface ReviewArgs {
-  [x: string]: unknown;
-  ci: boolean;
-  commentPerFile: boolean;
-  model: string;
-  debug: boolean;
-  _: (string | number)[];
-  $0: string;
-}
 
 const handleNoCommand = async () => {
   const inquirer = await import("inquirer");
@@ -37,12 +29,23 @@ const handleNoCommand = async () => {
 export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
-      description: "Indicate that the script is running on a CI environment",
-      type: "boolean",
-      default: false,
+      description:
+        "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github' or 'gitlab'. Defaults to 'github'.",
+      choices: ["github", "gitlab"],
+      type: "string",
+      coerce: (arg) => {
+        return arg || "github";
+      },
+    })
+    .option("setupTarget", {
+      description: "Specifies for which platform ('github' or 'gitlab') the project should be configured for. Defaults to 'github'.",
+      choices: ["github", "gitlab"],
+      type: "string",
+      default: "github",
     })
     .option("commentPerFile", {
-      description: "Enables feedback to be made on a file-by-file basis.",
+      description:
+        "Enables feedback to be made on a file-by-file basis. Only work when the script is running on GitHub.",
       type: "boolean",
       default: false,
     })
@@ -63,10 +66,18 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
   }
+
   if (argv.shouldCommentPerFile && !argv.isCi) {
     throw new Error(
       "The 'commentPerFile' flag requires the 'ci' flag to be set."
     );
   }
+
+  if (argv.isCi === PlatformOptions.GITLAB && argv.shouldCommentPerFile) {
+    logger.warn(
+      "The 'commentPerFile' flag only works for GitHub, not for GitLab."
+    );
+  }
+
   return argv;
 };

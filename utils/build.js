@@ -19,9 +19,13 @@ const sharedConfig = {
 };
 
 build(sharedConfig).then(() => {
-  // Copy the ci template file to the dist folder after the build is complete
+  // Copy the ci template files to the dist folder after the build is complete
   fs.copyFileSync(
-    path.join(__dirname, "../templates", "pr.yml"),
-    path.join(__dirname, "../dist", "pr.yml")
+    path.join(__dirname, "../templates", "github-pr.yml"),
+    path.join(__dirname, "../dist", "github-pr.yml")
+  );
+  fs.copyFileSync(
+    path.join(__dirname, "../templates", "gitlab-pr.yml"),
+    path.join(__dirname, "../dist", "gitlab-pr.yml")
   );
 });
