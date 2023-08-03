@@ -1,5 +1,7 @@
 # Code Review GPT
 
+[![License][license_badge]][license]
+
 ## We give engineers their weekends back
 
 Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement.
@@ -135,3 +137,7 @@ Run `code-review-gpt` in the root directory of a git repository.
 ## Star History ⭐️👀
 
 [![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/code-review-gpt&type=Date)](https://star-history.com/#mattzcarey/code-review-gpt&Date)
+
+<!-- Badges -->
+[license]: https://opensource.org/licenses/MIT
+[license_badge]: https://img.shields.io/github/license/mattzcarey/code-review-gpt.svg?color=blue&style=flat-square&ghcache=unused
