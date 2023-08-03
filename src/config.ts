@@ -30,9 +30,7 @@ export const getGitHubEnvVariables = (): Record<string, string> => {
   };
 };
 
-export const getGitLabEnvVariables = async (): Promise<
-  Record<string, string>
-> => {
+export const getGitLabEnvVariables = (): Record<string, string> => {
   const missingVars = [
     "CI_MERGE_REQUEST_DIFF_BASE_SHA",
     "CI_PROJECT_ID",

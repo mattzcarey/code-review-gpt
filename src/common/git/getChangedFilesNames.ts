@@ -2,23 +2,23 @@ import { exec } from "child_process";
 import { join } from "path";
 
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
-import { GITHUB, GITLAB } from "../constants";
+import { PlatformOptions } from "../types";
 
-export const getChangedFilesNamesCommand = async (
+export const getChangedFilesNamesCommand = (
   isCi: string
-): Promise<string> => {
-  if (isCi === GITHUB) {
+): string => {
+  if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
     return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
-  } else if (isCi === GITLAB) {
-    const { mergeRequestBaseSha } = await getGitLabEnvVariables();
+  } else if (isCi === PlatformOptions.GITLAB) {
+    const { mergeRequestBaseSha } = getGitLabEnvVariables();
     return `git diff --name-only ${mergeRequestBaseSha}...HEAD`;
   }
   return "git diff --name-only --diff-filter=AMT --cached";
 };
 
 export const getChangedFilesNames = async (isCi: string): Promise<string[]> => {
-  const commandString = await getChangedFilesNamesCommand(isCi);
+  const commandString = getChangedFilesNamesCommand(isCi);
 
   return new Promise((resolve, reject) => {
     exec(commandString, (error, stdout, stderr) => {

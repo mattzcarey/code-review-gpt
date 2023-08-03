@@ -10,7 +10,7 @@ import { getGitLabEnvVariables } from "../../../config";
 export const commentOnPR = async (comment: string, signOff: string) => {
   try {
     const { gitlabToken, projectId, mergeRequestIIdString } =
-      await getGitLabEnvVariables();
+      getGitLabEnvVariables();
     const mergeRequestIId = parseInt(mergeRequestIIdString, 10);
     const api = new Gitlab({
       token: gitlabToken,
