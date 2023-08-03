@@ -3,3 +3,4 @@ export { ReviewArgs } from "./ReviewArgs";
 export { CreateFileCommentData } from "./CreateFileCommentData";
 export { IFeedback } from "./IFeedback";
 export { AskAIResponse } from "./AskAIResponse";
+export { PlatformOptions } from "./PlatformOptions";

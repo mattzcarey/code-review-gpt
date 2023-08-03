@@ -5,12 +5,10 @@ import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { File } from "../common/types";
+import { File, PlatformOptions } from "../common/types";
 import { filterFiles } from "./prompt/filterFiles";
 import { ReviewArgs } from "../common/types";
-import { GITHUB, GITLAB } from "../common/constants";
 import { logger } from "../common/utils/logger";
-
 export const review = async (yargs: ReviewArgs, files: File[]) => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
@@ -34,7 +32,7 @@ export const review = async (yargs: ReviewArgs, files: File[]) => {
 
   logger.debug(`Markdown report:\n ${response}`);
 
-  if (isCi === GITHUB) {
+  if (isCi === PlatformOptions.GITHUB) {
     if (!shouldCommentPerFile) {
       await commentOnPRGithub(response, signOff);
     }
@@ -42,7 +40,7 @@ export const review = async (yargs: ReviewArgs, files: File[]) => {
       await commentPerFile(feedbacks, signOff);
     }
   }
-  if (isCi === GITLAB) {
+  if (isCi === PlatformOptions.GITLAB) {
     await commentOnPRGitlab(response, signOff);
   }
 };

@@ -9,8 +9,7 @@ import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR as commentOnPRGitHub } from "../common/ci/github/commentOnPR";
 import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnPR";
 import { signOff } from "./constants";
-import { GITHUB, GITLAB } from "../common/constants";
-import { ReviewArgs } from "../common/types";
+import { PlatformOptions, ReviewArgs } from "../common/types";
 
 export const test = async ({ ci, model }: ReviewArgs) => {
   const maxPromptLength = getMaxPromptLength(model);
@@ -43,11 +42,11 @@ export const test = async ({ ci, model }: ReviewArgs) => {
     ci
   );
 
-  if (ci === GITHUB) {
+  if (ci === PlatformOptions.GITHUB) {
     await commentOnPRGitHub(testSummary, signOff);
   }
 
-  if (ci === GITLAB) {
+  if (ci === PlatformOptions.GITLAB) {
     await commentOnPRGitLab(testSummary, signOff);
   }
 };

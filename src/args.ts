@@ -1,8 +1,7 @@
 import yargs from "yargs";
 import dotenv from "dotenv";
 import { logger } from "./common/utils/logger";
-import { GITLAB } from "./common/constants";
-import { ReviewArgs } from "./common/types";
+import { PlatformOptions, ReviewArgs } from "./common/types";
 
 dotenv.config();
 
@@ -74,9 +73,9 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     );
   }
 
-  if (argv.isCi === GITLAB && argv.shouldCommentPerFile) {
+  if (argv.isCi === PlatformOptions.GITLAB && argv.shouldCommentPerFile) {
     logger.warn(
-      "The 'commentPerFile' flag only works for GitHub, not for GitLab the 'ci' flag to be set."
+      "The 'commentPerFile' flag only works for GitHub, not for GitLab."
     );
   }
 

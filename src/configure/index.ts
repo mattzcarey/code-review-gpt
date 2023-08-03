@@ -2,14 +2,13 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 import { logger } from "../common/utils/logger";
-import { GITHUB, GITLAB } from "../common/constants";
-import { ReviewArgs } from "../common/types";
+import { PlatformOptions, ReviewArgs } from "../common/types";
 
 export const configure = async (yargs: ReviewArgs) => {
-  if (yargs.setupTarget === GITHUB) {
+  if (yargs.setupTarget === PlatformOptions.GITHUB) {
     configureGitHub();
   }
-  if (yargs.setupTarget === GITLAB) {
+  if (yargs.setupTarget === PlatformOptions.GITLAB) {
     configureGitLab();
   }
 };

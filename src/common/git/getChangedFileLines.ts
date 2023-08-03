@@ -1,16 +1,15 @@
 import { exec } from "child_process";
 
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
-import { GITHUB, GITLAB } from "../constants";
-
+import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = async (
   isCi: string,
   fileName: string
 ): Promise<string> => {
-  if (isCi === GITHUB) {
+  if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
     return `git diff -U0 --diff-filter=AMT ${baseSha} ${githubSha} ${fileName}`;
-  } else if (isCi === GITLAB) {
+  } else if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = await getGitLabEnvVariables();
     return `git diff -U0 --diff-filter=AMT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
   }
