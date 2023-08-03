@@ -4,7 +4,7 @@ import { NextjsSite } from "sst/constructs";
 export default {
   config(_input) {
     return {
-      name: "nextjs-app",
+      name: "web-app",
       region: "eu-west-2",
     };
   },
