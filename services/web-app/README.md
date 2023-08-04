@@ -29,4 +29,4 @@ Remember to have your AWS credentials setup in your configure file.
 ### Useful links
 
 - https://sst.dev/examples/how-to-create-a-nextjs-app-with-serverless.html
-- *https://docs.sst.dev/advanced/iam-credentials
+- https://docs.sst.dev/advanced/iam-credentials
