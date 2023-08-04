@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
 
 variables:
   GIT_DEPTH: 0
@@ -12,17 +11,7 @@ build-job:
   stage: build
   script:
     - npm ci
-    - npm run build
-    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME --depth=1
-    - npm run start-gitlab
-  rules:
-      - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-
-unit-test-job:
-  stage: test
-  script:
-    - npm ci
-    - npm run build
-    - npm run test-ci-gitlab
+    - npm install code-review-gpt
+    - npx code-review-gpt review --ci=gitlab
   rules:
       - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

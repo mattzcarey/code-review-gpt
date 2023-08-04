@@ -9,6 +9,7 @@ import { File, PlatformOptions } from "../common/types";
 import { filterFiles } from "./prompt/filterFiles";
 import { ReviewArgs } from "../common/types";
 import { logger } from "../common/utils/logger";
+
 export const review = async (yargs: ReviewArgs, files: File[]) => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
