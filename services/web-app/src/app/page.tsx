@@ -1,32 +1,27 @@
-"use client"
-import { useSession, signIn } from 'next-auth/react';
+"use client";
+import { LoginButton } from '@/components/buttons/login';
+import { useSession } from 'next-auth/react';
+import Image from "next/image";
+import GithubImg from "../../public/github-mark-white.svg";
 
 export default function Home() {
-  // const { data, status } = useSession();
-  // const userEmail = data?.user?.email;
-
-  // if (status === "loading") {
-  //   return <p>Hang on there...</p>
-  // }
-
-  // if (status === "authenticated") {
-  //   return (
-  //     <>
-  //       <p>Signed in as {userEmail}</p>
-  //       <button onClick={() => signOut()}>Sign out</button>
-  //       <img src="https://cdn.pixabay.com/photo/2017/08/11/19/36/vw-2632486_1280.png" />
-  //     </>
-  //   )
-  // }
+  const { data, status } = useSession();
 
   return (
-    <div className="flex flex-col items-center p-16 relative place-items-center">
-        <h1 className="pb-[40px] text-4xl font-mono">
+    <>
+      <div className="flex flex-col items-center p-16 relative place-items-center">
+        <h1 className="pb-[10px] text-4xl font-mono">
           Code Review GPT
         </h1>
-        <button className="border-solid border-2 border-white p-[10px] text-3xl duration-500 hover:scale-125 hover:animate-bounce" style={{}} onClick={() => { signIn("github") }}>
-          Login
-        </button>
-    </div>
+        <a href="https://github.com/mattzcarey/code-review-gpt">
+          <Image src={GithubImg} alt={""} className="p-[10px] w-[60px]" />
+        </a>
+        {status === "authenticated" ? (
+          <h1>You're logged in</h1>
+        ) : (
+          <LoginButton />
+        )}
+      </div>
+    </>
   )
 }

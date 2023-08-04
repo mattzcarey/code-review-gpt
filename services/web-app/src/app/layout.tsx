@@ -1,4 +1,9 @@
+import { SessionProvider } from "next-auth/react"
+import type { AppProps } from 'next/app'
 import "../styles/globals.css";
+import React, { ReactNode } from 'react';
+import { Session } from 'next-auth';
+import { NextAuthProvider } from './providers';
 
 export const metadata = {
   title: 'Code Review GPT',
@@ -6,14 +11,12 @@ export const metadata = {
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+  }: {children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-      </body>
+        <body>
+          <NextAuthProvider>{children}</NextAuthProvider>
+        </body>
     </html>
   )
 }
