@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col items-center p-16 relative place-items-center">
+      <div className="flex flex-col items-center p-5 relative place-items-center">
         <h1 className="pb-[10px] text-4xl font-mono">
           Code Review GPT
         </h1>
