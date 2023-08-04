@@ -5,7 +5,7 @@ import Image from "next/image";
 import GithubImg from "../../public/github-mark-white.svg";
 
 export default function Home() {
-  const { data, status } = useSession();
+  const { status } = useSession();
 
   return (
     <>
