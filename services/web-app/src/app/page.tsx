@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { LoginButton } from '@/components/buttons/login';
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
@@ -14,7 +14,7 @@ export default function Home() {
           Code Review GPT
         </h1>
         <a href="https://github.com/mattzcarey/code-review-gpt">
-          <Image src={GithubImg} alt={""} className="p-[10px] w-[60px]" />
+          <Image src={GithubImg} alt={"Github logo"} className="p-[10px] w-[60px]" />
         </a>
         {status === "authenticated" ? (
           <h1>You're logged in</h1>
