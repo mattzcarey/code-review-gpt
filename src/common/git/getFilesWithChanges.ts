@@ -9,6 +9,12 @@ export const getFilesWithChanges = async (
   try {
     const fileNames = await getChangedFilesNames(isCi);
 
+    if (fileNames.length === 0) {
+      throw new Error(
+        "No files with changes found, please stage your changes."
+      );
+    }
+
     const files = await Promise.all(
       fileNames.map(async (fileName) => {
         const fileContent = await readFile(fileName, "utf8");

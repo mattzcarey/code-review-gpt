@@ -38,15 +38,10 @@ const pickWorstFeedbacks = async (
   feedbacks: IFeedback[],
   limit: number
 ): Promise<IFeedback[]> => {
-  // Filter out feedbacks with riskScore of 1 and 2, as we want to focus on the higher risk scores.
-  const filteredFeedbacks = feedbacks.filter(
-    (feedback) => feedback.riskScore > 2
-  );
-
   // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add weights so that feedbacks with higher risk scores are more likely to be picked.
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
-  filteredFeedbacks.forEach((feedback) => {
+  feedbacks.forEach((feedback) => {
     pickingPriorityQueue.enqueue(
       feedback,
       feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
@@ -55,6 +50,8 @@ const pickWorstFeedbacks = async (
       pickingPriorityQueue.dequeue();
     }
   });
+
+  console.log("dequeued", pickingPriorityQueue.getItems());
 
   return pickingPriorityQueue.getItems();
 };
@@ -83,6 +80,8 @@ const processFeedbacks = async (
   );
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
+
+  console.log("feedbacks", feedbacks);
 
   const worstFeedbacks = await pickWorstFeedbacks(feedbacks, maxFeedbackCount);
 
