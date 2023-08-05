@@ -1,7 +1,7 @@
-import yargs from "yargs";
 import dotenv from "dotenv";
-import { logger } from "./common/utils/logger";
+import yargs from "yargs";
 import { PlatformOptions, ReviewArgs } from "./common/types";
+import { logger } from "./common/utils/logger";
 
 dotenv.config();
 
@@ -38,7 +38,8 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       },
     })
     .option("setupTarget", {
-      description: "Specifies for which platform ('github' or 'gitlab') the project should be configured for. Defaults to 'github'.",
+      description:
+        "Specifies for which platform ('github' or 'gitlab') the project should be configured for. Defaults to 'github'.",
       choices: ["github", "gitlab"],
       type: "string",
       default: "github",
@@ -53,6 +54,13 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       description: "The model to use for generating the review",
       type: "string",
       default: "gpt-4",
+    })
+    .option("reviewType", {
+      description:
+        "Type of review to perform. 'full' will review the entire file, 'changed' will review the changed lines only but provide the full file as context if possible. 'costOptimized' will review only the changed lines using the least tokens possible keep api costs low. Defaults to 'changed'.",
+      choices: ["full", "changed", "costOptimized"],
+      type: "string",
+      default: "changed",
     })
     .option("debug", {
       description: "Enables debug logging",

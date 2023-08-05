@@ -12,15 +12,20 @@ export type CreateFileCommentData = {
   commit_id: string;
 };
 
-export interface File {
+export interface ReviewFile {
   fileName: string;
   fileContent: string;
   changedLines: string;
 }
 
+export type PromptFile = {
+  fileName: string;
+  promptContent: string;
+};
+
 export interface IFeedback {
   fileName: string;
-  logafScore: number;
+  riskScore: number;
   details: string;
 }
 
@@ -35,6 +40,7 @@ export interface ReviewArgs {
   setupTarget: string;
   commentPerFile: boolean;
   model: string;
+  reviewType: string;
   _: (string | number)[];
   $0: string;
 }

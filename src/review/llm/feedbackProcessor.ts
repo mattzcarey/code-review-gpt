@@ -1,10 +1,10 @@
 import AIModel from "../../common/model/AIModel";
+import { IFeedback } from "../../common/types";
+import { logger } from "../../common/utils/logger";
 import { maxFeedbackCount } from "../constants";
 import { completionPrompt } from "../prompt/prompts";
 import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
-import { logger } from "../../common/utils/logger";
-import { IFeedback } from "../../common/types";
 
 const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
@@ -34,22 +34,22 @@ const createSummary = async (
   return summary;
 };
 
-const pickBestFeedbacks = async (
+const pickWorstFeedbacks = async (
   feedbacks: IFeedback[],
   limit: number
 ): Promise<IFeedback[]> => {
-  // Filter out feedbacks with logafScore of 4 and 5, since we don't need to display them.
+  // Filter out feedbacks with riskScore of 1 and 2, as we want to focus on the higher risk scores.
   const filteredFeedbacks = feedbacks.filter(
-    (feedback) => feedback.logafScore < 4
+    (feedback) => feedback.riskScore > 2
   );
 
-  // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add weights so that feedbacks with lower logafScore are more likely to be picked.
+  // Use the priority queue with some randomization to pick feedbacks to display. This is to avoid showing the same feedbacks every time. We add weights so that feedbacks with higher risk scores are more likely to be picked.
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
   filteredFeedbacks.forEach((feedback) => {
     pickingPriorityQueue.enqueue(
       feedback,
-      1 / (1 + feedback.logafScore) + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is 1 / (1 + logafScore) so that feedbacks with lower logafScore are more likely to be picked.
+      feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
     );
     if (pickingPriorityQueue.size() > limit) {
       pickingPriorityQueue.dequeue();
@@ -84,11 +84,11 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  const bestFeedbacks = await pickBestFeedbacks(feedbacks, maxFeedbackCount);
+  const worstFeedbacks = await pickWorstFeedbacks(feedbacks, maxFeedbackCount);
 
-  logger.info(formatFeedbacks(bestFeedbacks));
+  logger.info(formatFeedbacks(worstFeedbacks));
 
-  return bestFeedbacks;
+  return worstFeedbacks;
 };
 
 export { createSummary, processFeedbacks };

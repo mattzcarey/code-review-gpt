@@ -1,8 +1,8 @@
 import { extname } from "path";
-import { File } from "../../../common/types";
+import { ReviewFile } from "../../../common/types";
 import { excludedKeywords, supportedFiles } from "../../constants";
 
-export const filterFiles = (files: File[]): File[] => {
+export const filterFiles = (files: ReviewFile[]): ReviewFile[] => {
   const filteredFileNames = files.filter((file) => {
     const ext = extname(file.fileName);
     return (
