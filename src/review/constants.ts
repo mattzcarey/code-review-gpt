@@ -37,3 +37,6 @@ export const supportedFiles = new Set(Object.keys(languageMap));
 export const excludedKeywords = new Set(["types"]);
 
 export const maxFeedbackCount = 3;
+
+//for cost optimized changed lines
+export const MAX_SURROUNDING_LINES = 5;

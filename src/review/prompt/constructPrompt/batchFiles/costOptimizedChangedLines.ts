@@ -1,4 +1,5 @@
 import { PromptFile, ReviewFile } from "../../../../common/types";
+import { MAX_SURROUNDING_LINES } from "../../../constants";
 import { createPromptFiles } from "./utils/createPromptFiles";
 import { promptsIntoBatches } from "./utils/promptsIntoBatches";
 
@@ -6,7 +7,6 @@ export const costOptimizedChangedLinesIntoBatches = async (
   files: ReviewFile[],
   maxPromptPayloadLength: number
 ): Promise<PromptFile[][]> => {
-  const MAX_SURROUNDING_LINES = 5;
   const promptFiles = createPromptFiles(
     files,
     maxPromptPayloadLength,
