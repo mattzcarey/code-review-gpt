@@ -4,33 +4,46 @@ const getChangedIndicesAndLength = (
   contentLines: string[],
   changedLinesArray: string[]
 ) => {
-  // Map changed lines to their indices and calculate the total length
   const changedIndices: { [index: number]: string } = {};
   let totalChangedLinesLength = 0;
+  let minIndex = Infinity;
+  let maxIndex = -Infinity;
+
+  // Create a map of trimmed content lines to their indices (arrays to handle duplicates)
+  const trimmedContentLinesMap = new Map<string, number[]>();
+  contentLines.forEach((line, index) => {
+    const trimmedLine = line.trim();
+    const indices = trimmedContentLinesMap.get(trimmedLine) || [];
+    indices.push(index);
+    trimmedContentLinesMap.set(trimmedLine, indices);
+  });
+
+  // Process the changed lines
   changedLinesArray.forEach((changedLine) => {
     const lineContent = changedLine.substring(1).trim();
-    const index = contentLines.findIndex((line) => line.trim() === lineContent);
-    if (index !== -1) {
+    const indices = trimmedContentLinesMap.get(lineContent);
+    if (indices && indices.length > 0) {
+      const index = indices.shift()!; // Take the first occurrence
       changedIndices[index] = changedLine;
-      totalChangedLinesLength += changedLine.length + 1; // Include newline character
+      totalChangedLinesLength += changedLine.length + 1;
+      minIndex = Math.min(minIndex, index);
+      maxIndex = Math.max(maxIndex, index);
     }
   });
-  return { changedIndices, totalChangedLinesLength };
+
+  return { changedIndices, totalChangedLinesLength, minIndex, maxIndex };
 };
 
 const calculateStartAndEnd = (
-  changedIndices: { [index: number]: string },
+  minIndex: number,
+  maxIndex: number,
   contentLinesLength: number,
   maxSurroundingLines?: number
 ) => {
-  let start = Math.max(
-    Math.min(...Object.keys(changedIndices).map(Number)) -
-      (maxSurroundingLines || 0),
-    0
-  );
-  let end = Math.min(
-    Math.max(...Object.keys(changedIndices).map(Number)) +
-      (maxSurroundingLines || 0),
+  // Calculate the starting and ending indices with surrounding lines considered
+  const start = Math.max(minIndex - (maxSurroundingLines || 0), 0);
+  const end = Math.min(
+    maxIndex + (maxSurroundingLines || 0),
     contentLinesLength - 1
   );
   return { start, end };
@@ -87,19 +100,12 @@ const createPromptContent = (
   changedIndices: { [index: number]: string },
   contentLines: string[]
 ) => {
-  let promptContent = "";
+  let promptContent = start > 0 ? "...\n" : "";
 
-  // Add ellipsis if there are skipped lines before the start
-  if (start > 0) {
-    promptContent += "...\n";
-  }
-
-  // Iterate only through the relevant lines (from start to end)
   for (let i = start; i <= end; i++) {
     promptContent += (changedIndices[i] || contentLines[i]) + "\n";
   }
 
-  // Add ellipsis if there are skipped lines after the end
   if (end < contentLines.length - 1) {
     promptContent += "...\n";
   }
@@ -116,15 +122,21 @@ export const createPromptFiles = (
     const contentLines = file.fileContent.split("\n");
     const changedLinesArray = file.changedLines.split("\n");
 
-    const { changedIndices, totalChangedLinesLength } =
+    // Get the changed indices, total length, and min/max indices
+    const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
+
+    // Calculate remaining space and start/end positions
     let remainingSpace =
       maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
     let { start, end } = calculateStartAndEnd(
-      changedIndices,
+      minIndex,
+      maxIndex,
       contentLines.length,
       maxSurroundingLines
     );
+
+    // Expand the range and create the prompt content
     ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
     const promptContent = createPromptContent(
       start,
