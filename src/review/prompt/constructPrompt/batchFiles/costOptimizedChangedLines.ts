@@ -1,6 +1,6 @@
 import { PromptFile, ReviewFile } from "../../../../common/types";
 import { createPromptFiles } from "./utils/createPromptChangedLines";
-import { filesIntoBatches } from "./utils/filesIntoBatches";
+import { promptsIntoBatches } from "./utils/promptsIntoBatches";
 
 export const costOptimizedChangedLinesIntoBatches = async (
   files: ReviewFile[],
@@ -12,5 +12,5 @@ export const costOptimizedChangedLinesIntoBatches = async (
     maxPromptPayloadLength,
     MAX_SURROUNDING_LINES
   );
-  return filesIntoBatches(promptFiles, maxPromptPayloadLength);
+  return promptsIntoBatches(promptFiles, maxPromptPayloadLength);
 };

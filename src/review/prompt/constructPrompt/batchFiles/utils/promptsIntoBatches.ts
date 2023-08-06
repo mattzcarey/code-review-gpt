@@ -2,7 +2,7 @@ import { PromptFile } from "../../../../../common/types";
 import { logger } from "../../../../../common/utils/logger";
 import { getLengthOfFile } from "../../getLengthOfFile";
 
-export const filesIntoBatches = (
+export const promptsIntoBatches = (
   promptFiles: PromptFile[],
   maxBatchSize: number
 ): PromptFile[][] => {
@@ -14,7 +14,7 @@ export const filesIntoBatches = (
     const currentFileSize = getLengthOfFile(file);
     if (currentFileSize > maxBatchSize) {
       logger.error(
-        `File ${file.fileName} is larger than the max prompt length, consider using a model with a larger context window. Skipping...`
+        `Changes to file ${file.fileName} are larger than the max prompt length, consider using a model with a larger context window. Skipping file changes...`
       );
       continue;
     } else if (currentBatchSize + currentFileSize > maxBatchSize) {
