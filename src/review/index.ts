@@ -22,6 +22,12 @@ export const review = async (yargs: ReviewArgs, files: ReviewFile[]) => {
   const reviewType = yargs.reviewType;
 
   const filteredFiles = filterFiles(files);
+  logger.debug(
+    `Files to review after filtering: ${filteredFiles.map(
+      (file) => file.fileName
+    )}`
+  );
+
   const maxPromptLength = getMaxPromptLength(modelName);
 
   const prompts = await constructPromptsArray(

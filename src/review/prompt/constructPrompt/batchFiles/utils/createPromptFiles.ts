@@ -88,9 +88,22 @@ const createPromptContent = (
   contentLines: string[]
 ) => {
   let promptContent = "";
+
+  // Add ellipsis if there are skipped lines before the start
+  if (start > 0) {
+    promptContent += "...\n";
+  }
+
+  // Iterate only through the relevant lines (from start to end)
   for (let i = start; i <= end; i++) {
     promptContent += (changedIndices[i] || contentLines[i]) + "\n";
   }
+
+  // Add ellipsis if there are skipped lines after the end
+  if (end < contentLines.length - 1) {
+    promptContent += "...\n";
+  }
+
   return promptContent.trim();
 };
 

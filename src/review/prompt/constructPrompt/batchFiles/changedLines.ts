@@ -1,5 +1,5 @@
 import { PromptFile, ReviewFile } from "../../../../common/types";
-import { createPromptFiles } from "./utils/createPromptChangedLines";
+import { createPromptFiles } from "./utils/createPromptFiles";
 import { promptsIntoBatches } from "./utils/promptsIntoBatches";
 
 export const changedLinesIntoBatches = async (

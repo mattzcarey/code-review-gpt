@@ -36,6 +36,7 @@ class AIModel {
     return retryAsync(
       async () => {
         const modelResponse = await this.model.call(prompt);
+        logger.debug(`Model response: ${modelResponse}`);
         try {
           // Use the utility function to parse and decode the specified attributes
           const parsedObject = parseAndDecodeAttributes<T>(

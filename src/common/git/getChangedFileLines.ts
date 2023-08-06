@@ -8,12 +8,12 @@ export const getChangesFileLinesCommand = (
 ): string => {
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
-    return `git diff -U0 --diff-filter=AMT ${baseSha} ${githubSha} ${fileName}`;
+    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${fileName}`;
   } else if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
-    return `git diff -U0 --diff-filter=AMT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
+    return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
   }
-  return `git diff -U0 --diff-filter=AMT --cached ${fileName}`;
+  return `git diff -U0 --diff-filter=AMRT --cached ${fileName}`;
 };
 
 export const getChangedFileLines = async (
