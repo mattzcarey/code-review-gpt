@@ -73,8 +73,10 @@ const processFeedbacks = async (
   model: AIModel,
   prompts: string[]
 ): Promise<IFeedback[]> => {
+  const attributesToEncode = ["details"]; //contains markdown, so we need to encode it during the parsing of JSON.
+
   const feedbackPromises = prompts.map((prompt) =>
-    model.callModelJSON<IFeedback[]>(prompt)
+    model.callModelJSON<IFeedback[]>(prompt, attributesToEncode)
   );
 
   const feedbackResults = await Promise.allSettled(

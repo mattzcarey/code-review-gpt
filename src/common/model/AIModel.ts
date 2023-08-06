@@ -1,6 +1,7 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import { retryAsync } from "ts-retry";
 import { logger } from "../utils/logger";
+import { parseAndDecodeAttributes } from "../utils/parseAndDecodeAttributes";
 
 interface IAIModel {
   modelName: string;
@@ -28,11 +29,27 @@ class AIModel {
     return this.model.call(prompt);
   }
 
-  public async callModelJSON<T>(prompt: string): Promise<T> {
+  public async callModelJSON<T>(
+    prompt: string,
+    attributesToEncode: string[] = []
+  ): Promise<T> {
     return retryAsync(
       async () => {
         const modelResponse = await this.model.call(prompt);
-        return JSON.parse(modelResponse) as T;
+        try {
+          // Use the utility function to parse and decode the specified attributes
+          const parsedObject = parseAndDecodeAttributes<T>(
+            modelResponse,
+            attributesToEncode
+          );
+          return parsedObject;
+        } catch (error) {
+          logger.error(
+            `Error parsing JSON response from the model: ${modelResponse}`,
+            error
+          );
+          throw error;
+        }
       },
       {
         maxTry: this.retryCount,
