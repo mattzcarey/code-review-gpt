@@ -17,7 +17,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release-please.outputs.release_created }}
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3
         with:
@@ -26,7 +26,7 @@ jobs:
   publish-package:
     runs-on: ubuntu-latest
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created  }}
+    if: ${{ needs.release-please.outputs.releases_created  }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
