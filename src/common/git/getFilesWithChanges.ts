@@ -15,7 +15,7 @@ export const getFilesWithChanges = async (
       logger.warn(
         "No files with changes found, you might need to stage your changes."
       );
-      exit();
+      exit(0);
     }
 
     const files = await Promise.all(

@@ -10,7 +10,10 @@ import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
 import { filterFiles } from "./prompt/filterFiles";
 
-export const review = async (yargs: ReviewArgs, files: ReviewFile[]) => {
+export const review = async (
+  yargs: ReviewArgs,
+  files: ReviewFile[]
+): Promise<void> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
   logger.debug(`Ci enabled: ${yargs.ci}`);
@@ -25,8 +28,8 @@ export const review = async (yargs: ReviewArgs, files: ReviewFile[]) => {
   const filteredFiles = filterFiles(files);
 
   if (filteredFiles.length == 0) {
-    logger.info("No file to review, exiting now.");
-    exit();
+    logger.info("No file to review, finishing review now.");
+    return;
   }
 
   logger.debug(
