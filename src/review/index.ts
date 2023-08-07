@@ -5,12 +5,12 @@ import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { File, PlatformOptions } from "../common/types";
+import { PlatformOptions } from "../common/types";
 import { filterFiles } from "./prompt/filterFiles";
 import { ReviewArgs } from "../common/types";
 import { logger } from "../common/utils/logger";
 
-export const review = async (yargs: ReviewArgs, files: File[]) => {
+export const review = async (yargs: ReviewArgs) => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
   logger.debug(`Ci enabled: ${yargs.ci}`);
@@ -19,6 +19,10 @@ export const review = async (yargs: ReviewArgs, files: File[]) => {
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
   const modelName = yargs.model as string;
+  const { getFilesWithChanges } = await import(
+    "../common/git/getFilesWithChanges"
+  );
+  const files = await getFilesWithChanges(isCi);
 
   const filteredFiles = filterFiles(files);
   const maxPromptLength = getMaxPromptLength(modelName);

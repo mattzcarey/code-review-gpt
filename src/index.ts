@@ -15,11 +15,7 @@ const main = async () => {
       break;
     case "review":
       const { review } = await import("./review");
-      const { getFilesWithChanges } = await import(
-        "./common/git/getFilesWithChanges"
-      );
-      const files = await getFilesWithChanges(argv.ci);
-      await review(argv, files);
+      await review(argv);
       break;
     case "test":
       const { test } = await import("./test");
