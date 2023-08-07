@@ -1,5 +1,7 @@
 import { readFile } from "fs/promises";
+import { exit } from "process";
 import { ReviewFile } from "../types";
+import { logger } from "../utils/logger";
 import { getChangedFileLines } from "./getChangedFileLines";
 import { getChangedFilesNames } from "./getChangedFilesNames";
 
@@ -10,9 +12,10 @@ export const getFilesWithChanges = async (
     const fileNames = await getChangedFilesNames(isCi);
 
     if (fileNames.length === 0) {
-      throw new Error(
-        "No files with changes found, please stage your changes."
+      logger.warn(
+        "No files with changes found, you might need to stage your changes."
       );
+      exit(0);
     }
 
     const files = await Promise.all(
