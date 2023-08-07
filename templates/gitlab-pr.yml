@@ -1,17 +1,12 @@
 stages:
-  - build
+  - review
 
-variables:
-  GIT_DEPTH: 0
-
-default:
-  image: node
-
-build-job:
-  stage: build
+gpt-review:
+  stage: review
+  image: "node:18.17"
+  before_script:
+    - npm install -g code-review-gpt
   script:
-    - npm ci
-    - npm install code-review-gpt
-    - npx code-review-gpt review --ci=gitlab
-  rules:
-      - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - code-review-gpt review --ci=gitlab
+  only:
+    - merge_requests
