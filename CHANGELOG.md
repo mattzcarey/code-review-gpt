@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.0...v0.1.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* releases_created ([#106](https://github.com/mattzcarey/code-review-gpt/issues/106)) ([4d18dbe](https://github.com/mattzcarey/code-review-gpt/commit/4d18dbe444d1fc9368cb20bb9157f90ca7d04fa2))
+
 ## [0.1.0](https://github.com/mattzcarey/code-review-gpt/compare/0.0.32...v0.1.0) (2023-08-07)
 
 
