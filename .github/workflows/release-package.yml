@@ -24,10 +24,6 @@ jobs:
         with:
           release-type: node
           package-name: code-review-gpt
-      - name: Debug output
-        run: |
-          echo "Releases created (releases_created): ${{ steps.release-please.outputs.releases_created }}"
-          echo "Release created (release_created): ${{ steps.release-please.outputs.release_created }}"
   publish-package:
     runs-on: ubuntu-latest
     needs: release-please
