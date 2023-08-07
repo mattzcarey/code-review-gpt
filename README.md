@@ -114,6 +114,14 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
 
 See the package.json file for all the npm commands you can run.
 
+5. Make a package release 🎉
+
+We use [release-please](https://github.com/googleapis/release-please) on this project. If you want to create a new release from your PR, please make sure your PR title follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. The release-please bot will automatically create a new release for you when your PR is merged.
+
+- fix: which represents bug fixes, and correlates to a patch version.
+- feat: which represents a new feature, and correlates to a SemVer minor.
+- feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a major version.
+
 ## Roadmap (see projects tab) 🌏
 
 ## Sponsors ❤️
