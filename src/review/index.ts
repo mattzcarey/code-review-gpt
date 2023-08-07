@@ -1,3 +1,4 @@
+import { exit } from "process";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
@@ -22,6 +23,12 @@ export const review = async (yargs: ReviewArgs, files: ReviewFile[]) => {
   const reviewType = yargs.reviewType;
 
   const filteredFiles = filterFiles(files);
+
+  if (filteredFiles.length == 0) {
+    logger.info("No file to review, exiting now.");
+    exit();
+  }
+
   logger.debug(
     `Files to review after filtering: ${filteredFiles.map(
       (file) => file.fileName
