@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.1...v0.2.0) (2023-08-07)
+
+
+### Features
+
+* Added PHP to languageMap ([#110](https://github.com/mattzcarey/code-review-gpt/issues/110)) ([0de1790](https://github.com/mattzcarey/code-review-gpt/commit/0de17903b9e75d5a8cf1ca6c569b209371ccfb4e))
+
 ## [0.1.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.0...v0.1.1) (2023-08-07)
 
 
