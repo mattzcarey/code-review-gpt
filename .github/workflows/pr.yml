@@ -30,10 +30,10 @@ jobs:
         run: npm run build
 
       - name: Run code review script
-        run: npm run start-github
+        run: npm run start -- --ci=github
 
       - name: Run unit tests
         run: npm run test-unit
 
       - name: Run prompt tests
-        run: npm run test-ci
+        run: npm run test -- --ci=github

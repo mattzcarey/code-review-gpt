@@ -9,13 +9,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts review",
-    "start-github": "ts-node ./src/index.ts review --ci",
-    "start-gitlab": "ts-node ./src/index.ts review --ci=gitlab",
-    "start-github-file-comments": "ts-node ./src/index.ts review --ci --commentPerFile",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
-    "test-ci-github": "ts-node ./src/index.ts test --ci=github",
-    "test-ci-gitlab": "ts-node ./src/index.ts test --ci=gitlab",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },

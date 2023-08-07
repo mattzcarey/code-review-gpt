@@ -1,11 +1,19 @@
 import { readFile } from "fs/promises";
+import { ReviewFile } from "../types";
 import { getChangedFileLines } from "./getChangedFileLines";
 import { getChangedFilesNames } from "./getChangedFilesNames";
-import { File } from "../types";
 
-export const getFilesWithChanges = async (isCi: string): Promise<File[]> => {
+export const getFilesWithChanges = async (
+  isCi: string
+): Promise<ReviewFile[]> => {
   try {
     const fileNames = await getChangedFilesNames(isCi);
+
+    if (fileNames.length === 0) {
+      throw new Error(
+        "No files with changes found, please stage your changes."
+      );
+    }
 
     const files = await Promise.all(
       fileNames.map(async (fileName) => {
