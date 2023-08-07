@@ -5,6 +5,10 @@
   "bin": {
     "code-review-gpt": "./dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattzcarey/code-review-gpt"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
