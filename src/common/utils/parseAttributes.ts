@@ -25,7 +25,7 @@ const processAttributes = (
   });
 };
 
-export const parseAndDecodeAttributes = <T>(
+export const parseAttributes = <T>(
   jsonString: string,
   attributesToEncode: string[]
 ): T => {

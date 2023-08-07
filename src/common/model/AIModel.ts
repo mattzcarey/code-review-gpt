@@ -1,7 +1,7 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import { retryAsync } from "ts-retry";
 import { logger } from "../utils/logger";
-import { parseAndDecodeAttributes } from "../utils/parseAndDecodeAttributes";
+import { parseAttributes } from "../utils/parseAttributes";
 
 interface IAIModel {
   modelName: string;
@@ -39,7 +39,7 @@ class AIModel {
         logger.debug(`Model response: ${modelResponse}`);
         try {
           // Use the utility function to parse and decode the specified attributes
-          const parsedObject = parseAndDecodeAttributes<T>(
+          const parsedObject = parseAttributes<T>(
             modelResponse,
             attributesToEncode
           );
