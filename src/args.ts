@@ -51,7 +51,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       default: false,
     })
     .option("model", {
-      description: "The model to use for generating the review",
+      description: "The model to use for generating the review.",
       type: "string",
       default: "gpt-4",
     })
@@ -63,12 +63,12 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       default: "changed",
     })
     .option("debug", {
-      description: "Enables debug logging",
+      description: "Enables debug logging.",
       type: "boolean",
       default: false,
     })
-    .command("review", "Review the pull request")
-    .command("configure", "Configure the script")
+    .command("review", "Review the pull request.")
+    .command("configure", "Configure the script.")
     .parseSync();
 
   if (!argv._[0]) {

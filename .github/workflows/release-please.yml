@@ -20,6 +20,7 @@ jobs:
       releases_created: ${{ steps.release-please.outputs.releases_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3
+        id: release-please
         with:
           release-type: node
           package-name: code-review-gpt
