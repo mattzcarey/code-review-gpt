@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.2.0...v0.2.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* add id to release please ci step ([29345e7](https://github.com/mattzcarey/code-review-gpt/commit/29345e73069410b56661c00cf2203507c3567248))
+
 ## [0.2.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.1...v0.2.0) (2023-08-07)
 
 
