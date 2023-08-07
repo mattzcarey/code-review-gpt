@@ -57,7 +57,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     })
     .option("reviewType", {
       description:
-        "Type of review to perform. 'full' will review the entire file, 'changed' will review the changed lines only but provide the full file as context if possible. 'costOptimized' will review only the changed lines using the least tokens possible keep api costs low. Defaults to 'changed'.",
+        "Type of review to perform. 'full' will review the entire file, 'changed' will review the changed lines only but provide the full file as context if possible. 'costOptimized' will review only the changed lines using the least tokens possible to keep api costs low. Defaults to 'changed'.",
       choices: ["full", "changed", "costOptimized"],
       type: "string",
       default: "changed",
