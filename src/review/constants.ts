@@ -30,6 +30,7 @@ export const languageMap: { [key: string]: string } = {
   ".tsx": "TypeScript",
   ".jsx": "JavaScript",
   ".dart": "Dart",
+  ".php": "PHP",
 };
 
 export const supportedFiles = new Set(Object.keys(languageMap));
