@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/mattzcarey/code-review-gpt/compare/v0.2.1...v0.2.2) (2023-08-07)
+
+
+### Bug Fixes
+
+* remove debug workflows ([c0a5c4b](https://github.com/mattzcarey/code-review-gpt/commit/c0a5c4b76d35ca1f15f044f1effa6120abbe3d76))
+
 ## [0.2.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.2.0...v0.2.1) (2023-08-07)
 
 
