@@ -1,10 +1,10 @@
 import { review } from "../../../../src/review/index";
-import { ReviewArgs, File } from "../../../../src/common/types";
+import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { getOpenAiApiEnvVariable } from "./helpers";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
-  files: File[];
+  files: ReviewFile[];
 }
 
 export const main = async (event: ReviewLambdasBody) => {
