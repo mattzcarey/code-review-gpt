@@ -1,5 +1,6 @@
 import { Gitlab } from "@gitbeaker/rest";
 import { getGitLabEnvVariables } from "../../../config";
+import { logger } from "../../utils/logger";
 /**
  * Publish a comment on the pull request. If the bot has already commented (i.e. a comment with the same sign off exists), update the comment instead of creating a new one.
  * The comment will be signed off with the provided sign off.
@@ -37,7 +38,7 @@ export const commentOnPR = async (comment: string, signOff: string) => {
       );
     }
   } catch (error) {
-    console.error(`Failed to comment on PR: ${error}`);
+    logger.error(`Failed to comment on PR: ${error}`);
     throw error;
   }
 };

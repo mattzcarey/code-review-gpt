@@ -77,6 +77,7 @@ const configureGitLab = async () => {
       type: "input",
       name: "apiKey",
       message: "Please input your OpenAI API key:",
+      mask: "*",
     },
   ]);
 

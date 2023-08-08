@@ -9,12 +9,12 @@ export const getChangedFilesNamesCommand = (
 ): string => {
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
-    return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
+    return `git diff --name-only --diff-filter=AMRT ${baseSha} ${githubSha}`;
   } else if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
-    return `git diff --name-only --diff-filter=AMT ${mergeRequestBaseSha} ${gitlabSha}`;
+    return `git diff --name-only --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha}`;
   }
-  return "git diff --name-only --diff-filter=AMT --cached";
+  return "git diff --name-only --diff-filter=AMRT --cached";
 };
 
 export const getChangedFilesNames = async (isCi: string): Promise<string[]> => {

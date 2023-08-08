@@ -38,14 +38,14 @@ In the root of your git repository run:
 
 ```shell
 npm install code-review-gpt
-npx code-review-gpt configure --ci=github
+npx code-review-gpt configure --setupTarget=github
 ```
 
 ### Gitlab CI
 
 ```shell
 npm install code-review-gpt
-npx code-review-gpt configure --ci=gitlab
+npx code-review-gpt configure --setupTarget=gitlab
 ```
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
@@ -69,17 +69,22 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 - `code-review-gpt review` - Runs the code review on the staged files.
 - `code-review-gpt configure` - Runs a setup tool to configure the application.
 
+- `code-review-gpt test` - Runs the e2e testing suite used internally in the CI in the tool repo.
+
 ### Options
 
-- `--ci` - Used with the `review` command. Options are --ci=("github" | "gitlab"). Defaults to "github" if no option is specified.  Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
+- `--ci` - Used with the `review` command. Options are --ci=("github" | "gitlab"). Defaults to "github" if no option is specified. Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
 
-- `--commentPerFile` - Used when the `--ci` flag is set. Defaults to false. It enables the bot to comment the feedback on a file-by-file basis. 
+- `--reviewType` - Used with the 'review' command. The options are --reviewType=("changed" | "full" | "costOptimized). Defaults to "changed" if no option is specified. Specifies whether the review is for the full file or just the changed lines. costOptimized limits the context surrounding the changed lines to 5 lines.
+
+- `--commentPerFile` - Used when the `--ci` flag is set. Defaults to false. It enables the bot to comment the feedback on a file-by-file basis.
 
 - `--setupTarget` - Used with the `configure` command. Options are --setupTarget=("github" | "gitlab"). Defaults to "github" if no option is specified. Specifies for which platform ('github' or 'gitlab') the project should be configured for.
 
 - `--model` - The model to use for the review. Defaults to `gpt-4`. You can use any openai model you have access to.
 
 - `--debug` - Runs the application in debug mode. This will enable debug logging.
+
 ## Getting Started Contributing 💫
 
 1. Clone the repository:
@@ -106,7 +111,16 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
    ```shell
    npm start
    ```
+
 See the package.json file for all the npm commands you can run.
+
+5. Make a package release 🎉
+
+We use [release-please](https://github.com/googleapis/release-please) on this project. If you want to create a new release from your PR, please make sure your PR title follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. The release-please bot will automatically create a new release for you when your PR is merged.
+
+- fix: which represents bug fixes, and correlates to a patch version.
+- feat: which represents a new feature, and correlates to a SemVer minor.
+- feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a major version.
 
 ## Roadmap (see projects tab) 🌏
 
@@ -125,17 +139,14 @@ See the package.json file for all the npm commands you can run.
 [![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/code-review-gpt&type=Date)](https://star-history.com/#mattzcarey/code-review-gpt&Date)
 
 <!-- Badges -->
+
 [npm]: https://www.npmjs.com/package/code-review-gpt
 [npm_badge]: https://img.shields.io/npm/dm/code-review-gpt.svg
-
 [license]: https://opensource.org/licenses/MIT
 [license_badge]: https://img.shields.io/github/license/mattzcarey/code-review-gpt.svg?color=blue&style=flat-square&ghcache=unused
-
 [contributors]: https://github.com/mattzcarey/code-review-gpt/graphs/contributors
 [contributors_badge]: https://img.shields.io/github/contributors/mattzcarey/code-review-gpt
-
 [pulse]: https://github.com/mattzcarey/code-review-gpt/pulse
 [pulse_badge]: https://img.shields.io/github/commit-activity/m/mattzcarey/code-review-gpt
-
 [twitter]: https://twitter.com/intent/follow?screen_name=oriontools.ai
 [twitter_badge]: https://img.shields.io/twitter/follow/oriontoolsai?style=social&logo=twitter

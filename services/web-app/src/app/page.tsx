@@ -1,11 +1,27 @@
+"use client"
+import { LoginButton } from '@/components/buttons/login';
+import { useSession } from 'next-auth/react';
+import Image from "next/image";
+import GithubImg from "../../public/github-mark-white.svg";
+
 export default function Home() {
+  const { status } = useSession();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="relative flex place-items-center hover:scale-125 duration-500">
-        <h1 className="hover:text-purple-600 text-4xl font-mono">
-          <a href="https://github.com/mattzcarey/code-review-gpt">Code Review GPT</a>
+    <>
+      <div className="flex flex-col items-center p-5 relative place-items-center">
+        <h1 className="pb-[10px] text-4xl font-mono">
+          Code Review GPT
         </h1>
+        <a href="https://github.com/mattzcarey/code-review-gpt">
+          <Image src={GithubImg} alt={"Github logo"} className="p-[10px] w-[60px]" />
+        </a>
+        {status === "authenticated" ? (
+          <h1>You're logged in</h1>
+        ) : (
+          <LoginButton />
+        )}
       </div>
-    </main>
+    </>
   )
 }
