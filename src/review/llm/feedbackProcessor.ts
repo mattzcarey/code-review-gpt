@@ -10,13 +10,11 @@ const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
 ): Promise<IFeedback[]> => {
   try {
-    console.log("In collectAndLogFeedback")
-    const feedbacks = await feedbackPromise;
-    console.log(`feedbacks: ${feedbacks}`)
+    console.log(`Before Feedback Promise`)
+    const feedbacks = await feedbackPromise; //! this doesn't get awaited...?
+    console.log(`Got feedbacks.`)
     return feedbacks;
   } catch (error) {
-        console.log("In collectAndLogFeedback")
-
     logger.error(`Error in processing prompt`, error);
     throw error;
   }
@@ -78,18 +76,13 @@ const processFeedbacks = async (
   model: AIModel,
   prompts: string[]
 ): Promise<IFeedback[]> => {
-  console.log("before feedbackPromises");
-
   const feedbackPromises = prompts.map((prompt) =>
     model.callModelJSON<IFeedback[]>(prompt)
   );
-  console.log("Got feedbackPromises");
-
 
   const feedbackResults = await Promise.allSettled(
     feedbackPromises.map(collectAndLogFeedback)
   );
-  console.log("Got feedback results");
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
