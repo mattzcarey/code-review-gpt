@@ -85,7 +85,7 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 
 - `--debug` - Runs the application in debug mode. This will enable debug logging.
 
-## Getting Started Contributing 💫
+## Getting Started 💫
 
 1. Clone the repository:
 
@@ -114,13 +114,21 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
 
 See the package.json file for all the npm commands you can run.
 
-5. Make a package release 🎉
+5. Make a PR 🎉
 
 We use [release-please](https://github.com/googleapis/release-please) on this project. If you want to create a new release from your PR, please make sure your PR title follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. The release-please bot will automatically create a new release for you when your PR is merged.
 
 - fix: which represents bug fixes, and correlates to a patch version.
 - feat: which represents a new feature, and correlates to a SemVer minor.
 - feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a major version.
+
+## Contributors 🙏
+
+Thanks to our wonderful contributors!
+
+<a href="https://github.com/mattzcarey/code-review-gpt/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mattzcarey/code-review-gpt" />
+</a>
 
 ## Roadmap (see projects tab) 🌏
 
