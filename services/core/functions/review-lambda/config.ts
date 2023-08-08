@@ -4,12 +4,14 @@ import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
+import { buildResourceName } from "../../helpers";
 
 const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY";
 
 export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
+      functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
       handler: "main",
       runtime: Runtime.NODEJS_18_X,

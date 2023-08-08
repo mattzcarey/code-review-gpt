@@ -9,8 +9,8 @@ const app = new App();
 const stage = getStage();
 const region = getRegion();
 
-const coreStack = new CoreStack(app, "crgpt-core-stack", {
-  stackName: buildResourceName("crgpt-core-stack"),
+const coreStack = new CoreStack(app, "crgpt-core", {
+  stackName: buildResourceName("crgpt-core"),
   stage: stage,
   env: { region },
 });

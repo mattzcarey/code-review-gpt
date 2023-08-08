@@ -3,7 +3,8 @@ import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
-import { isProduction } from "../../helpers";
+import { UpdateUserLambda } from "../../functions/update-user/config";
+import { buildResourceName, isProduction } from "../../helpers";
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -15,7 +16,8 @@ export class CoreStack extends Stack {
 
     new ReviewLambda(this, "review-lambda");
 
-    new Table(this, "user-database", {
+    const userTable = new Table(this, "user-database", {
+      tableName: buildResourceName("user-database"),
       billingMode: BillingMode.PAY_PER_REQUEST,
       partitionKey: {
         name: "PK",
@@ -27,6 +29,10 @@ export class CoreStack extends Stack {
       },
       deletionProtection: isProduction(),
       pointInTimeRecovery: isProduction(),
+    });
+
+    new UpdateUserLambda(this, "update-user-lambda", {
+      table: userTable,
     });
   }
 }
