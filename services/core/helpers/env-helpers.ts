@@ -1,4 +1,5 @@
 const defaultEnvironment = "dev";
+const defaultRegion = "eu-west-2";
 
 export type GetArgProps = {
   cliArg: string;
@@ -65,3 +66,10 @@ export const getStage = (): string => {
     defaultValue: defaultEnvironment,
   });
 };
+
+export const getRegion = (): string =>
+  getArg({
+    cliArg: 'region',
+    processEnvName: 'REGION',
+    defaultValue: defaultRegion,
+  });
