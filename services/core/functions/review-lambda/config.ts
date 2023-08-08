@@ -4,15 +4,12 @@ import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
-import { buildResourceName } from "../../helpers/env-helpers";
 
 const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY";
 
-export class ReviewLambda extends Construct {
+export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
-    super(scope, id);
-
-    const lambda = new NodejsFunction(this, buildResourceName("review-lambda"), {
+    super(scope, id, {
       entry: join(__dirname, "index.ts"),
       handler: "main",
       runtime: Runtime.NODEJS_18_X,
@@ -24,13 +21,13 @@ export class ReviewLambda extends Construct {
     });
 
     // Grant the Lambda function permissions to access Parameter Store
-    const parameterStoreArn = Stack.of(this).formatArn({
+    const parameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
 
-    lambda.addToRolePolicy(
+    this.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
         resources: [parameterStoreArn],
