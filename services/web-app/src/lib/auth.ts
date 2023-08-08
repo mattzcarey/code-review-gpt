@@ -3,17 +3,10 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { clientId, clientSecret, awsAccessKeyId, awsSecretKey, awsRegion } from "./config";
+import { Table } from "sst/node/table";
+import { Config } from "sst/node/config";
 
-export const dynamoConfig: DynamoDBClientConfig = {
-  credentials: {
-    accessKeyId: awsAccessKeyId as string,
-    secretAccessKey: awsSecretKey as string,
-  },
-  region: awsRegion,
-};
-
-const dynamoClient = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
+const dynamoClient = DynamoDBDocument.from(new DynamoDB({}), {
   marshallOptions: {
     convertEmptyValues: true,
     removeUndefinedValues: true,
@@ -24,11 +17,11 @@ const dynamoClient = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: clientId as string,
-      clientSecret: clientSecret as string,
+      clientId: Config.GITHUB_ID,
+      clientSecret: Config.GITHUB_SECRET,
     }),
   ],
   adapter: DynamoDBAdapter(dynamoClient, {
-    tableName: "dev-web-app-user-data",
+    tableName: Table['user-data'].tableName,
   }),
 };

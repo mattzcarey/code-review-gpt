@@ -17,7 +17,7 @@ export default function Home() {
           <Image src={GithubImg} alt={"Github logo"} className="p-[10px] w-[60px]" />
         </a>
         {status === "authenticated" ? (
-          <h1>You're logged in {data.user?.email}</h1>
+          <h1>You're logged in {data.user?.name}</h1>
         ) : (
           <LoginButton />
         )}
