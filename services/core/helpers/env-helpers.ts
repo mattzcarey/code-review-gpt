@@ -49,16 +49,8 @@ export const getArg = ({
 };
 
 export const buildResourceName = (resourceName: string): string =>
-  `${getStackName()}-${resourceName}`;
+  `${getStage()}-${resourceName}`;
 
-export const getStackName = (): string => {
-  const arg = getArg({
-    cliArg: "stackName",
-    processEnvName: "STACK_NAME",
-    defaultValue: getStage(),
-  });
-  return arg;
-};
 export const getStage = (): string => {
   return getArg({
     cliArg: "stage",
@@ -69,7 +61,7 @@ export const getStage = (): string => {
 
 export const getRegion = (): string =>
   getArg({
-    cliArg: 'region',
-    processEnvName: 'REGION',
+    cliArg: "region",
+    processEnvName: "REGION",
     defaultValue: defaultRegion,
   });

@@ -1,7 +1,2 @@
-export {
-  getRegion,
-  getStackName,
-  getStage,
-  buildResourceName,
-} from "./env-helpers";
+export { getRegion, getStage, buildResourceName } from "./env-helpers";
 export { isProduction } from "./isProduction";
