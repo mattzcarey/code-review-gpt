@@ -1,9 +1,10 @@
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
-import { DynamoDBAdapter } from "@auth/dynamodb-adapter"
+import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { clientId, clientSecret, awsAccessKeyId, awsSecretKey, awsRegion } from './config';
+import { clientId, clientSecret, awsAccessKeyId, awsSecretKey, awsRegion } from "./config";
+import { debug } from 'util';
 
 export const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -28,7 +29,10 @@ export const authOptions: NextAuthOptions = ({
       clientSecret: clientSecret as string,
     }),
   ],
-  adapter: DynamoDBAdapter(
-    dynamoClient
-  ),
+  adapter: DynamoDBAdapter(dynamoClient, { 
+    tableName: "dev-web-app-user-data",
+    partitionKey: "id",
+    sortKey: "name",
+  }),
+  debug: true,
 });
