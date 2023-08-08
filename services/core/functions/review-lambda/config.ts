@@ -4,15 +4,15 @@ import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
+import { buildResourceName } from "../../helpers/env-helpers";
 
-const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY"
+const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY";
 
 export class ReviewLambda extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const lambda = new NodejsFunction(this, "review-lambda", {
-      functionName: "review-lambda",
+    const lambda = new NodejsFunction(this, buildResourceName("review-lambda"), {
       entry: join(__dirname, "index.ts"),
       handler: "main",
       runtime: Runtime.NODEJS_18_X,
@@ -29,7 +29,7 @@ export class ReviewLambda extends Construct {
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
-    
+
     lambda.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
