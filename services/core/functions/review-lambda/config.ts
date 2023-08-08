@@ -6,6 +6,7 @@ import { Construct } from "constructs";
 import { join } from "path";
 
 const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY"
+
 export class ReviewLambda extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);

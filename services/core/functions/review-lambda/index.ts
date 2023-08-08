@@ -21,6 +21,5 @@ export const main = async (event: ReviewLambdasBody) => {
   );
 
   process.env["OPENAI_API_KEY"] = keyValue;
-  console.log(`process.env.OPENAI_API_KEY = ${process.env.OPENAI_API_KEY}`);
   return await review(event.args, event.files);
 };

@@ -10,9 +10,7 @@ const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
 ): Promise<IFeedback[]> => {
   try {
-    console.log(`Before Feedback Promise`)
-    const feedbacks = await feedbackPromise; //! this doesn't get awaited...?
-    console.log(`Got feedbacks.`)
+    const feedbacks = await feedbackPromise;
     return feedbacks;
   } catch (error) {
     logger.error(`Error in processing prompt`, error);

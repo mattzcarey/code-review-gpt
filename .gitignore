@@ -7,3 +7,10 @@ dist
 !.sst/types/index.ts
 !sst-env.d.ts
 .open-next
+*.js
+!jest.config.js
+*.d.ts
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

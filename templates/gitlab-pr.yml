@@ -1,39 +1,12 @@
-name: Code Review GPT CI
+stages:
+  - review
 
-on:
-  pull_request:
-    branches: [main]
-
-permissions:
-  pull-requests: write
-  contents: read
-
-jobs:
-  build_and_test:
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha }}
-      GITHUB_SHA: ${{ github.sha }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm ci
-      
-      - name: Build
-        run: npm run build
-
-      - name: Run code review script
-        run: npm run start-github
-      
-      - name: Run unit tests
-        run: npm run test-unit
-      
-      - name: Run prompt tests
-        run: npm run test-ci
+gpt-review:
+  stage: review
+  image: "node:18.17"
+  before_script:
+    - npm install -g code-review-gpt
+  script:
+    - code-review-gpt review --ci=gitlab
+  only:
+    - merge_requests
