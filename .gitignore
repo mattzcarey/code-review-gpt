@@ -7,3 +7,4 @@ dist
 !.sst/types/index.ts
 !sst-env.d.ts
 .open-next
+cdk.out/
