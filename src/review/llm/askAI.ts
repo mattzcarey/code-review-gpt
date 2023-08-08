@@ -16,7 +16,7 @@ export const askAI = async (
     temperature: 0.0,
     apiKey: openAIApiKey(),
   });
-
+  console.log("Created model");
   const feedbacks = await processFeedbacks(model, prompts);
 
   logger.debug(
