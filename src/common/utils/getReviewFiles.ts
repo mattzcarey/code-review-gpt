@@ -6,7 +6,7 @@ export const getReviewFiles = async (isCi: string, remotePullRequest: string): P
       "../github/getRemotePullRequestFiles"
     );
 
-    return await getRemotePullRequestFiles();
+    return await getRemotePullRequestFiles(remotePullRequest);
   } else {
     const { getFilesWithChanges } = await import(
       "../git/getFilesWithChanges"

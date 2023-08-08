@@ -40,6 +40,7 @@
     "@gitbeaker/rest": "^39.10.2",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
+    "graphql-request": "^6.1.0",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
     "ts-retry": "^4.2.1",

@@ -15,6 +15,13 @@ export const openAIApiKey = (): string => {
   return process.env.OPENAI_API_KEY;
 };
 
+export const githubToken = (): string => {
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error("GITHUB_TOKEN is not set");
+  }
+  return process.env.GITHUB_TOKEN;
+};
+
 export const getGitHubEnvVariables = (): Record<string, string> => {
   const missingVars = ["GITHUB_SHA", "BASE_SHA", "GITHUB_TOKEN"].filter(
     (varName) => !process.env[varName]
