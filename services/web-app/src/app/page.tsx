@@ -3,6 +3,7 @@ import { LoginButton } from '@/components/buttons/login';
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
 import GithubImg from "../../public/github-mark-white.svg";
+import Footer from '@/components/footer/footer';
 
 export default function Home() {
   const { data, status } = useSession();
@@ -22,6 +23,7 @@ export default function Home() {
           <LoginButton />
         )}
       </div>
+      <Footer />
     </>
   )
 }
