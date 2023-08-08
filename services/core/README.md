@@ -8,7 +8,7 @@ The `buildResourceName("<resource_name>")` uses command line arguments set when 
 
 - `stage` - the stage that you are developing on, ie. `dev`, `staging`,`prod`.
 - `stackName` - the unique name of the stack, so that during development multiple people can be working on the same stack.
-
+- `region` - the region, defaults to `eu-west-1`. This is not used in the naming of resources. 
 ### Example Deploy command
 
 When you want to deploy you can set these cli options.
