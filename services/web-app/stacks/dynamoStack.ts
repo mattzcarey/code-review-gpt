@@ -3,13 +3,14 @@ import { StackContext, Table } from "sst/constructs";
 export const DynamoStack = ({ stack }: StackContext) => {
   const table = new Table(stack, "user-data", {
     fields: {
-      id: "number",
-      name: "string",
-      email: "string",
+      pk: "string",
+      sk: "string",
+      GSI1PK: "string",
+      GSI1SK: "string",
     },
-    primaryIndex: { partitionKey: "id", sortKey: "email" },
+    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
     globalIndexes: {
-      GSI1: {partitionKey: "email", sortKey: "name"},
+      GSI1: { partitionKey: "GSI1PK", sortKey: "GSI1SK" },
     },
   });
 

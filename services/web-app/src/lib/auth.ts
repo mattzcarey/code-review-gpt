@@ -4,7 +4,6 @@ import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { clientId, clientSecret, awsAccessKeyId, awsSecretKey, awsRegion } from "./config";
-import { debug } from 'util';
 
 export const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -22,17 +21,14 @@ const dynamoClient = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
   },
 })
 
-export const authOptions: NextAuthOptions = ({
+export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       clientId: clientId as string,
       clientSecret: clientSecret as string,
     }),
   ],
-  adapter: DynamoDBAdapter(dynamoClient, { 
+  adapter: DynamoDBAdapter(dynamoClient, {
     tableName: "dev-web-app-user-data",
-    partitionKey: "id",
-    sortKey: "name",
   }),
-  debug: true,
-});
+};
