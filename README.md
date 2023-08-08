@@ -43,10 +43,31 @@ npx code-review-gpt configure --setupTarget=github
 
 ### Gitlab CI
 
+If you are running this tool in Gitlab, you will need to do some additional setup. You will need to create a **access token** in Gitlab and store it in your CI/CD variables to allow the bot access to you Gitlab account. Follow the steps below.
+
+#### Get Your Access Token
+1. Log in to your GitLab account.
+2. Go to your **User Settings** by clicking on your profile picture in the top right corner and selecting **Preferences**.
+3. In the left sidebar, under the **Access Tokens** section, you can generate a new personal access token.
+4. Name your token something relevant and understandable ie. `CODE_REVIEW-GPT-TOKEN`. Set the scope to be `api` only. 
+5. Click the "Create personal access token" button. GitLab will generate the token and display it to you ***once***. Make sure to copy this value, we are going to use it in the next step.
+
+#### Set Access Token as a CI/CD Variable
+1. Navigate to the project where you want to add the code review bot.
+2. In the left sidebar, click the **Settings** drop down, then click **CI/CD**
+3. Scroll down to the **Variables** section and click the **Expand** button.This is where you can manage your CI/CD variables.
+4. Create a new variable by clicking the **Add Variable** button in the CI/CD Variable table. 
+5. Paste your previously copied access token into the **Value** box. Name the variable `GITLAB_TOKEN`. Under the **Flags** section, make sure to tick the `Mask variable` option. 
+
+   - [Un-tick the `Protect variable` if your branches are not protected, otherwise this variable won't be availiable for the bot to use.]
+6. Save you changes. Now you can go ahead and run the following commands in you project directory.
+
+
 ```shell
 npm install code-review-gpt
 npx code-review-gpt configure --setupTarget=gitlab
 ```
+
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
 
