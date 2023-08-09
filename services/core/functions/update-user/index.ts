@@ -1,13 +1,16 @@
-import { getEnvVariable } from "@swarmion/serverless-helpers";
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { getUserEntity } from "../../entities/userEntity";
 
-const TABLE_NAME = getEnvVariable("TABLE_NAME");
-
 interface UpdateUserLambdaInput {
   apiKey: string;
   userId: string;
+}
+
+const TABLE_NAME = process.env["TABLE_NAME"];
+
+if (TABLE_NAME === undefined) {
+  throw new Error(`Environment variable not found: "TABLE_NAME"`);
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {

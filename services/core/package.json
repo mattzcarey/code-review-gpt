@@ -21,7 +21,6 @@
     "typescript": "~5.1.3"
   },
   "dependencies": {
-    "@swarmion/serverless-helpers": "^0.28.2",
     "aws-cdk-lib": "2.86.0",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1430.0",
