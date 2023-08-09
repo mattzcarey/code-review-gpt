@@ -3,3 +3,8 @@ export interface PullRequestIdentifier {
   repo: string;
   prNumber: number;
 }
+
+export interface PullRequestFile {
+  changeType: string;
+  path: string;
+}

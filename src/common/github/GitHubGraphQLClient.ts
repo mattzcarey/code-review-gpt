@@ -1,15 +1,10 @@
 import { gql, GraphQLClient } from "graphql-request"
 import { githubToken } from "../../config";
-import { PullRequestIdentifier } from "./types";
+import { PullRequestIdentifier, PullRequestFile } from "./types";
 
 interface PullRequest {
   headSha: string;
   files: PullRequestFile[];
-}
-
-interface PullRequestFile {
-  changeType: string;
-  path: string;
 }
 
 interface PaginatedPullRequestFiles {
