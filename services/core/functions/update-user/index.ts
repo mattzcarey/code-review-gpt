@@ -32,10 +32,13 @@ export const main = async (event: APIGatewayProxyEvent) => {
 
     const userEntity = getUserEntity(TABLE_NAME);
 
-    await userEntity.update({
-      userId: userId,
-      apiKey: apiKey,
-    });
+    await userEntity.update(
+      {
+        userId: userId,
+        apiKey: apiKey,
+      },
+      { conditions: { attr: "userId", exists: true } }
+    );
 
     return Promise.resolve({
       statusCode: 200,
