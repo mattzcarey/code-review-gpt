@@ -25,6 +25,7 @@
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1430.0",
     "constructs": "^10.0.0",
+    "dynamodb-toolbox": "^0.8.5",
     "source-map-support": "^0.5.21"
   }
 }
