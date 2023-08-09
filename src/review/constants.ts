@@ -30,6 +30,7 @@ export const supportedFiles = new Set([
   ".tsx",
   ".jsx",
   ".dart",
+  ".rb",
 ]);
 
 export const excludedKeywords = new Set(["types"]);

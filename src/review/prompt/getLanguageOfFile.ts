@@ -10,6 +10,7 @@ const fileExtensionToLanguage: Record<string, SupportedTextSplitterLanguage> = {
   ".rs": "rust",
   ".tsx": "js",
   ".jsx": "js",
+  ".rb": "ruby",
 };
 
 export const getLanguageOfFile = (
