@@ -1,10 +1,11 @@
 import { Stack, StackProps } from "aws-cdk-lib";
-import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
+import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Construct } from "constructs";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { buildResourceName, isProduction } from "../../helpers";
+import { CoreApi } from "./api-gateway";
+import { UserTable } from "./user-table";
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -14,25 +15,17 @@ export class CoreStack extends Stack {
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
-    new ReviewLambda(this, "review-lambda");
+    const api = new CoreApi(this, "api");
 
-    const userTable = new Table(this, "user-database", {
-      tableName: buildResourceName("user-database"),
-      billingMode: BillingMode.PAY_PER_REQUEST,
-      partitionKey: {
-        name: "PK",
-        type: AttributeType.STRING,
-      },
-      sortKey: {
-        name: "SK",
-        type: AttributeType.STRING,
-      },
-      deletionProtection: isProduction(),
-      pointInTimeRecovery: isProduction(),
-    });
+    const userTable = new UserTable(this, "user-database");
 
-    new UpdateUserLambda(this, "update-user-lambda", {
+    const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
       table: userTable,
     });
+
+    new ReviewLambda(this, "review-lambda");
+
+    const updateUserRoute = api.root.addResource("updateUser");
+    updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
   }
 }
