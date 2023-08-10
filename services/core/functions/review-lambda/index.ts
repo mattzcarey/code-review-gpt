@@ -2,11 +2,14 @@ import { review } from "../../../../src/review/index";
 import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { getVariableFromSSM } from "../helpers";
+import { logger } from "../../../../src/common/utils/logger";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
   files: ReviewFile[];
 }
+
+logger.settings.minLevel = 4;
 
 export const main = async (event: APIGatewayProxyEvent) => {
   const openAIApiKey = await getVariableFromSSM(
