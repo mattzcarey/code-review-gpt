@@ -13,6 +13,9 @@ export default function RootLayout({
   }: {children: ReactNode }) {
   return (
     <html lang="en">
+        <head>
+        <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+        </head>
         <body>
           <NextAuthProvider>
             <Header />
