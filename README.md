@@ -47,8 +47,8 @@ If you are running this tool in Gitlab, you will need to do some additional setu
 
 #### Get Your Access Token
 1. Log in to your GitLab account.
-2. Go to your **User Settings** by clicking on your profile picture in the top right corner and selecting **Preferences**.
-3. In the left sidebar, under the **Access Tokens** section, you can generate a new personal access token.
+2. Go to your **Repo settings** by clicking on the repository, and selecting **Settings** -> **Access Tokens**.
+3. In this section, you can generate a new access token.
 4. Name your token something relevant and understandable ie. `CODE_REVIEW-GPT-TOKEN`. Set the scope to be `api` only. 
 5. Click the "Create personal access token" button. GitLab will generate the token and display it to you ***once***. Make sure to copy this value, we are going to use it in the next step.
 
