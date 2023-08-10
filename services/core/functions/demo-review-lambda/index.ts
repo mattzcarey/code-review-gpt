@@ -9,7 +9,7 @@ interface ReviewLambdaInput {
   code: string;
 }
 
-const DEMO_MODEL = "gpt-4";
+const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
 logger.settings.minLevel = 4;
 
@@ -40,17 +40,21 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
-    const maxPromptLength = getMaxPromptLength(DEMO_MODEL);
+    const maxPromptLength = getMaxPromptLength(DEFAULT_DEMO_MODEL);
     const prompt = demoPrompt + code;
 
     if (prompt.length > maxPromptLength) {
       return Promise.resolve({
         statusCode: 400,
-        body: `The provided code is too large for the model ${DEMO_MODEL}. Please try and provide a smaller code snippet.`,
+        body: `The provided code is too large for the model ${DEFAULT_DEMO_MODEL}. Please try and provide a smaller code snippet.`,
       });
     }
 
-    const { markdownReport } = await askAI([prompt], DEMO_MODEL, openAIApiKey);
+    const { markdownReport } = await askAI(
+      [prompt],
+      DEFAULT_DEMO_MODEL,
+      openAIApiKey
+    );
 
     return Promise.resolve({
       statusCode: 200,
