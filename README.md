@@ -49,7 +49,7 @@ If you are running this tool in Gitlab, you will need to do some additional setu
 1. Log in to your GitLab account.
 2. Go to your **User Settings** by clicking on your profile picture in the top right corner and selecting **Preferences**.
 3. In the left sidebar, under the **Access Tokens** section, you can generate a new personal access token.
-4. Name your token something relevant and understandable ie. `CODE_REVIEW-GPT-TOKEN`. Set the scope to be `write_repository` only. 
+4. Name your token something relevant and understandable ie. `CODE_REVIEW-GPT-TOKEN`. Set the scope to be `api` only. 
 5. Click the "Create personal access token" button. GitLab will generate the token and display it to you ***once***. Make sure to copy this value, we are going to use it in the next step.
 
 #### Set Access Token as a CI/CD Variable
