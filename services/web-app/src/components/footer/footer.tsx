@@ -7,10 +7,13 @@ export const Footer = (): JSX.Element => {
         Where you can find us
         <div className="flex flex-row justify-evenly py-[10px]">
           <a href="https://github.com/mattzcarey/code-review-gpt">
-            <Image src="/github-mark-white.svg" alt={"github logo"} width={40} height={40} />
+            <Image src="/githubLogo.svg" alt={"github logo"} width={40} height={40} />
           </a>
           <a href="https://twitter.com/intent/follow?screen_name=oriontools.ai">
-            <Image src="/twitter.svg" alt={"twitter logo"} width={40} height={40} />
+            <Image src="/twitterLogo.svg" alt={"twitter logo"} width={40} height={40} />
+          </a>
+          <a href="https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg">
+            <Image src="/slackLogo.svg" alt={"slack logo"} width={40} height={40} className="scale-[2]" />
           </a>
         </div>
       </div>
