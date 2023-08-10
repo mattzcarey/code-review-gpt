@@ -8,3 +8,8 @@ export interface PullRequestFile {
   changeType: string;
   path: string;
 }
+
+export interface PullRequest {
+  headSha: string;
+  files: PullRequestFile[];
+}
