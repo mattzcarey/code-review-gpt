@@ -12,7 +12,8 @@ import { filterFiles } from "./prompt/filterFiles";
 
 export const review = async (
   yargs: ReviewArgs,
-  files: ReviewFile[]
+  files: ReviewFile[],
+  openAIApiKey: string
 ): Promise<void> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
@@ -50,7 +51,8 @@ export const review = async (
 
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
-    modelName
+    modelName,
+    openAIApiKey
   );
 
   logger.debug(`Markdown report:\n ${response}`);

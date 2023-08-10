@@ -4,14 +4,16 @@ import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnP
 import AIModel from "../common/model/AIModel";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs } from "../common/types";
-import { openAIApiKey } from "../config";
 import { signOff } from "./constants";
 import { loadSnapshots } from "./load/loadSnapshots";
 import { loadTestCases } from "./load/loadTestCases";
 import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 
-export const test = async ({ ci, model, reviewType }: ReviewArgs) => {
+export const test = async (
+  { ci, model, reviewType }: ReviewArgs,
+  openAIApiKey: string
+) => {
   const maxPromptLength = getMaxPromptLength(model);
 
   // Fetch the test cases.
@@ -24,7 +26,7 @@ export const test = async ({ ci, model, reviewType }: ReviewArgs) => {
     new AIModel({
       modelName: model,
       temperature: 0.0,
-      apiKey: openAIApiKey(),
+      apiKey: openAIApiKey,
     })
   );
 
@@ -39,7 +41,8 @@ export const test = async ({ ci, model, reviewType }: ReviewArgs) => {
     model,
     maxPromptLength,
     vectorStore,
-    reviewType
+    reviewType,
+    openAIApiKey
   );
 
   if (ci === PlatformOptions.GITHUB) {

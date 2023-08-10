@@ -2,7 +2,7 @@ import { SSM } from "aws-sdk";
 
 export const getOpenAiApiEnvVariable = async (
   openApiKeyParamName: string
-): Promise<string | undefined> => {
+): Promise<string> => {
   if (openApiKeyParamName === "") {
     throw new Error(
       "OPENAI_API_KEY_PARAM_NAME environment variable is not set."

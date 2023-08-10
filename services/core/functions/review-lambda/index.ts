@@ -8,7 +8,7 @@ interface ReviewLambdasBody {
 }
 
 export const main = async (event: ReviewLambdasBody) => {
-  process.env["OPENAI_API_KEY"] = await getOpenAiApiEnvVariable(
+  const openAIApiKey = await getOpenAiApiEnvVariable(
     process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
   );
 
@@ -16,5 +16,5 @@ export const main = async (event: ReviewLambdasBody) => {
     throw new Error("Request body is null");
   }
 
-  return await review(event.args, event.files);
+  return await review(event.args, event.files, openAIApiKey);
 };

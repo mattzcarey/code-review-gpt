@@ -22,7 +22,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
   }
 
   try {
-    process.env["OPENAI_API_KEY"] = await getOpenAiApiEnvVariable(
+    const openAIApiKey = await getOpenAiApiEnvVariable(
       process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
     );
 
@@ -46,7 +46,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
-    const { markdownReport } = await askAI([prompt], DEMO_MODEL);
+    const { markdownReport } = await askAI([prompt], DEMO_MODEL, openAIApiKey);
 
     return Promise.resolve({
       statusCode: 200,
