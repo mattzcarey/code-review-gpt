@@ -1,4 +1,3 @@
-import { exit } from "process";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
@@ -14,7 +13,7 @@ export const review = async (
   yargs: ReviewArgs,
   files: ReviewFile[],
   openAIApiKey: string
-): Promise<void> => {
+): Promise<string | undefined> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
   logger.debug(`Ci enabled: ${yargs.ci}`);
@@ -30,7 +29,7 @@ export const review = async (
 
   if (filteredFiles.length == 0) {
     logger.info("No file to review, finishing review now.");
-    return;
+    return undefined;
   }
 
   logger.debug(
@@ -68,4 +67,6 @@ export const review = async (
   if (isCi === PlatformOptions.GITLAB) {
     await commentOnPRGitlab(response, signOff);
   }
+
+  return response;
 };

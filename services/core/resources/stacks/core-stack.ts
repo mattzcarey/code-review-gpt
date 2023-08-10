@@ -24,11 +24,14 @@ export class CoreStack extends Stack {
       table: userTable,
     });
 
-    new ReviewLambda(this, "review-lambda");
+    const reviewLambda = new ReviewLambda(this, "review-lambda");
 
     new DemoReviewLambda(this, "demo-review-lambda");
 
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
+
+    const postReviewRoute = api.root.addResource("postReview");
+    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
   }
 }
