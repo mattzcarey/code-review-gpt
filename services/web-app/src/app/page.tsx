@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { InstallationInstructions } from './installationInstructions';
+import { InstallationInstructions } from './constants';
 import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
