@@ -32,10 +32,31 @@ npx code-review-gpt configure --setupTarget=github
 
 ### Gitlab CI
 
+If you are running this tool in Gitlab, you will need to do some additional setup. You will need to create a **access token** in Gitlab and store it in your CI/CD variables to allow the bot access to you Gitlab account. Follow the steps below.
+
+#### Get Your Access Token
+1. Log in to your GitLab account.
+2. Go to your **Repo settings** by clicking on the repository, and selecting **Settings** -> **Access Tokens**.
+3. In this section, you can generate a new access token.
+4. Name your token something relevant and understandable ie. \`CODE_REVIEW-GPT-TOKEN\`. Set the scope to be \`api\` only. 
+5. Click the "Create personal access token" button. GitLab will generate the token and display it to you ***once***. Make sure to copy this value, we are going to use it in the next step.
+
+#### Set Access Token as a CI/CD Variable
+1. Navigate to the project where you want to add the code review bot.
+2. In the left sidebar, click the **Settings** drop down, then click **CI/CD**
+3. Scroll down to the **Variables** section and click the **Expand** button.This is where you can manage your CI/CD variables.
+4. Create a new variable by clicking the **Add Variable** button in the CI/CD Variable table. 
+5. Paste your previously copied access token into the **Value** box. Name the variable \`GITLAB_TOKEN\`. Under the **Flags** section, make sure to tick the \`Mask variable\` option. 
+
+   - [Un-tick the \`Protect variable\` if your branches are not protected, otherwise this variable won't be availiable for the bot to use.]
+6. Save you changes. Now you can go ahead and run the following commands in you project directory.
+
+
 \`\`\`shell
 npm install code-review-gpt
 npx code-review-gpt configure --setupTarget=gitlab
 \`\`\`
+
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
 
@@ -73,41 +94,4 @@ You can now run \`code-review-gpt review\` in the root directory of any git-enab
 - \`--model\` - The model to use for the review. Defaults to \`gpt-4\`. You can use any openai model you have access to.
 
 - \`--debug\` - Runs the application in debug mode. This will enable debug logging.
-
-## Getting Started 💫
-
-1. Clone the repository:
-
-   \`\`\`shell
-   git clone https://github.com/mattzcarey/code-review-gpt.git
-   cd code-review-gpt
-   \`\`\`
-
-2. Install dependencies:
-
-   \`\`\`shell
-   npm install
-   \`\`\`
-
-3. Set up the API key:
-   - Rename the .env.example file to .env.
-   - Open the .env file and replace YOUR_API_KEY with your actual OPENAI API key.
-
-When used globally you should run \`export OPENAI_API_KEY=YOUR_API_KEY\` (or similar for your operating system) in your terminal to set the API key.
-
-4. Run the application:
-
-   \`\`\`shell
-   npm start
-   \`\`\`
-
-See the package.json file for all the npm commands you can run.
-
-5. Make a PR 🎉
-
-We use [release-please](https://github.com/googleapis/release-please) on this project. If you want to create a new release from your PR, please make sure your PR title follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. The release-please bot will automatically create a new release for you when your PR is merged.
-
-- fix: which represents bug fixes, and correlates to a patch version.
-- feat: which represents a new feature, and correlates to a SemVer minor.
-- feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a major version.
 `;
