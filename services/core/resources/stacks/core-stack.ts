@@ -5,8 +5,8 @@ import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { CoreApi } from "./api-gateway";
-import { UserTable } from "./user-table";
+import { CoreApi } from "../constructs/api-gateway";
+import { UserTable } from "../constructs/user-table";
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -16,7 +16,7 @@ export class CoreStack extends Stack {
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
-    const api = new CoreApi(this, "api");
+    const api = new CoreApi(this, "core-api");
 
     const userTable = new UserTable(this, "user-database");
 
