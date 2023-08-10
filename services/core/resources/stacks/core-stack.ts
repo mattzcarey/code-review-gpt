@@ -26,12 +26,23 @@ export class CoreStack extends Stack {
 
     const reviewLambda = new ReviewLambda(this, "review-lambda");
 
-    new DemoReviewLambda(this, "demo-review-lambda");
-
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
 
     const postReviewRoute = api.root.addResource("postReview");
     postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
+
+    // We use a separate api for the demo review to enable strong throttling on it
+    const demoApi = new CoreApi(this, "demo-api", {
+      deployOptions: {
+        throttlingBurstLimit: 1,
+        throttlingRateLimit: 1,
+      },
+    });
+
+    const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda");
+
+    const demoReviewRoute = demoApi.root.addResource("demoReview");
+    demoReviewRoute.addMethod("POST", new LambdaIntegration(demoReviewLambda));
   }
 }
