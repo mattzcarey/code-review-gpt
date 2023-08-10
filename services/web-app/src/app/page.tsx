@@ -5,7 +5,7 @@ import Image from "next/image";
 import GithubImg from "../../public/github-mark-white.svg";
 
 export default function Home() {
-  const { status } = useSession();
+  const { data, status } = useSession();
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function Home() {
           <Image src={GithubImg} alt={"Github logo"} className="p-[10px] w-[60px]" />
         </a>
         {status === "authenticated" ? (
-          <h1>You're logged in</h1>
+          <h1>You're logged in {data.user?.name}</h1>
         ) : (
           <LoginButton />
         )}
