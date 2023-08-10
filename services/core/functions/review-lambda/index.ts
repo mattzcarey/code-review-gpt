@@ -29,7 +29,11 @@ export const main = async (event: APIGatewayProxyEvent) => {
     );
 
     process.env["OPENAI_API_KEY"] = keyValue;
-    return await review(inputBody.args, inputBody.files);
+    const reviewResponse = await review(inputBody.args, inputBody.files);
+    return Promise.resolve({
+      statusCode: 200,
+      body: reviewResponse,
+    });
   } catch (err) {
     console.error(err);
 
