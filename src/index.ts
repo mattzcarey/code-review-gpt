@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
 import { getYargs } from "./args";
 import { logger } from "./common/utils/logger";
+import { getOpenAIApiKey } from "./config";
 
 dotenv.config();
 
 const main = async () => {
   const argv = await getYargs();
+  const openAIApiKey = getOpenAIApiKey();
   logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3;
 
   switch (argv._[0]) {
@@ -19,11 +21,11 @@ const main = async () => {
         "./common/git/getFilesWithChanges"
       );
       const files = await getFilesWithChanges(argv.ci);
-      await review(argv, files);
+      await review(argv, files, openAIApiKey);
       break;
     case "test":
       const { test } = await import("./test");
-      await test(argv);
+      await test(argv, openAIApiKey);
       break;
     default:
       logger.error("Unknown command");

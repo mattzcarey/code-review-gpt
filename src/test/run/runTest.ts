@@ -24,7 +24,8 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string
+  reviewType: string,
+  openAIApiKey: string
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -39,7 +40,11 @@ const runTest = async (
     reviewType
   );
 
-  const { markdownReport: reviewResponse } = await askAI(prompts, modelName);
+  const { markdownReport: reviewResponse } = await askAI(
+    prompts,
+    modelName,
+    openAIApiKey
+  );
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
     reviewResponse,
@@ -78,7 +83,8 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string
+  reviewType: string,
+  openAIApiKey: string
 ): Promise<string> => {
   if (testCases.length === 0) {
     return "No test cases found.";
@@ -96,7 +102,8 @@ export const runTests = async (
         modelName,
         maxPromptLength,
         vectorStore,
-        reviewType
+        reviewType,
+        openAIApiKey
       );
       testResults[testCase.name] = result;
     } catch (error) {

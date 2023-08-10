@@ -10,7 +10,7 @@ import {
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
 
-export class ReviewLambda extends NodejsFunction {
+export class DemoReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
       functionName: buildResourceName(id),
