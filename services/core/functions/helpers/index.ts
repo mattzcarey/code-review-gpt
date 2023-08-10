@@ -1,25 +1,23 @@
 import { SSM } from "aws-sdk";
 
-export const getOpenAiApiEnvVariable = async (
-  openApiKeyParamName: string
+export const getVariableFromSSM = async (
+  parameterName: string
 ): Promise<string> => {
-  if (openApiKeyParamName === "") {
-    throw new Error(
-      "OPENAI_API_KEY_PARAM_NAME environment variable is not set."
-    );
+  if (parameterName === "") {
+    throw new Error("No SSM parameter name provided.");
   }
 
   const ssmClient = new SSM();
   const response = await ssmClient
     .getParameter({
-      Name: openApiKeyParamName,
+      Name: parameterName,
       WithDecryption: true,
     })
     .promise();
   const keyValue = response.Parameter?.Value;
   if (keyValue === undefined) {
     throw new Error(
-      `Could not retrieve value for key ${openApiKeyParamName} from AWS Parameter Store.`
+      `Could not retrieve value for key ${parameterName} from AWS Parameter Store.`
     );
   }
   return keyValue;

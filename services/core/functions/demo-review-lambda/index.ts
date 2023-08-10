@@ -1,4 +1,4 @@
-import { getOpenAiApiEnvVariable } from "../helpers";
+import { getVariableFromSSM } from "../helpers";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { askAI } from "../../../../src/review/llm/askAI";
 import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
@@ -22,8 +22,12 @@ export const main = async (event: APIGatewayProxyEvent) => {
   }
 
   try {
-    const openAIApiKey = await getOpenAiApiEnvVariable(
+    const openAIApiKey = await getVariableFromSSM(
       process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
+    );
+
+    process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
+      process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
     );
 
     const inputBody = JSON.parse(event.body) as ReviewLambdaInput;

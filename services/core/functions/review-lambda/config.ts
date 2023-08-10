@@ -5,7 +5,10 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
 import { buildResourceName } from "../../helpers";
-import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
+import {
+  LANGCHAIN_API_KEY_PARAM_NAME,
+  OPENAI_API_KEY_PARAM_NAME,
+} from "../../constants";
 
 export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
@@ -17,21 +20,33 @@ export class ReviewLambda extends NodejsFunction {
       architecture: Architecture.ARM_64,
       environment: {
         OPENAI_API_KEY_PARAM_NAME: OPENAI_API_KEY_PARAM_NAME,
+        LANGCHAIN_API_KEY_PARAM_NAME: LANGCHAIN_API_KEY_PARAM_NAME,
+        LANGCHAIN_TRACING_V2: "true",
+        LANGCHAIN_PROJECT: "code-review-gpt",
       },
       timeout: Duration.seconds(60),
     });
 
     // Grant the Lambda function permissions to access Parameter Store
-    const parameterStoreArn = Stack.of(scope).formatArn({
+    const openAIApiKeyparameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
 
+    const langchainApiKeyparameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: LANGCHAIN_API_KEY_PARAM_NAME,
+    });
+
     this.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
-        resources: [parameterStoreArn],
+        resources: [
+          openAIApiKeyparameterStoreArn,
+          langchainApiKeyparameterStoreArn,
+        ],
       })
     );
   }

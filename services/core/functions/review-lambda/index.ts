@@ -1,6 +1,6 @@
 import { review } from "../../../../src/review/index";
 import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
-import { getOpenAiApiEnvVariable } from "../helpers";
+import { getVariableFromSSM } from "../helpers";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
@@ -8,8 +8,12 @@ interface ReviewLambdasBody {
 }
 
 export const main = async (event: ReviewLambdasBody) => {
-  const openAIApiKey = await getOpenAiApiEnvVariable(
+  const openAIApiKey = await getVariableFromSSM(
     process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
+  );
+
+  process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
+    process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
   );
 
   if (event === null) {
