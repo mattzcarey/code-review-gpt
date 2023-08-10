@@ -1,6 +1,7 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Construct } from "constructs";
+import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
@@ -24,6 +25,8 @@ export class CoreStack extends Stack {
     });
 
     const reviewLambda = new ReviewLambda(this, "review-lambda");
+
+    new DemoReviewLambda(this, "demo-review-lambda");
 
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));

@@ -1,20 +1,20 @@
 import AIModel from "../../common/model/AIModel";
 import { AskAIResponse } from "../../common/types";
 import { logger } from "../../common/utils/logger";
-import { openAIApiKey } from "../../config";
 import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
   prompts: string[],
-  modelName: string
+  modelName: string,
+  openAIApiKey: string
 ): Promise<AskAIResponse> => {
   logger.info("Asking the experts...");
 
   const model = new AIModel({
     modelName: modelName,
     temperature: 0.0,
-    apiKey: openAIApiKey(),
+    apiKey: openAIApiKey,
   });
 
   const feedbacks = await processFeedbacks(model, prompts);
