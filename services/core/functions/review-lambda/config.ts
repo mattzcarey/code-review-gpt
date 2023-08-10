@@ -5,8 +5,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
 import { buildResourceName } from "../../helpers";
-
-const OPENAI_API_KEY_PARAM_NAME = "GLOBAL_OPENAI_API_KEY";
+import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
 
 export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
