@@ -123,18 +123,26 @@ export const createPromptFiles = (
     const changedLinesArray = file.changedLines.split("\n");
 
     // Get the changed indices, total length, and min/max indices
-    const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
+    const { changedIndices, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
 
-    // Calculate remaining space and start/end positions
-    let remainingSpace =
-      maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
     let { start, end } = calculateStartAndEnd(
       minIndex,
       maxIndex,
       contentLines.length,
       maxSurroundingLines
     );
+
+    const initialPromptContentLength = createPromptContent(
+      start,
+      end,
+      changedIndices,
+      contentLines
+    ).length;
+
+    // Calculate remaining space and start/end positions
+    let remainingSpace =
+      maxPromptPayloadLength - initialPromptContentLength - file.fileName.length;
 
     // Expand the range and create the prompt content
     ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
