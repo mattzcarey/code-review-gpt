@@ -13,3 +13,8 @@ export interface PullRequest {
   headSha: string;
   files: PullRequestFile[];
 }
+
+export interface CommitFile {
+  path: string;
+  content: string;
+}

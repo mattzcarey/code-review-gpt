@@ -1,11 +1,6 @@
 import { Octokit } from "octokit"
 import { githubToken } from "../../config";
-import { PullRequestIdentifier, PullRequestFile } from "./types";
-
-interface CommitFile {
-  path: string;
-  content: string;
-}
+import { PullRequestIdentifier, PullRequestFile, CommitFile } from "./types";
 
 interface RawCommitFile {
   url: string;

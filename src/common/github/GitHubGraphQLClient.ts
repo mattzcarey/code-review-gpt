@@ -28,7 +28,7 @@ export class GitHubGraphQLClient {
     }
   }
 
-  async getPullRequest(identifier: PullRequestIdentifier): Promise<PullRequest> {
+  async fetchPullRequest(identifier: PullRequestIdentifier): Promise<PullRequest> {
     const q = gql`
       query($owner: String!, $repo: String!, $prNumber: Int!, $nextPage: String) {
         repository(owner: $owner, name: $repo) {
@@ -55,7 +55,7 @@ export class GitHubGraphQLClient {
     let files: PullRequestFile[] = [];
 
     while (hasNextPage) {
-      const result = await this.getPaginatedPullRequestFiles(q, identifier, nextPage);
+      const result = await this.fetchPaginatedPullRequestFiles(q, identifier, nextPage);
 
       headSha = result.headSha;
       files.push(...result.files);
@@ -67,7 +67,7 @@ export class GitHubGraphQLClient {
     return { headSha, files };
   }
 
-  private async getPaginatedPullRequestFiles(query: string, identifier: PullRequestIdentifier, nextPage?: string): Promise<PaginatedPullRequestFiles> {
+  private async fetchPaginatedPullRequestFiles(query: string, identifier: PullRequestIdentifier, nextPage?: string): Promise<PaginatedPullRequestFiles> {
     const data = await this.query(query, { owner: identifier.owner, repo: identifier.repo, prNumber: identifier.prNumber, nextPage: nextPage });
 
     const pullRequest = data.repository.pullRequest;
