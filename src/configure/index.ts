@@ -77,6 +77,7 @@ const configureGitLab = async () => {
       type: "input",
       name: "apiKey",
       message: "Please input your OpenAI API key:",
+      mask: "*",
     },
   ]);
 
@@ -91,11 +92,11 @@ const configureGitLab = async () => {
     execSync(`glab auth login`, { stdio: "inherit" });
     execSync(`glab variable set OPENAI_API_KEY ${apiKey}`);
     logger.info(
-      "Successfully added the OPENAI_API_KEY secret to your GitLab repository."
+      "Successfully added the OPENAI_API_KEY secret to your GitLab repository.\n Please make sure you have set up your Gitlab access token before using this tool. Refer to the README (Gitlab CI section) for information on how to do this."
     );
   } catch (error) {
     logger.error(
-      "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY to the repo's CI/CD Variables manually."
+      "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY and the GITLAB_TOKEN to the repo's CI/CD Variables manually. Refer to the README (Gitlab CI section)for information on how to set up your access token."
     );
   }
 };

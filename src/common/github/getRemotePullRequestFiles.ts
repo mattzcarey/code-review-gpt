@@ -1,11 +1,11 @@
-import { File } from "../types";
+import { ReviewFile } from "../types";
 import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier";
 import { filterPullRequestFiles } from "./filterPullRequestFiles";
 import { associateFilesWithContents } from "./associateFilesWithContents";
 import { GitHubGraphQLClient } from "./GitHubGraphQLClient";
 import { GitHubRESTClient } from "./GitHubRESTClient";
 
-export const getRemotePullRequestFiles = async (remotePullRequest: string): Promise<File[]> => {
+export const getRemotePullRequestFiles = async (remotePullRequest: string): Promise<ReviewFile[]> => {
   const pullRequestIdentifier = extractPullRequestIdentifier(remotePullRequest);
   const gqlClient = new GitHubGraphQLClient();
   const restClient = new GitHubRESTClient();

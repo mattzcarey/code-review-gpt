@@ -1,32 +1,52 @@
-import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
-import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
+import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
+import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
+import { PlatformOptions, ReviewArgs } from "../common/types";
+import { getReviewFiles } from "../common/utils/getReviewFiles";
+import { logger } from "../common/utils/logger";
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { PlatformOptions } from "../common/types";
-import { getReviewFiles } from "../common/utils/getReviewFiles";
 import { filterFiles } from "./prompt/filterFiles";
-import { ReviewArgs } from "../common/types";
-import { logger } from "../common/utils/logger";
 
-export const review = async (yargs: ReviewArgs) => {
+export const review = async (
+  yargs: ReviewArgs
+): Promise<void> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
   logger.debug(`Ci enabled: ${yargs.ci}`);
-  logger.debug(`Remote Pull Request: ${yargs.remote}`);
   logger.debug(`Comment per file enabled: ${yargs.commentPerFile}`);
+  logger.debug(`Review type chosen: ${yargs.reviewType}`);
+  logger.debug(`Remote Pull Request: ${yargs.remote}`);
 
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
-  const modelName = yargs.model as string;
+  const modelName = yargs.model;
+  const reviewType = yargs.reviewType;
   const remotePullRequest = yargs.remote as string;
 
   const files = await getReviewFiles(isCi, remotePullRequest);
   const filteredFiles = filterFiles(files);
+
+  if (filteredFiles.length == 0) {
+    logger.info("No file to review, finishing review now.");
+    return;
+  }
+
+  logger.debug(
+    `Files to review after filtering: ${filteredFiles.map(
+      (file) => file.fileName
+    )}`
+  );
+
   const maxPromptLength = getMaxPromptLength(modelName);
-  const prompts = await constructPromptsArray(filteredFiles, maxPromptLength);
+
+  const prompts = await constructPromptsArray(
+    filteredFiles,
+    maxPromptLength,
+    reviewType
+  );
 
   logger.debug(`Prompts used:\n ${prompts}`);
 

@@ -1,6 +1,6 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { File } from "../../../common/types";
+import { ReviewFile } from "../../../common/types";
 import { filterFiles } from "./filterFiles";
 
 describe("filterFiles unit test", () => {
@@ -11,7 +11,7 @@ describe("filterFiles unit test", () => {
   test("returns only supported files", async () => {
     const testDir = join(__dirname, "../../../testFiles");
 
-    const testFiles: File[] = [];
+    const testFiles: ReviewFile[] = [];
 
     const readDir = await readdir(testDir);
 
@@ -28,7 +28,10 @@ describe("filterFiles unit test", () => {
     );
 
     const result = await filterFiles(testFiles);
-    const filesRegex = new RegExp(`(src/testFiles/longFile.tsx|src/testFiles/initialFilesExample.ts)`, "i");
+    const filesRegex = new RegExp(
+      `(src/testFiles/longFile.tsx|src/testFiles/initialFilesExample.ts)`,
+      "i"
+    );
 
     expect(result.length).toEqual(2);
     expect(result[0].fileName).toMatch(filesRegex);

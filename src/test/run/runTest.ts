@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { logger } from "../../common/utils/logger";
 import { askAI } from "../../review/llm/askAI";
 import { constructPromptsArray } from "../../review/prompt/constructPrompt/constructPrompt";
 import { TestCase } from "../types";
@@ -8,7 +9,6 @@ import {
   generateTestResultsSummary,
   testResult,
 } from "./generateTestReport";
-import { logger } from "../../common/utils/logger";
 
 /**
  * Run a single test case.
@@ -16,6 +16,7 @@ import { logger } from "../../common/utils/logger";
  * @param modelName The name of the model.
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
+ * @param reviewType The review type.
  * @returns The test result.
  */
 const runTest = async (
@@ -23,6 +24,7 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
+  reviewType: string
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -33,7 +35,8 @@ const runTest = async (
   // First step: run the review on the code snippet.
   const prompts = await constructPromptsArray(
     [testCase.snippet],
-    maxPromptLength
+    maxPromptLength,
+    reviewType
   );
 
   const { markdownReport: reviewResponse } = await askAI(prompts, modelName);
@@ -67,6 +70,7 @@ const runTest = async (
  * @param modelName The name of the model.
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
+ * @param reviewType The review type.
  * @returns The test results.
  */
 export const runTests = async (
@@ -74,7 +78,7 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  ci: string
+  reviewType: string
 ): Promise<string> => {
   if (testCases.length === 0) {
     return "No test cases found.";
@@ -92,6 +96,7 @@ export const runTests = async (
         modelName,
         maxPromptLength,
         vectorStore,
+        reviewType
       );
       testResults[testCase.name] = result;
     } catch (error) {

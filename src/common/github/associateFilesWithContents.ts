@@ -1,4 +1,4 @@
-import { File } from "../types";
+import { ReviewFile } from "../types";
 import { CommitFile } from "./types";
 
 type DiffSection = {
@@ -6,8 +6,8 @@ type DiffSection = {
   content: string;
 };
 
-export const associateFilesWithContents = (pullRequestDiff: string, commitFiles: CommitFile[]): File[] => {
-  const files: File[] = [];
+export const associateFilesWithContents = (pullRequestDiff: string, commitFiles: CommitFile[]): ReviewFile[] => {
+  const files: ReviewFile[] = [];
   const sections = extractDiffSections(pullRequestDiff);
 
   for (const i in commitFiles) {

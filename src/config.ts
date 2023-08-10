@@ -47,7 +47,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
   ].filter((varName) => !process.env[varName]);
   if (missingVars.length > 0) {
     logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
-    throw new Error("One or more GitLab environment variables are not set");
+    throw new Error("One or more GitLab environment variables are not set. Did you set up your Gitlab access token? Refer to the README (Gitlab CI section) on how to set it up.");
   }
   return {
     mergeRequestBaseSha: process.env.CI_MERGE_REQUEST_DIFF_BASE_SHA as string,
