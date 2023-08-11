@@ -40,7 +40,9 @@ export class CoreStack extends Stack {
       },
     });
 
-    const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda");
+    const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda", {
+      table: userTable,
+    });
 
     const demoReviewRoute = demoApi.root.addResource("demoReview");
     demoReviewRoute.addMethod("POST", new LambdaIntegration(demoReviewLambda));

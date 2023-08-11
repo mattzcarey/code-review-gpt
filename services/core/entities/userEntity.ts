@@ -1,24 +1,8 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { Entity, Table } from "dynamodb-toolbox";
+import { Entity } from "dynamodb-toolbox";
+import { getTable } from "./getTable";
 
 export const getUserEntity = (tableName: string): Entity => {
-  const marshallOptions = {
-    convertEmptyValues: false,
-  };
-
-  const translateConfig = { marshallOptions };
-
-  const DocumentClient = DynamoDBDocumentClient.from(
-    new DynamoDBClient(translateConfig)
-  );
-
-  const myTable = new Table({
-    name: tableName,
-    partitionKey: "PK",
-    sortKey: "SK",
-    DocumentClient: DocumentClient,
-  });
+  const myTable = getTable(tableName);
 
   const userEntity = new Entity({
     name: "userEntity",

@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { getUserEntity } from "../../entities/userEntity";
+import { getUserEntity } from "../../entities";
 
 interface UpdateUserLambdaInput {
   apiKey: string;

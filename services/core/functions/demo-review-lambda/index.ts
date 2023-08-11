@@ -4,6 +4,7 @@ import { askAI } from "../../../../src/review/llm/askAI";
 import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
 import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { logger } from "../../../../src/common/utils/logger";
+import { getDemoReviewDayCounterEntity } from "../../entities";
 
 interface ReviewLambdaInput {
   code: string;
@@ -12,6 +13,12 @@ interface ReviewLambdaInput {
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
 logger.settings.minLevel = 4;
+
+const TABLE_NAME = process.env["TABLE_NAME"];
+
+if (TABLE_NAME === undefined) {
+  throw new Error(`Environment variable not found: "TABLE_NAME"`);
+}
 
 export const main = async (event: APIGatewayProxyEvent) => {
   if (event.body == null) {
@@ -39,6 +46,13 @@ export const main = async (event: APIGatewayProxyEvent) => {
         body: "The request body does not contain the expected data.",
       });
     }
+
+    const demoReviewDayCounterEntity =
+      getDemoReviewDayCounterEntity(TABLE_NAME);
+
+    await demoReviewDayCounterEntity.update({
+      count: { $add: 1 },
+    });
 
     const maxPromptLength = getMaxPromptLength(DEFAULT_DEMO_MODEL);
     const prompt = demoPrompt + code;

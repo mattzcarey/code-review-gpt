@@ -9,9 +9,16 @@ import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
+
+export interface DemoReviewLambdaProps {
+  table: Table;
+}
 
 export class DemoReviewLambda extends NodejsFunction {
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: DemoReviewLambdaProps) {
+    const { table } = props;
+
     super(scope, id, {
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
@@ -22,7 +29,9 @@ export class DemoReviewLambda extends NodejsFunction {
         OPENAI_API_KEY_PARAM_NAME: OPENAI_API_KEY_PARAM_NAME,
         LANGCHAIN_API_KEY_PARAM_NAME: LANGCHAIN_API_KEY_PARAM_NAME,
         LANGCHAIN_TRACING_V2: "true",
-        LANGCHAIN_PROJECT: "code-review-gpt",
+        LANGCHAIN_PROJECT: "demo-review",
+        // LANGCHAIN_ENDPOINT: "https://api.smith.langchain.com",
+        TABLE_NAME: table.tableName,
       },
       timeout: Duration.seconds(60),
     });
@@ -49,5 +58,7 @@ export class DemoReviewLambda extends NodejsFunction {
         ],
       })
     );
+
+    table.grantWriteData(this);
   }
 }
