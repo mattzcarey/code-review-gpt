@@ -1,7 +1,7 @@
 ---
 name: User Story
-about: Template user story issue
-title: UserStory
+about: Use this template for user stories.
+title: "[Epic]: User story"
 labels: ''
 assignees: ''
 
