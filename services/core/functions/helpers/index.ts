@@ -22,3 +22,13 @@ export const getVariableFromSSM = async (
   }
   return keyValue;
 };
+
+export const getEnvVariable = (variableName: string): string => {
+  const value = process.env[variableName];
+
+  if (value === undefined) {
+    throw new Error(`Environment variable not found: ${variableName}`);
+  }
+
+  return value;
+};

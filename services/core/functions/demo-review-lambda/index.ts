@@ -1,10 +1,14 @@
-import { getVariableFromSSM } from "../helpers";
+import { v4 as uuidv4 } from "uuid";
 import { APIGatewayProxyEvent } from "aws-lambda";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+import { getEnvVariable, getVariableFromSSM } from "../helpers";
 import { askAI } from "../../../../src/review/llm/askAI";
 import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
 import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { logger } from "../../../../src/common/utils/logger";
 import { getDemoReviewDayCounterEntity } from "../../entities";
+import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 
 interface ReviewLambdaInput {
   code: string;
@@ -14,13 +18,14 @@ const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
 logger.settings.minLevel = 4;
 
-const TABLE_NAME = process.env["TABLE_NAME"];
+const TABLE_NAME = getEnvVariable("TABLE_NAME");
+const BUCKET_NAME = getEnvVariable("BUCKET_NAME");
 
-if (TABLE_NAME === undefined) {
-  throw new Error(`Environment variable not found: "TABLE_NAME"`);
-}
+const s3Client = new S3Client({});
 
 export const main = async (event: APIGatewayProxyEvent) => {
+  const demoReviewId = uuidv4();
+
   if (event.body == null) {
     return Promise.resolve({
       statusCode: 400,
@@ -68,6 +73,15 @@ export const main = async (event: APIGatewayProxyEvent) => {
       [prompt],
       DEFAULT_DEMO_MODEL,
       openAIApiKey
+    );
+
+    await saveInputAndResponseToS3(
+      TABLE_NAME,
+      BUCKET_NAME,
+      s3Client,
+      demoReviewId,
+      prompt,
+      markdownReport
     );
 
     return Promise.resolve({

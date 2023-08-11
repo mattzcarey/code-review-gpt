@@ -1,11 +1,14 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
+import { buildResourceName } from "../../helpers";
 import { CoreApi } from "../constructs/api-gateway";
+import { ReviewBucket } from "../constructs/review-bucket";
 import { UserTable } from "../constructs/user-table";
 
 interface CoreStackProps extends StackProps {
@@ -40,8 +43,11 @@ export class CoreStack extends Stack {
       },
     });
 
+    const demoReviewBucket = new ReviewBucket(this, "demo-review-bucket");
+
     const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda", {
       table: userTable,
+      bucket: demoReviewBucket,
     });
 
     const demoReviewRoute = demoApi.root.addResource("demoReview");

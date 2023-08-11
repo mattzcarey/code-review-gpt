@@ -10,14 +10,16 @@ import {
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export interface DemoReviewLambdaProps {
   table: Table;
+  bucket: Bucket;
 }
 
 export class DemoReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string, props: DemoReviewLambdaProps) {
-    const { table } = props;
+    const { table, bucket } = props;
 
     super(scope, id, {
       functionName: buildResourceName(id),
@@ -32,6 +34,7 @@ export class DemoReviewLambda extends NodejsFunction {
         LANGCHAIN_PROJECT: "demo-review",
         // LANGCHAIN_ENDPOINT: "https://api.smith.langchain.com",
         TABLE_NAME: table.tableName,
+        BUCKET_NAME: bucket.bucketName,
       },
       timeout: Duration.seconds(60),
     });
@@ -60,5 +63,6 @@ export class DemoReviewLambda extends NodejsFunction {
     );
 
     table.grantWriteData(this);
+    bucket.grantPut(this);
   }
 }
