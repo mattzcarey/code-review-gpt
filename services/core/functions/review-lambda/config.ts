@@ -8,6 +8,7 @@ import { buildResourceName } from "../../helpers";
 import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
+  GITHUB_SECRET_PARAM_NAME,
 } from "../../constants";
 
 export class ReviewLambda extends NodejsFunction {
@@ -20,6 +21,7 @@ export class ReviewLambda extends NodejsFunction {
       architecture: Architecture.ARM_64,
       environment: {
         OPENAI_API_KEY_PARAM_NAME: OPENAI_API_KEY_PARAM_NAME,
+        GITHUB_SECRET_PARAM_NAME: GITHUB_SECRET_PARAM_NAME,
         LANGCHAIN_API_KEY_PARAM_NAME: LANGCHAIN_API_KEY_PARAM_NAME,
         LANGCHAIN_TRACING_V2: "true",
         LANGCHAIN_PROJECT: "code-review-gpt",
@@ -28,13 +30,19 @@ export class ReviewLambda extends NodejsFunction {
     });
 
     // Grant the Lambda function permissions to access Parameter Store
-    const openAIApiKeyparameterStoreArn = Stack.of(scope).formatArn({
+    const openAIApiKeyParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
 
-    const langchainApiKeyparameterStoreArn = Stack.of(scope).formatArn({
+    const githubSecretParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_SECRET_PARAM_NAME,
+    });
+
+    const langchainApiKeyParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
       resourceName: LANGCHAIN_API_KEY_PARAM_NAME,
@@ -44,8 +52,9 @@ export class ReviewLambda extends NodejsFunction {
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
         resources: [
-          openAIApiKeyparameterStoreArn,
-          langchainApiKeyparameterStoreArn,
+          openAIApiKeyParameterStoreArn,
+          githubSecretParameterStoreArn,
+          langchainApiKeyParameterStoreArn,
         ],
       })
     );
