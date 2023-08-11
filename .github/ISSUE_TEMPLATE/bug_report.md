@@ -1,33 +1,45 @@
 ---
-name: Bug report
-about: Create a report to help us find the cause and fix the bug
-title: Bug
-labels: bug
+name: 🐞 Bug
+about: File a bug report to help us improve the project
+title: '[BUG] <title>'
+labels: bug, needs triage
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!--
+Note: Please search to see if an issue already exists for the bug you encountered.
+-->
 
-**To Reproduce**
-Steps to reproduce the behaviour:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+### Current Behavior:
+<!-- A concise description of what you're experiencing. -->
 
-**Expected behaviour**
-A clear and concise description of what you expected to happen.
+### Expected Behavior:
+<!-- A concise description of what you expected to happen. -->
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Steps To Reproduce:
+<!--
+Example: steps to reproduce the behavior:
+1. In this environment...
+1. With this config...
+1. Run '...'
+1. See error...
+-->
 
-**OS and package versions**
-If applicable
+### Environment:
+<!--
+Example:
+- OS: Ubuntu 20.04
+- Node: 13.14.0
+- npm: 7.6.3
+-->
 
-**Additional context**
-Add any other context about the problem here.
+### Anything else:
+<!--
+Links? References? Anything that will give us more context about the issue that you are encountering!
+-->
 
-**Suggestions on the root cause**
+### Suggestions on the root cause**
+<!--
 Add any suggestions on what you think the problem is. Be as specific as you can.
+-->
