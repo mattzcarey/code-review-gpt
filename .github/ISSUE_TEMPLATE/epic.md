@@ -10,13 +10,14 @@ labels: epic
 <!--
 Why do we need this functionality?
 What’s the value to the product?
+Who proposed it?
 -->
 
 ### Success measures
 
 <!--
-What are you proposing?
-What should it look like?
+How will we know if we’ve solved the problem?
+What does good look like?
 -->
 
 ### Scope of feature
@@ -24,6 +25,7 @@ What should it look like?
 <!--
 Describe what you are proposing?
 What should it look like?
+What is out of scope? Is there a separate ticket for that?
 -->
 
 ### Edge cases
