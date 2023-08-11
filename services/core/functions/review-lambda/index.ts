@@ -4,6 +4,7 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { getVariableFromSSM } from "../helpers";
 import { logger } from "../../../../src/common/utils/logger";
 import { authenticate } from "./auth";
+import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
@@ -20,21 +21,22 @@ export const main = async (event: APIGatewayProxyEvent) => {
     });
   }
 
-  if (event.headers['X-Hub-Signature-256'] === undefined) {
+  const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
+  if (header === undefined) {
     return Promise.resolve({
       statusCode: 401,
       body: "No authentication token found.",
     });
   }
 
-  const authenticated = authenticate(event.headers['X-Hub-Signature-256'], event.body);
-  if (!authenticated){
+  const authenticated = await authenticate(header, event.body);
+  if (!authenticated) {
     return Promise.resolve({
       statusCode: 401,
       body: "Unauthorized.",
     });
   }
- 
+
   const openAIApiKey = await getVariableFromSSM(
     process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
   );
@@ -42,7 +44,6 @@ export const main = async (event: APIGatewayProxyEvent) => {
   process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
     process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
   );
-
 
   try {
     const inputBody = JSON.parse(event.body) as ReviewLambdasBody;

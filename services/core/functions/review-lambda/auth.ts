@@ -1,4 +1,5 @@
 import { getVariableFromSSM } from "../helpers";
+import { subtle } from "crypto";
 
 export const authenticate = async (
   header: string,
@@ -14,24 +15,16 @@ export const authenticate = async (
   const keyBytes = encoder.encode(githubSecret);
   const algorithm = { name: "HMAC", hash: { name: "SHA-256" } };
   const extractable = false;
-  const key = await crypto.subtle.importKey(
-    "raw",
-    keyBytes,
-    algorithm,
-    extractable,
-    ["sign", "verify"]
-  );
+  const key = await subtle.importKey("raw", keyBytes, algorithm, extractable, [
+    "sign",
+    "verify",
+  ]);
 
   // Verify Token
   const sigHex = header.split("=")[1];
   const sigBytes = hexToBytes(sigHex);
   const dataBytes = encoder.encode(payload);
-  const equal = await crypto.subtle.verify(
-    algorithm.name,
-    key,
-    sigBytes,
-    dataBytes
-  );
+  const equal = await subtle.verify(algorithm.name, key, sigBytes, dataBytes);
 
   return equal;
 };
