@@ -39,7 +39,7 @@ Example:
 Links? References? Anything that will give us more context about the issue that you are encountering!
 -->
 
-### Suggestions on the root cause**
+### Suggestions on the root cause
 <!--
 Add any suggestions on what you think the problem is. Be as specific as you can.
 -->
