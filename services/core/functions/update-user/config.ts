@@ -4,6 +4,8 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
 import { buildResourceName } from "../../helpers";
+import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
+import { commonLambdaProps } from "../helpers/commonLambdaProps";
 
 interface UpdateUserLambdaProps {
   table: Table;
@@ -14,13 +16,11 @@ export class UpdateUserLambda extends NodejsFunction {
     const { table } = props;
 
     super(scope, id, {
+      ...commonLambdaProps,
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
-      handler: "main",
-      runtime: Runtime.NODEJS_18_X,
-      architecture: Architecture.ARM_64,
       environment: {
-        TABLE_NAME: table.tableName,
+        ...commonLambdaEnvironment,
       },
     });
 

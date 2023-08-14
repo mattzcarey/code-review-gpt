@@ -1,7 +1,7 @@
 import { review } from "../../../../src/review/index";
 import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { getVariableFromSSM } from "../helpers";
+import { getVariableFromSSM } from "../helpers/getVariable";
 import { logger } from "../../../../src/common/utils/logger";
 import { authenticate } from "./auth";
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
