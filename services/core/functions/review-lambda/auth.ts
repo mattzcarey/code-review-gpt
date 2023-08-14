@@ -1,4 +1,4 @@
-import { getVariableFromSSM } from "../helpers";
+import { getVariableFromSSM } from "../helpers/getVariable";
 import { subtle } from "crypto";
 
 export const authenticate = async (

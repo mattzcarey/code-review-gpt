@@ -1,6 +1,5 @@
 import { Duration, Stack } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
