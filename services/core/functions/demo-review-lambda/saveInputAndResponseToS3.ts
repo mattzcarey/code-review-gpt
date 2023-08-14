@@ -1,8 +1,7 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getDemoReviewS3LocationEntity } from "../../entities/demoReviewS3LocationEntity";
+import { ReviewEntity } from "../../entities";
 
 export const saveInputAndResponseToS3 = async (
-  tableName: string,
   bucketName: string,
   s3Client: S3Client,
   id: string,
@@ -30,10 +29,10 @@ export const saveInputAndResponseToS3 = async (
   const putBucketResponseCommand = new PutObjectCommand(bucketResponse);
   await s3Client.send(putBucketResponseCommand);
 
-  const demoReviewS3LocationEntity = getDemoReviewS3LocationEntity(tableName);
-  await demoReviewS3LocationEntity.put({
+  await ReviewEntity.put({
     reviewId: id,
     inputLocation: `${bucketDateFolder}/${id}/input.md`,
     responseLocation: `${bucketDateFolder}/${id}/response.md`,
+    demo: true,
   });
 };

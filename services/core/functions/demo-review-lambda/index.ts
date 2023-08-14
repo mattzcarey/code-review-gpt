@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3";
 
-import { getEnvVariable, getVariableFromSSM } from "../helpers";
+import { getEnvVariable, getVariableFromSSM } from "../helpers/getVariable";
 import { askAI } from "../../../../src/review/llm/askAI";
 import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
 import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { logger } from "../../../../src/common/utils/logger";
-import { getDemoReviewDayCounterEntity } from "../../entities";
+import { ReviewDemoCounterEntity } from "../../entities";
 import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 
 interface ReviewLambdaInput {
@@ -18,7 +18,6 @@ const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
 logger.settings.minLevel = 4;
 
-const TABLE_NAME = getEnvVariable("TABLE_NAME");
 const BUCKET_NAME = getEnvVariable("BUCKET_NAME");
 
 const s3Client = new S3Client({});
@@ -52,11 +51,8 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
-    const demoReviewDayCounterEntity =
-      getDemoReviewDayCounterEntity(TABLE_NAME);
-
-    await demoReviewDayCounterEntity.update({
-      count: { $add: 1 },
+    await ReviewDemoCounterEntity.update({
+      dailyCount: { $add: 1 },
     });
 
     const maxPromptLength = getMaxPromptLength(DEFAULT_DEMO_MODEL);
@@ -76,7 +72,6 @@ export const main = async (event: APIGatewayProxyEvent) => {
     );
 
     await saveInputAndResponseToS3(
-      TABLE_NAME,
       BUCKET_NAME,
       s3Client,
       demoReviewId,
