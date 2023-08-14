@@ -1,5 +1,5 @@
 import { Table } from "aws-cdk-lib/aws-dynamodb";
-import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Key } from "aws-cdk-lib/aws-kms";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
@@ -9,11 +9,12 @@ import { commonLambdaProps } from "../helpers/commonLambdaProps";
 
 interface UpdateUserLambdaProps {
   table: Table;
+  kmsKey: Key;
 }
 
 export class UpdateUserLambda extends NodejsFunction {
   constructor(scope: Construct, id: string, props: UpdateUserLambdaProps) {
-    const { table } = props;
+    const { table, kmsKey } = props;
 
     super(scope, id, {
       ...commonLambdaProps,
@@ -21,9 +22,11 @@ export class UpdateUserLambda extends NodejsFunction {
       entry: join(__dirname, "index.ts"),
       environment: {
         ...commonLambdaEnvironment,
+        KMS_KEY_ID: kmsKey.keyId,
       },
     });
 
     table.grantWriteData(this);
+    kmsKey.grantEncryptDecrypt(this);
   }
 }

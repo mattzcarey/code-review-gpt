@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { UserEntity } from "../../entities";
+import { encryptKey } from "./encryptKey";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
@@ -27,10 +28,12 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
+    const encryptedApiKey = await encryptKey(apiKey);
+
     await UserEntity.update(
       {
         userId: userId,
-        apiKey: apiKey,
+        apiKey: encryptedApiKey,
       },
       { conditions: { attr: "userId", exists: true } }
     );
