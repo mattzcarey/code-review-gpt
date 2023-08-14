@@ -1,16 +1,10 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { getUserEntity } from "../../entities/userEntity";
+import { UserEntity } from "../../entities";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
   userId: string;
-}
-
-const TABLE_NAME = process.env["TABLE_NAME"];
-
-if (TABLE_NAME === undefined) {
-  throw new Error(`Environment variable not found: "TABLE_NAME"`);
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {
@@ -33,9 +27,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
-    const userEntity = getUserEntity(TABLE_NAME);
-
-    await userEntity.update(
+    await UserEntity.update(
       {
         userId: userId,
         apiKey: apiKey,

@@ -10,21 +10,21 @@ import {
   OPENAI_API_KEY_PARAM_NAME,
   GITHUB_SECRET_PARAM_NAME,
 } from "../../constants";
+import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
+import { commonLambdaProps } from "../helpers/commonLambdaProps";
+import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
 
 export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
+      ...commonLambdaProps,
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
-      handler: "main",
-      runtime: Runtime.NODEJS_18_X,
-      architecture: Architecture.ARM_64,
       environment: {
-        OPENAI_API_KEY_PARAM_NAME: OPENAI_API_KEY_PARAM_NAME,
         GITHUB_SECRET_PARAM_NAME: GITHUB_SECRET_PARAM_NAME,
-        LANGCHAIN_API_KEY_PARAM_NAME: LANGCHAIN_API_KEY_PARAM_NAME,
-        LANGCHAIN_TRACING_V2: "true",
-        LANGCHAIN_PROJECT: "code-review-gpt",
+        LANGCHAIN_PROJECT: "review",
+        ...commonLambdaEnvironment,
+        ...reviewLambdaEnvironment,
       },
       timeout: Duration.seconds(60),
     });

@@ -1,6 +1,5 @@
 import { Duration, Stack } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
@@ -9,20 +8,30 @@ import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { commonLambdaProps } from "../helpers/commonLambdaProps";
+import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
+import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
+
+export interface DemoReviewLambdaProps {
+  table: Table;
+  bucket: Bucket;
+}
 
 export class DemoReviewLambda extends NodejsFunction {
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: DemoReviewLambdaProps) {
+    const { table, bucket } = props;
+
     super(scope, id, {
+      ...commonLambdaProps,
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
-      handler: "main",
-      runtime: Runtime.NODEJS_18_X,
-      architecture: Architecture.ARM_64,
       environment: {
-        OPENAI_API_KEY_PARAM_NAME: OPENAI_API_KEY_PARAM_NAME,
-        LANGCHAIN_API_KEY_PARAM_NAME: LANGCHAIN_API_KEY_PARAM_NAME,
-        LANGCHAIN_TRACING_V2: "true",
-        LANGCHAIN_PROJECT: "code-review-gpt",
+        ...commonLambdaEnvironment,
+        ...reviewLambdaEnvironment,
+        LANGCHAIN_PROJECT: "demo-review",
+        BUCKET_NAME: bucket.bucketName,
       },
       timeout: Duration.seconds(60),
     });
@@ -49,5 +58,8 @@ export class DemoReviewLambda extends NodejsFunction {
         ],
       })
     );
+
+    table.grantWriteData(this);
+    bucket.grantPut(this);
   }
 }
