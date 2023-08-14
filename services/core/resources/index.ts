@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { App, Aspects } from "aws-cdk-lib";
+import { App, Aspects, Tags } from "aws-cdk-lib";
 import { RemovalPolicyAspect } from "../aspects/RemovalPolicyAspect";
 
+import { buildResourceName, getRegion, getStage } from "../helpers";
 import { CoreStack } from "./stacks/core-stack";
-import { buildResourceName, getStage, getRegion } from "../helpers";
 
 const app = new App();
 const stage = getStage();
@@ -16,3 +16,6 @@ const coreStack = new CoreStack(app, "crgpt-core", {
 });
 
 Aspects.of(coreStack).add(new RemovalPolicyAspect());
+
+//enable OTel traces
+Tags.of(app).add("baselime:tracing", `true`);
