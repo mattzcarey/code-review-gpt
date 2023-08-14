@@ -22,6 +22,7 @@ export class ReviewLambda extends NodejsFunction {
       entry: join(__dirname, "index.ts"),
       environment: {
         GITHUB_SECRET_PARAM_NAME: GITHUB_SECRET_PARAM_NAME,
+        LANGCHAIN_PROJECT: "review",
         ...commonLambdaEnvironment,
         ...reviewLambdaEnvironment,
       },

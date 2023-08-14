@@ -30,6 +30,7 @@ export class DemoReviewLambda extends NodejsFunction {
       environment: {
         ...commonLambdaEnvironment,
         ...reviewLambdaEnvironment,
+        LANGCHAIN_PROJECT: "demo-review",
         BUCKET_NAME: bucket.bucketName,
       },
       timeout: Duration.seconds(60),
