@@ -118,13 +118,17 @@ export const createPromptFiles = (
   maxPromptPayloadLength: number,
   maxSurroundingLines?: number
 ): PromptFile[] => {
-  return files.map((file) => {
+  return files.reduce((result: PromptFile[], file) => {
     const contentLines = file.fileContent.split("\n");
     const changedLinesArray = file.changedLines.split("\n");
 
     // Get the changed indices, total length, and min/max indices
     const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
+
+    if (totalChangedLinesLength == 0) {
+      return result;
+    }
 
     // Calculate remaining space and start/end positions
     let remainingSpace =
@@ -145,9 +149,10 @@ export const createPromptFiles = (
       contentLines
     );
 
-    return {
+    result.push({
       fileName: file.fileName,
       promptContent: promptContent,
-    };
-  });
+    });
+    return result;
+  }, []);
 };
