@@ -3,6 +3,8 @@ import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { getVariableFromSSM } from "../helpers";
 import { logger } from "../../../../src/common/utils/logger";
+import { authenticate } from "./auth";
+import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
@@ -12,6 +14,29 @@ interface ReviewLambdasBody {
 logger.settings.minLevel = 4;
 
 export const main = async (event: APIGatewayProxyEvent) => {
+  if (event.body === null) {
+    return Promise.resolve({
+      statusCode: 400,
+      body: "The request does not contain a body as expected.",
+    });
+  }
+
+  const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
+  if (header === undefined) {
+    return Promise.resolve({
+      statusCode: 401,
+      body: "No authentication token found.",
+    });
+  }
+
+  const authenticated = await authenticate(header, event.body);
+  if (!authenticated) {
+    return Promise.resolve({
+      statusCode: 401,
+      body: "Unauthorized.",
+    });
+  }
+
   const openAIApiKey = await getVariableFromSSM(
     process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
   );
@@ -19,13 +44,6 @@ export const main = async (event: APIGatewayProxyEvent) => {
   process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
     process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
   );
-
-  if (event.body === null) {
-    return Promise.resolve({
-      statusCode: 400,
-      body: "The request does not contain a body as expected.",
-    });
-  }
 
   try {
     const inputBody = JSON.parse(event.body) as ReviewLambdasBody;
