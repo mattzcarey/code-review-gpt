@@ -37,15 +37,20 @@ export const main = async (event: APIGatewayProxyEvent) => {
     });
   }
 
-  const openAIApiKey = await getVariableFromSSM(
-    process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
-  );
-
-  process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
-    process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
-  );
-
   try {
+    // Use the same OpenAI key for everyone for now
+    const openAIApiKey = await getVariableFromSSM(
+      process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
+    );
+
+    // The following can be used once the key is retrieved from user data in DynamoDB
+    // Which will contain an encrypted key
+    // const openAIKey = await decryptKey(userEncrypedKey);
+
+    process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
+      process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
+    );
+
     const inputBody = JSON.parse(event.body) as ReviewLambdasBody;
     const reviewResponse = await review(
       inputBody.args,
