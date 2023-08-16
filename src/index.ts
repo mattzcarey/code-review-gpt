@@ -8,6 +8,7 @@ dotenv.config();
 const main = async () => {
   const argv = await getYargs();
   const openAIApiKey = getOpenAIApiKey();
+
   logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3;
 
   switch (argv._[0]) {
