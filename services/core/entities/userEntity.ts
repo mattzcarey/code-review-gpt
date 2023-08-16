@@ -27,6 +27,9 @@ export const getUserEntity = (tableName: string): Entity => {
       SK: { sortKey: true, hidden: true, default: "ROOT" },
       userId: ["PK", 0, { type: "string", required: true }],
       apiKey: { type: "string" },
+      name: { type: "string" },
+      email: { type: "string" },
+      pictureUrl: { type: "string" },
     },
     table: myTable,
   } as const);
