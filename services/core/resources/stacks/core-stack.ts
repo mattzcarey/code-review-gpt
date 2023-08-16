@@ -4,6 +4,7 @@ import { Key } from "aws-cdk-lib/aws-kms";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
+import { GetUserLambda } from "../../functions/get-user/config";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
@@ -60,5 +61,12 @@ export class CoreStack extends Stack {
 
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
+
+    const getUserLambda = new GetUserLambda(this, "get-user-lambda", {
+      table: userTable,
+    });
+
+    const getUserRoute = api.root.addResource("getUser");
+    getUserRoute.addMethod("GET", new LambdaIntegration(getUserLambda));
   }
 }

@@ -26,10 +26,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
   const demoReviewId = uuidv4();
 
   if (event.body == null) {
-    return Promise.resolve({
+    return {
       statusCode: 400,
       body: "The request does not contain a body as expected.",
-    });
+    };
   }
 
   try {
@@ -45,10 +45,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const code = inputBody.code;
 
     if (code === undefined) {
-      return Promise.resolve({
+      return {
         statusCode: 400,
         body: "The request body does not contain the expected data.",
-      });
+      };
     }
 
     await ReviewDemoCounterEntity.update({
@@ -59,10 +59,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const prompt = demoPrompt + code;
 
     if (prompt.length > maxPromptLength) {
-      return Promise.resolve({
+      return {
         statusCode: 400,
         body: `The provided code is too large for the model ${DEFAULT_DEMO_MODEL}. Please try and provide a smaller code snippet.`,
-      });
+      };
     }
 
     const { markdownReport } = await askAI(
@@ -79,16 +79,16 @@ export const main = async (event: APIGatewayProxyEvent) => {
       markdownReport
     );
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: markdownReport,
-    });
+    };
   } catch (err) {
     console.error(err);
 
-    return Promise.resolve({
+    return {
       statusCode: 500,
       body: "Error when reviewing code.",
-    });
+    };
   }
 };
