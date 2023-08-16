@@ -1,16 +1,11 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { getUserEntity } from "../../entities/userEntity";
+import { UserEntity } from "../../entities";
+import { encryptKey } from "./encryptKey";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
   userId: string;
-}
-
-const TABLE_NAME = process.env["TABLE_NAME"];
-
-if (TABLE_NAME === undefined) {
-  throw new Error(`Environment variable not found: "TABLE_NAME"`);
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {
@@ -33,12 +28,12 @@ export const main = async (event: APIGatewayProxyEvent) => {
       });
     }
 
-    const userEntity = getUserEntity(TABLE_NAME);
+    const encryptedApiKey = await encryptKey(apiKey);
 
-    await userEntity.update(
+    await UserEntity.update(
       {
         userId: userId,
-        apiKey: apiKey,
+        apiKey: encryptedApiKey,
       },
       { conditions: { attr: "userId", exists: true } }
     );

@@ -1,6 +1,6 @@
+import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
-import { Config, NextjsSite, Table  } from "sst/constructs";
-
+import { Config, NextjsSite, Table } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -38,5 +38,8 @@ export default {
         SiteUrl: site.url,
       });
     });
+
+    //enable OTel traces
+    Tags.of(app).add("baselime:tracing", `true`);
   },
 } satisfies SSTConfig;

@@ -1,11 +1,15 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Key } from "aws-cdk-lib/aws-kms";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
+import { buildResourceName, getStage } from "../../helpers";
 import { CoreApi } from "../constructs/api-gateway";
+import { ReviewBucket } from "../constructs/review-bucket";
 import { UserTable } from "../constructs/user-table";
 
 interface CoreStackProps extends StackProps {
@@ -20,14 +24,7 @@ export class CoreStack extends Stack {
 
     const userTable = new UserTable(this, "user-database");
 
-    const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
-      table: userTable,
-    });
-
     const reviewLambda = new ReviewLambda(this, "review-lambda");
-
-    const updateUserRoute = api.root.addResource("updateUser");
-    updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
 
     const postReviewRoute = api.root.addResource("postReview");
     postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
@@ -40,9 +37,28 @@ export class CoreStack extends Stack {
       },
     });
 
-    const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda");
+    const demoReviewBucket = new ReviewBucket(this, "demo-review-bucket");
+
+    const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda", {
+      table: userTable,
+      bucket: demoReviewBucket,
+    });
 
     const demoReviewRoute = demoApi.root.addResource("demoReview");
     demoReviewRoute.addMethod("POST", new LambdaIntegration(demoReviewLambda));
+
+    // Resources for user management
+    const kmsKey = new Key(this, "encryption-key", {
+      enableKeyRotation: true,
+      alias: `${getStage()}/encryption-key`,
+    });
+
+    const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
+      table: userTable,
+      kmsKey: kmsKey,
+    });
+
+    const updateUserRoute = api.root.addResource("updateUser");
+    updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
   }
 }
