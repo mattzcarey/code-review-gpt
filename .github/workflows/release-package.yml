@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     branches:
-      - main
+      - feat/release-please-only-release-when-src-changes
 
 permissions:
   contents: write
@@ -25,6 +25,7 @@ jobs:
           release-type: node
           package-name: code-review-gpt
           path: src
+          version-file: package.json
   publish-package:
     runs-on: ubuntu-latest
     needs: release-please
