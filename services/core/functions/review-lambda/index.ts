@@ -15,26 +15,26 @@ logger.settings.minLevel = 4;
 
 export const main = async (event: APIGatewayProxyEvent) => {
   if (event.body === null) {
-    return Promise.resolve({
+    return {
       statusCode: 400,
       body: "The request does not contain a body as expected.",
-    });
+    };
   }
 
   const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
   if (header === undefined) {
-    return Promise.resolve({
+    return {
       statusCode: 401,
       body: "No authentication token found.",
-    });
+    };
   }
 
   const authenticated = await authenticate(header, event.body);
   if (!authenticated) {
-    return Promise.resolve({
+    return {
       statusCode: 401,
       body: "Unauthorized.",
-    });
+    };
   }
 
   try {
@@ -57,16 +57,16 @@ export const main = async (event: APIGatewayProxyEvent) => {
       inputBody.files,
       openAIApiKey
     );
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: reviewResponse,
-    });
+    };
   } catch (err) {
     console.error(err);
 
-    return Promise.resolve({
+    return {
       statusCode: 500,
       body: "Error when reviewing code.",
-    });
+    };
   }
 };

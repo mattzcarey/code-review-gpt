@@ -10,10 +10,10 @@ interface UpdateUserLambdaInput {
 
 export const main = async (event: APIGatewayProxyEvent) => {
   if (event.body == null) {
-    return Promise.resolve({
+    return {
       statusCode: 400,
       body: "The request does not contain a body as expected.",
-    });
+    };
   }
 
   try {
@@ -22,10 +22,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const userId = inputBody.userId;
 
     if (apiKey === undefined || userId === undefined) {
-      return Promise.resolve({
+      return {
         statusCode: 400,
         body: "The request body does not contain the expected data.",
-      });
+      };
     }
 
     const encryptedApiKey = await encryptKey(apiKey);
@@ -38,16 +38,16 @@ export const main = async (event: APIGatewayProxyEvent) => {
       { conditions: { attr: "userId", exists: true } }
     );
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: "User updated successfully.",
-    });
+    };
   } catch (err) {
     console.error(err);
 
-    return Promise.resolve({
+    return {
       statusCode: 500,
       body: "Error when updating user.",
-    });
+    };
   }
 };

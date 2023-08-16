@@ -7,10 +7,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const userId = event.queryStringParameters?.userId;
 
     if (userId === undefined) {
-      return Promise.resolve({
+      return {
         statusCode: 400,
         body: "Please provide the userId of the user you wish to get.",
-      });
+      };
     }
 
     const response = await UserEntity.get({
@@ -21,22 +21,22 @@ export const main = async (event: APIGatewayProxyEvent) => {
     delete user?.["apiKey"];
 
     if (user === undefined) {
-      return Promise.resolve({
+      return {
         statusCode: 404,
         body: "User not found.",
-      });
+      };
     }
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: JSON.stringify(user),
-    });
+    };
   } catch (err) {
     console.error(err);
 
-    return Promise.resolve({
+    return {
       statusCode: 500,
       body: "Error when getting user.",
-    });
+    };
   }
 };
