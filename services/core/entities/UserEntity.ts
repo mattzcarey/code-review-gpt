@@ -8,6 +8,7 @@ export const UserEntity = new Entity({
     SK: { sortKey: true, hidden: true, default: "ROOT" },
     userId: ["PK", 0, { type: "string", required: true }],
     apiKey: { type: "binary" },
+    repos: { type: "list" },
   },
   table: Table,
 } as const);
