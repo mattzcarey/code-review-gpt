@@ -5,13 +5,14 @@ import { Construct } from "constructs";
 import { join } from "path";
 import { buildResourceName } from "../../helpers";
 
-interface CreateUserLambdaProps {
+interface AddUserLambdaProps {
   table: Table;
+  authTable: Table;
 }
 
-export class CreateUserLambda extends NodejsFunction {
-  constructor(scope: Construct, id: string, props: CreateUserLambdaProps) {
-    const { table } = props;
+export class AddUserLambda extends NodejsFunction {
+  constructor(scope: Construct, id: string, props: AddUserLambdaProps) {
+    const { table, authTable } = props;
 
     super(scope, id, {
       functionName: buildResourceName(id),
@@ -25,5 +26,6 @@ export class CreateUserLambda extends NodejsFunction {
     });
 
     table.grantReadWriteData(this);
+    authTable.grantStream(this);
   }
 }

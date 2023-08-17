@@ -25,10 +25,7 @@ export default {
         globalIndexes: {
           GSI1: { partitionKey: "GSI1PK", sortKey: "GSI1SK" },
         },
-        stream: "new_image",
-        consumers: {
-          consumer1: "../core/functions/add-user.main",
-        },
+        stream: true,
       });
       const site = new NextjsSite(stack, "site", {
         bind: [table, GITHUB_ID, GITHUB_SECRET],
