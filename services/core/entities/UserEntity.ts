@@ -11,6 +11,7 @@ export const UserEntity = new Entity({
     email: { type: "string" },
     name: { type: "string" },
     pictureUrl: { type: "string" },
+    repos: { type: "list" },
   },
   table: Table,
 } as const);
