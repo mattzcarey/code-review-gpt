@@ -40,7 +40,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
             pictureUrl: pictureUrl,
           },
         });
-        const response = await docClient.send(command);
+        await docClient.send(command);
 
         return Promise.resolve({
           statusCode: 200,
