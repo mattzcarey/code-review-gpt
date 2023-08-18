@@ -1,11 +1,10 @@
 import { DynamoDBStreamEvent } from "aws-lambda";
-import { UserEntity } from '../../entities';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { buildResourceName } from '../../../../core/helpers';
 
-const TABLE_NAME = process.env["TABLE_NAME"];
-
-if (TABLE_NAME === undefined) {
-  throw new Error(`Environment variable not found: "TABLE_NAME"`);
-}
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 export const main = async (event: DynamoDBStreamEvent) => {
   if (event.Records == null) {
@@ -16,13 +15,12 @@ export const main = async (event: DynamoDBStreamEvent) => {
   }
 
   try {
-    const records = event.Records.filter(record => record.dynamodb?.Keys && record.dynamodb?.Keys['type'].S === 'user');
-    for (const record of records) {
-      if (record.dynamodb?.Keys) {
-        const userId = record.dynamodb?.Keys['id'].S;
-        const name = record.dynamodb?.Keys['name'].S;
-        const email = record.dynamodb?.Keys['email'].S;
-        const pictureUrl = record.dynamodb?.Keys['image'].S;
+    for (const record of event.Records) {
+      if (record.dynamodb.NewImage.type['S'] === "USER") {
+        const userId = record.dynamodb?.NewImage.id['S'];
+        const name = record.dynamodb?.NewImage.name['S'];
+        const email = record.dynamodb?.NewImage.email['S'];
+        const pictureUrl = record.dynamodb?.NewImage.image['S'];
 
         if (userId === undefined || name === undefined || email === undefined || pictureUrl === undefined) {
           return Promise.resolve({
@@ -30,31 +28,30 @@ export const main = async (event: DynamoDBStreamEvent) => {
             body: "The request record does not contain the expected data.",
           });
         }
-
-        await UserEntity.put(
-          {
+        
+        const command = new PutCommand({
+          TableName: buildResourceName("crgpt-data"),
+          Item: {
+            PK: `USERID#${userId}`,
+            SK: "ROOT",
             userId: userId,
             name: name,
             email: email,
             pictureUrl: pictureUrl,
           },
-          { conditions: { attr: "userId", exists: true } }
-        );
+        });
+        const response = await docClient.send(command);
 
         return Promise.resolve({
           statusCode: 200,
           body: "User added successfully.",
         });
-      } else {
-        return Promise.resolve({
-          statusCode: 400,
-          body: "Dynamodb record in the event did not contain any keys"
-        });
       }
     }
+
     return Promise.resolve({
       statusCode: 400,
-      body: "Dynamodb record in the event did not contain any keys"
+      body: "Dynamodb record did not contain any new users",
     });
   } catch (err) {
     console.error(err);

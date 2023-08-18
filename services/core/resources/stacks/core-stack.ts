@@ -1,21 +1,15 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Key } from "aws-cdk-lib/aws-kms";
-import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 import { GetUserLambda } from "../../functions/get-user/config";
-
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { buildResourceName, getStage } from "../../helpers";
 import { CoreApi } from "../constructs/api-gateway";
 import { ReviewBucket } from "../constructs/review-bucket";
 import { UserTable } from "../constructs/user-table";
-import { AddUserLambda } from '../../functions/add-user/config';
-import { build } from 'esbuild';
-import { AUTH_TABLE_NAME } from '../../constants';
-import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { getStage } from '../../helpers';
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -66,15 +60,6 @@ export class CoreStack extends Stack {
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
 
-    const addUserLambda = new AddUserLambda(this, "add-user-lambda", {
-      table: userTable,
-      authTable: Table.fromTableArn(this, "auth-table", "arn:aws:dynamodb:eu-west-2:384933632379:table/".concat(buildResourceName(AUTH_TABLE_NAME))) as Table,
-      //authTable: Table.fromTableName(this, "authTable", buildResourceName(AUTH_TABLE_NAME)),
-    });
-
-    const addUserRoute = api.root.addResource("addUser");
-    addUserRoute.addMethod("POST", new LambdaIntegration(addUserLambda));
-    
     const getUserLambda = new GetUserLambda(this, "get-user-lambda", {
       table: userTable,
     });
