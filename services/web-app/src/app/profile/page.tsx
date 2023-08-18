@@ -1,7 +1,9 @@
 "use client";
-import { RepoTable } from "@/components/repoTable";
+import { Loading } from "@/components/loading/loading";
+import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Profile(): JSX.Element {
   const repos = [
@@ -13,15 +15,18 @@ export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
-  if (!session) {
-    return <p>You are not logged in.</p>;
-  }
-
-  if (session == null) {
-    return <p>Unauthorised.</p>;
+  if (!session || session === null) {
+    return (
+      <>
+      <p  className="text-xl flex justify-center mt-16 ml-10" >You are not logged in.</p>
+      <Link className="text-xl underline flex justify-center mb-5 ml-10" href="/">
+        Click here to return to home page. 
+      </Link>
+      </>
+    );
   }
 
   return (
