@@ -1,5 +1,5 @@
 "use client";
-import { Loading } from "@/components/loading/loading";
+import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -21,10 +21,15 @@ export default function Profile(): JSX.Element {
   if (!session || session === null) {
     return (
       <>
-      <p  className="text-xl flex justify-center mt-16 ml-10" >You are not logged in.</p>
-      <Link className="text-xl underline flex justify-center mb-5 ml-10" href="/">
-        Click here to return to home page. 
-      </Link>
+        <p className="text-xl flex justify-center mt-16 ml-10">
+          You are not logged in.
+        </p>
+        <Link
+          className="text-xl underline flex justify-center mb-5 ml-10"
+          href="/"
+        >
+          Click here to return to home page.
+        </Link>
       </>
     );
   }
