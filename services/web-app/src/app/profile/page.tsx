@@ -1,6 +1,6 @@
 "use client";
-import Loading from "@/components/loading/loading";
-import { RepoTable } from "@/components/tables/repoTable";
+import Loading from "@/app/components/loading/loading";
+import { RepoTable } from "@/app/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
