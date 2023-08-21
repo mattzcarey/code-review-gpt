@@ -17,8 +17,8 @@ const dynamoClient = DynamoDBDocument.from(new DynamoDB({}), {
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID as string || Config.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET as string || Config.GITHUB_SECRET,
+      clientId: Config.GITHUB_ID || process.env.GITHUB_ID,
+      clientSecret: Config.GITHUB_SECRET || process.env.GITHUB_SECRET,
     }),
   ],
   adapter: DynamoDBAdapter(dynamoClient, {
