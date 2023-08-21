@@ -28,7 +28,7 @@ export default function Profile(): JSX.Element {
     return <Loading />;
   }
 
-  if (!session || session === null) {
+  if (!session) {
     return (
       <>
         <p className="text-xl flex justify-center mt-16 ml-10">
@@ -49,7 +49,7 @@ export default function Profile(): JSX.Element {
       <h1 className="text-3xl flex justify-right mt-10 mb-5 ml-10">
         My Profile
       </h1>
-      <div className="flex flex-col p-5 ml-10 mr-10">
+      <div className="flex flex-col p-5 mx-10">
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image

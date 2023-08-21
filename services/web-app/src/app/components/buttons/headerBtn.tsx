@@ -9,7 +9,7 @@ interface HeaderButtonProps {
 const HeaderButton: React.FC<HeaderButtonProps> = ({ text, route }) => {
   return (
     <Link
-      className="p-[5px] mr-3 ml-3 text-l font-mono hover:underline"
+      className="p-[5px] mx-3 text-l font-mono hover:underline"
       href={route}
     >
       {text}
