@@ -1,3 +1,6 @@
+export const BASE_URL = "https://369xqmdtr1.execute-api.eu-west-2.amazonaws.com/prod";
+export const GET_USER_PATH = "/getUser";
+export const UPDATE_USER_PATH = "/updateUser";
 export const InstallationInstructions = `
 ## We give engineers their weekends back
 

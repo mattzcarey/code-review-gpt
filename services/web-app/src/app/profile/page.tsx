@@ -4,6 +4,9 @@ import { RepoTable } from "@/app/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import useAxios from "../pages/api/useAxios";
+import { GET_USER_PATH } from "../lib/constants";
+import { HttpMethod } from "../lib/types";
 
 export default function Profile(): JSX.Element {
   const repos = [
@@ -13,6 +16,13 @@ export default function Profile(): JSX.Element {
   ];
 
   const { data: session, status } = useSession();
+  const { data, loading, error } = useAxios({
+    method: HttpMethod.GET,
+    path: GET_USER_PATH,
+  });
+  console.log(data);
+  console.log(loading);
+  console.log(error);
 
   if (status === "loading") {
     return <Loading />;
@@ -43,11 +53,10 @@ export default function Profile(): JSX.Element {
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image
-              src="/icon.png"
+              src="/../assets/icon.png"
               alt={"orion logo"}
               width={100}
               height={100}
-              layout="responsive"
             />
           </div>
           <h1 className="text-2xl ml-5">{session.user?.email}</h1>

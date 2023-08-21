@@ -14,11 +14,10 @@ export const Header = (): JSX.Element => {
       <div className="flex items-center">
         <div className="rounded-full overflow-hidden w-16 h-16">
           <Image
-            src="/icon.png"
+            src="/../../assets/icon.png"
             alt={"orion logo"}
             width={100}
             height={100}
-            layout="responsive"
           />
         </div>
         <Link className="text-4xl font-mono ml-4" href="/">
