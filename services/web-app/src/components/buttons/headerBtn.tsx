@@ -10,10 +10,10 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({ text, route }) => {
   return (
     <Link
       href={route}
+      className="p-[5px] mx-3 text-l font-mono hover:underline"
     >
-      <a className="p-[5px] mx-3 text-l font-mono hover:underline">
-        {text}
-      </a>    </Link>
+      {text}
+    </Link>
   );
 };
 
