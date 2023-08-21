@@ -1,17 +1,15 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Key } from "aws-cdk-lib/aws-kms";
-import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 import { GetUserLambda } from "../../functions/get-user/config";
-
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { buildResourceName, getStage } from "../../helpers";
 import { CoreApi } from "../constructs/api-gateway";
 import { ReviewBucket } from "../constructs/review-bucket";
 import { UserTable } from "../constructs/user-table";
+import { getStage } from '../../helpers';
 
 interface CoreStackProps extends StackProps {
   stage: string;

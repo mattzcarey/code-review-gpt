@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { InstallationInstructions } from './constants';
 import ReactMarkdown from 'react-markdown';
 
