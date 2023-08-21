@@ -18,7 +18,7 @@ export default function Profile(): JSX.Element {
     return <Loading />;
   }
 
-  if (!session || session === null) {
+  if (!session) {
     return (
       <>
         <p className="text-xl flex justify-center mt-16 ml-10">
