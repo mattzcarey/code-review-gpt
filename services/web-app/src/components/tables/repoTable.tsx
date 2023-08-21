@@ -6,7 +6,7 @@ interface RepoTableProps {
 
 export const RepoTable: React.FC<RepoTableProps> = ({ repos }) => {
   return (
-    <div className="ml-10 mr-10">
+    <div className="mx-10">
       <h1 className="text-xl font-bold mb-5">Linked Repositories</h1>
       <Table.Root>
         <Table.Header>
