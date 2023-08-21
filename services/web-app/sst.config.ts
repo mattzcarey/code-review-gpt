@@ -1,6 +1,6 @@
 import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
-import { Config, NextjsSite, Table, use } from "sst/constructs";
+import { Config, NextjsSite, Table } from "sst/constructs";
 import { getStage } from '../core/helpers';
 
 export default {
@@ -19,7 +19,6 @@ export default {
       const GITHUB_ID = new Config.Secret(stack, "GITHUB_ID");
       const GITHUB_SECRET = new Config.Secret(stack, "GITHUB_SECRET");
 
-      //const userTable = use(UserEntity);
       const table = new Table(stack, "user-data", {
         fields: {
           pk: "string",

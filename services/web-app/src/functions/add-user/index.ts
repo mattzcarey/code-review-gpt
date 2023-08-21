@@ -16,37 +16,35 @@ export const main = async (event: DynamoDBStreamEvent) => {
 
   try {
     for (const record of event.Records) {
-      if (record.dynamodb.NewImage.type['S'] === "USER") {
-        const userId = record.dynamodb?.NewImage.id['S'];
-        const name = record.dynamodb?.NewImage.name['S'];
-        const email = record.dynamodb?.NewImage.email['S'];
-        const pictureUrl = record.dynamodb?.NewImage.image['S'];
+      const userId = record.dynamodb?.NewImage.id['S'];
+      const name = record.dynamodb?.NewImage.name['S'];
+      const email = record.dynamodb?.NewImage.email['S'];
+      const pictureUrl = record.dynamodb?.NewImage.image['S'];
 
-        if (userId === undefined || name === undefined || email === undefined || pictureUrl === undefined) {
-          return Promise.resolve({
-            statusCode: 400,
-            body: "The request record does not contain the expected data.",
-          });
-        }
-        
-        const command = new PutCommand({
-          TableName: buildResourceName("crgpt-data"),
-          Item: {
-            PK: `USERID#${userId}`,
-            SK: "ROOT",
-            userId: userId,
-            name: name,
-            email: email,
-            pictureUrl: pictureUrl,
-          },
-        });
-        await docClient.send(command);
-
+      if (userId === undefined || name === undefined || email === undefined || pictureUrl === undefined) {
         return Promise.resolve({
-          statusCode: 200,
-          body: "User added successfully.",
+          statusCode: 400,
+          body: "The request record does not contain the expected data.",
         });
       }
+
+      const command = new PutCommand({
+        TableName: buildResourceName("crgpt-data"),
+        Item: {
+          PK: `USERID#${userId}`,
+          SK: "ROOT",
+          userId: userId,
+          name: name,
+          email: email,
+          pictureUrl: pictureUrl,
+        },
+      });
+      await docClient.send(command);
+
+      return Promise.resolve({
+        statusCode: 200,
+        body: "User added successfully.",
+      });
     }
 
     return Promise.resolve({
