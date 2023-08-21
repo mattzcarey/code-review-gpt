@@ -11,7 +11,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({ text, route }) => {
     <Link
       href={route}
     >
-      <a className="p-[5px] mr-3 ml-3 text-l font-mono hover:underline">
+      <a className="p-[5px] mx-3 text-l font-mono hover:underline">
         {text}
       </a>    </Link>
   );
