@@ -31,6 +31,11 @@ export const languageMap: { [key: string]: string } = {
   ".jsx": "JavaScript",
   ".dart": "Dart",
   ".php": "PHP",
+  ".cpp": "C++",
+  ".h": "C++",
+  ".cxx": "C++",
+  ".hpp": "C++",
+  ".hxx": "C++",
 };
 
 export const supportedFiles = new Set(Object.keys(languageMap));
