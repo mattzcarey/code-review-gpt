@@ -36,9 +36,10 @@ export default {
             function: {
               handler: "src/functions/add-user/index.main",
               permissions: ["dynamodb"],
-              environment: {
-                STAGE: getStage(),
-              }
+            },
+            environment: {
+              CLOUDFLARE_WORKER_URL: "https://worker-email-production.mattc-543.workers.dev/",
+              CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
             },
             filters: [
               {

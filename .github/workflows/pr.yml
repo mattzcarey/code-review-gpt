@@ -35,6 +35,9 @@ jobs:
 
       - name: Run unit tests
         run: npm run test-unit
+      
+      - name: Run integ tests
+        run: npm run test-integration
 
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
