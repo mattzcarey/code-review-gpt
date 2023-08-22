@@ -4,27 +4,20 @@ import { RepoTable } from "@/app/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import useAxios from "../pages/api/useAxios";
+import useAxios from "../lib/hooks/useAxios";
 import { GET_USER_PATH } from "../lib/constants";
 import { HttpMethod } from "../lib/types";
 
 export default function Profile(): JSX.Element {
-  const repos = [
-    "code-review-gpt",
-    "cooking-website",
-    "make-money-fast-crypto",
-  ];
-
+  let repos = [];
   const { data: session, status } = useSession();
-  const { data, loading, error } = useAxios({
+  const { data, loading } = useAxios({
     method: HttpMethod.GET,
     path: GET_USER_PATH,
+    params: {email: session?.user?.email ?? ""} 
   });
-  console.log(data);
-  console.log(loading);
-  console.log(error);
-
-  if (status === "loading") {
+  
+  if (status === "loading" || loading) {
     return <Loading />;
   }
 
@@ -43,6 +36,10 @@ export default function Profile(): JSX.Element {
       </>
     );
   }
+  
+  if (data) {
+    repos = JSON.parse(data).repos;
+  }
 
   return (
     <>
@@ -53,7 +50,7 @@ export default function Profile(): JSX.Element {
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image
-              src="/../assets/icon.png"
+              src={session.user?.image ?? "/assets/icon.png"}
               alt={"orion logo"}
               width={100}
               height={100}

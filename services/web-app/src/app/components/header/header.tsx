@@ -14,7 +14,7 @@ export const Header = (): JSX.Element => {
       <div className="flex items-center">
         <div className="rounded-full overflow-hidden w-16 h-16">
           <Image
-            src="/../../assets/icon.png"
+            src="/assets/icon.png"
             alt={"orion logo"}
             width={100}
             height={100}

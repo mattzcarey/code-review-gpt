@@ -13,16 +13,10 @@ const useAxios = (request: AxiosRequest) => {
     setError(null);
 
     try {
-      const response = await axios.get(BASE_URL + request.path, {
-        params: { userId: 24 },
+      const response = await axios[request.method](BASE_URL + request.path, {
+        params: request.params ?? undefined,
+        data: request.body ?? undefined,
       });
-      console.log(request.params);
-      //   const response = await axios[request.method](BASE_URL + request.path, {
-      //     params: request.params ?? undefined,
-      //     data: request.body ?? undefined,
-      //   });
-      console.log("sent request, gto response");
-      console.log(response);
       setData(response.data);
     } catch (err: any) {
       setError(err);

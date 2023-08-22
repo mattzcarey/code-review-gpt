@@ -14,6 +14,12 @@ const nextConfig = {
         port: "",
         pathname: "/mattzcarey/code-review-gpt/assets/77928207/a47c2460-b866-433f-a4c9-efb5737d4fed",
       },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "**",
+      },
     ],
   },
 }

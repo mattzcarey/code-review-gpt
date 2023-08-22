@@ -1,7 +1,6 @@
 import { DynamoDBStreamEvent } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { buildResourceName } from '../../../../core/helpers';
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -29,9 +28,9 @@ export const main = async (event: DynamoDBStreamEvent) => {
       }
 
       const command = new PutCommand({
-        TableName: buildResourceName("crgpt-data"),
+        TableName: "liza-dev-crgpt-data",
         Item: {
-          PK: `USERID#${userId}`,
+          PK: `EMAIL#${email}`,
           SK: "ROOT",
           userId: userId,
           name: name,
