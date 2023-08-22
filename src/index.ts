@@ -21,6 +21,7 @@ const main = async () => {
         "./common/git/getFilesWithChanges"
       );
       const files = await getFilesWithChanges(argv.ci);
+      logger.debug(`Files with changes: ${files.join(", ")}`);
       await review(argv, files, openAIApiKey);
       break;
     case "test":
