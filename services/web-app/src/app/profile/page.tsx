@@ -4,7 +4,6 @@ import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import useAxios from "../../lib/hooks/useAxios";
-import { GET_USER_PATH } from "../../lib/constants";
 import { useEffect, useState } from "react";
 import { User } from "../../lib/types";
 import { ReturnToHome } from "../../components/returnToHome/returnToHome";
@@ -22,7 +21,7 @@ export default function Profile(): JSX.Element {
 
       try {
         const response = await axiosInstance.get(
-          `${GET_USER_PATH}?email=${session?.user?.email}`
+          `/getUser?email=${session?.user?.email}`
         );
         setData(response.data);
       } catch (err: any) {
