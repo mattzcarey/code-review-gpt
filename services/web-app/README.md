@@ -11,7 +11,6 @@ For setting them in SST you would need to use the following commands:
 ```bash
 npx sst secrets set GITHUB_ID sk_test_abc123
 npx sst secrets set GITHUB_SECRET sk_test_abc123
-npx sst secrets set CLOUDFLARE_WORKER_URL sk_test_abc123
 ```
 
 To run the development server locally:

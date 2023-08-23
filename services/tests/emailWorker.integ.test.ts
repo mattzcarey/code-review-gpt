@@ -1,9 +1,10 @@
-import { getVariableFromSSM } from "../core/functions/helpers/getVariable";
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: './services/tests/.env' });
 
 describe("CloudFlare email worker health test", () => {
-  it("Should return 200 after successfully hitting the CloudFlare health endpoint", async() => {
-    const url = await getVariableFromSSM("CLOUDFLARE_WORKER_URL");
-    const res =  await fetch(url.concat("api/health"), {
+  test("Should return 200 after successfully hitting the CloudFlare health endpoint", async() => {
+    const res =  await fetch(process.env.CLOUDFLARE_WORKER_HEALTH_URL ?? "", {
       method: "GET",
     });
 

@@ -16,6 +16,7 @@ jobs:
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       GITHUB_SHA: ${{ github.sha }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CLOUDFLARE_WORKER_HEALTH_URL: ${{ secrets.CLOUDFLARE_WORKER_HEALTH_URL }}
 
     steps:
       - uses: actions/checkout@v2
