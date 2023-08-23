@@ -8,7 +8,10 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "deploy-staging": "cdk deploy -c stage=staging -c region=eu-west-2 --all",
+    "deploy-prod": "cdk deploy -c stage=prod -c region=eu-west-2 --all"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",

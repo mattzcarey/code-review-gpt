@@ -7,7 +7,9 @@
     "dev-local": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy-staging": "npx sst deploy --stage staging",
+    "deploy-prod": "npx sst deploy --stage prod"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.382.0",
