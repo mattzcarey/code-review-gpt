@@ -1,4 +1,4 @@
-import { InstallationInstructions } from "./lib/constants";
+import { InstallationInstructions } from "../lib/constants";
 import ReactMarkdown from "react-markdown";
 
 export default function Home() {

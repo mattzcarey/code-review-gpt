@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { SignInButton } from "@/app/components/buttons/signIn";
+import { SignInButton } from "@/components/buttons/signIn";
 import { useSession } from "next-auth/react";
 import { SignOutButton } from "../buttons/signOut";
 import HeaderButton from "../buttons/headerBtn";
@@ -14,7 +14,7 @@ export const Header = (): JSX.Element => {
       <div className="flex items-center">
         <div className="rounded-full overflow-hidden w-16 h-16">
           <Image
-            src="/assets/icon.png"
+            src="/icon.png"
             alt={"orion logo"}
             width={100}
             height={100}
