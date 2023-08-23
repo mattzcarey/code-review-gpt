@@ -7,16 +7,33 @@ import Link from "next/link";
 import useAxios from "../lib/hooks/useAxios";
 import { GET_USER_PATH } from "../lib/constants";
 import { HttpMethod } from "../lib/types";
+import { useEffect, useState } from "react";
 
 export default function Profile(): JSX.Element {
   let repos = [];
   const { data: session, status } = useSession();
-  const { data, loading } = useAxios({
-    method: HttpMethod.GET,
-    path: GET_USER_PATH,
-    params: {email: session?.user?.email ?? ""} 
-  });
-  
+  const { axiosInstance } = useAxios();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await axiosInstance.get(
+          `/getUser?email=${session?.user?.email}`
+        );
+        setData(response.data);
+      } catch (err: any) {
+        console.log("Failed to getUser")
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [session?.user]);
+
   if (status === "loading" || loading) {
     return <Loading />;
   }
@@ -36,7 +53,7 @@ export default function Profile(): JSX.Element {
       </>
     );
   }
-  
+
   if (data) {
     repos = JSON.parse(data).repos;
   }
