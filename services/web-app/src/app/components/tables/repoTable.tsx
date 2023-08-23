@@ -1,11 +1,11 @@
 import { Table } from "@radix-ui/themes";
 
 interface RepoTableProps {
-  repos: string[] | undefined; // Change the type of repos to allow undefined
+  repos: string[] | undefined;
 }
 
 export const RepoTable: React.FC<RepoTableProps> = ({ repos }) => {
-  if (repos === undefined || repos.length === 0) { // Check if repos is undefined or empty
+  if (repos === undefined || repos.length === 0) {
     return (
       <div className="mx-10">
         <h1 className="text-xl font-bold mb-5">Linked Repositories</h1>

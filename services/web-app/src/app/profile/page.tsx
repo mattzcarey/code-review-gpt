@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import useAxios from "../lib/hooks/useAxios";
 import { GET_USER_PATH } from "../lib/constants";
-import { HttpMethod } from "../lib/types";
 import { useEffect, useState } from "react";
 
 export default function Profile(): JSX.Element {
@@ -22,7 +21,7 @@ export default function Profile(): JSX.Element {
 
       try {
         const response = await axiosInstance.get(
-          `/getUser?email=${session?.user?.email}`
+          `${GET_USER_PATH}?email=${session?.user?.email}`
         );
         setData(response.data);
       } catch (err: any) {
