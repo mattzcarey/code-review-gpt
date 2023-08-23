@@ -40,11 +40,11 @@ export const main = async (event: DynamoDBStreamEvent) => {
       });
       await docClient.send(command);
 
+      return Promise.resolve({
+        statusCode: 200,
+        body: "User added successfully.",
+      });
     }
-    return Promise.resolve({
-      statusCode: 200,
-      body: "User added successfully.",
-    });
 
     return Promise.resolve({
       statusCode: 400,
