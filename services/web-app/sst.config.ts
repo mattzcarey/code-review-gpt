@@ -1,7 +1,6 @@
 import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
-import { getStage } from '../core/helpers';
 
 export default {
   config(_input) {
@@ -35,11 +34,11 @@ export default {
           consumer1: {
             function: {
               handler: "src/functions/add-user/index.main",
-              permissions: ["dynamodb"],
-            },
-            environment: {
-              CLOUDFLARE_WORKER_URL: "https://worker-email-production.mattc-543.workers.dev/",
-              CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
+              permissions: ["dynamodb", "ssm"],
+              environment: {
+                CLOUDFLARE_WORKER_URL: "https://worker-email-production.mattc-543.workers.dev/api/email",
+                CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
+              },
             },
             filters: [
               {

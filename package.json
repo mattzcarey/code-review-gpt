@@ -11,7 +11,7 @@
     "start": "ts-node ./src/index.ts review",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
-    "test-integration" : "jest .services/tests",
+    "test-integ" : "jest -c services/tests/jest.config.js",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },

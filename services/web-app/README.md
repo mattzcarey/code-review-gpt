@@ -26,8 +26,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Involves starting our SST dev environment.
 
 ```bash
-npx sst dev
+npx sst dev stage <stage>
 ```
+
+Remember to use the same stage for both your SST and CDK stack.
 
 Next in a separate terminal:
 
