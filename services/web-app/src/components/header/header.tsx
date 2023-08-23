@@ -18,7 +18,6 @@ export const Header = (): JSX.Element => {
             alt={"orion logo"}
             width={100}
             height={100}
-            layout="responsive"
           />
         </div>
         <Link className="text-4xl font-mono ml-4" href="/">

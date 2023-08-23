@@ -1,42 +1,33 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { UserEntity } from "../../entities";
+import { formatResponse } from "../../helpers/format-response";
 
 export const main = async (event: APIGatewayProxyEvent) => {
   try {
-    const userId = event.queryStringParameters?.userId;
+    const email = event.queryStringParameters?.email;
 
-    if (userId === undefined) {
-      return {
-        statusCode: 400,
-        body: "Please provide the userId of the user you wish to get.",
-      };
+    if (email === undefined) {
+      return formatResponse("Please provide the email of the user you wish to get.", 400)
     }
 
     const response = await UserEntity.get({
-      userId: userId,
+      email: email,
     });
 
+    console.log(response);
     const user = response.Item;
     delete user?.["apiKey"];
 
     if (user === undefined) {
-      return {
-        statusCode: 404,
-        body: "User not found.",
-      };
+      return formatResponse("User not found.", 404)
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(user),
-    };
+    return formatResponse(JSON.stringify(user))
+
   } catch (err) {
     console.error(err);
 
-    return {
-      statusCode: 500,
-      body: "Error when getting user.",
-    };
+    return formatResponse("Error when getting user.", 500)
   }
 };

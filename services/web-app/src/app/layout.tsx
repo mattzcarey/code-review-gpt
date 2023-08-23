@@ -24,9 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Theme>
           <NextAuthProvider>
             <Header />
-            <main className="flex flex-col flex-grow mb-16"> 
-              {children}
-            </main>
+            <main className="flex flex-col flex-grow mb-16">{children}</main>
             <Footer />
           </NextAuthProvider>
         </Theme>

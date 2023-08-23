@@ -1,3 +1,4 @@
+export const BASE_URL = "https://mylf3hxjs8.execute-api.eu-west-2.amazonaws.com/prod";
 export const InstallationInstructions = `
 ## We give engineers their weekends back
 

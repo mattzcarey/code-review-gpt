@@ -3,35 +3,48 @@ import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
+import useAxios from "../../lib/hooks/useAxios";
+import { useEffect, useState } from "react";
+import { User } from "../../lib/types";
+import { ReturnToHome } from "../../components/cards/returnToHome";
 
 export default function Profile(): JSX.Element {
-  const repos = [
-    "code-review-gpt",
-    "cooking-website",
-    "make-money-fast-crypto",
-  ];
-
+  let user: User;
   const { data: session, status } = useSession();
+  const { axiosInstance } = useAxios();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  if (status === "loading") {
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await axiosInstance.get(
+          `/getUser?email=${session?.user?.email}`
+        );
+        setData(response.data);
+      } catch (err: any) {
+        console.log("Failed to getUser");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [session?.user]);
+
+  if (status === "loading" || loading) {
     return <Loading />;
   }
 
   if (!session) {
-    return (
-      <>
-        <p className="text-xl flex justify-center mt-16 ml-10">
-          You are not logged in.
-        </p>
-        <Link
-          className="text-xl underline flex justify-center mb-5 ml-10"
-          href="/"
-        >
-          Click here to return to home page.
-        </Link>
-      </>
-    );
+    return <ReturnToHome message="You are not logged in" />;
+  }
+
+  if (!data) {
+    return <ReturnToHome message="Could not retrieve User data." />;
+  } else {
+    user = JSON.parse(data);
   }
 
   return (
@@ -43,16 +56,15 @@ export default function Profile(): JSX.Element {
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image
-              src="/icon.png"
+              src={user.pictureUrl ?? "/user.svg"}
               alt={"orion logo"}
               width={100}
               height={100}
-              layout="responsive"
             />
           </div>
-          <h1 className="text-2xl ml-5">{session.user?.email}</h1>
+          <h1 className="text-2xl ml-5">{user.email}</h1>
         </div>
-        <RepoTable repos={repos} />
+        <RepoTable repos={user.repos} />
       </div>
     </>
   );
