@@ -28,7 +28,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
       }
 
       const command = new PutCommand({
-        TableName: "liza-dev-crgpt-data",
+        TableName: `${process.env.SST_STAGE}-crgpt-data`,
         Item: {
           PK: `EMAIL#${email}`,
           SK: "ROOT",
@@ -40,11 +40,11 @@ export const main = async (event: DynamoDBStreamEvent) => {
       });
       await docClient.send(command);
 
-      return Promise.resolve({
-        statusCode: 200,
-        body: "User added successfully.",
-      });
     }
+    return Promise.resolve({
+      statusCode: 200,
+      body: "User added successfully.",
+    });
 
     return Promise.resolve({
       statusCode: 400,
