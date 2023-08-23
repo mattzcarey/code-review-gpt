@@ -1,4 +1,6 @@
 "use client";
+import "../../styles/loading.css";
+import "../../styles/updateApiKey.css";
 import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
@@ -7,6 +9,7 @@ import useAxios from "../../lib/hooks/useAxios";
 import { useEffect, useState } from "react";
 import { User } from "../../lib/types";
 import { ReturnToHome } from "../../components/cards/returnToHome";
+import UpdateAPIKey from "@/components/buttons/updateApiKey";
 
 export default function Profile(): JSX.Element {
   let user: User;
@@ -64,6 +67,7 @@ export default function Profile(): JSX.Element {
           </div>
           <h1 className="text-2xl ml-5">{user.email}</h1>
         </div>
+        <UpdateAPIKey />
         <RepoTable repos={user.repos} />
       </div>
     </>
