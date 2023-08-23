@@ -3,13 +3,15 @@ import Loading from "@/app/components/loading/loading";
 import { RepoTable } from "@/app/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import useAxios from "../lib/hooks/useAxios";
 import { GET_USER_PATH } from "../lib/constants";
 import { useEffect, useState } from "react";
+import { User } from "../lib/types";
+import { ReturnToHome } from "../components/returnToHome/returnToHome";
+import UpdateAPIKey from "../components/buttons/updateApiKey";
 
 export default function Profile(): JSX.Element {
-  let repos = [];
+  let user: User;
   const { data: session, status } = useSession();
   const { axiosInstance } = useAxios();
   const [data, setData] = useState(null);
@@ -25,7 +27,7 @@ export default function Profile(): JSX.Element {
         );
         setData(response.data);
       } catch (err: any) {
-        console.log("Failed to getUser")
+        console.log("Failed to getUser");
       } finally {
         setLoading(false);
       }
@@ -38,23 +40,13 @@ export default function Profile(): JSX.Element {
   }
 
   if (!session) {
-    return (
-      <>
-        <p className="text-xl flex justify-center mt-16 ml-10">
-          You are not logged in.
-        </p>
-        <Link
-          className="text-xl underline flex justify-center mb-5 ml-10"
-          href="/"
-        >
-          Click here to return to home page.
-        </Link>
-      </>
-    );
+    return <ReturnToHome message="You are not logged in" />;
   }
 
-  if (data) {
-    repos = JSON.parse(data).repos;
+  if (!data) {
+    return <ReturnToHome message="Could not retrieve User data." />;
+  } else {
+    user = JSON.parse(data);
   }
 
   return (
@@ -66,15 +58,16 @@ export default function Profile(): JSX.Element {
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image
-              src={session.user?.image ?? "/assets/icon.png"}
+              src={user.pictureUrl ?? "/assets/icon.png"}
               alt={"orion logo"}
               width={100}
               height={100}
             />
           </div>
-          <h1 className="text-2xl ml-5">{session.user?.email}</h1>
+          <h1 className="text-2xl ml-5">{user.email}</h1>
         </div>
-        <RepoTable repos={repos} />
+        <UpdateAPIKey />
+        <RepoTable repos={user.repos} />
       </div>
     </>
   );
