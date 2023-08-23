@@ -33,7 +33,6 @@
   "license": "MIT",
   "dependencies": {
     "@actions/github": "^5.1.1",
-    "@aws-sdk/client-ssm": "^3.395.0",
     "@gitbeaker/rest": "^39.10.2",
     "@radix-ui/themes": "^1.0.0",
     "chalk": "^4.1.2",
