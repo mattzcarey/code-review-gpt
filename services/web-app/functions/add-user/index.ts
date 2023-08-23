@@ -2,13 +2,15 @@ import { DynamoDBStreamEvent } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import fetch from "node-fetch";
-import { getVariableFromSSM } from "../../../../core/functions/helpers/getVariable";
+import { getVariableFromSSM } from "../../../core/functions/helpers/getVariable";
+import { Config } from "sst/node/config";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 const postEmail = async(email: string, name: string) => {
-  return await fetch(process.env.CLOUDFLARE_WORKER_URL ?? "", {
+  const url  = await getVariableFromSSM(process.env.CLOUDFLARE_WORKER_URL_NAME) ?? "";
+  return await fetch(url.concat("api/email"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +20,7 @@ const postEmail = async(email: string, name: string) => {
     },
     body: JSON.stringify({
       "to": {"email": email, "name": name },
-      "from": { "email": "test@oriontools.ai", "name": "Orion Tools" },
+      "from": { "email": "noreply@oriontools.ai", "name": "Matt from Orion Tools" },
       "subject": "Welcome to Code Review GPT",
       "html": "<p>Thanks for signing up for Orion tools. We aim to make the best AI powered dev tools. We hope you enjoy using our code review product. <br/>Here is a <a href=\"https://github.com/mattzcarey/code-review-gpt\">link</a> to the repo, give it a star. Here is a <a href=\"https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg\">link</a> to our slack community.</p>"
     }),

@@ -11,6 +11,7 @@ For setting them in SST you would need to use the following commands:
 ```bash
 npx sst secrets set GITHUB_ID sk_test_abc123
 npx sst secrets set GITHUB_SECRET sk_test_abc123
+npx sst secrets set CLOUDFLARE_WORKER_URL sk_test_abc123
 ```
 
 To run the development server locally:
@@ -26,7 +27,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Involves starting our SST dev environment.
 
 ```bash
-npx sst dev stage <stage>
+npx sst dev --stage <stage>
 ```
 
 Remember to use the same stage for both your SST and CDK stack.
