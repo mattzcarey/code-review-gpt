@@ -6,7 +6,7 @@ import Image from "next/image";
 import useAxios from "../../lib/hooks/useAxios";
 import { useEffect, useState } from "react";
 import { User } from "../../lib/types";
-import { ReturnToHome } from "../../components/returnToHome/returnToHome";
+import { ReturnToHome } from "../../components/cards/returnToHome";
 
 export default function Profile(): JSX.Element {
   let user: User;
