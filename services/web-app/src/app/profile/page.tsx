@@ -1,14 +1,13 @@
 "use client";
-import Loading from "@/app/components/loading/loading";
-import { RepoTable } from "@/app/components/tables/repoTable";
+import Loading from "@/components/loading/loading";
+import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import useAxios from "../lib/hooks/useAxios";
-import { GET_USER_PATH } from "../lib/constants";
+import useAxios from "../../lib/hooks/useAxios";
+import { GET_USER_PATH } from "../../lib/constants";
 import { useEffect, useState } from "react";
-import { User } from "../lib/types";
-import { ReturnToHome } from "../components/returnToHome/returnToHome";
-import UpdateAPIKey from "../components/buttons/updateApiKey";
+import { User } from "../../lib/types";
+import { ReturnToHome } from "../../components/returnToHome/returnToHome";
 
 export default function Profile(): JSX.Element {
   let user: User;
@@ -58,7 +57,7 @@ export default function Profile(): JSX.Element {
         <div className="flex items-center mb-10">
           <div className="rounded-full overflow-hidden w-16 h-16">
             <Image
-              src={user.pictureUrl ?? "/assets/icon.png"}
+              src={user.pictureUrl ?? "/user.svg"}
               alt={"orion logo"}
               width={100}
               height={100}
@@ -66,7 +65,6 @@ export default function Profile(): JSX.Element {
           </div>
           <h1 className="text-2xl ml-5">{user.email}</h1>
         </div>
-        <UpdateAPIKey />
         <RepoTable repos={user.repos} />
       </div>
     </>

@@ -1,9 +1,9 @@
-import "./styles/globals.css";
-import "./styles/custom.css";
+import "../styles/globals.css";
+import "../styles/custom.css";
 import React, { ReactNode } from "react";
 import { NextAuthProvider } from "./providers";
-import { Footer } from "@/app/components/footer/footer";
-import { Header } from "@/app/components/header/header";
+import { Footer } from "@/components/footer/footer";
+import { Header } from "@/components/header/header";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 
