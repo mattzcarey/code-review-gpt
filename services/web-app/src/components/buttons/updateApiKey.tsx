@@ -11,7 +11,6 @@ const UpdateAPIKey: React.FC<UpdateAPIKeyProps> = ({ onSave }) => {
   const [apiKey, setApiKey] = useState(""); // State to hold the API key input value
 
   const handleSave = () => {
-    console.log(apiKey);
     onSave(apiKey);
   };
 
