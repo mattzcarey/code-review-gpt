@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
-import { NextAuthOptions } from "next-auth";
+import { CookiesOptions, NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { Table } from "sst/node/table";
 import { Config } from "sst/node/config";
@@ -14,6 +14,23 @@ const dynamoClient = DynamoDBDocument.from(new DynamoDB({}), {
   },
 })
 
+const cookies: Partial<CookiesOptions> = {
+  sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+          httpOnly: true,
+          sameSite: "none",
+          path: "/",
+          domain: process.env.NEXT_PUBLIC_DOMAIN,
+          secure: true,
+      },
+  },
+  callbackUrl: {
+      name: `next-auth.callback-url`,
+      options: {}
+  },
+};
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
@@ -24,4 +41,17 @@ export const authOptions: NextAuthOptions = {
   adapter: DynamoDBAdapter(dynamoClient, {
     tableName: Table['user-data'].tableName,
   }),
+  session: {
+    strategy: "jwt",
+  },
+  cookies: cookies,
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token, user }) {
+      session.user = token as any;
+      return session;
+    },
+  },
 };

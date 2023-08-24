@@ -8,6 +8,7 @@ import Link from "next/link";
 
 export const Header = (): JSX.Element => {
   const { data: session } = useSession();
+  console.log({ session });
 
   return (
     <header className="flex flex-row navbar justify-between items-center m-5">
