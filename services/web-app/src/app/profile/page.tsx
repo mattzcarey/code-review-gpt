@@ -1,6 +1,4 @@
 "use client";
-import "../../styles/loading.css";
-import "../../styles/updateApiKey.css";
 import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
