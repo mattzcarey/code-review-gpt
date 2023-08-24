@@ -7,9 +7,9 @@ export const getCertificateArn = (
   subDomain: string
 ): string | undefined => {
   return (
-    StringParameter.fromSecureStringParameterAttributes(
+    StringParameter.fromStringParameterAttributes(
       scope,
-      "CertificateArnParameter",
+      `CertificateArnParameter-${subDomain}-${stage}`,
       {
         parameterName: `${subDomain.toUpperCase()}_${stage.toUpperCase()}_CERTIFICATE_ARN`,
       }
