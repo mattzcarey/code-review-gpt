@@ -13,6 +13,17 @@ export class CoreApi extends RestApi {
         ...props?.deployOptions,
         tracingEnabled: true,
       },
+      defaultCorsPreflightOptions: {
+        allowHeaders: [
+          'Content-Type',
+          'X-Amz-Date',
+          'Authorization',
+          'X-Api-Key',
+        ],
+        allowMethods: ['OPTIONS', 'GET', 'POST'],
+        allowCredentials: true,
+        allowOrigins: ['http://localhost:3000'],
+      },
     });
   }
 }
