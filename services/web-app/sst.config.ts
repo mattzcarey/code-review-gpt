@@ -1,6 +1,6 @@
 import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
-import { Config, NextjsSite, Table } from "sst/constructs";
+import { Config, NextjsSite, Table, Function } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -30,33 +30,37 @@ export default {
           GSI1: { partitionKey: "GSI1PK", sortKey: "GSI1SK" },
         },
         stream: "new_image",
-        consumers: {
-          consumer1: {
-            function: {
-              handler: "/functions/add-user/index.main",
-              permissions: ["dynamodb", "ssm"],
-              environment: {
-                CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
-                CLOUDFLARE_WORKER_URL_NAME: "CLOUDFLARE_WORKER_URL",
-              },
-            },
-            filters: [
-              {
-                dynamodb: {
-                  NewImage: {
-                    type: {
-                      S: ["USER"],
-                    },
+      });
+
+      const lambda = new Function(stack, 'AddUserLambda', {
+        handler: 'functions/add-user/index.main', // Your Lambda handler function
+        permissions: ["dynamodb", "ssm"],
+        environment: {
+          CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
+          CLOUDFLARE_WORKER_URL_NAME: "CLOUDFLARE_WORKER_URL",
+        },
+      });
+
+      lambda.attachPermissions([table, "grantReadWriteData"]);
+      table.addConsumers(stack, {
+        consumer1:  {
+          function: lambda,
+          filters: [
+            {
+              dynamodb: {
+                NewImage: {
+                  type: {
+                    S: ["USER"],
                   },
                 },
               },
-            ],
-          }
+            },
+          ],
         }
       });
 
       const site = new NextjsSite(stack, "site", {
-        bind: [GITHUB_ID, GITHUB_SECRET, table],
+        bind: [GITHUB_ID, GITHUB_SECRET, table, lambda],
       });
 
       stack.addOutputs({

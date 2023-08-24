@@ -9,7 +9,7 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 const postEmail = async(email: string, name: string) => {
-  const url  = await getVariableFromSSM(process.env.CLOUDFLARE_WORKER_URL_NAME) ?? "";
+  const url  = await getVariableFromSSM(process.env.CLOUDFLARE_WORKER_URL_NAME ?? "");
   return await fetch(url.concat("api/email"), {
     method: "POST",
     headers: {
