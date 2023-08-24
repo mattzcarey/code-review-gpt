@@ -1,6 +1,7 @@
 import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
+import { getDomainName } from "./helpers";
 
 export default {
   config(_input) {
@@ -51,12 +52,13 @@ export default {
                 },
               },
             ],
-          }
-        }
+          },
+        },
       });
 
       const site = new NextjsSite(stack, "site", {
         bind: [GITHUB_ID, GITHUB_SECRET, table],
+        customDomain: getDomainName(stack.stage),
       });
 
       stack.addOutputs({
