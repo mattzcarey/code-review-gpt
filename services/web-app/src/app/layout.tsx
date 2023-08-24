@@ -1,5 +1,4 @@
 import "../styles/globals.css";
-import "../styles/custom.css";
 import React, { ReactNode } from "react";
 import { NextAuthProvider } from "./providers";
 import { Footer } from "@/components/footer/footer";
