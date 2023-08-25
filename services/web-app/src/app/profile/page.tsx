@@ -1,14 +1,12 @@
 "use client";
 import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import useAxios from "../../lib/hooks/useAxios";
 import { useEffect, useState } from "react";
 import { User } from "../../lib/types";
 import { ReturnToHome } from "../../components/cards/returnToHome";
-import { getToken } from "next-auth/jwt";
-import { Config } from 'sst/constructs';
 
 export default function Profile(): JSX.Element {
   let user: User;
@@ -16,19 +14,17 @@ export default function Profile(): JSX.Element {
   const { axiosInstance } = useAxios();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const authSecret = Config.NEXTAUTH_SECRET;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       try {
-        const token = await getToken({ request, authSecret});
         const response = await axiosInstance.get(
           `/getUser?email=${session?.user?.email}`, 
           { 
             headers: {
-              "Authorization": token?.token ?? "",
+              "Authorization": session?.token,
             }
           }
         );

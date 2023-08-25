@@ -3,7 +3,6 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import fetch from "node-fetch";
 import { getVariableFromSSM } from "../../../core/functions/helpers/getVariable";
-import { Config } from "sst/node/config";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
