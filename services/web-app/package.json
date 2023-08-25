@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "sst bind next dev",
     "dev-local": "next dev",
-    "build": "next build",
+    "build": "sst bind next build",
     "start": "next start",
     "lint": "next lint"
   },
