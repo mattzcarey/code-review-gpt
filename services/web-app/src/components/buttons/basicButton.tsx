@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@radix-ui/themes";
 import "../../styles/updateApiKey.css";
+import { Button } from "@radix-ui/themes";
 
 export interface UpdateAPIKeyProps {
   text: string;
