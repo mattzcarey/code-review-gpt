@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import React, { ReactNode } from "react";
 import { NextAuthProvider } from "./providers";
 import { Footer } from "@/components/footer/footer";
-import { Header } from "@/components/header/header";
+import { Header } from "@/components/navbar/header/header";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 
@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         ></script>
       </head>
       <body className="flex flex-col min-h-screen">
-        <Theme>
+        <Theme appearance="light" accentColor="purple" grayColor="gray" radius="medium" scaling="95%">
           <NextAuthProvider>
             <Header />
             <main className="flex flex-col flex-grow mb-16">{children}</main>

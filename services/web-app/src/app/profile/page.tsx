@@ -7,7 +7,7 @@ import useAxios from "../../lib/hooks/useAxios";
 import { useEffect, useState } from "react";
 import { User } from "../../lib/types";
 import { ReturnToHome } from "../../components/cards/returnToHome";
-import UpdateAPIKey from "@/components/buttons/updateApiKey";
+import UpdateAPIKey from "@/components/dialog/updateApiKey";
 
 export default function Profile(): JSX.Element {
   let user: User;
@@ -47,10 +47,10 @@ export default function Profile(): JSX.Element {
 
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
-      const response = await axiosInstance.post(
-        `/updateUser`,
-        { email: user.email, apiKey: newApiKey } 
-      );
+      const response = await axiosInstance.post(`/updateUser`, {
+        email: user.email,
+        apiKey: newApiKey,
+      });
       console.log("API key updated successfully:", response.data);
     } catch (error) {
       console.error("Failed to update API key:", error);
