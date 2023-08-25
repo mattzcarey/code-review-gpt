@@ -6,10 +6,10 @@ import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 import { GetUserLambda } from "../../functions/get-user/config";
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
+import { getCertificateArn, getDomainName, getStage } from "../../helpers";
 import { CoreApi } from "../constructs/api-gateway";
 import { ReviewBucket } from "../constructs/review-bucket";
 import { UserTable } from "../constructs/user-table";
-import { getStage } from '../../helpers';
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -19,7 +19,10 @@ export class CoreStack extends Stack {
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
-    const api = new CoreApi(this, "core-api");
+    const api = new CoreApi(this, "core-api", {
+      domainNameString: `api.${getDomainName(props.stage)}`,
+      certificateArn: getCertificateArn(this, props.stage, "api"),
+    });
 
     const userTable = new UserTable(this, "user-database");
 
@@ -34,6 +37,8 @@ export class CoreStack extends Stack {
         throttlingBurstLimit: 1,
         throttlingRateLimit: 1,
       },
+      domainNameString: `demo.${getDomainName(props.stage)}`,
+      certificateArn: getCertificateArn(this, props.stage, "demo"),
     });
 
     const demoReviewBucket = new ReviewBucket(this, "demo-review-bucket");
