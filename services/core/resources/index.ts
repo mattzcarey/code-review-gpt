@@ -4,18 +4,31 @@ import { RemovalPolicyAspect } from "../aspects/RemovalPolicyAspect";
 
 import { buildResourceName, getRegion, getStage } from "../helpers";
 import { CoreStack } from "./stacks/core-stack";
+import { DemoStack } from "./stacks/demo-stack";
 
 const app = new App();
+
+//Env
 const stage = getStage();
 const region = getRegion();
 
+//Stacks
 const coreStack = new CoreStack(app, "crgpt-core", {
   stackName: buildResourceName("crgpt-core"),
   stage: stage,
-  env: { region },
+  env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
 });
 
-Aspects.of(coreStack).add(new RemovalPolicyAspect());
+const demoStack = new DemoStack(app, "crgpt-demo", {
+  stackName: buildResourceName("crgpt-demo"),
+  stage: stage,
+  env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
+  userTable: coreStack.userTable,
+});
 
-//enable OTel traces
+//Aspects
+Aspects.of(coreStack).add(new RemovalPolicyAspect());
+Aspects.of(demoStack).add(new RemovalPolicyAspect());
+
+//OTel traces
 Tags.of(app).add("baselime:tracing", `true`);
