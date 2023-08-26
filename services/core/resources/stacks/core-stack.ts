@@ -9,7 +9,6 @@ import { UpdateUserLambda } from "../../functions/update-user/config";
 import { getCertificateArn, getDomainName, getStage } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
 import { UserTable } from "../constructs/user-table";
-import { getStage } from '../../helpers';
 
 interface CoreStackProps extends StackProps {
   stage: string;

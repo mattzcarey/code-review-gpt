@@ -1,6 +1,7 @@
 import { Tags } from "aws-cdk-lib";
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
+import { getDomainName } from "./helpers";
 
 export default {
   config(_input) {
@@ -17,8 +18,12 @@ export default {
     app.stack(function Site({ stack }) {
       const GITHUB_ID = new Config.Secret(stack, "GITHUB_ID");
       const GITHUB_SECRET = new Config.Secret(stack, "GITHUB_SECRET");
+      const NEXTAUTH_SECRET = new Config.Secret(stack, "NEXTAUTH_SECRET");
+      const NEXTAUTH_URL = new Config.Parameter(stack, "NEXTAUTH_URL", {
+        value: getDomainName(stack.stage) ?? "http://localhost:3000",
+      });
 
-      const table = new Table(stack, "user-data", {
+      const table = new Table(stack, "auth", {
         fields: {
           pk: "string",
           sk: "string",
@@ -33,7 +38,7 @@ export default {
         consumers: {
           consumer1: {
             function: {
-              handler: "/functions/add-user/index.main",
+              handler: "functions/add-user/index.main",
               permissions: ["dynamodb", "ssm"],
               environment: {
                 CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
@@ -51,12 +56,13 @@ export default {
                 },
               },
             ],
-          }
-        }
+          },
+        },
       });
 
       const site = new NextjsSite(stack, "site", {
-        bind: [GITHUB_ID, GITHUB_SECRET, table],
+        bind: [GITHUB_ID, GITHUB_SECRET, NEXTAUTH_URL, NEXTAUTH_SECRET, table],
+        customDomain: getDomainName(stack.stage),
       });
 
       stack.addOutputs({
