@@ -14,22 +14,22 @@ const dynamoClient = DynamoDBDocument.from(new DynamoDB({}), {
   },
 })
 
-// const cookies: Partial<CookiesOptions> = {
-//   sessionToken: {
-//       name: `next-auth.session-token`,
-//       options: {
-//           httpOnly: true,
-//           sameSite: "none",
-//           path: "/",
-//           domain: process.env.NEXT_PUBLIC_DOMAIN,
-//           secure: true,
-//       },
-//   },
-//   callbackUrl: {
-//       name: `next-auth.callback-url`,
-//       options: {}
-//   },
-// };
+export const cookies: Partial<CookiesOptions> = {
+  sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+          httpOnly: true,
+          sameSite: "none",
+          path: "/",
+          domain: process.env.NEXT_PUBLIC_DOMAIN,
+          secure: true,
+      },
+  },
+  callbackUrl: {
+      name: `next-auth.callback-url`,
+      options: {}
+  },
+};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -44,13 +44,13 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  //cookies: cookies,
+  cookies: cookies,
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
-    },
-    async session({ session, token, user }) {
-      session.user = token as any;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub as string;
+      }
+
       return session;
     },
   },
