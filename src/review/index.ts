@@ -3,7 +3,6 @@ import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs, ReviewFile } from "../common/types";
-import { getReviewFiles } from "../common/utils/getReviewFiles";
 import { logger } from "../common/utils/logger";
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
@@ -12,6 +11,7 @@ import { filterFiles } from "./prompt/filterFiles";
 
 export const review = async (
   yargs: ReviewArgs,
+  files: ReviewFile[],
   openAIApiKey: string
 ): Promise<string | undefined> => {
   logger.debug(`Review started.`);
@@ -25,9 +25,7 @@ export const review = async (
   const shouldCommentPerFile = yargs.commentPerFile;
   const modelName = yargs.model;
   const reviewType = yargs.reviewType;
-  const remotePullRequest = yargs.remote as string;
 
-  const files = await getReviewFiles(isCi, remotePullRequest);
   const filteredFiles = filterFiles(files);
 
   if (filteredFiles.length == 0) {

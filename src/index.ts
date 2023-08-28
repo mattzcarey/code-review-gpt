@@ -17,8 +17,11 @@ const main = async () => {
       break;
     case "review":
       const { review } = await import("./review");
-      const files = await getFilesWithChanges(argv.ci);
-      await review(argv, openAIApiKey);
+      const { getReviewFiles } = await import("./common/utils/getReviewFiles");
+      const files = await getReviewFiles(argv.ci, argv.remote);
+      console.log(argv.ci, argv.remote);
+      console.log(files);
+      await review(argv, files, openAIApiKey);
       break;
     case "test":
       const { test } = await import("./test");
