@@ -1,58 +1,47 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { getUserEntity } from "../../entities/userEntity";
+import { UserEntity } from "../../entities";
+import { encryptKey } from "./encryptKey";
+import { formatResponse } from "../../helpers/format-response";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
-  userId: string;
-}
-
-const TABLE_NAME = process.env["TABLE_NAME"];
-
-if (TABLE_NAME === undefined) {
-  throw new Error(`Environment variable not found: "TABLE_NAME"`);
+  email: string;
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {
   if (event.body == null) {
-    return Promise.resolve({
-      statusCode: 400,
-      body: "The request does not contain a body as expected.",
-    });
+    return formatResponse(
+      "The request does not contain a body as expected.",
+      400
+    );
   }
 
   try {
     const inputBody = JSON.parse(event.body) as UpdateUserLambdaInput;
     const apiKey = inputBody.apiKey;
-    const userId = inputBody.userId;
+    const email = inputBody.email;
 
-    if (apiKey === undefined || userId === undefined) {
-      return Promise.resolve({
-        statusCode: 400,
-        body: "The request body does not contain the expected data.",
-      });
+    if (apiKey === undefined || email === undefined) {
+      return formatResponse(
+        "The request body does not contain the expected data.",
+        400
+      );
     }
 
-    const userEntity = getUserEntity(TABLE_NAME);
+    const encryptedApiKey = await encryptKey(apiKey);
 
-    await userEntity.update(
+    await UserEntity.update(
       {
-        userId: userId,
-        apiKey: apiKey,
+        email: email,
+        apiKey: encryptedApiKey,
       },
-      { conditions: { attr: "userId", exists: true } }
+      { conditions: { attr: "email", exists: true } }
     );
 
-    return Promise.resolve({
-      statusCode: 200,
-      body: "User updated successfully.",
-    });
+    return formatResponse("User updated successfully.");
   } catch (err) {
     console.error(err);
-
-    return Promise.resolve({
-      statusCode: 500,
-      body: "Error when updating user.",
-    });
+    return formatResponse("Error when updating user.", 500);
   }
 };

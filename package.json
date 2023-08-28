@@ -1,6 +1,6 @@
 {
   "name": "code-review-gpt",
-  "version": "0.0.34",
+  "version": "0.1.0",
   "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
   "bin": {
     "code-review-gpt": "./dist/index.js"
@@ -11,6 +11,7 @@
     "start": "ts-node ./src/index.ts review",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
+    "test-integ": "jest -c services/tests/jest.config.js",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
@@ -33,6 +34,7 @@
   "dependencies": {
     "@actions/github": "^5.1.1",
     "@gitbeaker/rest": "^39.10.2",
+    "@radix-ui/themes": "^1.0.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
     "graphql-request": "^6.1.0",

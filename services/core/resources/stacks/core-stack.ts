@@ -1,37 +1,58 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Key } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
-import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
-
+import { GetUserLambda } from "../../functions/get-user/config";
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { CoreApi } from "./api-gateway";
-import { UserTable } from "./user-table";
+import { getCertificateArn, getDomainName, getStage } from "../../helpers";
+import { OrionApi } from "../constructs/api-gateway";
+import { UserTable } from "../constructs/user-table";
 
 interface CoreStackProps extends StackProps {
   stage: string;
 }
 
 export class CoreStack extends Stack {
+  userTable: Table;
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
-    const api = new CoreApi(this, "api");
-
-    const userTable = new UserTable(this, "user-database");
-
-    const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
-      table: userTable,
+    //API
+    const api = new OrionApi(this, "core-api", {
+      rootDomain: getDomainName(props.stage),
+      subDomain: "api",
+      certificateArn: getCertificateArn(this, "api"),
     });
 
-    const reviewLambda = new ReviewLambda(this, "review-lambda");
+    //KMS
+    const kmsKey = new Key(this, "encryption-key", {
+      enableKeyRotation: true,
+      alias: `${getStage()}/encryption-key`,
+    });
 
-    new DemoReviewLambda(this, "demo-review-lambda");
+    //DynamoDB
+    this.userTable = new UserTable(this, "user-database");
+
+    //Lambda
+    const reviewLambda = new ReviewLambda(this, "review-lambda");
+    const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
+      table: this.userTable,
+      kmsKey: kmsKey,
+    });
+    const getUserLambda = new GetUserLambda(this, "get-user-lambda", {
+      table: this.userTable,
+    });
+
+    //Routes
+    const postReviewRoute = api.root.addResource("postReview");
+    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
 
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
 
-    const postReviewRoute = api.root.addResource("postReview");
-    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
+    const getUserRoute = api.root.addResource("getUser");
+    getUserRoute.addMethod("GET", new LambdaIntegration(getUserLambda));
   }
 }
