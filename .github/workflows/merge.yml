@@ -47,7 +47,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
       - name: 🚀 Deploy core
-        run: cd services/core && npm deploy-staging
+        run: cd services/core && npm run deploy-staging
 
       - name: 🚀 Deploy web-app
-        run: cd services/web-app && npm deploy-staging
+        run: cd services/web-app && npm run deploy-staging
