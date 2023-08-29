@@ -1,63 +1,37 @@
 import { Octokit } from "octokit"
 import { githubToken } from "../../config";
-import { PullRequestIdentifier, PullRequestFile, CommitFile } from "./types";
-
-interface RawCommitFile {
-  url: string;
-  path: string;
-}
+import { isEligibleForReview } from "./isEligibleForReview";
+import { PullRequestIdentifier } from "./types";
+import { ReviewFile } from "../types";
 
 export class GitHubRESTClient {
-  readonly githubDiffMIMEType = "application/vnd.github.v3.diff";
-  readonly githubPullRequestEndpoint = "/repos/{owner}/{repo}/pulls/{number}";
-  readonly githubCommitEndpoint = "/repos/{owner}/{repo}/git/trees/{sha}?recursive=1";
+  private client: Octokit = new Octokit({ auth: githubToken() });
 
-  private client: Octokit = new Octokit({auth: githubToken()});
+  async fetchPullRequestFiles(identifier: PullRequestIdentifier): Promise<ReviewFile[]> {
+    const response = await this.client.paginate(this.client.rest.pulls.listFiles, { owner: identifier.owner, repo: identifier.repo, pull_number: identifier.prNumber });
 
-  async fetchPullRequestDiff(identifier: PullRequestIdentifier): Promise<string> {
-    const response = await this.client.request(`GET ${this.githubPullRequestEndpoint}`, {
-      headers: {
-        accept: this.githubDiffMIMEType
-      },
-      owner: identifier.owner,
-      repo: identifier.repo,
-      number: identifier.prNumber,
-    });
+    let pullRequestFiles: ReviewFile[] = [];
 
-    return response.data;
-  }
-
-  async fetchCommitFiles(identifier: PullRequestIdentifier, headSha: string, prFiles: PullRequestFile[]): Promise<CommitFile[]> {
-    const response = await this.client.request(`GET ${this.githubCommitEndpoint}`, {
-      owner: identifier.owner,
-      repo: identifier.repo,
-      sha: headSha,
-    });
-
-    let filePaths = prFiles.map(file => file.path);
-    let files: CommitFile[] = [];
-
-    for (const file of response.data.tree) {
-      if (filePaths.includes(file.path)) {
-        const commitFile = await this.fetchCommitFile(file as RawCommitFile);
-        files.push(commitFile);
+    for (const file of response) {
+      if (!isEligibleForReview(file.filename, file.status)) {
+        continue;
       }
+
+      const content = await this.fetchPullRequestFile(file.raw_url);
+      const pullRequestFile = {
+        fileName: file.filename,
+        fileContent: content,
+        changedLines: file.patch as string,
+      }
+
+      pullRequestFiles.push(pullRequestFile);
     }
 
-    return files;
+    return pullRequestFiles;
   }
 
-  async fetchCommitFile(file: RawCommitFile): Promise<CommitFile> {
-    const gitHubFile = await this.client.request(`GET ${file.url}`)
-    const commitFile: CommitFile = {
-      path: file.path,
-      content: this.decodeFileContent(gitHubFile.data.content),
-    };
-
-    return commitFile
-  }
-
-  private decodeFileContent(content: string): string {
-    return Buffer.from(content, "base64").toString("utf-8");
+  async fetchPullRequestFile(url: string): Promise<string> {
+    const response = await this.client.request(`GET ${url}`);
+    return response.data;
   }
 }

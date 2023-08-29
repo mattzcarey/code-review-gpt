@@ -37,7 +37,6 @@
     "@radix-ui/themes": "^1.0.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
-    "graphql-request": "^6.1.0",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
     "octokit": "^3.1.0",
