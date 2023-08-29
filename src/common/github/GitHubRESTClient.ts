@@ -7,30 +7,38 @@ import { ReviewFile } from "../types";
 export class GitHubRESTClient {
   private client: Octokit = new Octokit({ auth: githubToken() });
 
-  async fetchPullRequestFiles(identifier: PullRequestIdentifier): Promise<ReviewFile[]> {
-    const response = await this.client.paginate(this.client.rest.pulls.listFiles, { owner: identifier.owner, repo: identifier.repo, pull_number: identifier.prNumber });
+  async fetchReviewFiles(identifier: PullRequestIdentifier): Promise<ReviewFile[]> {
+    const rawFiles = await this.client.paginate(this.client.rest.pulls.listFiles, { owner: identifier.owner, repo: identifier.repo, pull_number: identifier.prNumber });
 
-    let pullRequestFiles: ReviewFile[] = [];
+    return await this.fetchPullRequestFiles(rawFiles);
+  }
 
-    for (const file of response) {
-      if (!isEligibleForReview(file.filename, file.status)) {
+  async fetchPullRequestFiles(rawFiles: any[]): Promise<ReviewFile[]> {
+    let reviewFiles: ReviewFile[] = [];
+
+    for (const rawFile of rawFiles) {
+      if (!isEligibleForReview(rawFile.filename, rawFile.status)) {
         continue;
       }
 
-      const content = await this.fetchPullRequestFile(file.raw_url);
-      const pullRequestFile = {
-        fileName: file.filename,
-        fileContent: content,
-        changedLines: file.patch as string,
-      }
-
-      pullRequestFiles.push(pullRequestFile);
+      const reviewFile = await this.fetchPullRequestFile(rawFile);
+      reviewFiles.push(reviewFile);
     }
 
-    return pullRequestFiles;
+    return reviewFiles;
   }
 
-  async fetchPullRequestFile(url: string): Promise<string> {
+  async fetchPullRequestFile(rawFile: any): Promise<ReviewFile> {
+    const content = await this.fetchPullRequestFileContent(rawFile.raw_url);
+
+    return {
+      fileName: rawFile.filename,
+      fileContent: content,
+      changedLines: rawFile.patch as string,
+    }
+  }
+
+  async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
     return response.data;
   }

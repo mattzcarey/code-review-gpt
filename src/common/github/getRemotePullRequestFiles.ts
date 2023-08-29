@@ -7,7 +7,7 @@ export const getRemotePullRequestFiles = async (remotePullRequest: string): Prom
   const restClient = new GitHubRESTClient();
 
   try {
-    const files = await restClient.fetchPullRequestFiles(pullRequestIdentifier);
+    const files = await restClient.fetchReviewFiles(pullRequestIdentifier);
 
     return files;
   } catch (error) {
