@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - main
-      - demo
 
 name: 🚀 Deploy to staging
 concurrency: deploy_staging
