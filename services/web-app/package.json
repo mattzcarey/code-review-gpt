@@ -34,13 +34,14 @@
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
     "@types/node-fetch": "^2.6.4",
     "aws-cdk-lib": "2.84.0",
     "constructs": "10.1.156",
-    "sst": "^2.22.10"
+    "sst": "^2.22.10",
+    "typescript": "5.1.6"
   }
 }
