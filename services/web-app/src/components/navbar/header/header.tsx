@@ -15,8 +15,9 @@ export const Header = (): JSX.Element => {
       <div className="flex items-center">
         {session ? (
           <div className="flex items-center">
+            <HeaderButton text="Home" route="/" />
             <HeaderButton text="Profile" route="/profile" />
-            <div className="flex flex-col">
+            <div className="flex flex-col mx-3">
               <BasicButton
                 text="Sign Out"
                 onClick={() => {

@@ -25,7 +25,7 @@ export default function Profile(): JSX.Element {
         );
         setData(response.data);
       } catch (err: any) {
-        console.log("Failed to getUser");
+        console.log("Failed to getUser.");
       } finally {
         setLoading(false);
       }
