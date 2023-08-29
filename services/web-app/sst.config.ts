@@ -38,7 +38,7 @@ export default {
         consumers: {
           consumer1: {
             function: {
-              handler: "functions/add-user/index.main",
+              handler: "./functions/add-user/index.main",
               permissions: ["dynamodb", "ssm"],
               environment: {
                 CLOUDFLARE_WORKER_TOKEN_NAME: "CLOUDFLARE_WORKER_TOKEN",
