@@ -45,11 +45,11 @@ const authOptions: NextAuthOptions = {
       clientSecret: Config.GITHUB_SECRET,
     }),
   ],
-  // secret: Config.NEXTAUTH_SECRET,
+  secret: Config.NEXTAUTH_SECRET,
   adapter: DynamoDBAdapter(dynamoClient, {
     tableName: Table.auth.tableName,
   }),
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);
+
