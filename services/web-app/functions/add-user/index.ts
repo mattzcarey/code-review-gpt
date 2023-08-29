@@ -67,7 +67,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
       const command = new PutCommand({
         TableName: `${process.env.SST_STAGE}-crgpt-data`,
         Item: {
-          PK: `EMAIL#${email}`,
+          PK: `USERID#${userId}`,
           SK: "ROOT",
           userId: userId,
           name: name,

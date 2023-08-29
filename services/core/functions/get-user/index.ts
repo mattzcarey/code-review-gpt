@@ -5,14 +5,14 @@ import { formatResponse } from "../../helpers/format-response";
 
 export const main = async (event: APIGatewayProxyEvent) => {
   try {
-    const email = event.queryStringParameters?.email;
+    const userId = event.queryStringParameters?.userId;
 
-    if (email === undefined) {
+    if (userId === undefined) {
       return formatResponse("Please provide the email of the user you wish to get.", 400)
     }
 
     const response = await UserEntity.get({
-      email: email,
+      userId: userId,
     });
 
     console.log(response);
