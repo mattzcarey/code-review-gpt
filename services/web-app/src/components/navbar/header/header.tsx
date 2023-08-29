@@ -3,7 +3,8 @@ import { useSession } from "next-auth/react";
 import Logo from "../logo/logo";
 import { signOut, signIn } from "next-auth/react";
 import HeaderButton from "./headerButton";
-import BasicButton from "@/components/buttons/basicButton";
+import BasicButton from "../../buttons/basicButton";
+import React from "react";
 
 export const Header = (): JSX.Element => {
   const { data: session } = useSession();
@@ -19,7 +20,7 @@ export const Header = (): JSX.Element => {
               <BasicButton
                 text="Sign Out"
                 onClick={() => {
-                  signOut();
+                  signOut({callbackUrl: "/"});
                 }}
               />
             </div>
@@ -28,7 +29,7 @@ export const Header = (): JSX.Element => {
           <BasicButton
             text="Sign In"
             onClick={() => {
-              signIn();
+              signIn("github", {callbackUrl: "/profile"});
             }}
           />
         )}
