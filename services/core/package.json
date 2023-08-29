@@ -8,7 +8,10 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "deploy-staging": "cdk deploy -c stage=staging -c region=eu-west-2 --all",
+    "deploy-prod": "cdk deploy -c stage=prod -c region=eu-west-2 --all"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
@@ -30,7 +33,7 @@
     "aws-lambda": "^1.0.7",
     "constructs": "^10.0.0",
     "dynamodb-toolbox": "^0.8.5",
-    "esbuild": "^0.19.1",
+    "esbuild": "0.19.1",
     "source-map-support": "^0.5.21",
     "uuid": "^9.0.0"
   }

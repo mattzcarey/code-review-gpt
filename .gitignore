@@ -6,6 +6,8 @@ dist
 !jest.config.js
 *.d.ts
 
+cdk.context.json
+
 # nextjs and sst
 .next
 .sst
@@ -17,3 +19,4 @@ dist
 # CDK asset staging directory
 .cdk.staging
 cdk.out/
+cdk.context.json
