@@ -20,7 +20,7 @@ export default function Profile(): JSX.Element {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(`/getUser?email=${session?.user?.email}`);
+        const response = await axiosInstance.get(`/getUser?userId=${session?.user?.id}`);
         setData(response.data);
       } catch (err: any) {
         console.log("Failed to getUser, error -> ", err);
