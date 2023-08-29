@@ -8,11 +8,6 @@ export const getRemotePullRequestFiles = async (remotePullRequest: string): Prom
 
   try {
     const files = await restClient.fetchPullRequestFiles(pullRequestIdentifier);
-    // const pullRequest = await gqlClient.fetchPullRequest(pullRequestIdentifier);
-    // const filteredPullRequestFiles = filterPullRequestFiles(pullRequest.files);
-    // const pullRequestDiff = await restClient.fetchPullRequestDiff(pullRequestIdentifier);
-    // const gitCommitFiles = await restClient.fetchCommitFiles(pullRequestIdentifier, pullRequest.headSha, filteredPullRequestFiles);
-    // const files = associateFilesWithContents(pullRequestDiff, gitCommitFiles);
 
     return files;
   } catch (error) {
