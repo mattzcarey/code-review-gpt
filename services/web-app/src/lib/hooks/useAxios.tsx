@@ -8,15 +8,11 @@ const axiosInstance = axios.create({
 
 const useAxios = (): { axiosInstance: AxiosInstance } => {
   const session = getSession();
+  axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = (session as Session).user.id ?? "";
-
+      config.headers.Authorization = (session as Session).token;
       return config;
-    },
-    (error: AxiosError) => {
-      console.error({ error });
-      void Promise.reject(error);
     }
   );
   return { axiosInstance };
