@@ -3,26 +3,27 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import fetch from "node-fetch";
 import { getVariableFromSSM } from "../../../core/functions/helpers/getVariable";
-import { Config } from "sst/node/config";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
-const postEmail = async(email: string, name: string) => {
-  const url  = await getVariableFromSSM(process.env.CLOUDFLARE_WORKER_URL_NAME ?? "");
+const postEmail = async (email: string, name: string) => {
+  const url = await getVariableFromSSM(
+    process.env.CLOUDFLARE_WORKER_URL_NAME ?? ""
+  );
   return await fetch(url.concat("api/email"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": await getVariableFromSSM(
+      Authorization: await getVariableFromSSM(
         process.env.CLOUDFLARE_WORKER_TOKEN_NAME ?? ""
       ),
     },
     body: JSON.stringify({
-      "to": {"email": email, "name": name },
-      "from": { "email": "noreply@oriontools.ai", "name": "Matt from Orion Tools" },
-      "subject": "Welcome to Code Review GPT",
-      "html": "<p>Thanks for signing up for Orion tools. We aim to make the best AI powered dev tools. We hope you enjoy using our code review product. <br/>Here is a <a href=\"https://github.com/mattzcarey/code-review-gpt\">link</a> to the repo, give it a star. Here is a <a href=\"https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg\">link</a> to our slack community.</p>"
+      to: { email: email, name: name },
+      from: { email: "noreply@oriontools.ai", name: "Matt from Orion Tools" },
+      subject: "Welcome to Code Review GPT",
+      html: '<p>Thanks for signing up for Orion tools. We aim to make the best AI powered dev tools. We hope you enjoy using our code review product. <br/>Here is a <a href="https://github.com/mattzcarey/code-review-gpt">link</a> to the repo, give it a star. Here is a <a href="https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg">link</a> to our slack community.</p>',
     }),
   });
 };
@@ -38,12 +39,17 @@ export const main = async (event: DynamoDBStreamEvent) => {
   try {
     if (event.Records[0].dynamodb?.NewImage) {
       const record = event.Records[0].dynamodb?.NewImage;
-      const userId = record.id['S'];
-      const name = record.name['S'];
-      const email = record.email['S'];
-      const pictureUrl = record.image['S'];
+      const userId = record.id["S"];
+      const name = record.name["S"];
+      const email = record.email["S"];
+      const pictureUrl = record.image["S"];
 
-      if (userId === undefined || name === undefined || email === undefined || pictureUrl === undefined) {
+      if (
+        userId === undefined ||
+        name === undefined ||
+        email === undefined ||
+        pictureUrl === undefined
+      ) {
         return Promise.resolve({
           statusCode: 400,
           body: "The request record does not contain the expected data.",
@@ -52,13 +58,16 @@ export const main = async (event: DynamoDBStreamEvent) => {
 
       const res = await postEmail(email, name);
       if (!res.ok) {
-        console.error("Failed to send welcome email due to this status code: ", res.status);
+        console.error(
+          "Failed to send welcome email due to this status code: ",
+          res.status
+        );
       }
 
       const command = new PutCommand({
         TableName: `${process.env.SST_STAGE}-crgpt-data`,
         Item: {
-          PK: `USERID#${userId}`,
+          PK: `EMAIL#${email}`,
           SK: "ROOT",
           userId: userId,
           name: name,
@@ -80,7 +89,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
     }
   } catch (err) {
     console.error(err);
-  
+
     return Promise.resolve({
       statusCode: 500,
       body: "Error when updating user.",
