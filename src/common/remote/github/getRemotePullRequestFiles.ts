@@ -1,8 +1,10 @@
-import { ReviewFile } from "../types";
+import { ReviewFile } from "../../types";
 import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier";
 import { GitHubRESTClient } from "./GitHubRESTClient";
 
-export const getRemotePullRequestFiles = async (remotePullRequest: string): Promise<ReviewFile[]> => {
+export const getRemotePullRequestFiles = async (
+  remotePullRequest: string
+): Promise<ReviewFile[]> => {
   const pullRequestIdentifier = extractPullRequestIdentifier(remotePullRequest);
   const restClient = new GitHubRESTClient();
 

@@ -1,14 +1,23 @@
-import { Octokit } from "octokit"
-import { githubToken } from "../../config";
+import { Octokit } from "octokit";
+import { githubToken } from "../../../config";
+import { ReviewFile } from "../../types";
 import { isEligibleForReview } from "./isEligibleForReview";
 import { PullRequestIdentifier } from "./types";
-import { ReviewFile } from "../types";
 
 export class GitHubRESTClient {
   private client: Octokit = new Octokit({ auth: githubToken() });
 
-  async fetchReviewFiles(identifier: PullRequestIdentifier): Promise<ReviewFile[]> {
-    const rawFiles = await this.client.paginate(this.client.rest.pulls.listFiles, { owner: identifier.owner, repo: identifier.repo, pull_number: identifier.prNumber });
+  async fetchReviewFiles(
+    identifier: PullRequestIdentifier
+  ): Promise<ReviewFile[]> {
+    const rawFiles = await this.client.paginate(
+      this.client.rest.pulls.listFiles,
+      {
+        owner: identifier.owner,
+        repo: identifier.repo,
+        pull_number: identifier.prNumber,
+      }
+    );
 
     return await this.fetchPullRequestFiles(rawFiles);
   }
@@ -35,7 +44,7 @@ export class GitHubRESTClient {
       fileName: rawFile.filename,
       fileContent: content,
       changedLines: rawFile.patch as string,
-    }
+    };
   }
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
