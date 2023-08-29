@@ -11,7 +11,7 @@ export class ReviewBucket extends Bucket {
       removalPolicy: isProduction()
         ? RemovalPolicy.RETAIN
         : RemovalPolicy.DESTROY,
-      autoDeleteObjects: !isProduction(),
+      // autoDeleteObjects: !isProduction(), //todo update this once we get a fix 
     });
   }
 }
