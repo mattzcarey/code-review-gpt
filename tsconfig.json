@@ -13,7 +13,7 @@
     "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "src/testFiles"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
   "engines": {
     "node": ">=18"
   }
