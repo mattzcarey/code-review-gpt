@@ -10,7 +10,7 @@ interface UpdateUserLambdaInput {
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {
-  if (event.body == null) {
+  if (event.body === null) {
     return formatResponse(
       "The request does not contain a body as expected.",
       400

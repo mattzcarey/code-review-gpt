@@ -31,7 +31,7 @@ const postEmail = async (email: string, name: string) => {
 };
 
 export const main = async (event: DynamoDBStreamEvent) => {
-  if (event.Records == null) {
+  if (event.Records === null) {
     return Promise.resolve({
       statusCode: 400,
       body: "The request does not contain a any dynamodb records as expected.",

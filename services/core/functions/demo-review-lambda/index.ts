@@ -25,7 +25,7 @@ const s3Client = new S3Client({});
 export const main = async (event: APIGatewayProxyEvent) => {
   const demoReviewId = uuidv4();
 
-  if (event.body == null) {
+  if (event.body === null) {
     return {
       statusCode: 400,
       body: "The request does not contain a body as expected.",
