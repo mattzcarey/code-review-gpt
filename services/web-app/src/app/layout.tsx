@@ -2,9 +2,9 @@ import "../styles/globals.css";
 import React, { ReactNode } from "react";
 import { NextAuthProvider } from "./providers";
 import { Footer } from "../components/footer/footer";
-import { Header } from "../components/navbar/header/header";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+import { NavBar } from "@/components/navbar";
 
 export const metadata = {
   title: "Code Review GPT",
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="flex flex-col min-h-screen">
         <Theme appearance="light" accentColor="purple" grayColor="gray" radius="medium" scaling="95%">
           <NextAuthProvider>
-            <Header />
+            <NavBar />
             <main className="flex flex-col flex-grow mb-16">{children}</main>
             <Footer />
           </NextAuthProvider>

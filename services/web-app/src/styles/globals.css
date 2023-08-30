@@ -15,6 +15,11 @@ body {
   background: rgb(var(--background-start-rgb));
 }
 
+header,
+section {
+  @apply px-2 py-2 md:px-5;
+}
+
 .markdown > * {
   all: revert;
 }
