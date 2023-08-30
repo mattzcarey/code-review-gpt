@@ -10,10 +10,6 @@ import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { ReviewDemoCounterEntity } from "../../entities";
 import { getEnvVariable, getVariableFromSSM } from "../helpers/getVariable";
 
-interface ReviewLambdaInput {
-  code: string;
-}
-
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
 const DEFAULT_ORGANISATION = undefined;
@@ -29,7 +25,16 @@ type DemoReviewLambdaResponse = {
   body: string | undefined;
 };
 
-export const main = async (event: APIGatewayProxyEvent): Promise<DemoReviewLambdaResponse> => {
+interface ReviewLambdaInput {
+  code: string;
+}
+
+const isReviewLambdaInput = (input: unknown): input is ReviewLambdaInput =>
+  typeof input === "object" && input !== null && "code" in input;
+
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<DemoReviewLambdaResponse> => {
   const demoReviewId = uuidv4();
 
   if (event.body === null) {
@@ -48,10 +53,9 @@ export const main = async (event: APIGatewayProxyEvent): Promise<DemoReviewLambd
       process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
     );
 
-    const inputBody = JSON.parse(event.body) as ReviewLambdaInput;
-    const code = inputBody.code;
+    const inputBody: unknown = JSON.parse(event.body);
 
-    if (code === undefined) {
+    if (!isReviewLambdaInput(inputBody)) {
       return {
         statusCode: 400,
         body: "The request body does not contain the expected data.",
@@ -63,7 +67,7 @@ export const main = async (event: APIGatewayProxyEvent): Promise<DemoReviewLambd
     });
 
     const maxPromptLength = getMaxPromptLength(DEFAULT_DEMO_MODEL);
-    const prompt = demoPrompt + code;
+    const prompt = demoPrompt + inputBody.code;
 
     if (prompt.length > maxPromptLength) {
       return {
