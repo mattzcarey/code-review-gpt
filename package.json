@@ -49,6 +49,8 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
     "@types/jest": "29.5.3",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "@types/node": "^20.4.0",
     "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
