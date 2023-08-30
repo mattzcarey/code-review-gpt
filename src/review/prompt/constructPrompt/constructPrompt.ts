@@ -15,19 +15,19 @@ export const constructPromptsArray = async (
 
   switch (reviewType) {
     case "full":
-      promptPayloads = await fullFilesIntoBatches(
+      promptPayloads = fullFilesIntoBatches(
         files,
         maxPromptPayloadLength
       );
       break;
     case "changed":
-      promptPayloads = await changedLinesIntoBatches(
+      promptPayloads = changedLinesIntoBatches(
         files,
         maxPromptPayloadLength
       );
       break;
     case "costOptimized":
-      promptPayloads = await costOptimizedChangedLinesIntoBatches(
+      promptPayloads = costOptimizedChangedLinesIntoBatches(
         files,
         maxPromptPayloadLength
       );
