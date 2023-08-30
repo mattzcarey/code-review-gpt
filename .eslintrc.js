@@ -12,7 +12,12 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
   rules: {
-    "prettier/prettier": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        trailingComma: "none",
+      },
+    ],
     "import/extensions": 0,
     "import/no-unresolved": 0,
     "import/prefer-default-export": 0,
