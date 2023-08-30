@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export const SignOutButton = () => {
   return (
     <button
-      className="border-2 border-black p-[5px] mx-3 text-xl hover:underline"
+      className="mx-3 text-xl hover:underline"
       onClick={() => {
         signOut({ callbackUrl: "/" });
       }}

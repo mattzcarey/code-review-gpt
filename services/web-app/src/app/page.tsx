@@ -1,15 +1,12 @@
-import { InstallationInstructions } from "../lib/constants";
-import ReactMarkdown from "react-markdown";
+"use client";
+
+import { Features, Hero } from "@/components/home";
 
 export default function Home() {
   return (
-    <>
-      <div className="flex flex-col p-5 mx-10">
-        <ReactMarkdown
-          className="markdown"
-          children={InstallationInstructions}
-        />
-      </div>
-    </>
+    <div className="w-full h-full">
+      <Hero />
+      <Features />
+    </div>
   );
 }

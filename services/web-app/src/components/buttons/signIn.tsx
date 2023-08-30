@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 export const SignInButton = () => {
   return (
     <button
-      className="border-2 p-[5px] mx-3 text-xl hover:underline"
+      className="text-base mx-3 text-xl hover:underline"
       onClick={() => {
-        signIn("github", { callbackUrl: '/profile' });
+        signIn("github", { callbackUrl: "/profile" });
       }}
     >
       Sign In
