@@ -30,7 +30,7 @@ export const review = async (
 
   const filteredFiles = filterFiles(files);
 
-  if (filteredFiles.length == 0) {
+  if (filteredFiles.length === 0) {
     logger.info("No file to review, finishing review now.");
 
     return undefined;
