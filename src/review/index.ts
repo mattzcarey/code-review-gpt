@@ -19,6 +19,7 @@ export const review = async (
   logger.debug(`Ci enabled: ${yargs.ci}`);
   logger.debug(`Comment per file enabled: ${yargs.commentPerFile}`);
   logger.debug(`Review type chosen: ${yargs.reviewType}`);
+  logger.debug(`Remote Pull Request: ${yargs.remote}`);
 
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;

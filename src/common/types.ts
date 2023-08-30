@@ -41,6 +41,7 @@ export interface ReviewArgs {
   commentPerFile: boolean;
   model: string;
   reviewType: string;
+  remote: string | undefined;
   _: (string | number)[];
   $0: string;
 }
