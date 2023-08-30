@@ -6,7 +6,7 @@ import { logger } from "./common/utils/logger";
 
 dotenv.config();
 
-const handleNoCommand = async () => {
+const handleNoCommand = async (): Promise<string | number> => {
   const inquirer = await import("inquirer");
   const questions = [
     {
@@ -23,7 +23,10 @@ const handleNoCommand = async () => {
     },
   ];
 
-  const answers = await inquirer.default.prompt(questions);
+  //TODO: this is very sus - review this
+  const answers = (await inquirer.default.prompt(questions)) as {
+    command: string;
+  };
 
   return answers.command;
 };
@@ -35,7 +38,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
         "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github' or 'gitlab'. Defaults to 'github'.",
       choices: ["github", "gitlab"],
       type: "string",
-      coerce: (arg: ReviewArgs | undefined) => {
+      coerce: (arg: string) => {
         return arg || "github";
       },
     })
@@ -67,7 +70,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .option("remote", {
       description: "The identifier of a remote Pull Request to review",
       type: "string",
-      coerce: (arg: ReviewArgs | undefined) => {
+      coerce: (arg: string) => {
         return arg || "";
       },
     })

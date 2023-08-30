@@ -36,7 +36,7 @@ export enum PlatformOptions {
 
 export interface ReviewArgs {
   [x: string]: unknown;
-  ci: string;
+  ci: string | undefined;
   setupTarget: string;
   commentPerFile: boolean;
   model: string;
