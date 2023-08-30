@@ -50,6 +50,7 @@ const calculateStartAndEnd = (
   return { start, end };
 };
 
+// eslint-disable-next-line complexity
 const expandRange = (
   start: number,
   end: number,
@@ -127,7 +128,7 @@ export const createPromptFiles = (
     const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
 
-    if (totalChangedLinesLength == 0) {
+    if (totalChangedLinesLength === 0) {
       return result;
     }
 

@@ -30,7 +30,8 @@ const postEmail = async (email: string, name: string) => {
   });
 };
 
-export const main = async (event: DynamoDBStreamEvent) => {
+// eslint-disable-next-line complexity
+export const main = async (event: DynamoDBStreamEvent): Promise<void> => {
   if (event.Records === null) {
     return Promise.resolve({
       statusCode: 400,
