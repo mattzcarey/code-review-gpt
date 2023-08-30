@@ -16,6 +16,8 @@ interface ReviewLambdaInput {
 
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
+const DEFAULT_ORGANISATION = undefined;
+
 logger.settings.minLevel = 4;
 
 const BUCKET_NAME = getEnvVariable("BUCKET_NAME");
@@ -68,7 +70,8 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const { markdownReport } = await askAI(
       [prompt],
       DEFAULT_DEMO_MODEL,
-      openAIApiKey
+      openAIApiKey,
+      DEFAULT_ORGANISATION
     );
 
     await saveInputAndResponseToS3(
