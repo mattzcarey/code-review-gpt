@@ -53,7 +53,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .option("model", {
       description: "The model to use for generating the review.",
       type: "string",
-      default: "gpt-4",
+      default: "gpt-3.5-turbo",
     })
     .option("reviewType", {
       description:
