@@ -9,7 +9,7 @@ export interface UpdateAPIKeyProps {
 const BasicButton: React.FC<UpdateAPIKeyProps> = ({ text, onClick }) => {
   return (
     <button
-      className="bg-black hover:bg-purple-900 text-white sm:font-light font-extralight py-2 px-4 rounded"
+      className="bg-black text-white sm:font-light font-extralight py-2 px-4 rounded"
       onClick={onClick}
     >
       {text}
