@@ -29,6 +29,7 @@ const configureGitHub = async () => {
   logger.info(`Created GitHub Actions workflow at: ${workflowFile}`);
 
   const inquirer = await import("inquirer");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { apiKey } = await inquirer.default.prompt([
     {
       type: "input",

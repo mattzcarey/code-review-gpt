@@ -5,6 +5,7 @@ import { Config, NextjsSite, Table } from "sst/constructs";
 import { getDomainName } from "./helpers";
 
 export default {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   config(_input) {
     return {
       name: "web-app",
