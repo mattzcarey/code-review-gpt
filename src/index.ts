@@ -36,6 +36,6 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  logger.error(`Error: ${error}`);
+  logger.error(`Error: ${error as unknown as string}`);
   process.exit(1);
 });

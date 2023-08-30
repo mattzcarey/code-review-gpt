@@ -22,10 +22,12 @@ export const askAI = async (
   const feedbacks = await processFeedbacks(model, prompts);
 
   logger.debug(
-    `Feedback received:\n ${feedbacks.map(
-      (feedback) =>
-        `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
-    )}`
+    `Feedback received:\n ${
+      feedbacks.map(
+        (feedback) =>
+          `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
+      ) as unknown as string
+    }`
   );
   const summary = await createSummary(model, feedbacks);
 

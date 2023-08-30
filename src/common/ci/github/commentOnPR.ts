@@ -10,7 +10,10 @@ import { getToken } from "../utils";
  * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
  * @returns
  */
-export const commentOnPR = async (comment: string, signOff: string): Promise<void> => {
+export const commentOnPR = async (
+  comment: string,
+  signOff: string
+): Promise<void> => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
@@ -30,8 +33,8 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       issue_number: pull_number,
     });
 
-    const botComment = comments.find((comment) =>
-      comment.body?.includes(signOff)
+    const botComment = comments.find(
+      (comment) => comment.body?.includes(signOff)
     );
 
     const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
@@ -53,7 +56,7 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       });
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${error}`);
+    logger.error(`Failed to comment on PR: ${error as string}`);
     throw error;
   }
 };

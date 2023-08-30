@@ -13,6 +13,8 @@ export const getRemotePullRequestFiles = async (
 
     return files;
   } catch (error) {
-    throw new Error(`Failed to get remote Pull Request files: ${error}`);
+    throw new Error(
+      `Failed to get remote Pull Request files: ${error  as string}`
+    );
   }
 };

@@ -48,7 +48,9 @@ const configureGitHub = async () => {
 
   try {
     execSync(`gh auth status || gh auth login`, { stdio: "inherit" });
-    execSync(`gh secret set OPENAI_API_KEY --body=${apiKey}`);
+    execSync(
+      `gh secret set OPENAI_API_KEY --body=${apiKey as unknown as string}`
+    );
     logger.info(
       "Successfully added the OPENAI_API_KEY secret to your GitHub repository."
     );
@@ -93,7 +95,7 @@ const configureGitLab = async () => {
 
   try {
     execSync(`glab auth login`, { stdio: "inherit" });
-    execSync(`glab variable set OPENAI_API_KEY ${apiKey}`);
+    execSync(`glab variable set OPENAI_API_KEY ${apiKey as unknown as string}`);
     logger.info(
       "Successfully added the OPENAI_API_KEY secret to your GitLab repository.\n Please make sure you have set up your Gitlab access token before using this tool. Refer to the README (Gitlab CI section) for information on how to do this."
     );

@@ -16,11 +16,13 @@ export const review = async (
 ): Promise<string | undefined> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
-  logger.debug(`Ci enabled: ${yargs.ci}`);
-  logger.debug(`Comment per file enabled: ${yargs.commentPerFile}`);
+  logger.debug(`Ci enabled: ${yargs.ci as unknown as string}`);
+  logger.debug(
+    `Comment per file enabled: ${yargs.commentPerFile as unknown as string}`
+  );
   logger.debug(`Review type chosen: ${yargs.reviewType}`);
-  logger.debug(`Organization chosen: ${yargs.org}`);
-  logger.debug(`Remote Pull Request: ${yargs.remote}`);
+  logger.debug(`Organization chosen: ${yargs.org as unknown as string}`);
+  logger.debug(`Remote Pull Request: ${yargs.remote as unknown as string}`);
 
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
@@ -37,9 +39,9 @@ export const review = async (
   }
 
   logger.debug(
-    `Files to review after filtering: ${filteredFiles.map(
-      (file) => file.fileName
-    )}`
+    `Files to review after filtering: ${
+      filteredFiles.map((file) => file.fileName) as unknown as string
+    }`
   );
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -50,7 +52,7 @@ export const review = async (
     reviewType
   );
 
-  logger.debug(`Prompts used:\n ${prompts}`);
+  logger.debug(`Prompts used:\n ${prompts as unknown as string}`);
 
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
