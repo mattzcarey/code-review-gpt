@@ -35,7 +35,7 @@ const runTest = async (
   logger.info(chalk.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
-  const prompts = await constructPromptsArray(
+  const prompts = constructPromptsArray(
     [testCase.snippet],
     maxPromptLength,
     reviewType

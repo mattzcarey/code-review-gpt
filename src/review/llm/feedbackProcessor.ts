@@ -87,7 +87,7 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  const worstFeedbacks = await pickWorstFeedbacks(feedbacks, maxFeedbackCount);
+  const worstFeedbacks = pickWorstFeedbacks(feedbacks, maxFeedbackCount);
 
   logger.info(formatFeedbacks(worstFeedbacks));
 

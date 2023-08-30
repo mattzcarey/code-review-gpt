@@ -5,26 +5,20 @@ import { PromptFile, ReviewFile } from "../../../common/types";
 import { getLanguageName } from "../getLanguageOfFile";
 import { instructionPrompt } from "../prompts";
 
-export const constructPromptsArray = async (
+export const constructPromptsArray = (
   files: ReviewFile[],
   maxPromptLength: number,
   reviewType: string
-): Promise<string[]> => {
+): string[] => {
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   let promptPayloads: PromptFile[][];
 
   switch (reviewType) {
     case "full":
-      promptPayloads = fullFilesIntoBatches(
-        files,
-        maxPromptPayloadLength
-      );
+      promptPayloads = fullFilesIntoBatches(files, maxPromptPayloadLength);
       break;
     case "changed":
-      promptPayloads = changedLinesIntoBatches(
-        files,
-        maxPromptPayloadLength
-      );
+      promptPayloads = changedLinesIntoBatches(files, maxPromptPayloadLength);
       break;
     case "costOptimized":
       promptPayloads = costOptimizedChangedLinesIntoBatches(

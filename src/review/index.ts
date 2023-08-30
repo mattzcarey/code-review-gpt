@@ -44,7 +44,7 @@ export const review = async (
 
   const maxPromptLength = getMaxPromptLength(modelName);
 
-  const prompts = await constructPromptsArray(
+  const prompts = constructPromptsArray(
     filteredFiles,
     maxPromptLength,
     reviewType
