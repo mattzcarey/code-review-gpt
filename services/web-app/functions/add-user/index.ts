@@ -32,7 +32,7 @@ const postEmail = async (email: string, name: string) => {
 
 // eslint-disable-next-line complexity
 export const main = async (event: DynamoDBStreamEvent): Promise<void> => {
-  if (event.Records === null) {
+  if (event.Records.length === 0) {
     return Promise.resolve({
       statusCode: 400,
       body: "The request does not contain a any dynamodb records as expected.",
