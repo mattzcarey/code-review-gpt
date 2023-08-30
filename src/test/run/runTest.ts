@@ -44,7 +44,8 @@ const runTest = async (
   const { markdownReport: reviewResponse } = await askAI(
     prompts,
     modelName,
-    openAIApiKey
+    openAIApiKey,
+    undefined
   );
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(
