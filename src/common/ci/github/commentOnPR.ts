@@ -10,7 +10,7 @@ import { getToken } from "../utils";
  * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
  * @returns
  */
-export const commentOnPR = async (comment: string, signOff: string) => {
+export const commentOnPR = async (comment: string, signOff: string): Promise<void> => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;

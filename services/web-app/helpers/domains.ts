@@ -1,4 +1,4 @@
-export const getDomainName = (stage: string) => {
+export const getDomainName = (stage: string): string | undefined => {
   switch (stage) {
     case "prod":
       return "oriontools.ai";

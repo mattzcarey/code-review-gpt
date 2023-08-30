@@ -5,12 +5,12 @@ import path from "path";
 import { PlatformOptions, ReviewArgs } from "../common/types";
 import { logger } from "../common/utils/logger";
 
-export const configure = async (yargs: ReviewArgs) => {
+export const configure = async (yargs: ReviewArgs): Promise<void> => {
   if (yargs.setupTarget === PlatformOptions.GITHUB) {
-    configureGitHub();
+    await configureGitHub();
   }
   if (yargs.setupTarget === PlatformOptions.GITLAB) {
-    configureGitLab();
+    await configureGitLab();
   }
 };
 

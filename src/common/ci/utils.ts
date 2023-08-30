@@ -1,4 +1,5 @@
 import { context, getOctokit } from "@actions/github";
+import { GitHub } from "@actions/github/lib/utils";
 
 import { getGitHubEnvVariables } from "../../config";
 import { CreateFileCommentData } from "../types";
@@ -14,7 +15,7 @@ export const getRelativePath = (fileName: string, repoName: string): string => {
   }
 };
 
-export const getToken = () => {
+export const getToken = (): string => {
   const { githubToken } = getGitHubEnvVariables();
   if (!githubToken) {
     throw new Error("GITHUB_TOKEN is not set");
@@ -23,14 +24,21 @@ export const getToken = () => {
   return githubToken;
 };
 
-export const getOctokitRepoDetails = () => {
+type OctokitType = {
+  octokit: InstanceType<typeof GitHub>;
+  owner: string;
+  repo: string;
+  pull_number: number;
+};
+
+export const getOctokitRepoDetails = (): OctokitType | undefined => {
   const githubToken = getToken();
   const { payload, issue } = context;
 
   if (!payload.pull_request) {
     logger.warn("Not a pull request. Skipping commenting on PR...");
 
-    return;
+    return undefined;
   }
   const octokit = getOctokit(githubToken);
   const { owner, repo, number: pull_number } = issue;
@@ -39,9 +47,9 @@ export const getOctokitRepoDetails = () => {
 };
 
 export const commentOnFile = async (
-  octokit: any,
+  octokit: InstanceType<typeof GitHub>,
   data: CreateFileCommentData
-) => {
+): Promise<void> => {
   try {
     const botCommentBody = `${data.feedback.details}\n\n---\n\n${data.signOff}`;
 

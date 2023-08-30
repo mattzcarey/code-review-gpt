@@ -11,7 +11,7 @@ import { commentOnFile, getOctokitRepoDetails } from "../utils";
 export const commentPerFile = async (
   feedbacks: IFeedback[],
   signOff: string
-) => {
+): Promise<void> => {
   const octokitRepoDetails = getOctokitRepoDetails();
   if (octokitRepoDetails) {
     const { octokit, owner, repo, pull_number } = octokitRepoDetails;
@@ -26,7 +26,7 @@ export const commentPerFile = async (
 
     // Comment all feedback file by file
     for (const feedback of feedbacks) {
-      commentOnFile(octokit, {
+      await commentOnFile(octokit, {
         feedback,
         signOff,
         owner,

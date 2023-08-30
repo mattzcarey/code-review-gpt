@@ -35,7 +35,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
         "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github' or 'gitlab'. Defaults to 'github'.",
       choices: ["github", "gitlab"],
       type: "string",
-      coerce: (arg) => {
+      coerce: (arg: ReviewArgs | undefined) => {
         return arg || "github";
       },
     })
@@ -67,7 +67,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .option("remote", {
       description: "The identifier of a remote Pull Request to review",
       type: "string",
-      coerce: (arg) => {
+      coerce: (arg: ReviewArgs | undefined) => {
         return arg || "";
       },
     })
