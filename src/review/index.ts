@@ -19,12 +19,14 @@ export const review = async (
   logger.debug(`Ci enabled: ${yargs.ci}`);
   logger.debug(`Comment per file enabled: ${yargs.commentPerFile}`);
   logger.debug(`Review type chosen: ${yargs.reviewType}`);
+  logger.debug(`Organization chosen: ${yargs.org}`);
   logger.debug(`Remote Pull Request: ${yargs.remote}`);
 
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
   const modelName = yargs.model;
   const reviewType = yargs.reviewType;
+  const organization = yargs.org;
 
   const filteredFiles = filterFiles(files);
 
@@ -52,7 +54,8 @@ export const review = async (
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
     modelName,
-    openAIApiKey
+    openAIApiKey,
+    organization
   );
 
   logger.debug(`Markdown report:\n ${response}`);

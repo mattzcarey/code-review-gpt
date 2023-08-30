@@ -7,7 +7,8 @@ import { generateMarkdownReport } from "./generateMarkdownReport";
 export const askAI = async (
   prompts: string[],
   modelName: string,
-  openAIApiKey: string
+  openAIApiKey: string,
+  organization: string | undefined,
 ): Promise<AskAIResponse> => {
   logger.info("Asking the experts...");
 
@@ -15,6 +16,7 @@ export const askAI = async (
     modelName: modelName,
     temperature: 0.0,
     apiKey: openAIApiKey,
+    organization,
   });
 
   const feedbacks = await processFeedbacks(model, prompts);
