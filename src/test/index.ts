@@ -27,6 +27,7 @@ export const test = async (
       modelName: model,
       temperature: 0.0,
       apiKey: openAIApiKey,
+      organization: undefined
     })
   );
 
