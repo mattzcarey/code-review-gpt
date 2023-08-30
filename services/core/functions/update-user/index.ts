@@ -7,10 +7,18 @@ import {
   FormattedHandlerResponse,
 } from "../../helpers/format-response";
 
-interface UpdateUserLambdaInput {
+type UpdateUserLambdaInput = {
   apiKey: string;
   userId: string;
 }
+
+const isValidEventBody = (input: unknown): input is UpdateUserLambdaInput =>
+  typeof input === "object" &&
+  input !== null &&
+  "apiKey" in input &&
+  typeof input.apiKey === "string" &&
+  "userId" in input &&
+  typeof input.userId === "string";
 
 export const main = async (
   event: APIGatewayProxyEvent
@@ -23,22 +31,20 @@ export const main = async (
   }
 
   try {
-    const inputBody = JSON.parse(event.body) as UpdateUserLambdaInput;
-    const apiKey = inputBody.apiKey;
-    const userId = inputBody.userId;
+    const inputBody: unknown = JSON.parse(event.body);
 
-    if (apiKey === undefined || userId === undefined) {
+    if (!isValidEventBody(inputBody)) {
       return formatResponse(
         "The request body does not contain the expected data.",
         400
       );
     }
 
-    const encryptedApiKey = await encryptKey(apiKey);
+    const encryptedApiKey = await encryptKey(inputBody.apiKey);
 
     await UserEntity.update(
       {
-        userId: userId,
+        userId: inputBody.userId,
         apiKey: encryptedApiKey,
       },
       { conditions: { attr: "userId", exists: true } }
