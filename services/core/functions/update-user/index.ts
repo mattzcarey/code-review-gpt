@@ -6,7 +6,7 @@ import { formatResponse } from "../../helpers/format-response";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
-  email: string;
+  userId: string;
 }
 
 export const main = async (event: APIGatewayProxyEvent) => {
@@ -20,9 +20,9 @@ export const main = async (event: APIGatewayProxyEvent) => {
   try {
     const inputBody = JSON.parse(event.body) as UpdateUserLambdaInput;
     const apiKey = inputBody.apiKey;
-    const email = inputBody.email;
+    const userId = inputBody.userId;
 
-    if (apiKey === undefined || email === undefined) {
+    if (apiKey === undefined || userId === undefined) {
       return formatResponse(
         "The request body does not contain the expected data.",
         400
@@ -33,10 +33,10 @@ export const main = async (event: APIGatewayProxyEvent) => {
 
     await UserEntity.update(
       {
-        email: email,
+        userId: userId,
         apiKey: encryptedApiKey,
       },
-      { conditions: { attr: "email", exists: true } }
+      { conditions: { attr: "userId", exists: true } }
     );
 
     return formatResponse("User updated successfully.");
