@@ -62,12 +62,12 @@ export const commentOnFile = async (
     // Check if bot has already commented on this file
     const relativePath = getRelativePath(data.feedback.fileName, data.repo);
     const botComment = comments.find(
-      (comment: any) =>
-        comment?.path === relativePath && comment?.body?.includes(data.signOff)
+      (comment) =>
+        comment.path === relativePath && comment.body.includes(data.signOff)
     );
 
     if (botComment) {
-      octokit.rest.pulls.updateReviewComment({
+      await octokit.rest.pulls.updateReviewComment({
         owner: data.owner,
         repo: data.repo,
         comment_id: botComment.id,
