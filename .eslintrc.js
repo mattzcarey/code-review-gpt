@@ -7,17 +7,10 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:import/recommended",
-    "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
   rules: {
-    "prettier/prettier": [
-      "error",
-      {
-        trailingComma: "none",
-      },
-    ],
     "import/extensions": 0,
     "import/no-unresolved": 0,
     "import/prefer-default-export": 0,
