@@ -48,19 +48,16 @@ input {
   line-height: 1.5;
 }
 
-.Button {
-  border-radius: 6px;
-  padding: 10px;
-}
-
-.Button.green {
+.green {
+  border-radius: 3px;
+  padding: 6px;
   background-color: var(--green-4);
   color: var(--green-11);
 }
-.Button.green:hover {
+.green:hover {
   background-color: var(--green-5);
 }
-.Button.green:focus {
+.green:focus {
   box-shadow: 0 0 0 2px var(--green-7);
 }
 

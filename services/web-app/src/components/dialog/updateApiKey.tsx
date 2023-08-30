@@ -47,7 +47,7 @@ const UpdateAPIKey: React.FC<UpdateAPIKeyProps> = ({ onSave }) => {
               }}
             >
               <Dialog.Close asChild>
-                <button className="Button green" onClick={handleSave}>
+                <button className="green" onClick={handleSave}>
                   Save Changes
                 </button>
               </Dialog.Close>

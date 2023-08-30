@@ -1,43 +1,29 @@
 "use client";
-import { useSession } from "next-auth/react";
-import Logo from "../logo/logo";
-import { signOut, signIn } from "next-auth/react";
-import HeaderButton from "./headerButton";
-import BasicButton from "../../buttons/basicButton";
+import { motion } from "framer-motion";
 import React from "react";
+import { useHeader } from "@/lib/hooks/useHeader";
 
-export const Header = (): JSX.Element => {
-  const { data: session } = useSession();
+export const Header = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element => {
+  const { hidden } = useHeader();
 
   return (
-    <header className="flex flex-row navbar justify-between items-center m-5 border-b border-gray-300  pb-2">
-      <Logo />
-      <div className="flex items-center">
-        {session ? (
-          <div className="flex items-center">
-            <HeaderButton text="Home" route="/" />
-            <HeaderButton text="Profile" route="/profile" />
-            <div className="flex flex-col mx-3">
-              <BasicButton
-                text="Sign Out"
-                onClick={() => {
-                  signOut({callbackUrl: "/"});
-                }}
-              />
-            </div>
-          </div>
-        ) : (
-          <BasicButton
-            text="Sign In"
-            onClick={() => {
-              signIn("github", {callbackUrl: "/profile"});
-            }}
-          />
-        )}
-      </div>
-    </header>
+    <motion.header
+      animate={{
+        y: hidden ? "-100%" : "0%",
+        transition: { ease: "circOut" },
+      }}
+      className="sticky top-0 w-full border-b border-b-black/10 dark:border-b-white/25 bg-white dark:bg-black z-20"
+    >
+      <nav className="max-w-screen-2xl mx-auto py-1 flex items-center justify-between gap-8">
+        {children}
+      </nav>
+    </motion.header>
   );
 };
 
-Header.displayName = "Header";
-export default Header;
+
+

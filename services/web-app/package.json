@@ -25,16 +25,19 @@
     "autoprefixer": "10.4.14",
     "aws-lambda": "^1.0.7",
     "axios": "^1.4.0",
+    "clsx": "^2.0.0",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "framer-motion": "^10.16.1",
     "next": "13.4.12",
     "next-auth": "^4.23.1",
+    "node-fetch": "^3.3.2",
     "postcss": "8.4.27",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
-    "tailwindcss": "3.3.3",
-    "node-fetch": "^3.3.2"
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss": "3.3.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",

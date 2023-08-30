@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@radix-ui/themes";
-import "../../styles/updateApiKey.css";
 
 export interface UpdateAPIKeyProps {
   text: string;
@@ -9,16 +8,12 @@ export interface UpdateAPIKeyProps {
 
 const BasicButton: React.FC<UpdateAPIKeyProps> = ({ text, onClick }) => {
   return (
-    <Button
-      className="font-light"
-      highContrast
-      color="gray"
-      variant="solid"
-      size="3"
+    <button
+      className="bg-black hover:bg-purple-900 text-white sm:font-light font-extralight py-2 px-4 rounded"
       onClick={onClick}
     >
       {text}
-    </Button>
+    </button>
   );
 };
 

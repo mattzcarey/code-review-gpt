@@ -28,6 +28,6 @@
     "**/*.ts",
     ".next/types/**/*.ts",
     ".sst/types/**/*.ts"
-  ],
+, "src/components/navbar/index.tsx"  ],
   "exclude": ["node_modules"]
 }
