@@ -1,7 +1,8 @@
-import { readFile, readdir } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
 import path from "path";
-import { TestCase } from "../types";
+
 import { logger } from "../../common/utils/logger";
+import { TestCase } from "../types";
 
 /**
  * Load a single test case defined in a JSON file.
@@ -11,6 +12,7 @@ import { logger } from "../../common/utils/logger";
 const loadTestCase = async (testCasePath: string): Promise<TestCase> => {
   try {
     const fileData = await readFile(testCasePath, "utf8");
+
     return JSON.parse(fileData) as TestCase;
   } catch (error) {
     logger.error(`Error loading test case: ${testCasePath}`);

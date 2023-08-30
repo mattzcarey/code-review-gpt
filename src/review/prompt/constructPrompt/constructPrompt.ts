@@ -1,9 +1,9 @@
-import { PromptFile, ReviewFile } from "../../../common/types";
-import { getLanguageName } from "../getLanguageOfFile";
-import { instructionPrompt } from "../prompts";
 import { changedLinesIntoBatches } from "./batchFiles/changedLines";
 import { costOptimizedChangedLinesIntoBatches } from "./batchFiles/costOptimizedChangedLines";
 import { fullFilesIntoBatches } from "./batchFiles/fullFiles";
+import { PromptFile, ReviewFile } from "../../../common/types";
+import { getLanguageName } from "../getLanguageOfFile";
+import { instructionPrompt } from "../prompts";
 
 export const constructPromptsArray = async (
   files: ReviewFile[],

@@ -3,6 +3,7 @@ import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Key } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
+
 import { GetUserLambda } from "../../functions/get-user/config";
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";

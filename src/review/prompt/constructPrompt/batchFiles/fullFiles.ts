@@ -1,5 +1,5 @@
-import { PromptFile, ReviewFile } from "../../../../common/types";
 import { promptsIntoBatches } from "./utils/promptsIntoBatches";
+import { PromptFile, ReviewFile } from "../../../../common/types";
 
 export const fullFilesIntoBatches = async (
   files: ReviewFile[],

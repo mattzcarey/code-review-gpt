@@ -3,6 +3,7 @@ const encodeAttribute = (attribute: string, jsonString: string): string => {
     `"${attribute}"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"`,
     "g"
   );
+
   return jsonString.replace(
     regex,
     (match, value) => `"${attribute}": "${encodeURIComponent(value)}"`

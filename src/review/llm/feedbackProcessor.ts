@@ -1,16 +1,17 @@
+import PriorityQueue from "./PriorityQueue";
+import { formatFeedbacks } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
 import { IFeedback } from "../../common/types";
 import { logger } from "../../common/utils/logger";
 import { maxFeedbackCount } from "../constants";
 import { completionPrompt } from "../prompt/prompts";
-import PriorityQueue from "./PriorityQueue";
-import { formatFeedbacks } from "./generateMarkdownReport";
 
 const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
 ): Promise<IFeedback[]> => {
   try {
     const feedbacks = await feedbackPromise;
+
     return feedbacks;
   } catch (error) {
     logger.error(`Error in processing prompt`, error);
@@ -65,6 +66,7 @@ const extractFulfilledFeedbacks = (
     if (feedbackResult.status === "fulfilled") {
       accumulatedFeedbacks.push(...feedbackResult.value);
     }
+
     return accumulatedFeedbacks;
   }, [] as IFeedback[]);
 };

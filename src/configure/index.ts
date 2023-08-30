@@ -1,8 +1,9 @@
+import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
-import { logger } from "../common/utils/logger";
+
 import { PlatformOptions, ReviewArgs } from "../common/types";
+import { logger } from "../common/utils/logger";
 
 export const configure = async (yargs: ReviewArgs) => {
   if (yargs.setupTarget === PlatformOptions.GITHUB) {
@@ -41,6 +42,7 @@ const configureGitHub = async () => {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitHub repository."
     );
+
     return;
   }
 
@@ -85,6 +87,7 @@ const configureGitLab = async () => {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitLab CI/CD environment variables for your repository."
     );
+
     return;
   }
 

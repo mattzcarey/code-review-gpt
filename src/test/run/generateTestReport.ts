@@ -1,6 +1,7 @@
+import chalk from "chalk";
+
 import { testThreshold } from "../constants";
 import { TestCase } from "../types";
-import chalk from "chalk";
 
 /**
  * Possible test results.
@@ -121,6 +122,7 @@ export const generateTestResultsSummary = (testResults: {
 
   const counts = Object.values(testResults).reduce((counts, result) => {
     counts[result]++;
+
     return counts;
   }, Object.fromEntries(Object.values(testResult).map((result) => [result, 0])));
 

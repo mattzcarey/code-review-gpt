@@ -1,5 +1,6 @@
 import { CfnResource, IAspect, RemovalPolicy } from "aws-cdk-lib";
 import { IConstruct } from "constructs";
+
 import { isProduction } from "../helpers";
 
 export class RemovalPolicyAspect implements IAspect {

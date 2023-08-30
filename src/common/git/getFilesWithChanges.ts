@@ -1,9 +1,10 @@
 import { readFile } from "fs/promises";
 import { exit } from "process";
-import { ReviewFile } from "../types";
-import { logger } from "../utils/logger";
+
 import { getChangedFileLines } from "./getChangedFileLines";
 import { getChangedFilesNames } from "./getChangedFilesNames";
+import { ReviewFile } from "../types";
+import { logger } from "../utils/logger";
 
 export const getFilesWithChanges = async (
   isCi: string

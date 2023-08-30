@@ -1,8 +1,9 @@
 import { Octokit } from "octokit";
-import { githubToken } from "../../../config";
-import { ReviewFile } from "../../types";
+
 import { isEligibleForReview } from "./isEligibleForReview";
 import { PullRequestIdentifier } from "./types";
+import { githubToken } from "../../../config";
+import { ReviewFile } from "../../types";
 
 export class GitHubRESTClient {
   private client: Octokit = new Octokit({ auth: githubToken() });
@@ -23,7 +24,7 @@ export class GitHubRESTClient {
   }
 
   async fetchPullRequestFiles(rawFiles: any[]): Promise<ReviewFile[]> {
-    let reviewFiles: ReviewFile[] = [];
+    const reviewFiles: ReviewFile[] = [];
 
     for (const rawFile of rawFiles) {
       if (!isEligibleForReview(rawFile.filename, rawFile.status)) {
@@ -49,6 +50,7 @@ export class GitHubRESTClient {
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
+
     return response.data;
   }
 }

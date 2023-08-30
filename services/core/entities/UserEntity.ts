@@ -1,4 +1,5 @@
 import { Entity } from "dynamodb-toolbox";
+
 import { Table } from "./Table";
 
 export const UserEntity = new Entity({

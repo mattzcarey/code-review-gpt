@@ -6,7 +6,6 @@ import GithubProvider from "next-auth/providers/github";
 import { Config } from "sst/node/config";
 import { Table } from "sst/node/table";
 
-import "sst/node/config";
 declare module "sst/node/config" {
   export interface SecretResources {
     GITHUB_SECRET: {
@@ -21,7 +20,6 @@ declare module "sst/node/config" {
   }
 }
 
-import "sst/node/table";
 declare module "sst/node/table" {
   export interface TableResources {
     auth: {

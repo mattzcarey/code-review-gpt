@@ -1,8 +1,9 @@
 import { readdirSync } from "fs";
-import path from "path";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import path from "path";
+
 import { CreateMemoryStore } from '../../common/model/createMemoryStore';
 
 /**

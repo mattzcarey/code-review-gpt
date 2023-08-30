@@ -1,7 +1,8 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { ReviewFile } from "../../../common/types";
+
 import { filterFiles } from "./filterFiles";
+import { ReviewFile } from "../../../common/types";
 
 describe("filterFiles unit test", () => {
   afterEach(() => {

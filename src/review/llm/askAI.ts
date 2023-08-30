@@ -1,8 +1,8 @@
+import { createSummary, processFeedbacks } from "./feedbackProcessor";
+import { generateMarkdownReport } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
 import { AskAIResponse } from "../../common/types";
 import { logger } from "../../common/utils/logger";
-import { createSummary, processFeedbacks } from "./feedbackProcessor";
-import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
   prompts: string[],

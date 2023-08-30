@@ -1,13 +1,13 @@
+import { signOff } from "./constants";
+import { askAI } from "./llm/askAI";
+import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
+import { filterFiles } from "./prompt/filterFiles";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs, ReviewFile } from "../common/types";
 import { logger } from "../common/utils/logger";
-import { signOff } from "./constants";
-import { askAI } from "./llm/askAI";
-import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { filterFiles } from "./prompt/filterFiles";
 
 export const review = async (
   yargs: ReviewArgs,
@@ -32,6 +32,7 @@ export const review = async (
 
   if (filteredFiles.length == 0) {
     logger.info("No file to review, finishing review now.");
+
     return undefined;
   }
 

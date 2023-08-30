@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import yargs from "yargs";
+
 import { PlatformOptions, ReviewArgs } from "./common/types";
 import { logger } from "./common/utils/logger";
 
@@ -23,6 +24,7 @@ const handleNoCommand = async () => {
   ];
 
   const answers = await inquirer.default.prompt(questions);
+
   return answers.command;
 };
 

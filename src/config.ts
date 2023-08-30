@@ -12,6 +12,7 @@ export const getOpenAIApiKey = (): string => {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not set");
   }
+
   return process.env.OPENAI_API_KEY;
 };
 
@@ -19,6 +20,7 @@ export const githubToken = (): string => {
   if (!process.env.GITHUB_TOKEN) {
     throw new Error("GITHUB_TOKEN is not set");
   }
+
   return process.env.GITHUB_TOKEN;
 };
 
@@ -30,6 +32,7 @@ export const getGitHubEnvVariables = (): Record<string, string> => {
     logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
     throw new Error("One or more GitHub environment variables are not set");
   }
+
   return {
     githubSha: process.env.GITHUB_SHA as string,
     baseSha: process.env.BASE_SHA as string,
@@ -51,6 +54,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
       "One or more GitLab environment variables are not set. Did you set up your Gitlab access token? Refer to the README (Gitlab CI section) on how to set it up."
     );
   }
+
   return {
     mergeRequestBaseSha: process.env.CI_MERGE_REQUEST_DIFF_BASE_SHA as string,
     gitlabSha: process.env.CI_COMMIT_SHA as string,

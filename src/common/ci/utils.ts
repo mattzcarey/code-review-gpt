@@ -1,7 +1,8 @@
-import { getGitHubEnvVariables } from "../../config";
 import { context, getOctokit } from "@actions/github";
-import { logger } from "../utils/logger";
+
+import { getGitHubEnvVariables } from "../../config";
 import { CreateFileCommentData } from "../types";
+import { logger } from "../utils/logger";
 
 export const getRelativePath = (fileName: string, repoName: string): string => {
   const repoIndex = fileName.lastIndexOf(repoName);
@@ -18,6 +19,7 @@ export const getToken = () => {
   if (!githubToken) {
     throw new Error("GITHUB_TOKEN is not set");
   }
+
   return githubToken;
 };
 
@@ -27,10 +29,12 @@ export const getOctokitRepoDetails = () => {
 
   if (!payload.pull_request) {
     logger.warn("Not a pull request. Skipping commenting on PR...");
+
     return;
   }
   const octokit = getOctokit(githubToken);
   const { owner, repo, number: pull_number } = issue;
+
   return { octokit, owner, repo, pull_number };
 };
 

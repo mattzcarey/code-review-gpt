@@ -2,6 +2,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBStreamEvent } from "aws-lambda";
 import fetch from "node-fetch";
+
 import { getVariableFromSSM } from "./getVariableFromSSM";
 
 const client = new DynamoDBClient({});
@@ -11,6 +12,7 @@ const postEmail = async (email: string, name: string) => {
   const url = await getVariableFromSSM(
     process.env.CLOUDFLARE_WORKER_URL_NAME ?? ""
   );
+
   return await fetch(url.concat("api/email"), {
     method: "POST",
     headers: {
@@ -38,7 +40,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
 
   try {
     if (event.Records[0].dynamodb?.NewImage) {
-      const record = event.Records[0].dynamodb?.NewImage;
+      const record = event.Records[0].dynamodb.NewImage;
       const userId = record.id["S"];
       const name = record.name["S"];
       const email = record.email["S"];

@@ -1,4 +1,5 @@
 import { Gitlab } from "@gitbeaker/rest";
+
 import { getGitLabEnvVariables } from "../../../config";
 import { logger } from "../../utils/logger";
 /**
@@ -19,7 +20,7 @@ export const commentOnPR = async (comment: string, signOff: string) => {
 
     const notes = await api.MergeRequestNotes.all(projectId, mergeRequestIId);
 
-    const botComment = notes.find((note) => note?.body?.includes(signOff));
+    const botComment = notes.find((note) => note.body.includes(signOff));
 
     const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
 

@@ -1,6 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Table as DDBToolboxTable } from "dynamodb-toolbox";
+
 import { TABLE_NAME } from "../constants";
 import { buildResourceName } from "../helpers";
 

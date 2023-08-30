@@ -1,5 +1,5 @@
 import { IFeedback } from "../../types";
-import { getOctokitRepoDetails, commentOnFile } from "../utils";
+import { commentOnFile, getOctokitRepoDetails } from "../utils";
 
 /**
  * Publish comments on a file-by-file basis on the pull request. If the bot has already commented on a file (i.e. a comment with the same sign off exists on that file), update the comment instead of creating a new one.

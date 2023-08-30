@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+
 import { getYargs } from "./args";
 import { logger } from "./common/utils/logger";
 import { getOpenAIApiKey } from "./config";

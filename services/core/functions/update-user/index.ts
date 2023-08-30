@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { UserEntity } from "../../entities";
 import { encryptKey } from "./encryptKey";
+import { UserEntity } from "../../entities";
 import { formatResponse } from "../../helpers/format-response";
 
 interface UpdateUserLambdaInput {
@@ -42,6 +42,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     return formatResponse("User updated successfully.");
   } catch (err) {
     console.error(err);
+
     return formatResponse("Error when updating user.", 500);
   }
 };
