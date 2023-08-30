@@ -1,5 +1,6 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import { retryAsync } from "ts-retry";
+
 import { logger } from "../utils/logger";
 import { parseAttributes } from "../utils/parseAttributes";
 
@@ -37,7 +38,7 @@ class AIModel {
   ): Promise<T> {
     return retryAsync(
       async () => {
-        const modelResponse = await this.model.call(prompt);
+        const modelResponse = await this.callModel(prompt);
         logger.debug(`Model response: ${modelResponse}`);
         try {
           // Use the utility function to parse and decode the specified attributes
@@ -45,6 +46,7 @@ class AIModel {
             modelResponse,
             attributesToEncode
           );
+
           return parsedObject;
         } catch (error) {
           logger.error(
