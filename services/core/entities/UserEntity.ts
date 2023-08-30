@@ -4,10 +4,10 @@ import { Table } from "./Table";
 export const UserEntity = new Entity({
   name: "userEntity",
   attributes: {
-    PK: { partitionKey: true, hidden: true, prefix: "EMAIL#" },
+    PK: { partitionKey: true, hidden: true, prefix: "USERID#" },
     SK: { sortKey: true, hidden: true, default: "ROOT" },
-    email: ["PK", 0, { type: "string", required: true }],
-    userId: { type: "string" },
+    userId: ["PK", 0, { type: "string", required: true }],
+    email: { type: "string" },
     apiKey: { type: "binary" },
     name: { type: "string" },
     pictureUrl: { type: "string" },

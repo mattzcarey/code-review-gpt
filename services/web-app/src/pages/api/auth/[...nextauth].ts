@@ -49,6 +49,19 @@ const authOptions: NextAuthOptions = {
   adapter: DynamoDBAdapter(dynamoClient, {
     tableName: Table.auth.tableName,
   }),
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub;
+        session.token = token;
+      }
+
+      return session;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
