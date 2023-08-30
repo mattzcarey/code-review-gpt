@@ -24,7 +24,12 @@ const BUCKET_NAME = getEnvVariable("BUCKET_NAME");
 
 const s3Client = new S3Client({});
 
-export const main = async (event: APIGatewayProxyEvent) => {
+type DemoReviewLambdaResponse = {
+  statusCode: number;
+  body: string | undefined;
+};
+
+export const main = async (event: APIGatewayProxyEvent): Promise<DemoReviewLambdaResponse> => {
   const demoReviewId = uuidv4();
 
   if (event.body === null) {

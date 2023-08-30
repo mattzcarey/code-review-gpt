@@ -14,7 +14,7 @@ interface ReviewLambdasBody {
 
 logger.settings.minLevel = 4;
 
-export type ReviewLambdaResponse = {
+type ReviewLambdaResponse = {
   statusCode: number;
   body: string | undefined;
 };
