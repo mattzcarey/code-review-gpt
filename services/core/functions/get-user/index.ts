@@ -8,7 +8,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const userId = event.queryStringParameters?.userId;
 
     if (userId === undefined) {
-      return formatResponse("Please provide the email of the user you wish to get.", 400)
+      return formatResponse("Please provide the userId of the user you wish to get.", 400)
     }
 
     const response = await UserEntity.get({
