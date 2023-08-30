@@ -1,8 +1,9 @@
 import { readdirSync } from "fs";
 import { TextLoader } from "langchain/document_loaders/fs/text";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import path from "path";
 
-import { CreateMemoryStore } from '../../common/model/createMemoryStore';
+import { CreateMemoryStore } from "../../common/model/createMemoryStore";
 
 /**
  * Load a snapshot for a test from a file.
@@ -20,7 +21,9 @@ const loadSnapshot = async (snapshotPath: string) => {
  * @param shapshotsDir The directory containing the snapshots.
  * @returns The snapshots in a MemoryVectorStore.
  */
-export const loadSnapshots = async (shapshotsDir: string) => {
+export const loadSnapshots = async (
+  shapshotsDir: string
+): Promise<MemoryVectorStore> => {
   const snapshotFiles = readdirSync(shapshotsDir);
 
   const snapshots = await Promise.all(

@@ -14,7 +14,7 @@ import { PlatformOptions, ReviewArgs } from "../common/types";
 export const test = async (
   { ci, model, reviewType }: ReviewArgs,
   openAIApiKey: string
-) => {
+): Promise<void> => {
   const maxPromptLength = getMaxPromptLength(model);
 
   // Fetch the test cases.
