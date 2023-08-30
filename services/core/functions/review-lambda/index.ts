@@ -14,7 +14,14 @@ interface ReviewLambdasBody {
 
 logger.settings.minLevel = 4;
 
-export const main = async (event: APIGatewayProxyEvent) => {
+export type ReviewLambdaResponse = {
+  statusCode: number;
+  body: string | undefined;
+};
+
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<ReviewLambdaResponse> => {
   if (event.body === null) {
     return {
       statusCode: 400,

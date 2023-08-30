@@ -2,14 +2,19 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { encryptKey } from "./encryptKey";
 import { UserEntity } from "../../entities";
-import { formatResponse } from "../../helpers/format-response";
+import {
+  formatResponse,
+  FormattedHandlerResponse,
+} from "../../helpers/format-response";
 
 interface UpdateUserLambdaInput {
   apiKey: string;
   userId: string;
 }
 
-export const main = async (event: APIGatewayProxyEvent) => {
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<FormattedHandlerResponse> => {
   if (event.body === null) {
     return formatResponse(
       "The request does not contain a body as expected.",
