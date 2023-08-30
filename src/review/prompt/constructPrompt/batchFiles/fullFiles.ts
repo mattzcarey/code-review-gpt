@@ -1,10 +1,10 @@
 import { promptsIntoBatches } from "./utils/promptsIntoBatches";
 import { PromptFile, ReviewFile } from "../../../../common/types";
 
-export const fullFilesIntoBatches = async (
+export const fullFilesIntoBatches = (
   files: ReviewFile[],
   maxBatchSize: number
-): Promise<PromptFile[][]> => {
+): PromptFile[][] => {
   const promptFiles = files.map((file) => ({
     fileName: file.fileName,
     promptContent: file.fileContent

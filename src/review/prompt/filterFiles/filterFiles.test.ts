@@ -28,7 +28,7 @@ describe("filterFiles unit test", () => {
       })
     );
 
-    const result = await filterFiles(testFiles);
+    const result = filterFiles(testFiles);
     const filesRegex = new RegExp(
       `(src/testFiles/longFile.tsx|src/testFiles/initialFilesExample.ts)`,
       "i"

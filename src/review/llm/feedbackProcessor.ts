@@ -35,10 +35,10 @@ const createSummary = async (
   return summary;
 };
 
-const pickWorstFeedbacks = async (
+const pickWorstFeedbacks = (
   feedbacks: IFeedback[],
   limit: number
-): Promise<IFeedback[]> => {
+): IFeedback[] => {
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
   //remove feedbacks with risk score of 1 from consideration.
