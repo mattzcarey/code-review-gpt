@@ -38,9 +38,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
         "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github' or 'gitlab'. Defaults to 'github'.",
       choices: ["github", "gitlab"],
       type: "string",
-      coerce: (arg: string) => {
-        return arg || "github";
-      },
+      default: "github",
     })
     .option("setupTarget", {
       description:
