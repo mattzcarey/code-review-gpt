@@ -1,5 +1,5 @@
 import { Tags } from "aws-cdk-lib";
-import { SSTConfig } from "sst";
+import { type SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
 
 import { getDomainName } from "./helpers";
