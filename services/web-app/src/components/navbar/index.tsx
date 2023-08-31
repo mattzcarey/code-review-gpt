@@ -9,7 +9,7 @@ export const NavBar = (): JSX.Element => {
   return (
     <Header>
       <Logo />
-      <NavItems className="hidden sm:flex" />
+      <NavItems className="hidden sm:flex text-white" />
       <MobileMenu />
     </Header>
   );
