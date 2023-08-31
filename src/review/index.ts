@@ -24,7 +24,7 @@ export const review = async (
   logger.debug(`Organization chosen: ${yargs.org as unknown as string}`);
   logger.debug(`Remote Pull Request: ${yargs.remote as unknown as string}`);
 
-  const isCi = yargs.ci;
+  const platform = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
   const modelName = yargs.model;
   const reviewType = yargs.reviewType;
@@ -63,7 +63,7 @@ export const review = async (
 
   logger.debug(`Markdown report:\n ${response}`);
 
-  if (isCi === PlatformOptions.GITHUB) {
+  if (platform === PlatformOptions.GITHUB) {
     if (!shouldCommentPerFile) {
       await commentOnPRGithub(response, signOff);
     }
@@ -71,7 +71,7 @@ export const review = async (
       await commentPerFile(feedbacks, signOff);
     }
   }
-  if (isCi === PlatformOptions.GITLAB) {
+  if (platform === PlatformOptions.GITLAB) {
     await commentOnPRGitlab(response, signOff);
   }
 

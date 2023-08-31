@@ -92,13 +92,13 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     argv._[0] = await handleNoCommand();
   }
 
-  if (argv.shouldCommentPerFile && !argv.isCi) {
+  if (argv.shouldCommentPerFile && !argv.platform) {
     throw new Error(
       "The 'commentPerFile' flag requires the 'ci' flag to be set."
     );
   }
 
-  if (argv.isCi === PlatformOptions.GITLAB && argv.shouldCommentPerFile) {
+  if (argv.platform === PlatformOptions.GITLAB && argv.shouldCommentPerFile) {
     logger.warn(
       "The 'commentPerFile' flag only works for GitHub, not for GitLab."
     );

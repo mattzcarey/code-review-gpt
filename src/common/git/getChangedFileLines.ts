@@ -3,14 +3,14 @@ import { exec } from "child_process";
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = (
-  isCi: string | undefined,
+  platform: string | undefined,
   fileName: string
 ): string => {
-  if (isCi === PlatformOptions.GITHUB) {
+  if (platform === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
 
     return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${fileName}`;
-  } else if (isCi === PlatformOptions.GITLAB) {
+  } else if (platform === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
     return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
@@ -20,10 +20,10 @@ export const getChangesFileLinesCommand = (
 };
 
 export const getChangedFileLines = async (
-  isCi: string | undefined,
+  platform: string | undefined,
   fileName: string
 ): Promise<string> => {
-  const commandString = getChangesFileLinesCommand(isCi, fileName);
+  const commandString = getChangesFileLinesCommand(platform, fileName);
 
   return new Promise((resolve, reject) => {
     exec(commandString, (error, stdout, stderr) => {

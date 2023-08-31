@@ -7,10 +7,10 @@ import { ReviewFile } from "../types";
 import { logger } from "../utils/logger";
 
 export const getFilesWithChanges = async (
-  isCi: string | undefined
+  platform: string | undefined
 ): Promise<ReviewFile[]> => {
   try {
-    const fileNames = await getChangedFilesNames(isCi);
+    const fileNames = await getChangedFilesNames(platform);
 
     if (fileNames.length === 0) {
       logger.warn(
@@ -22,7 +22,7 @@ export const getFilesWithChanges = async (
     const files = await Promise.all(
       fileNames.map(async (fileName) => {
         const fileContent = await readFile(fileName, "utf8");
-        const changedLines = await getChangedFileLines(isCi, fileName);
+        const changedLines = await getChangedFileLines(platform, fileName);
 
         return { fileName, fileContent, changedLines };
       })
