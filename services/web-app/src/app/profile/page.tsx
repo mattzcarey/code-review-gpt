@@ -48,7 +48,7 @@ export default function Profile(): JSX.Element {
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
       const response = await axiosInstance.post(`/updateUser`, {
-        email: user.email,
+        userID: user.userId,
         apiKey: newApiKey,
       });
       console.log("API key updated successfully:", response.data);
