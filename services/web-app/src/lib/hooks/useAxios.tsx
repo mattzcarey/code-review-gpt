@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { BASE_URL } from "@/lib/constants";
-import { Session, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import { Session } from 'next-auth';
 
 const axiosInstance = axios.create({
   baseURL: `${BASE_URL}`,

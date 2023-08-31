@@ -2,6 +2,7 @@ import { Button, Link } from "@radix-ui/themes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import React, { useRef } from "react";
 import { MdNorthEast } from "react-icons/md";
+import BasicButton from "../buttons/basicButton";
 
 export function Hero() {
   const targetRef = useRef<HTMLDivElement | null>(null);
@@ -45,7 +46,7 @@ export function Hero() {
           pipeline.
         </p>
         <Link href={"/installation"}>
-          <Button size={"4"}>Install</Button>
+          <BasicButton text="Install"></BasicButton>
         </Link>
         <Link
           target="_blank"
