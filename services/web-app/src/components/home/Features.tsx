@@ -1,7 +1,7 @@
 "use client";
-import { Card } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import { GiBrain, GiDatabase, GiOpenBook } from "react-icons/gi";
+import Card from "../cards/Card";
 
 export const Features = (): JSX.Element => {
   return (

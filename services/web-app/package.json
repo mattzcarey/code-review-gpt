@@ -41,6 +41,7 @@
     "tailwindcss": "3.3.3"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
     "@types/aws-lambda": "^8.10.119",
     "@types/node-fetch": "^2.6.4",
     "aws-cdk-lib": "^2.93.0",
