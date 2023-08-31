@@ -1,6 +1,7 @@
-import { InstallationInstructions } from "@/lib/constants";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+
+import { InstallationInstructions } from "@/lib/constants";
 
 export default function Installation(): JSX.Element {
   return (

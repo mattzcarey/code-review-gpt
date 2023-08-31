@@ -1,13 +1,16 @@
 "use client";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+import UpdateAPIKey from "@/components/dialog/updateApiKey";
 import Loading from "@/components/loading/loading";
 import { RepoTable } from "@/components/tables/repoTable";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import useAxios from "../../lib/hooks/useAxios";
-import { useEffect, useState } from "react";
-import { User } from "../../lib/types";
+
 import { ReturnToHome } from "../../components/cards/returnToHome";
-import UpdateAPIKey from "@/components/dialog/updateApiKey";
+import useAxios from "../../lib/hooks/useAxios";
+import { User } from "../../lib/types";
+
 
 export default function Profile(): JSX.Element {
   let user: User;

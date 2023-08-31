@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 import { GiBrain, GiDatabase, GiOpenBook } from "react-icons/gi";
+
 import Card from "../cards/Card";
 
 export const Features = (): JSX.Element => {

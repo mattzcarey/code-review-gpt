@@ -1,9 +1,13 @@
 import "../styles/globals.css";
 import React, { ReactNode } from "react";
-import { NextAuthProvider } from "./providers";
+
 import { Footer } from "@/components/footer/footer";
+
+import { NextAuthProvider } from "./providers";
+
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+
 import { NavBar } from "@/components/navbar";
 
 export const metadata = {
