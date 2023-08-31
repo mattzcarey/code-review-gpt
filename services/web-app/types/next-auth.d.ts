@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession, ISODateString } from "next-auth";
+import { ISODateString } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
