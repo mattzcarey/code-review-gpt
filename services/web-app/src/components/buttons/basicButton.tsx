@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "@radix-ui/themes";
 
-export interface UpdateAPIKeyProps {
+export interface ButtonProps {
   text: string;
   onClick?: () => void;
 }
 
-const BasicButton: React.FC<UpdateAPIKeyProps> = ({ text, onClick }) => {
+const BasicButton: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
     <button
       className="bg-black text-white sm:font-light font-extralight py-2 px-4 rounded"
