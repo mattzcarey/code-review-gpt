@@ -8,7 +8,7 @@ import { buildResourceName } from "../../helpers";
 import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
 import { commonLambdaProps } from "../helpers/commonLambdaProps";
 
-interface UpdateUserLambdaProps {
+type UpdateUserLambdaProps = {
   table: Table;
   kmsKey: Key;
 }

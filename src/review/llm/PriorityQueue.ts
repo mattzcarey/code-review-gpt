@@ -1,4 +1,4 @@
-interface QueueItem<T> {
+type QueueItem<T> = {
   priority: number;
   item: T;
 }
