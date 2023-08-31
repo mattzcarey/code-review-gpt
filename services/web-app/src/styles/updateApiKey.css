@@ -48,37 +48,16 @@ input {
   line-height: 1.5;
 }
 
-.Button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 0 15px;
-  font-size: 15px;
-  line-height: 1;
-  font-weight: 500;
-  height: 35px;
-  width: max-content;
-}
-.Button.violet {
-  background-color: black;
-  color: white;
-}
-.Button.violet:hover {
-  text-decoration: underline;
-  background-color: black;
-}
-.Button.violet:focus {
-  box-shadow: 0 0 0 2px black;
-}
-.Button.green {
+.green {
+  border-radius: 3px;
+  padding: 6px;
   background-color: var(--green-4);
   color: var(--green-11);
 }
-.Button.green:hover {
+.green:hover {
   background-color: var(--green-5);
 }
-.Button.green:focus {
+.green:focus {
   box-shadow: 0 0 0 2px var(--green-7);
 }
 

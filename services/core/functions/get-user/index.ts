@@ -15,7 +15,6 @@ export const main = async (event: APIGatewayProxyEvent) => {
       userId: userId,
     });
 
-    console.log(response);
     const user = response.Item;
     delete user?.["apiKey"];
 
