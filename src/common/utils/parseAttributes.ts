@@ -44,6 +44,10 @@ export const parseAttributes = (jsonString: string): IFeedback[] => {
 
     return parsedObject;
   } else {
-    throw new Error("encodeAttribute error");
+    throw new Error(
+      `The shape of the object returned from the model was incorrect. Object returned was ${String(
+        parsedObject
+      )}. Object should include fileName, riskScore and details fields.`
+    );
   }
 };
