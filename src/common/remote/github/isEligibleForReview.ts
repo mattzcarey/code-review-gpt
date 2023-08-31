@@ -1,4 +1,5 @@
 import { extname } from "path";
+
 import { excludedKeywords, supportedFiles } from "../../../review/constants";
 
 // see: https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-pull-requests-files
@@ -10,6 +11,7 @@ const isSupportedPullRequestFileChange = (status: string): boolean => {
 
 const isSupportedFileType = (path: string): boolean => {
   const ext = extname(path);
+
   return (
     supportedFiles.has(ext) &&
     ![...excludedKeywords].some((keyword) => path.includes(keyword))

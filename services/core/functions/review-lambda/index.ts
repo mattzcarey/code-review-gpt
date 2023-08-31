@@ -1,10 +1,11 @@
-import { review } from "../../../../src/review/index";
-import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { getVariableFromSSM } from "../helpers/getVariable";
-import { logger } from "../../../../src/common/utils/logger";
+
 import { authenticate } from "./auth";
+import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
+import { logger } from "../../../../src/common/utils/logger";
+import { review } from "../../../../src/review/index";
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
+import { getVariableFromSSM } from "../helpers/getVariable";
 
 interface ReviewLambdasBody {
   args: ReviewArgs;
@@ -13,7 +14,14 @@ interface ReviewLambdasBody {
 
 logger.settings.minLevel = 4;
 
-export const main = async (event: APIGatewayProxyEvent) => {
+type ReviewLambdaResponse = {
+  statusCode: number;
+  body: string | undefined;
+};
+
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<ReviewLambdaResponse> => {
   if (event.body === null) {
     return {
       statusCode: 400,
@@ -57,6 +65,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
       inputBody.files,
       openAIApiKey
     );
+
     return {
       statusCode: 200,
       body: reviewResponse,

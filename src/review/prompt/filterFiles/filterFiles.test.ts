@@ -1,7 +1,8 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { ReviewFile } from "../../../common/types";
+
 import { filterFiles } from "./filterFiles";
+import { ReviewFile } from "../../../common/types";
 
 describe("filterFiles unit test", () => {
   afterEach(() => {
@@ -27,7 +28,7 @@ describe("filterFiles unit test", () => {
       })
     );
 
-    const result = await filterFiles(testFiles);
+    const result = filterFiles(testFiles);
     const filesRegex = new RegExp(
       `(src/testFiles/longFile.tsx|src/testFiles/initialFilesExample.ts)`,
       "i"

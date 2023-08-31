@@ -1,14 +1,15 @@
 import chalk from "chalk";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { logger } from "../../common/utils/logger";
-import { askAI } from "../../review/llm/askAI";
-import { constructPromptsArray } from "../../review/prompt/constructPrompt/constructPrompt";
-import { TestCase } from "../types";
+
 import {
   generateTestReport,
   generateTestResultsSummary,
   testResult,
 } from "./generateTestReport";
+import { logger } from "../../common/utils/logger";
+import { askAI } from "../../review/llm/askAI";
+import { constructPromptsArray } from "../../review/prompt/constructPrompt/constructPrompt";
+import { TestCase } from "../types";
 
 /**
  * Run a single test case.
@@ -34,7 +35,7 @@ const runTest = async (
   logger.info(chalk.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
-  const prompts = await constructPromptsArray(
+  const prompts = constructPromptsArray(
     [testCase.snippet],
     maxPromptLength,
     reviewType
@@ -43,7 +44,8 @@ const runTest = async (
   const { markdownReport: reviewResponse } = await askAI(
     prompts,
     modelName,
-    openAIApiKey
+    openAIApiKey,
+    undefined
   );
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(

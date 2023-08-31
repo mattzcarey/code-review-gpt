@@ -1,6 +1,7 @@
 import { context, getOctokit } from "@actions/github";
-import { getToken } from "../utils";
+
 import { logger } from "../../utils/logger";
+import { getToken } from "../utils";
 
 /**
  * Publish a comment on the pull request. If the bot has already commented (i.e. a comment with the same sign off exists), update the comment instead of creating a new one.
@@ -9,13 +10,17 @@ import { logger } from "../../utils/logger";
  * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
  * @returns
  */
-export const commentOnPR = async (comment: string, signOff: string) => {
+export const commentOnPR = async (
+  comment: string,
+  signOff: string
+): Promise<void> => {
   try {
     const githubToken = getToken();
     const { payload, issue } = context;
 
     if (!payload.pull_request) {
       logger.warn("Not a pull request. Skipping commenting on PR...");
+
       return;
     }
 
@@ -28,8 +33,8 @@ export const commentOnPR = async (comment: string, signOff: string) => {
       issue_number: pull_number,
     });
 
-    const botComment = comments.find((comment) =>
-      comment?.body?.includes(signOff)
+    const botComment = comments.find(
+      (comment) => comment.body?.includes(signOff)
     );
 
     const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
@@ -51,7 +56,7 @@ export const commentOnPR = async (comment: string, signOff: string) => {
       });
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${error}`);
+    logger.error(`Failed to comment on PR: ${error as string}`);
     throw error;
   }
 };

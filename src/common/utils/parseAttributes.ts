@@ -1,50 +1,53 @@
-const encodeAttribute = (attribute: string, jsonString: string): string => {
-  const regex = new RegExp(
-    `"${attribute}"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"`,
-    "g"
-  );
+import { IFeedback } from "../types";
+
+const encodeDetails = (jsonString: string): string => {
+  const regex = new RegExp(`"details"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"`, "g");
+
   return jsonString.replace(
     regex,
-    (match, value) => `"${attribute}": "${encodeURIComponent(value)}"`
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    (match, value) => `"details": "${encodeURIComponent(value)}"`
   );
 };
 
-const decodeAndReplaceNewlines = (value: string): string => {
-  return decodeURIComponent(value).replace(/\\n/g, "\n");
-};
+const decodeAndReplaceNewlines = (value: string): string =>
+  decodeURIComponent(value).replace(/\\n/g, "\n");
 
-const processAttributes = (
-  object: any,
-  attributesToEncode: string[],
-  processor: (value: string) => string
-) => {
-  attributesToEncode.forEach((attribute) => {
-    if (object[attribute]) {
-      object[attribute] = processor(object[attribute]);
-    }
-  });
-};
+const processDetails = (object: IFeedback) =>
+  (object["details"] = decodeAndReplaceNewlines(object["details"]));
 
-export const parseAttributes = <T>(
-  jsonString: string,
-  attributesToEncode: string[]
-): T => {
+const isIFeedback = (input: unknown): input is IFeedback =>
+  typeof input === "object" &&
+  input !== null &&
+  "fileName" in input &&
+  typeof input.fileName === "string" &&
+  "riskScore" in input &&
+  typeof input.riskScore === "number" &&
+  "details" in input &&
+  typeof input.details === "string";
+
+const isIFeedbackArray = (input: unknown): input is IFeedback[] =>
+  Array.isArray(input) && input.every((entry) => isIFeedback(entry));
+
+export const parseAttributes = (jsonString: string): IFeedback[] => {
   let encodedJsonString = jsonString;
-
-  // Encode the specified attributes
-  attributesToEncode.forEach((attribute) => {
-    encodedJsonString = encodeAttribute(attribute, encodedJsonString);
-  });
+  encodedJsonString = encodeDetails(encodedJsonString);
 
   // Parse the JSON string
-  const parsedObject: T = JSON.parse(encodedJsonString);
+  const parsedObject: unknown = JSON.parse(encodedJsonString);
 
-  // Decode the specified attributes for each item and replace '\n' with actual newline characters
-  if (Array.isArray(parsedObject)) {
-    parsedObject.forEach((item: any) => {
-      processAttributes(item, attributesToEncode, decodeAndReplaceNewlines);
+  if (isIFeedbackArray(parsedObject)) {
+    // Decode the specified attributes for each item and replace '\n' with actual newline characters
+    parsedObject.forEach((item: IFeedback) => {
+      processDetails(item);
     });
-  }
 
-  return parsedObject;
+    return parsedObject;
+  } else {
+    throw new Error(
+      `The shape of the object returned from the model was incorrect. Object returned was ${String(
+        parsedObject
+      )}. Object should include fileName, riskScore and details fields.`
+    );
+  }
 };

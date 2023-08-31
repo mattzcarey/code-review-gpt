@@ -21,6 +21,7 @@ export const getVariableFromSSM = async (
       `Could not retrieve value for key ${parameterName} from AWS Parameter Store.`
     );
   }
+
   return keyValue;
 };
 

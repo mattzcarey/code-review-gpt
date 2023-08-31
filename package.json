@@ -8,6 +8,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "lint-fix": "eslint . --ext=js,ts --fix",
+    "lint-test": "eslint . --ext=js,ts",
     "start": "ts-node ./src/index.ts review",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",

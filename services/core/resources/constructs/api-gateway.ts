@@ -7,6 +7,7 @@ import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { ARecord, HostedZone, RecordTarget } from "aws-cdk-lib/aws-route53";
 import { ApiGateway } from "aws-cdk-lib/aws-route53-targets";
 import { Construct } from "constructs";
+
 import { buildResourceName } from "../../helpers";
 
 export interface CoreApiProps extends Omit<RestApiProps, "restApiName"> {
@@ -21,7 +22,7 @@ export class OrionApi extends RestApi {
       ...props,
       restApiName: buildResourceName(id),
       deployOptions: {
-        ...props?.deployOptions,
+        ...props.deployOptions,
         tracingEnabled: true,
       },
       defaultCorsPreflightOptions: {

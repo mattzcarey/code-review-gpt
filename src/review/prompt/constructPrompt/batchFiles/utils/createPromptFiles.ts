@@ -46,9 +46,11 @@ const calculateStartAndEnd = (
     maxIndex + (maxSurroundingLines || 0),
     contentLinesLength - 1
   );
+
   return { start, end };
 };
 
+// eslint-disable-next-line complexity
 const expandRange = (
   start: number,
   end: number,
@@ -87,8 +89,8 @@ const expandRange = (
       break;
     }
 
-    if (start === 0) expandStart = false;
-    if (end === contentLines.length - 1) expandEnd = false;
+    if (start === 0) {expandStart = false;}
+    if (end === contentLines.length - 1) {expandEnd = false;}
   }
 
   return { start, end };
@@ -126,12 +128,12 @@ export const createPromptFiles = (
     const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
 
-    if (totalChangedLinesLength == 0) {
+    if (totalChangedLinesLength === 0) {
       return result;
     }
 
     // Calculate remaining space and start/end positions
-    let remainingSpace =
+    const remainingSpace =
       maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
     let { start, end } = calculateStartAndEnd(
       minIndex,
@@ -153,6 +155,7 @@ export const createPromptFiles = (
       fileName: file.fileName,
       promptContent: promptContent,
     });
+
     return result;
   }, []);
 };

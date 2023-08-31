@@ -1,8 +1,30 @@
 import { Octokit } from "octokit";
-import { githubToken } from "../../../config";
-import { ReviewFile } from "../../types";
+
 import { isEligibleForReview } from "./isEligibleForReview";
 import { PullRequestIdentifier } from "./types";
+import { githubToken } from "../../../config";
+import { ReviewFile } from "../../types";
+
+type GithubFile = {
+  sha: string;
+  filename: string;
+  status:
+    | "added"
+    | "removed"
+    | "modified"
+    | "renamed"
+    | "copied"
+    | "changed"
+    | "unchanged";
+  additions: number;
+  deletions: number;
+  changes: number;
+  blob_url: string;
+  raw_url: string;
+  contents_url: string;
+  patch?: string | undefined;
+  previous_filename?: string | undefined;
+};
 
 export class GitHubRESTClient {
   private client: Octokit = new Octokit({ auth: githubToken() });
@@ -22,8 +44,8 @@ export class GitHubRESTClient {
     return await this.fetchPullRequestFiles(rawFiles);
   }
 
-  async fetchPullRequestFiles(rawFiles: any[]): Promise<ReviewFile[]> {
-    let reviewFiles: ReviewFile[] = [];
+  async fetchPullRequestFiles(rawFiles: GithubFile[]): Promise<ReviewFile[]> {
+    const reviewFiles: ReviewFile[] = [];
 
     for (const rawFile of rawFiles) {
       if (!isEligibleForReview(rawFile.filename, rawFile.status)) {
@@ -37,18 +59,21 @@ export class GitHubRESTClient {
     return reviewFiles;
   }
 
-  async fetchPullRequestFile(rawFile: any): Promise<ReviewFile> {
+  async fetchPullRequestFile(rawFile: GithubFile): Promise<ReviewFile> {
     const content = await this.fetchPullRequestFileContent(rawFile.raw_url);
 
     return {
       fileName: rawFile.filename,
-      fileContent: content,
+      //TODO: fix this
+      fileContent: content as unknown as string,
       changedLines: rawFile.patch as string,
     };
   }
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
-    return response.data;
+
+    //TODO: fix this
+    return response.data as string;
   }
 }

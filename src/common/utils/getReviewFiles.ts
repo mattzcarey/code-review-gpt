@@ -1,7 +1,7 @@
 import { ReviewFile } from "../types";
 
 export const getReviewFiles = async (
-  isCi: string,
+  isCi: string | undefined,
   remotePullRequest: string | undefined
 ): Promise<ReviewFile[]> => {
   if (remotePullRequest !== undefined) {

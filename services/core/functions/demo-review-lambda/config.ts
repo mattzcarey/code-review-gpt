@@ -1,17 +1,18 @@
 import { Duration, Stack } from "aws-cdk-lib";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { join } from "path";
-import { buildResourceName } from "../../helpers";
+
 import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
-import { Table } from "aws-cdk-lib/aws-dynamodb";
-import { Bucket } from "aws-cdk-lib/aws-s3";
-import { commonLambdaProps } from "../helpers/commonLambdaProps";
+import { buildResourceName } from "../../helpers";
 import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
+import { commonLambdaProps } from "../helpers/commonLambdaProps";
 import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
 
 export interface DemoReviewLambdaProps {

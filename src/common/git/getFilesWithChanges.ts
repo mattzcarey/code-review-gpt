@@ -1,12 +1,13 @@
 import { readFile } from "fs/promises";
 import { exit } from "process";
-import { ReviewFile } from "../types";
-import { logger } from "../utils/logger";
+
 import { getChangedFileLines } from "./getChangedFileLines";
 import { getChangedFilesNames } from "./getChangedFilesNames";
+import { ReviewFile } from "../types";
+import { logger } from "../utils/logger";
 
 export const getFilesWithChanges = async (
-  isCi: string
+  isCi: string | undefined
 ): Promise<ReviewFile[]> => {
   try {
     const fileNames = await getChangedFilesNames(isCi);
@@ -29,6 +30,6 @@ export const getFilesWithChanges = async (
 
     return files;
   } catch (error) {
-    throw new Error(`Failed to get files with changes: ${error}`);
+    throw new Error(`Failed to get files with changes: ${error as string}`);
   }
 };

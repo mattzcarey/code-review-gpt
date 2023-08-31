@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { App, Aspects, Tags } from "aws-cdk-lib";
-import { RemovalPolicyAspect } from "../aspects/RemovalPolicyAspect";
 
-import { buildResourceName, getRegion, getStage } from "../helpers";
 import { CoreStack } from "./stacks/core-stack";
 import { DemoStack } from "./stacks/demo-stack";
+import { RemovalPolicyAspect } from "../aspects/RemovalPolicyAspect";
+import { buildResourceName, getRegion, getStage } from "../helpers";
 
 const app = new App();
 

@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+
 import { getYargs } from "./args";
 import { logger } from "./common/utils/logger";
 import { getOpenAIApiKey } from "./config";
@@ -11,20 +12,23 @@ const main = async () => {
   logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3;
 
   switch (argv._[0]) {
-    case "configure":
+    case "configure": {
       const { configure } = await import("./configure");
       await configure(argv);
       break;
-    case "review":
+    }
+    case "review": {
       const { review } = await import("./review");
       const { getReviewFiles } = await import("./common/utils/getReviewFiles");
       const files = await getReviewFiles(argv.ci, argv.remote);
       await review(argv, files, openAIApiKey);
       break;
-    case "test":
+    }
+    case "test": {
       const { test } = await import("./test");
       await test(argv, openAIApiKey);
       break;
+    }
     default:
       logger.error("Unknown command");
       process.exit(1);
@@ -32,6 +36,6 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  logger.error(`Error: ${error}`);
+  logger.error(`Error: ${error as unknown as string}`);
   process.exit(1);
 });

@@ -1,5 +1,7 @@
 import { OpenAIChat } from "langchain/llms/openai";
 import { retryAsync } from "ts-retry";
+
+import { IFeedback } from "../types";
 import { logger } from "../utils/logger";
 import { parseAttributes } from "../utils/parseAttributes";
 
@@ -8,6 +10,7 @@ interface IAIModel {
   temperature: number;
   apiKey: string;
   retryCount?: number;
+  organization: string | undefined;
 }
 
 const defaultRetryCount = 3;
@@ -21,6 +24,7 @@ class AIModel {
       openAIApiKey: options.apiKey,
       modelName: options.modelName,
       temperature: options.temperature,
+      configuration: { organization: options.organization },
     });
     this.retryCount = options.retryCount || defaultRetryCount;
   }
@@ -29,20 +33,15 @@ class AIModel {
     return this.model.call(prompt);
   }
 
-  public async callModelJSON<T>(
-    prompt: string,
-    attributesToEncode: string[] = []
-  ): Promise<T> {
+  public async callModelJSON(prompt: string): Promise<IFeedback[]> {
     return retryAsync(
       async () => {
-        const modelResponse = await this.model.call(prompt);
+        const modelResponse = await this.callModel(prompt);
         logger.debug(`Model response: ${modelResponse}`);
         try {
           // Use the utility function to parse and decode the specified attributes
-          const parsedObject = parseAttributes<T>(
-            modelResponse,
-            attributesToEncode
-          );
+          const parsedObject = parseAttributes(modelResponse);
+
           return parsedObject;
         } catch (error) {
           logger.error(
