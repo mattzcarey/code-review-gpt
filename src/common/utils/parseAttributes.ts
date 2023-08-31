@@ -5,7 +5,8 @@ const encodeDetails = (jsonString: string): string => {
 
   return jsonString.replace(
     regex,
-    (value) => `"details": "${encodeURIComponent(value)}"`
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    (match, value) => `"details": "${encodeURIComponent(value)}"`
   );
 };
 
