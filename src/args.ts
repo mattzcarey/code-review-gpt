@@ -70,7 +70,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .option("remote", {
       description: "The identifier of a remote Pull Request to review",
       type: "string",
-      coerce: (arg: string) => {
+      coerce: (arg: string | undefined) => {
         return arg || "";
       },
     })
