@@ -10,6 +10,7 @@ export default function Demo(): JSX.Element {
   const { status } = useSession();
   const [loading ] = useState(false);
   const [passedText, setSyncedText] = useState<string>('');
+  const [displayedText, setDisplayedText] = useState<string>('');
   const [isHidden, setIsHidden] = useState<boolean>(true);
 
   const handleText = (text: string) => {
@@ -18,6 +19,7 @@ export default function Demo(): JSX.Element {
 
   const onClick = () => {
     setIsHidden(false);
+    setDisplayedText(passedText);
   }
 
   if (status === "loading" || loading) {
@@ -28,7 +30,7 @@ export default function Demo(): JSX.Element {
     <div className="flex flex-col items-center">
       <CodeTextArea onTextChange={handleText} />
       <ReviewButton onClick={onClick} />
-      <ReviewedCode text={passedText} isHidden={isHidden} />
+      <ReviewedCode text={displayedText} isHidden={isHidden} />
     </div>
   );
 }
