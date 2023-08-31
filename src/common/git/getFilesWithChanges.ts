@@ -7,7 +7,7 @@ import { ReviewFile } from "../types";
 import { logger } from "../utils/logger";
 
 export const getFilesWithChanges = async (
-  isCi: string
+  isCi: string | undefined
 ): Promise<ReviewFile[]> => {
   try {
     const fileNames = await getChangedFilesNames(isCi);

@@ -3,7 +3,7 @@ import { exec } from "child_process";
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = (
-  isCi: string,
+  isCi: string | undefined,
   fileName: string
 ): string => {
   if (isCi === PlatformOptions.GITHUB) {
@@ -20,7 +20,7 @@ export const getChangesFileLinesCommand = (
 };
 
 export const getChangedFileLines = async (
-  isCi: string,
+  isCi: string | undefined,
   fileName: string
 ): Promise<string> => {
   const commandString = getChangesFileLinesCommand(isCi, fileName);
