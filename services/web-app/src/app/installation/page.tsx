@@ -1,5 +1,3 @@
-"use client";
-
 import { InstallationInstructions } from "@/lib/constants";
 import React from "react";
 import ReactMarkdown from "react-markdown";
