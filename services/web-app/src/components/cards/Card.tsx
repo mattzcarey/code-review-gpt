@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use client";
 import { classNames } from "@/lib/helpers/utils";
 import { motion } from "framer-motion";
