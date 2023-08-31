@@ -5,7 +5,7 @@ import IconButton from "../buttons/iconButton";
 import BasicButton from "../buttons/basicButton";
 import { HomeIcon, PersonIcon } from "@radix-ui/react-icons";
 import React, { Dispatch, HTMLAttributes, SetStateAction } from "react";
-import { cn } from "@/lib/helpers/utils";
+import { classNames } from "@/lib/helpers/utils";
 
 interface NavItemsProps extends HTMLAttributes<HTMLUListElement> {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -21,7 +21,7 @@ export const NavItems = ({
 
   return (
     <ul
-      className={cn(
+      className={classNames(
         "flex flex-row items-center gap-4 text-sm flex-1",
         className
       )}

@@ -27,7 +27,8 @@
     "next-env.d.ts",
     "**/*.ts",
     ".next/types/**/*.ts",
-    ".sst/types/**/*.ts"
-, "src/components/navbar/index.tsx"  ],
+    ".sst/types/**/*.ts",
+    "**/*.tsx"
+  ],
   "exclude": ["node_modules"]
 }

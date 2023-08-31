@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en">
       <head>
         <script
           type="module"
