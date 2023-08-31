@@ -5,13 +5,13 @@ import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 
 export const getChangedFilesNamesCommand = (
-  platform: string | undefined
+  isCi: string | undefined
 ): string => {
-  if (platform === PlatformOptions.GITHUB) {
+  if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
 
     return `git diff --name-only --diff-filter=AMRT ${baseSha} ${githubSha}`;
-  } else if (platform === PlatformOptions.GITLAB) {
+  } else if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
     return `git diff --name-only --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha}`;
@@ -20,10 +20,8 @@ export const getChangedFilesNamesCommand = (
   return "git diff --name-only --diff-filter=AMRT --cached";
 };
 
-export const getChangedFilesNames = async (
-  platform: string | undefined
-): Promise<string[]> => {
-  const commandString = getChangedFilesNamesCommand(platform);
+export const getChangedFilesNames = async (isCi: string | undefined): Promise<string[]> => {
+  const commandString = getChangedFilesNamesCommand(isCi);
 
   return new Promise((resolve, reject) => {
     exec(commandString, (error, stdout, stderr) => {
