@@ -7,9 +7,7 @@ export const Logo = (): JSX.Element => {
       <div className="rounded-full overflow-hidden w-12 h-12">
         <Image src="/icon.png" alt={"orion logo"} width={100} height={100} />
       </div>
-      <span className="text-2xl text-white font-extralight ml-4">
-        Code Review GPT
-      </span>
+      <span className="text-2xl font-extralight ml-4">Code Review GPT</span>
     </Link>
   );
 };
