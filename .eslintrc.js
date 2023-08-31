@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  ignorePatterns: ["**.js"],
+  ignorePatterns: ["**.js", "**.d.ts"],
   extends: [
     "eslint:recommended",
     "plugin:import/recommended",
