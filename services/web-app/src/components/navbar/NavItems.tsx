@@ -43,8 +43,8 @@ export const NavItems = ({
 
             <BasicButton
               text="Sign Out"
-              onClick={() => {
-                signOut({ callbackUrl: "/" });
+              onClick={async () => {
+                await signOut({ callbackUrl: "/" });
               }}
             />
           </>
@@ -57,8 +57,8 @@ export const NavItems = ({
             />
             <BasicButton
               text="Sign In"
-              onClick={() => {
-                signIn("github", { callbackUrl: "/profile" });
+              onClick={async () => {
+                await signIn("github", { callbackUrl: "/profile" });
               }}
             />
           </>
