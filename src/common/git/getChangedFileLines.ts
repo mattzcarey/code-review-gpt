@@ -3,21 +3,24 @@ import { exec } from "child_process";
 import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = (
-  isCi: string,
+  isCi: string | undefined,
   fileName: string
 ): string => {
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
+
     return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${fileName}`;
   } else if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
+
     return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
   }
+
   return `git diff -U0 --diff-filter=AMRT --cached ${fileName}`;
 };
 
 export const getChangedFileLines = async (
-  isCi: string,
+  isCi: string | undefined,
   fileName: string
 ): Promise<string> => {
   const commandString = getChangesFileLinesCommand(isCi, fileName);

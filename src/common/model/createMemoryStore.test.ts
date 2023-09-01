@@ -1,6 +1,7 @@
-import { MemoryVectorStore } from 'langchain/vectorstores/memory';
-import { CreateMemoryStore } from './createMemoryStore';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { MemoryVectorStore } from 'langchain/vectorstores/memory';
+
+import { CreateMemoryStore } from './createMemoryStore';
 import { initialFiles } from '../../testFiles/initialFilesExample'
 
 describe('CreateMemoryStore function', () => {

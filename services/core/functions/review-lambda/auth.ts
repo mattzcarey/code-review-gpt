@@ -1,5 +1,6 @@
-import { getVariableFromSSM } from "../helpers/getVariable";
 import { subtle } from "crypto";
+
+import { getVariableFromSSM } from "../helpers/getVariable";
 
 export const authenticate = async (
   header: string,
@@ -30,13 +31,13 @@ export const authenticate = async (
 };
 
 function hexToBytes(hex: string) {
-  let len = hex.length / 2;
-  let bytes = new Uint8Array(len);
+  const len = hex.length / 2;
+  const bytes = new Uint8Array(len);
 
   let index = 0;
   for (let i = 0; i < hex.length; i += 2) {
-    let c = hex.slice(i, i + 2);
-    let b = parseInt(c, 16);
+    const c = hex.slice(i, i + 2);
+    const b = parseInt(c, 16);
     bytes[index] = b;
     index += 1;
   }

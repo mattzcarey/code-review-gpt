@@ -1,16 +1,17 @@
+import PriorityQueue from "./PriorityQueue";
+import { formatFeedbacks } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
 import { IFeedback } from "../../common/types";
 import { logger } from "../../common/utils/logger";
 import { maxFeedbackCount } from "../constants";
 import { completionPrompt } from "../prompt/prompts";
-import PriorityQueue from "./PriorityQueue";
-import { formatFeedbacks } from "./generateMarkdownReport";
 
 const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
 ): Promise<IFeedback[]> => {
   try {
     const feedbacks = await feedbackPromise;
+
     return feedbacks;
   } catch (error) {
     logger.error(`Error in processing prompt`, error);
@@ -34,10 +35,10 @@ const createSummary = async (
   return summary;
 };
 
-const pickWorstFeedbacks = async (
+const pickWorstFeedbacks = (
   feedbacks: IFeedback[],
   limit: number
-): Promise<IFeedback[]> => {
+): IFeedback[] => {
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
   //remove feedbacks with risk score of 1 from consideration.
@@ -65,6 +66,7 @@ const extractFulfilledFeedbacks = (
     if (feedbackResult.status === "fulfilled") {
       accumulatedFeedbacks.push(...feedbackResult.value);
     }
+
     return accumulatedFeedbacks;
   }, [] as IFeedback[]);
 };
@@ -73,10 +75,9 @@ const processFeedbacks = async (
   model: AIModel,
   prompts: string[]
 ): Promise<IFeedback[]> => {
-  const attributesToEncode = ["details"]; //contains markdown, so we need to encode it during the parsing of JSON.
 
   const feedbackPromises = prompts.map((prompt) =>
-    model.callModelJSON<IFeedback[]>(prompt, attributesToEncode)
+    model.callModelJSON(prompt)
   );
 
   const feedbackResults = await Promise.allSettled(
@@ -85,7 +86,7 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  const worstFeedbacks = await pickWorstFeedbacks(feedbacks, maxFeedbackCount);
+  const worstFeedbacks = pickWorstFeedbacks(feedbacks, maxFeedbackCount);
 
   logger.info(formatFeedbacks(worstFeedbacks));
 

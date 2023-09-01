@@ -1,33 +1,27 @@
-import { PromptFile, ReviewFile } from "../../../common/types";
-import { getLanguageName } from "../getLanguageOfFile";
-import { instructionPrompt } from "../prompts";
 import { changedLinesIntoBatches } from "./batchFiles/changedLines";
 import { costOptimizedChangedLinesIntoBatches } from "./batchFiles/costOptimizedChangedLines";
 import { fullFilesIntoBatches } from "./batchFiles/fullFiles";
+import { PromptFile, ReviewFile } from "../../../common/types";
+import { getLanguageName } from "../getLanguageOfFile";
+import { instructionPrompt } from "../prompts";
 
-export const constructPromptsArray = async (
+export const constructPromptsArray = (
   files: ReviewFile[],
   maxPromptLength: number,
   reviewType: string
-): Promise<string[]> => {
+): string[] => {
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   let promptPayloads: PromptFile[][];
 
   switch (reviewType) {
     case "full":
-      promptPayloads = await fullFilesIntoBatches(
-        files,
-        maxPromptPayloadLength
-      );
+      promptPayloads = fullFilesIntoBatches(files, maxPromptPayloadLength);
       break;
     case "changed":
-      promptPayloads = await changedLinesIntoBatches(
-        files,
-        maxPromptPayloadLength
-      );
+      promptPayloads = changedLinesIntoBatches(files, maxPromptPayloadLength);
       break;
     case "costOptimized":
-      promptPayloads = await costOptimizedChangedLinesIntoBatches(
+      promptPayloads = costOptimizedChangedLinesIntoBatches(
         files,
         maxPromptPayloadLength
       );

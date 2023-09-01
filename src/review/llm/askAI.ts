@@ -1,13 +1,14 @@
+import { createSummary, processFeedbacks } from "./feedbackProcessor";
+import { generateMarkdownReport } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
 import { AskAIResponse } from "../../common/types";
 import { logger } from "../../common/utils/logger";
-import { createSummary, processFeedbacks } from "./feedbackProcessor";
-import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
   prompts: string[],
   modelName: string,
-  openAIApiKey: string
+  openAIApiKey: string,
+  organization: string | undefined,
 ): Promise<AskAIResponse> => {
   logger.info("Asking the experts...");
 
@@ -15,15 +16,18 @@ export const askAI = async (
     modelName: modelName,
     temperature: 0.0,
     apiKey: openAIApiKey,
+    organization,
   });
 
   const feedbacks = await processFeedbacks(model, prompts);
 
   logger.debug(
-    `Feedback received:\n ${feedbacks.map(
-      (feedback) =>
-        `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
-    )}`
+    `Feedback received:\n ${
+      feedbacks.map(
+        (feedback) =>
+          `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
+      ) as unknown as string
+    }`
   );
   const summary = await createSummary(model, feedbacks);
 

@@ -1,4 +1,5 @@
 import { Gitlab } from "@gitbeaker/rest";
+
 import { getGitLabEnvVariables } from "../../../config";
 import { logger } from "../../utils/logger";
 /**
@@ -8,7 +9,10 @@ import { logger } from "../../utils/logger";
  * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
  * @returns
  */
-export const commentOnPR = async (comment: string, signOff: string) => {
+export const commentOnPR = async (
+  comment: string,
+  signOff: string
+): Promise<void> => {
   try {
     const { gitlabToken, projectId, mergeRequestIIdString } =
       getGitLabEnvVariables();
@@ -19,7 +23,7 @@ export const commentOnPR = async (comment: string, signOff: string) => {
 
     const notes = await api.MergeRequestNotes.all(projectId, mergeRequestIId);
 
-    const botComment = notes.find((note) => note?.body?.includes(signOff));
+    const botComment = notes.find((note) => note.body.includes(signOff));
 
     const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
 
@@ -38,7 +42,7 @@ export const commentOnPR = async (comment: string, signOff: string) => {
       );
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${error}`);
+    logger.error(`Failed to comment on PR: ${error as string}`);
     throw error;
   }
 };

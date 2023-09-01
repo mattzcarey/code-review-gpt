@@ -2,6 +2,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBStreamEvent } from "aws-lambda";
 import fetch from "node-fetch";
+
 import { getVariableFromSSM } from "./getVariableFromSSM";
 
 const client = new DynamoDBClient({});
@@ -11,6 +12,7 @@ const postEmail = async (email: string, name: string) => {
   const url = await getVariableFromSSM(
     process.env.CLOUDFLARE_WORKER_URL_NAME ?? ""
   );
+
   return await fetch(url.concat("api/email"), {
     method: "POST",
     headers: {
@@ -28,8 +30,9 @@ const postEmail = async (email: string, name: string) => {
   });
 };
 
-export const main = async (event: DynamoDBStreamEvent) => {
-  if (event.Records == null) {
+// eslint-disable-next-line complexity
+export const main = async (event: DynamoDBStreamEvent): Promise<void> => {
+  if (event.Records.length === 0) {
     return Promise.resolve({
       statusCode: 400,
       body: "The request does not contain a any dynamodb records as expected.",
@@ -38,7 +41,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
 
   try {
     if (event.Records[0].dynamodb?.NewImage) {
-      const record = event.Records[0].dynamodb?.NewImage;
+      const record = event.Records[0].dynamodb.NewImage;
       const userId = record.id["S"];
       const name = record.name["S"];
       const email = record.email["S"];
@@ -65,7 +68,7 @@ export const main = async (event: DynamoDBStreamEvent) => {
       }
 
       const command = new PutCommand({
-        TableName: `${process.env.SST_STAGE}-crgpt-data`,
+        TableName: `${process.env.SST_STAGE as unknown as string}-crgpt-data`,
         Item: {
           PK: `USERID#${userId}`,
           SK: "ROOT",

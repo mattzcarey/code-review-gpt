@@ -1,6 +1,7 @@
+import chalk from "chalk";
+
 import { testThreshold } from "../constants";
 import { TestCase } from "../types";
-import chalk from "chalk";
 
 /**
  * Possible test results.
@@ -39,7 +40,7 @@ const formatTestResult = (result: testResult, message: string): string => {
     case testResult.FAIL:
       return chalk.red(`❌ [FAIL] - ${message}`);
     default:
-      throw new Error(`Unknown test result: ${result}`);
+      throw new Error(`Unknown test result: ${result as unknown as string}`);
   }
 };
 
@@ -89,7 +90,7 @@ const displayDetailedReport = (
   review: string,
   similarReview: string
 ) => `
- > Test case snippet: ${testCase.snippet}
+ > Test case snippet: ${testCase.snippet as unknown as string}
 
 ===============================================================================
 
@@ -121,6 +122,7 @@ export const generateTestResultsSummary = (testResults: {
 
   const counts = Object.values(testResults).reduce((counts, result) => {
     counts[result]++;
+
     return counts;
   }, Object.fromEntries(Object.values(testResult).map((result) => [result, 0])));
 

@@ -2,6 +2,7 @@ import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
+
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
 import { getCertificateArn, getDomainName } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";

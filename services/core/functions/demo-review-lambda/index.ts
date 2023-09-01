@@ -1,20 +1,18 @@
-import { v4 as uuidv4 } from "uuid";
-import { APIGatewayProxyEvent } from "aws-lambda";
 import { S3Client } from "@aws-sdk/client-s3";
+import { APIGatewayProxyEvent } from "aws-lambda";
+import { v4 as uuidv4 } from "uuid";
 
-import { getEnvVariable, getVariableFromSSM } from "../helpers/getVariable";
-import { askAI } from "../../../../src/review/llm/askAI";
-import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
-import { demoPrompt } from "../../../../src/review/prompt/prompts";
-import { logger } from "../../../../src/common/utils/logger";
-import { ReviewDemoCounterEntity } from "../../entities";
 import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
-
-interface ReviewLambdaInput {
-  code: string;
-}
+import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
+import { logger } from "../../../../src/common/utils/logger";
+import { askAI } from "../../../../src/review/llm/askAI";
+import { demoPrompt } from "../../../../src/review/prompt/prompts";
+import { ReviewDemoCounterEntity } from "../../entities";
+import { getEnvVariable, getVariableFromSSM } from "../helpers/getVariable";
 
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
+
+const DEFAULT_ORGANISATION = undefined;
 
 logger.settings.minLevel = 4;
 
@@ -22,10 +20,24 @@ const BUCKET_NAME = getEnvVariable("BUCKET_NAME");
 
 const s3Client = new S3Client({});
 
-export const main = async (event: APIGatewayProxyEvent) => {
+type DemoReviewLambdaResponse = {
+  statusCode: number;
+  body: string | undefined;
+};
+
+interface ReviewLambdaInput {
+  code: string;
+}
+
+const isReviewLambdaInput = (input: unknown): input is ReviewLambdaInput =>
+  typeof input === "object" && input !== null && "code" in input;
+
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<DemoReviewLambdaResponse> => {
   const demoReviewId = uuidv4();
 
-  if (event.body == null) {
+  if (event.body === null) {
     return {
       statusCode: 400,
       body: "The request does not contain a body as expected.",
@@ -41,10 +53,9 @@ export const main = async (event: APIGatewayProxyEvent) => {
       process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
     );
 
-    const inputBody = JSON.parse(event.body) as ReviewLambdaInput;
-    const code = inputBody.code;
+    const inputBody: unknown = JSON.parse(event.body);
 
-    if (code === undefined) {
+    if (!isReviewLambdaInput(inputBody)) {
       return {
         statusCode: 400,
         body: "The request body does not contain the expected data.",
@@ -56,7 +67,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     });
 
     const maxPromptLength = getMaxPromptLength(DEFAULT_DEMO_MODEL);
-    const prompt = demoPrompt + code;
+    const prompt = demoPrompt + inputBody.code;
 
     if (prompt.length > maxPromptLength) {
       return {
@@ -68,7 +79,8 @@ export const main = async (event: APIGatewayProxyEvent) => {
     const { markdownReport } = await askAI(
       [prompt],
       DEFAULT_DEMO_MODEL,
-      openAIApiKey
+      openAIApiKey,
+      DEFAULT_ORGANISATION
     );
 
     await saveInputAndResponseToS3(

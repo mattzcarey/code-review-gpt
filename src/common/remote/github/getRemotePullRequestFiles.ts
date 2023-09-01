@@ -1,6 +1,6 @@
-import { ReviewFile } from "../../types";
-import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier";
 import { GitHubRESTClient } from "./GitHubRESTClient";
+import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier";
+import { ReviewFile } from "../../types";
 
 export const getRemotePullRequestFiles = async (
   remotePullRequest: string
@@ -13,6 +13,8 @@ export const getRemotePullRequestFiles = async (
 
     return files;
   } catch (error) {
-    throw new Error(`Failed to get remote Pull Request files: ${error}`);
+    throw new Error(
+      `Failed to get remote Pull Request files: ${error  as string}`
+    );
   }
 };

@@ -1,10 +1,11 @@
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
+
+import { generateHash } from "./hash";
 import AIModel from "../../common/model/AIModel";
+import { logger } from "../../common/utils/logger";
 import { generateCodeSnippetsPrompt } from "../constants";
 import { TestCase } from "../types";
-import { generateHash } from "./hash";
-import { logger } from "../../common/utils/logger";
 
 /**
  * Generate a code snippet for a test case.
@@ -21,7 +22,8 @@ const generateCodeSnippet = async (
     JSON.stringify(testCase)
   );
 
-  const modelResponse = (await model.callModel(prompt)) as string;
+  const modelResponse = (await model.callModel(prompt));
+
   return modelResponse.replace("```typescript", "").replace("```", "");
 };
 
@@ -47,6 +49,7 @@ const loadOrGenerateCodeSnippet = async (
 
   try {
     const fileContent = readFileSync(fileName, "utf8");
+
     return {
       ...testCase,
       snippet: { fileName, fileContent, changedLines: fileContent },

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 export const BASE_URL = "https://9e0fli8qi6.execute-api.eu-west-2.amazonaws.com/prod";
+=======
+export const BASE_URL = "https://n1f8qnxszk.execute-api.eu-west-2.amazonaws.com/prod";
+>>>>>>> main
 export const InstallationInstructions = `
 ## We give engineers their weekends back
 

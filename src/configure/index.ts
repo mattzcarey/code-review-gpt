@@ -1,15 +1,16 @@
+import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
-import { logger } from "../common/utils/logger";
-import { PlatformOptions, ReviewArgs } from "../common/types";
 
-export const configure = async (yargs: ReviewArgs) => {
+import { PlatformOptions, ReviewArgs } from "../common/types";
+import { logger } from "../common/utils/logger";
+
+export const configure = async (yargs: ReviewArgs): Promise<void> => {
   if (yargs.setupTarget === PlatformOptions.GITHUB) {
-    configureGitHub();
+    await configureGitHub();
   }
   if (yargs.setupTarget === PlatformOptions.GITLAB) {
-    configureGitLab();
+    await configureGitLab();
   }
 };
 
@@ -28,6 +29,7 @@ const configureGitHub = async () => {
   logger.info(`Created GitHub Actions workflow at: ${workflowFile}`);
 
   const inquirer = await import("inquirer");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { apiKey } = await inquirer.default.prompt([
     {
       type: "input",
@@ -41,12 +43,15 @@ const configureGitHub = async () => {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitHub repository."
     );
+
     return;
   }
 
   try {
     execSync(`gh auth status || gh auth login`, { stdio: "inherit" });
-    execSync(`gh secret set OPENAI_API_KEY --body=${apiKey}`);
+    execSync(
+      `gh secret set OPENAI_API_KEY --body=${apiKey as unknown as string}`
+    );
     logger.info(
       "Successfully added the OPENAI_API_KEY secret to your GitHub repository."
     );
@@ -72,6 +77,7 @@ const configureGitLab = async () => {
   logger.info(`Created GitLab CI at: ${pipelineFile}`);
 
   const inquirer = await import("inquirer");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { apiKey } = await inquirer.default.prompt([
     {
       type: "input",
@@ -85,12 +91,13 @@ const configureGitLab = async () => {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitLab CI/CD environment variables for your repository."
     );
+
     return;
   }
 
   try {
     execSync(`glab auth login`, { stdio: "inherit" });
-    execSync(`glab variable set OPENAI_API_KEY ${apiKey}`);
+    execSync(`glab variable set OPENAI_API_KEY ${apiKey as unknown as string}`);
     logger.info(
       "Successfully added the OPENAI_API_KEY secret to your GitLab repository.\n Please make sure you have set up your Gitlab access token before using this tool. Refer to the README (Gitlab CI section) for information on how to do this."
     );

@@ -1,16 +1,29 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { UserEntity } from "../../entities";
 import { encryptKey } from "./encryptKey";
-import { formatResponse } from "../../helpers/format-response";
+import { UserEntity } from "../../entities";
+import {
+  formatResponse,
+  FormattedHandlerResponse,
+} from "../../helpers/format-response";
 
-interface UpdateUserLambdaInput {
+type UpdateUserLambdaInput = {
   apiKey: string;
   userId: string;
 }
 
-export const main = async (event: APIGatewayProxyEvent) => {
-  if (event.body == null) {
+const isValidEventBody = (input: unknown): input is UpdateUserLambdaInput =>
+  typeof input === "object" &&
+  input !== null &&
+  "apiKey" in input &&
+  typeof input.apiKey === "string" &&
+  "userId" in input &&
+  typeof input.userId === "string";
+
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<FormattedHandlerResponse> => {
+  if (event.body === null) {
     return formatResponse(
       "The request does not contain a body as expected.",
       400
@@ -18,22 +31,20 @@ export const main = async (event: APIGatewayProxyEvent) => {
   }
 
   try {
-    const inputBody = JSON.parse(event.body) as UpdateUserLambdaInput;
-    const apiKey = inputBody.apiKey;
-    const userId = inputBody.userId;
+    const inputBody: unknown = JSON.parse(event.body);
 
-    if (apiKey === undefined || userId === undefined) {
+    if (!isValidEventBody(inputBody)) {
       return formatResponse(
         "The request body does not contain the expected data.",
         400
       );
     }
 
-    const encryptedApiKey = await encryptKey(apiKey);
+    const encryptedApiKey = await encryptKey(inputBody.apiKey);
 
     await UserEntity.update(
       {
-        userId: userId,
+        userId: inputBody.userId,
         apiKey: encryptedApiKey,
       },
       { conditions: { attr: "userId", exists: true } }
@@ -42,6 +53,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     return formatResponse("User updated successfully.");
   } catch (err) {
     console.error(err);
+
     return formatResponse("Error when updating user.", 500);
   }
 };

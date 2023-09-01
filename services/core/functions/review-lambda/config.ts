@@ -3,12 +3,13 @@ import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
-import { buildResourceName } from "../../helpers";
+
 import {
+  GITHUB_SECRET_PARAM_NAME,
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
-  GITHUB_SECRET_PARAM_NAME,
 } from "../../constants";
+import { buildResourceName } from "../../helpers";
 import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
 import { commonLambdaProps } from "../helpers/commonLambdaProps";
 import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
