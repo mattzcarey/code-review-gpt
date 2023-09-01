@@ -1,5 +1,11 @@
 import { Stack, StackProps } from "aws-cdk-lib";
-import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import {
+  AuthorizationType,
+  IdentitySource,
+  LambdaIntegration,
+  RequestAuthorizer,
+  TokenAuthorizer,
+} from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Key } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
@@ -9,6 +15,13 @@ import { UpdateUserLambda } from "../../functions/update-user/config";
 import { getCertificateArn, getDomainName, getStage } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
 import { UserTable } from "../constructs/user-table";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
+
+import { ApiAuthoriserLambda } from "../../functions/authoriser/config";
+import {
+  HttpLambdaAuthorizer,
+  HttpLambdaResponseType,
+} from "@aws-cdk/aws-apigatewayv2-authorizers-alpha";
 
 interface CoreStackProps extends StackProps {
   stage: string;
@@ -44,15 +57,33 @@ export class CoreStack extends Stack {
     const getUserLambda = new GetUserLambda(this, "get-user-lambda", {
       table: this.userTable,
     });
+    const authoriserLambda = new ApiAuthoriserLambda(
+      this,
+      "apigateway-authoriser-lambda"
+    );
+
+    //API Authoriser
+    const authorizer = new TokenAuthorizer(this, "api-authoriser", {
+      handler: authoriserLambda,
+    });
 
     //Routes
     const postReviewRoute = api.root.addResource("postReview");
-    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
+    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda), { //todo check if we need auth here? Are we gonna be calling this for demo?
+      authorizationType: AuthorizationType.CUSTOM,
+      authorizer: authorizer,
+    });
 
     const updateUserRoute = api.root.addResource("updateUser");
-    updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
+    updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda), {
+      authorizationType: AuthorizationType.CUSTOM,
+      authorizer: authorizer,
+    });
 
     const getUserRoute = api.root.addResource("getUser");
-    getUserRoute.addMethod("GET", new LambdaIntegration(getUserLambda));
+    getUserRoute.addMethod("GET", new LambdaIntegration(getUserLambda), {
+      authorizationType: AuthorizationType.CUSTOM,
+      authorizer: authorizer,
+    });
   }
 }
