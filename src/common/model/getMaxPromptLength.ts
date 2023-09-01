@@ -8,7 +8,7 @@ export const getMaxPromptLength = (modelName: string): number => {
   if (!maxPromptLength) {
     throw new Error(
       `Model ${modelName} not found. Please choose one of ${
-        modelInfo.map((info) => info.model) as unknown as string
+        modelInfo.map((info) => info.model).toString()
       } or make a PR to add a new model.`
     );
   }

@@ -1,8 +1,8 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { Cross2Icon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
 import * as Dialog from "@radix-ui/react-dialog";
-import React from "react";
+import { Cross2Icon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
+
 import { NavItems } from "./NavItems";
 
 export const MobileMenu = (): JSX.Element => {

@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import React from "react";
-import { useHeader } from "@/lib/hooks/useHeader";
+
+import { useHeader } from "../../../lib/hooks/useHeader";
 
 export const Header = ({
   children,
@@ -24,6 +25,3 @@ export const Header = ({
     </motion.header>
   );
 };
-
-
-

@@ -42,7 +42,7 @@ export const commentOnPR = async (
       );
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${error as string}`);
+    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`);
     throw error;
   }
 };

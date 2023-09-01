@@ -1,7 +1,9 @@
 "use client";
-import { classNames } from "@/lib/helpers/utils";
 import { motion } from "framer-motion";
 import { forwardRef, HTMLAttributes, LegacyRef } from "react";
+
+import { classNames } from "../../lib/helpers/utils";
+
 
 type CardProps = HTMLAttributes<HTMLDivElement>;
 

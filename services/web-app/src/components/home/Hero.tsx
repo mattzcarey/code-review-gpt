@@ -2,9 +2,10 @@ import { Button, Link } from "@radix-ui/themes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import React, { useRef } from "react";
 import { MdNorthEast } from "react-icons/md";
+
 import BasicButton from "../buttons/basicButton";
 
-export function Hero() {
+export function Hero(): JSX.Element {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,

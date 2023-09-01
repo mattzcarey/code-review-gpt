@@ -25,7 +25,7 @@ type DemoReviewLambdaResponse = {
   body: string | undefined;
 };
 
-interface ReviewLambdaInput {
+type ReviewLambdaInput = {
   code: string;
 }
 

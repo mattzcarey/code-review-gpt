@@ -7,7 +7,7 @@ import { review } from "../../../../src/review/index";
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 import { getVariableFromSSM } from "../helpers/getVariable";
 
-interface ReviewLambdasBody {
+type ReviewLambdasBody = {
   args: ReviewArgs;
   files: ReviewFile[];
 }

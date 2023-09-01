@@ -12,7 +12,7 @@ export type CreateFileCommentData = {
   commit_id: string;
 };
 
-export interface ReviewFile {
+export type ReviewFile = {
   fileName: string;
   fileContent: string;
   changedLines: string;
@@ -23,7 +23,7 @@ export type PromptFile = {
   promptContent: string;
 };
 
-export interface IFeedback {
+export type IFeedback = {
   fileName: string;
   riskScore: number;
   details: string;
@@ -34,7 +34,7 @@ export enum PlatformOptions {
   GITLAB = "gitlab",
 }
 
-export interface ReviewArgs {
+export type ReviewArgs = {
   [x: string]: unknown;
   ci: string | undefined;
   setupTarget: string;
