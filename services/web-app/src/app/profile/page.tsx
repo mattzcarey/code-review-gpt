@@ -10,11 +10,24 @@ import { RepoTable } from "../../components/tables/repoTable";
 import useAxios from "../../lib/hooks/useAxios";
 import { User } from "../../lib/types";
 
+const containsUserDataFields = (input: object): boolean =>
+  "email" in input &&
+  typeof input.email === "string" &&
+  "userId" in input &&
+  typeof input.userId === "string" &&
+  "apiKey" in input &&
+  typeof input.apiKey === "string" &&
+  "name" in input &&
+  typeof input.name === "string";
+
+const isValidUserData = (input: unknown): input is User =>
+  typeof input === "object" && input !== null && containsUserDataFields(input);
+
 export default async function Profile(): Promise<JSX.Element> {
   let user: User;
   const { data: session, status } = useSession();
   const { axiosInstance } = await useAxios();
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,6 +44,10 @@ export default async function Profile(): Promise<JSX.Element> {
         const response = await axiosInstance.get(
           `/getUser?userId=${session.user.id}`
         );
+        //We need response.data to be of type string so that it can be parsed into user data
+        if (typeof response.data !== "string") {
+          throw new Error("Session data not fetched correctly.");
+        }
         setData(response.data);
       } catch (err) {
         console.error("Failed to getUser, due to the following error ", err);
@@ -52,7 +69,12 @@ export default async function Profile(): Promise<JSX.Element> {
   if (!data) {
     return <ReturnToHome message="Could not retrieve User data." />;
   } else {
-    user = JSON.parse(data);
+    const parsedData: unknown = JSON.parse(data);
+    if (!isValidUserData(parsedData)) {
+      return <ReturnToHome message="Could not retrieve valid User data." />;
+    } else {
+      user = parsedData;
+    }
   }
 
   const handleUpdateApiKey = async (newApiKey: string) => {

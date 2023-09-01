@@ -1,8 +1,8 @@
 export interface User {
-    email: "" ,
-    userId: "",
-    apiKey: "",
-    name: "",
-    pictureUrl?: "",
+    email: string ,
+    userId: string,
+    apiKey: string,
+    name: string,
+    pictureUrl?: string,
     repos?: [],
 }
