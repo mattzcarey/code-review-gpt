@@ -7,33 +7,42 @@ export type GetArgProps = {
   defaultValue?: string;
 };
 
+const isRecord = (input: unknown): input is Record<string, unknown> =>
+  typeof input === "object" && input !== null;
+
+const isNonEmptyString = (arg: unknown): arg is string =>
+  typeof arg === "string" && arg !== "";
+
+const getCliCdkContext = (cliArg: string): string | undefined => {
+  const cdkContextEnv = process.env.CDK_CONTEXT_JSON ?? "";
+  const parsedCdKContext: unknown = JSON.parse(cdkContextEnv);
+
+  if (isRecord(parsedCdKContext) && cliArg in parsedCdKContext) {
+    const cdkCli = parsedCdKContext[cliArg];
+    if (typeof cdkCli === "string") {
+      return cdkCli;
+    }
+  }
+
+  return undefined;
+};
+
+const findCliArg = (key: string): string | undefined => {
+  const index = process.argv.findIndex((arg) => arg === `--${key}`);
+
+  return index !== -1 && index + 1 < process.argv.length
+    ? process.argv[index + 1]
+    : undefined;
+};
+
 export const getArg = ({
   cliArg,
   processEnvName,
   defaultValue,
 }: GetArgProps): string => {
-  const isNonEmptyString = (arg: unknown): arg is string =>
-    typeof arg === "string" && arg !== "";
-
-  const getCdkContext = (): Record<string, unknown> | undefined => {
-    const cdkContextEnv = process.env.CDK_CONTEXT_JSON;
-
-    return cdkContextEnv != null
-      ? (JSON.parse(cdkContextEnv) as Record<string, unknown>)
-      : undefined;
-  };
-
-  const findCliArg = (key: string): string | undefined => {
-    const index = process.argv.findIndex((arg) => arg === `--${key}`);
-
-    return index !== -1 && index + 1 < process.argv.length
-      ? process.argv[index + 1]
-      : undefined;
-  };
-
   const argSources = [
     findCliArg(cliArg),
-    getCdkContext()?.[cliArg] as string | undefined,
+    getCliCdkContext(cliArg),
     process.env[processEnvName],
     defaultValue,
   ];
