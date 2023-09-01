@@ -10,28 +10,35 @@ import { RepoTable } from "../../components/tables/repoTable";
 import useAxios from "../../lib/hooks/useAxios";
 import { User } from "../../lib/types";
 
-export default function Profile(): JSX.Element {
+export default async function Profile(): Promise<JSX.Element> {
   let user: User;
   const { data: session, status } = useSession();
-  const { axiosInstance } = useAxios();
-  const [data, setData] = useState(null);
+  const { axiosInstance } = await useAxios();
+  const [data, setData] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        if (
+          session === null ||
+          session.user === undefined ||
+          session.user.id === undefined
+        ) {
+          throw new Error("Session data not fetched correctly.");
+        }
         const response = await axiosInstance.get(
-          `/getUser?userId=${session?.user?.id}`
+          `/getUser?userId=${session.user.id}`
         );
         setData(response.data);
-      } catch (err: any) {
-        console.log("Failed to getUser, due to the following error ", err);
+      } catch (err) {
+        console.error("Failed to getUser, due to the following error ", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    void fetchData();
   }, [session?.user]);
 
   if (status === "loading" || loading) {
