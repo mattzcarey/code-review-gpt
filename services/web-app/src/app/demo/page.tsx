@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Loading from "@/components/loading/loading";
 import CodeTextArea from "@/components/textFields/codeBox";
 import ReviewedCode from "@/components/textFields/reviewedCode";
-import ReviewButton from "@/components/buttons/reviewBtn";
+import BasicButton from "@/components/buttons/basicButton";
 
 export default function Demo(): JSX.Element {
   const { status } = useSession();
@@ -29,7 +29,7 @@ export default function Demo(): JSX.Element {
   return (
     <div className="flex flex-col items-center">
       <CodeTextArea onTextChange={handleText} />
-      <ReviewButton onClick={onClick} />
+      <BasicButton text="Review" onClick={onClick} styling="m-2" />
       <ReviewedCode text={displayedText} isHidden={isHidden} />
     </div>
   );
