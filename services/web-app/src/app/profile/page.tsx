@@ -3,14 +3,12 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-import UpdateAPIKey from "@/components/dialog/updateApiKey";
-import Loading from "@/components/loading/loading";
-import { RepoTable } from "@/components/tables/repoTable";
-
 import { ReturnToHome } from "../../components/cards/returnToHome";
+import UpdateAPIKey from "../../components/dialog/updateApiKey";
+import Loading from "../../components/loading/loading";
+import { RepoTable } from "../../components/tables/repoTable";
 import useAxios from "../../lib/hooks/useAxios";
 import { User } from "../../lib/types";
-
 
 export default function Profile(): JSX.Element {
   let user: User;
@@ -23,7 +21,9 @@ export default function Profile(): JSX.Element {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(`/getUser?userId=${session?.user?.id}`);
+        const response = await axiosInstance.get(
+          `/getUser?userId=${session?.user?.id}`
+        );
         setData(response.data);
       } catch (err: any) {
         console.log("Failed to getUser, due to the following error ", err);

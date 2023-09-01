@@ -5,7 +5,7 @@ import { MdNorthEast } from "react-icons/md";
 
 import BasicButton from "../buttons/basicButton";
 
-export function Hero() {
+export function Hero(): JSX.Element {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,

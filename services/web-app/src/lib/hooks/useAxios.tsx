@@ -1,9 +1,8 @@
-import axios, { AxiosInstance } from "axios";
-import { Session } from 'next-auth';
+import axios, { type AxiosInstance } from "axios";
+import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 
-import { BASE_URL } from "@/lib/constants";
-
+import { BASE_URL } from "../constants";
 
 const axiosInstance = axios.create({
   baseURL: `${BASE_URL}`,
@@ -12,13 +11,11 @@ const axiosInstance = axios.create({
 const useAxios = (): { axiosInstance: AxiosInstance } => {
   const session = getSession();
   axiosInstance.interceptors.request.clear();
-  axiosInstance.interceptors.request.use(
-    (config) => {
-      config.headers.Authorization = (session as Session).token;
+  axiosInstance.interceptors.request.use((config) => {
+    config.headers.Authorization = (session as Session).token;
 
-      return config;
-    }
-  );
+    return config;
+  });
 
   return { axiosInstance };
 };
