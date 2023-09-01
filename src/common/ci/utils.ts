@@ -86,9 +86,9 @@ export const commentOnFile = async (
     }
   } catch (error) {
     logger.error(
-      `Failed to comment on PR for feedback: ${data.feedback.details}. Error: ${
-        error as string
-      }`
+      `Failed to comment on PR for feedback: ${
+        data.feedback.details
+      }. Error: ${JSON.stringify(error)}`
     );
   }
 };

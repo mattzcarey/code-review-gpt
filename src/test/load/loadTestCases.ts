@@ -4,6 +4,14 @@ import path from "path";
 import { logger } from "../../common/utils/logger";
 import { TestCase } from "../types";
 
+const isTestCase = (input: unknown): input is TestCase =>
+  typeof input === "object" &&
+  input !== null &&
+  "name" in input &&
+  typeof input.name === "string" &&
+  "description" in input &&
+  typeof input.description === "string";
+
 /**
  * Load a single test case defined in a JSON file.
  * @param testCasePath The path to the JSON test case file.
@@ -13,7 +21,13 @@ const loadTestCase = async (testCasePath: string): Promise<TestCase> => {
   try {
     const fileData = await readFile(testCasePath, "utf8");
 
-    return JSON.parse(fileData) as TestCase;
+    const parsedFileData: unknown = JSON.parse(fileData);
+
+    if (!isTestCase(parsedFileData)) {
+      throw new Error('File data is of unexpected format.');
+    }
+
+    return parsedFileData;
   } catch (error) {
     logger.error(`Error loading test case: ${testCasePath}`);
     throw error;
