@@ -1,6 +1,6 @@
 import { ReviewFile } from "../common/types";
 
-export interface TestCase {
+export type TestCase = {
   name: string;
   description: string;
   hash?: string;

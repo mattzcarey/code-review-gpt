@@ -20,6 +20,14 @@ module.exports = {
     "max-depth": ["error", 3],
     "max-params": ["error", 6],
     eqeqeq: ["error", "smart"],
+    "@typescript-eslint/no-misused-promises": [
+      2,
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
     "import/no-extraneous-dependencies": [
       "error",
       {

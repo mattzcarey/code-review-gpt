@@ -40,7 +40,7 @@ const formatTestResult = (result: testResult, message: string): string => {
     case testResult.FAIL:
       return chalk.red(`❌ [FAIL] - ${message}`);
     default:
-      throw new Error(`Unknown test result: ${result as unknown as string}`);
+      throw new Error(`Unknown test result: ${result}`);
   }
 };
 
@@ -90,7 +90,7 @@ const displayDetailedReport = (
   review: string,
   similarReview: string
 ) => `
- > Test case snippet: ${testCase.snippet as unknown as string}
+ > Test case snippet: ${JSON.stringify(testCase.snippet)}
 
 ===============================================================================
 

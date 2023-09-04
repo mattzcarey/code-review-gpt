@@ -7,7 +7,7 @@ import { buildResourceName } from "../../helpers";
 import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
 import { commonLambdaProps } from "../helpers/commonLambdaProps";
 
-interface GetUserLambdaProps {
+type GetUserLambdaProps = {
   table: Table;
 }
 

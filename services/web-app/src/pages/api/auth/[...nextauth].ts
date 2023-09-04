@@ -54,8 +54,8 @@ const authOptions: NextAuthOptions = {
     // eslint-disable-next-line @typescript-eslint/require-await
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub;
-        session.token = token;
+        session.user.userId = token.sub;
+        session.token = token.token;
       }
 
       return session;

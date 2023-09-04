@@ -65,7 +65,7 @@ export class GitHubRESTClient {
     return {
       fileName: rawFile.filename,
       fileContent: content,
-      changedLines: rawFile.patch as string,
+      changedLines: rawFile.patch ?? '',
     };
   }
 

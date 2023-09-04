@@ -15,7 +15,7 @@ import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
 import { commonLambdaProps } from "../helpers/commonLambdaProps";
 import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
 
-export interface DemoReviewLambdaProps {
+export type DemoReviewLambdaProps = {
   table: Table;
   bucket: Bucket;
 }

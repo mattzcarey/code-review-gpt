@@ -1,8 +1,9 @@
 "use client";
-import Logo from "./Logo";
-import { NavItems } from "./NavItems";
-import { MobileMenu } from "./MobileMenu";
 import React from "react";
+
+import Logo from "./Logo";
+import { MobileMenu } from "./MobileMenu";
+import { NavItems } from "./NavItems";
 import { Header } from "./header/header";
 
 export const NavBar = (): JSX.Element => {

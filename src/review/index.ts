@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { signOff } from "./constants";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
@@ -16,13 +17,15 @@ export const review = async (
 ): Promise<string | undefined> => {
   logger.debug(`Review started.`);
   logger.debug(`Model used: ${yargs.model}`);
-  logger.debug(`Ci enabled: ${yargs.ci as unknown as string}`);
-  logger.debug(
-    `Comment per file enabled: ${yargs.commentPerFile as unknown as string}`
-  );
+  logger.debug(`Ci enabled: ${yargs.ci ?? "ci is undefined"}`);
+  logger.debug(`Comment per file enabled: ${String(yargs.commentPerFile)}`);
   logger.debug(`Review type chosen: ${yargs.reviewType}`);
-  logger.debug(`Organization chosen: ${yargs.org as unknown as string}`);
-  logger.debug(`Remote Pull Request: ${yargs.remote as unknown as string}`);
+  logger.debug(
+    `Organization chosen: ${yargs.org ?? "organization is undefined"}`
+  );
+  logger.debug(
+    `Remote Pull Request: ${yargs.remote ?? "remote pull request is undefined"}`
+  );
 
   const isCi = yargs.ci;
   const shouldCommentPerFile = yargs.commentPerFile;
@@ -40,7 +43,7 @@ export const review = async (
 
   logger.debug(
     `Files to review after filtering: ${
-      filteredFiles.map((file) => file.fileName) as unknown as string
+      filteredFiles.map((file) => file.fileName).toString()
     }`
   );
 
@@ -52,7 +55,7 @@ export const review = async (
     reviewType
   );
 
-  logger.debug(`Prompts used:\n ${prompts as unknown as string}`);
+  logger.debug(`Prompts used:\n ${prompts.toString()}`);
 
   const { markdownReport: response, feedbacks } = await askAI(
     prompts,
