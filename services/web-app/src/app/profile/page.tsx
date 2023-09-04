@@ -80,8 +80,6 @@ export default async function Profile(): Promise<JSX.Element> {
 
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
-      console.log("user -> ", user);
-      console.log("session -> ", session);
       const response = await axiosInstance.post(`/updateUser`, {
         apiKey: newApiKey,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
