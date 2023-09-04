@@ -11,7 +11,7 @@ declare module "next-auth" {
     name?: string;
     email?: string;
     pictureUrl?: string;
-    id?: string;
+    userId?: string;
     repos?: [string];
   }
 }

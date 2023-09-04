@@ -1,5 +1,4 @@
 import axios, { type AxiosInstance } from "axios";
-import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 
 import { BASE_URL } from "../constants";
@@ -20,7 +19,7 @@ const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
   axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = `Bearer ${(session as Session)?.token ?? ""}`;
+      config.headers["Authorization"] = `Bearer ${session.token ?? ""}`;
       
       return config;
     }
