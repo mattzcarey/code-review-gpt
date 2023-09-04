@@ -1,10 +1,11 @@
 "use client";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import Loading from "@/components/loading/loading";
-import CodeTextArea from "@/components/textFields/codeBox";
-import ReviewedCode from "@/components/textFields/reviewedCode";
-import BasicButton from "@/components/buttons/basicButton";
+
+import BasicButton from "../../components/buttons/basicButton";
+import Loading from "../../components/loading/loading";
+import CodeTextArea from "../../components/textFields/codeBox";
+import ReviewedCode from "../../components/textFields/reviewedCode";
 
 export default function Demo(): JSX.Element {
   const { status } = useSession();

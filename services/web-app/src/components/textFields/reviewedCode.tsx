@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ReviewedCodeProps {
+type ReviewedCodeProps = {
   text: string;
   isHidden: boolean;
 }

@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,6 @@ import UpdateAPIKey from "../../components/dialog/updateApiKey";
 import Loading from "../../components/loading/loading";
 import { RepoTable } from "../../components/tables/repoTable";
 import useAxios from "../../lib/hooks/useAxios";
-import { User } from "../../lib/types";
 
 const containsUserDataFields = (input: object): boolean =>
   "email" in input &&
@@ -37,12 +37,13 @@ export default async function Profile(): Promise<JSX.Element> {
         if (
           session === null ||
           session.user === undefined ||
-          session.user.id === undefined
+          session.user.userId === undefined
         ) {
           throw new Error("Session data not fetched correctly.");
         }
         const response = await axiosInstance.get(
-          `/getUser?userId=${session.user.id}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `/getUser?userId=${session.user.userId}`
         );
         //We need response.data to be of type string so that it can be parsed into user data
         if (typeof response.data !== "string") {
@@ -80,8 +81,9 @@ export default async function Profile(): Promise<JSX.Element> {
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
       const response = await axiosInstance.post(`/updateUser`, {
-        userID: user.userId,
         apiKey: newApiKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        userId: user.userId,
       });
       console.log("API key updated successfully:", response.data);
     } catch (error) {

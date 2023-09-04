@@ -17,13 +17,13 @@ const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
   }
 
   axiosInstance.interceptors.request.clear();
-  axiosInstance.interceptors.request.use((config) => {
-    //TODO: investigate this as the Session type returned from does not seem to contain 'token'
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config.headers.Authorization = session.token;
-
-    return config;
-  });
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${session.token ?? ""}`;
+      
+      return config;
+    }
+  );
 
   return { axiosInstance };
 };
