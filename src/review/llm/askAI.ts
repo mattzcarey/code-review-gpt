@@ -26,7 +26,7 @@ export const askAI = async (
       feedbacks.map(
         (feedback) =>
           `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
-      ) as unknown as string
+      ).toString()
     }`
   );
   const summary = await createSummary(model, feedbacks);

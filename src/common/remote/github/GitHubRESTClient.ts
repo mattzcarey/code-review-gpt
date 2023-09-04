@@ -64,16 +64,18 @@ export class GitHubRESTClient {
 
     return {
       fileName: rawFile.filename,
-      //TODO: fix this
-      fileContent: content as unknown as string,
-      changedLines: rawFile.patch as string,
+      fileContent: content,
+      changedLines: rawFile.patch ?? '',
     };
   }
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
 
-    //TODO: fix this
-    return response.data as string;
+    if('data' in response && typeof response.data === 'string'){
+      return response.data;
+    } else{
+      throw new Error('Error fetching data from octokit')
+    }
   }
 }

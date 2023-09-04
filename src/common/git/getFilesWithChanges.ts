@@ -30,6 +30,8 @@ export const getFilesWithChanges = async (
 
     return files;
   } catch (error) {
-    throw new Error(`Failed to get files with changes: ${error as string}`);
+    throw new Error(
+      `Failed to get files with changes: ${JSON.stringify(error)}`
+    );
   }
 };

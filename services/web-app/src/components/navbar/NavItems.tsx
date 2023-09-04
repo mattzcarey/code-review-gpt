@@ -1,11 +1,11 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { signOut, signIn } from "next-auth/react";
-import IconButton from "../buttons/iconButton";
-import BasicButton from "../buttons/basicButton";
 import { HomeIcon, PersonIcon } from "@radix-ui/react-icons";
+import { signIn, signOut, useSession } from "next-auth/react";
 import React, { Dispatch, HTMLAttributes, SetStateAction } from "react";
-import { classNames } from "@/lib/helpers/utils";
+
+import { classNames } from "../../lib/helpers/utils";
+import BasicButton from "../buttons/basicButton";
+import IconButton from "../buttons/iconButton";
 
 interface NavItemsProps extends HTMLAttributes<HTMLUListElement> {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -43,8 +43,8 @@ export const NavItems = ({
 
             <BasicButton
               text="Sign Out"
-              onClick={() => {
-                signOut({ callbackUrl: "/" });
+              onClick={async () => {
+                await signOut({ callbackUrl: "/" });
               }}
             />
           </>
@@ -57,8 +57,8 @@ export const NavItems = ({
             />
             <BasicButton
               text="Sign In"
-              onClick={() => {
-                signIn("github", { callbackUrl: "/profile" });
+              onClick={async () => {
+                await signIn("github", { callbackUrl: "/profile" });
               }}
             />
           </>

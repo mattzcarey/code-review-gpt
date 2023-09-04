@@ -1,34 +1,61 @@
 "use client";
-import Loading from "@/components/loading/loading";
-import { RepoTable } from "@/components/tables/repoTable";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import useAxios from "../../lib/hooks/useAxios";
-import React, { useEffect, useState } from "react";
 import { User } from "next-auth";
-import { ReturnToHome } from "@/components/cards/returnToHome";
-import UpdateAPIKey from "@/components/dialog/updateApiKey";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export default function Profile(): JSX.Element {
+import { ReturnToHome } from "../../components/cards/returnToHome";
+import UpdateAPIKey from "../../components/dialog/updateApiKey";
+import Loading from "../../components/loading/loading";
+import { RepoTable } from "../../components/tables/repoTable";
+import useAxios from "../../lib/hooks/useAxios";
+
+const containsUserDataFields = (input: object): boolean =>
+  "email" in input &&
+  typeof input.email === "string" &&
+  "userId" in input &&
+  typeof input.userId === "string" &&
+  "apiKey" in input &&
+  typeof input.apiKey === "string" &&
+  "name" in input &&
+  typeof input.name === "string";
+
+const isValidUserData = (input: unknown): input is User =>
+  typeof input === "object" && input !== null && containsUserDataFields(input);
+
+export default async function Profile(): Promise<JSX.Element> {
   let user: User;
   const { data: session, status } = useSession();
-  const { axiosInstance } = useAxios();
-  const [data, setData] = useState(null);
+  const { axiosInstance } = await useAxios();
+  const [data, setData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(`/getUser?userId=${session?.user?.id}`);
+        if (
+          session === null ||
+          session.user === undefined ||
+          session.user.id === undefined
+        ) {
+          throw new Error("Session data not fetched correctly.");
+        }
+        const response = await axiosInstance.get(
+          `/getUser?userId=${session.user.id}`
+        );
+        //We need response.data to be of type string so that it can be parsed into user data
+        if (typeof response.data !== "string") {
+          throw new Error("Session data not fetched correctly.");
+        }
         setData(response.data);
-      } catch (err: any) {
-        console.log("Failed to getUser, due to the following error ", err);
+      } catch (err) {
+        console.error("Failed to getUser, due to the following error ", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    void fetchData();
   }, [session?.user]);
 
   if (status === "loading" || loading) {
@@ -42,7 +69,12 @@ export default function Profile(): JSX.Element {
   if (!data) {
     return <ReturnToHome message="Could not retrieve User data." />;
   } else {
-    user = JSON.parse(data);
+    const parsedData: unknown = JSON.parse(data);
+    if (!isValidUserData(parsedData)) {
+      return <ReturnToHome message="Could not retrieve valid User data." />;
+    } else {
+      user = parsedData;
+    }
   }
 
   const handleUpdateApiKey = async (newApiKey: string) => {
