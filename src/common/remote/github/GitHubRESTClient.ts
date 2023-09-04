@@ -60,20 +60,21 @@ export class GitHubRESTClient {
   }
 
   async fetchPullRequestFile(rawFile: GithubFile): Promise<ReviewFile> {
-    const content = await this.fetchPullRequestFileContent(rawFile.raw_url);
+    const content = await this.fetchPullRequestFileContent(rawFile.contents_url);
 
     return {
       fileName: rawFile.filename,
-      //TODO: fix this
-      fileContent: content as unknown as string,
+      fileContent: content,
       changedLines: rawFile.patch as string,
     };
   }
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
+    return this.decodeBase64(response.data.content);
+  }
 
-    //TODO: fix this
-    return response.data as string;
+  decodeBase64(encoded: string): string {
+    return Buffer.from(encoded, "base64").toString("utf-8");
   }
 }

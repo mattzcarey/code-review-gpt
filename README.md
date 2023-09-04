@@ -99,7 +99,7 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 
 - `--reviewType` - Used with the 'review' command. The options are --reviewType=("changed" | "full" | "costOptimized). Defaults to "changed" if no option is specified. Specifies whether the review is for the full file or just the changed lines. costOptimized limits the context surrounding the changed lines to 5 lines.
 
-- `--remote` - Used with the 'review' command. Usage --remote=mattzcarey/code-review-gpt#96. Review a remote GitHub Pull Request.
+- `--remote` - Used with the 'review' command. Usage `--remote=mattzcarey/code-review-gpt#96`. Review a remote GitHub Pull Request.
 
 - `--commentPerFile` - Used when the `--ci` flag is set. Defaults to false. It enables the bot to comment the feedback on a file-by-file basis.
 
