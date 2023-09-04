@@ -12,7 +12,7 @@ const useAxios = (): { axiosInstance: AxiosInstance } => {
   axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
     (config) => {
-      config.headers.Authorization = (session as Session).token;
+      config.headers["Authorization"] = `Bearer ${(session as Session)?.token ?? ""}`;
       return config;
     }
   );

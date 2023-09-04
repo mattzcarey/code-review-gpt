@@ -2,7 +2,7 @@ import { ISODateString } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
-    token?: JWT;
+    token?: string;
     user?: User;
     expires?: ISODateString;
   }
@@ -10,8 +10,9 @@ declare module "next-auth" {
   interface User {
     name?: string;
     email?: string;
-    picture?: string;
+    pictureUrl?: string;
     id?: string;
+    repos?: [string];
   }
 }
 

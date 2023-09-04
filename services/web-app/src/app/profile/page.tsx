@@ -4,9 +4,9 @@ import { RepoTable } from "@/components/tables/repoTable";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import useAxios from "../../lib/hooks/useAxios";
-import { useEffect, useState } from "react";
-import { User } from "../../lib/types";
-import { ReturnToHome } from "../../components/cards/returnToHome";
+import React, { useEffect, useState } from "react";
+import { User } from "next-auth";
+import { ReturnToHome } from "@/components/cards/returnToHome";
 import UpdateAPIKey from "@/components/dialog/updateApiKey";
 
 export default function Profile(): JSX.Element {
@@ -47,9 +47,11 @@ export default function Profile(): JSX.Element {
 
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
+      console.log("user -> ", user);
+      console.log("session -> ", session);
       const response = await axiosInstance.post(`/updateUser`, {
-        userID: user.userId,
         apiKey: newApiKey,
+        userId: user.userId,
       });
       console.log("API key updated successfully:", response.data);
     } catch (error) {
