@@ -12,15 +12,17 @@ import UpdateAPIKey from "@/components/dialog/updateApiKey";
 export default function Profile(): JSX.Element {
   let user: User;
   const { data: session, status } = useSession();
-  const { axiosInstance } = useAxios();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      const { axiosInstance } = await useAxios();
       setLoading(true);
       try {
-        const response = await axiosInstance.get(`/getUser?userId=${session?.user?.id}`);
+        const response = await axiosInstance.get(
+          `/getUser?userId=${session?.user?.id}`
+        );
         setData(response.data);
       } catch (err: any) {
         console.log("Failed to getUser, due to the following error ", err);
@@ -47,11 +49,13 @@ export default function Profile(): JSX.Element {
 
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
+      const { axiosInstance } = await useAxios();
       const response = await axiosInstance.post(`/updateUser`, {
         userID: user.userId,
         apiKey: newApiKey,
       });
       console.log("API key updated successfully:", response.data);
+      console.log("Update API key is not available right now")
     } catch (error) {
       console.error("Failed to update API key:", error);
     }

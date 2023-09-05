@@ -69,10 +69,7 @@ export class CoreStack extends Stack {
 
     //Routes
     const postReviewRoute = api.root.addResource("postReview");
-    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda), { //todo check if we need auth here? Are we gonna be calling this for demo?
-      authorizationType: AuthorizationType.CUSTOM,
-      authorizer: authorizer,
-    });
+    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
 
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda), {

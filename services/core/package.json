@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
     "@types/jest": "^29.5.1",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "20.1.7",
     "aws-cdk": "2.86.0",
     "jest": "^29.5.0",
@@ -36,6 +37,7 @@
     "constructs": "^10.0.0",
     "dynamodb-toolbox": "^0.8.5",
     "esbuild": "0.19.1",
+    "next-auth": "^4.23.1",
     "source-map-support": "^0.5.21",
     "uuid": "^9.0.0"
   }
