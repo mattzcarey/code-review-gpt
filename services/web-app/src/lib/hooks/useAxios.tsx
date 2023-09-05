@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios, { type AxiosInstance } from "axios";
 import { getSession } from "next-auth/react";
 
@@ -20,6 +19,7 @@ export const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
   axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
     (config) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         config.headers["Authorization"] = `Bearer ${session.token}`;
       
       return config;

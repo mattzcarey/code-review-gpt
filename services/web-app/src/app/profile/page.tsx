@@ -14,7 +14,6 @@ export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserBody | null>(null);
   const [loading, setLoading] = useState(false);
-  // console.log("before useEffect session -> ", session);
 
   useEffect(() => {
     const fetchData = async () => {
