@@ -1,4 +1,4 @@
-export interface User {
+export interface UserBody {
     email: string ,
     userId: string,
     apiKey: string,
@@ -6,3 +6,12 @@ export interface User {
     pictureUrl?: string,
     repos?: [],
 }
+
+export type GetUserProps = {
+    userId: string;
+};
+
+export type UpdateUserProps = {
+    apiKey: string;
+    userId: string;
+};

@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
   baseURL: `${BASE_URL}`,
 });
 
-const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
+export const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
   const session = await getSession();
 
   if (session === null || !('token' in session)) {
@@ -15,6 +15,7 @@ const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
       "Error: logged in user's session data not fetched correctly."
     );
   }
+  console.log("session token -> ", session.token);
 
   axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
