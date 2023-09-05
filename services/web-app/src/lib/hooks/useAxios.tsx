@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios, { type AxiosInstance } from "axios";
 import { getSession } from "next-auth/react";
 
@@ -10,17 +11,16 @@ const axiosInstance = axios.create({
 export const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
   const session = await getSession();
 
-  if (session === null || !('token' in session)) {
+  if (session === null || session.token === undefined) {
     throw new Error(
       "Error: logged in user's session data not fetched correctly."
     );
   }
-  console.log("session token -> ", session.token);
 
   axiosInstance.interceptors.request.clear();
   axiosInstance.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = `Bearer ${session.token ?? ""}`;
+        config.headers["Authorization"] = `Bearer ${session.token}`;
       
       return config;
     }
