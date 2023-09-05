@@ -28,24 +28,19 @@ export default function Profile(): JSX.Element {
           throw new Error("Session data not fetched correctly.");
         }
         const userId = session.user.userId;
-        const parsedUser = await getUser({userId});
+        const parsedUser = await getUser({ userId });
         setUser(parsedUser);
-
       } catch (err) {
         console.error("Failed to getUser, due to the following error ", err);
       } finally {
         setLoading(false);
       }
     };
-    void fetchData();
-  }, [session?.user?.userId]);
 
-  // Use useEffect to watch for changes in the user state
-  useEffect(() => {
-    if (user !== null) {
-      return;
+    if (!user) {
+      void fetchData();
     }
-  }, [user]);
+  }, [session?.user?.userId, user]);
 
   if (status === "loading" || loading) {
     return <Loading />;
