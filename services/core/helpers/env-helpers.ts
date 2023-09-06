@@ -14,7 +14,7 @@ const isNonEmptyString = (arg: unknown): arg is string =>
   typeof arg === "string" && arg !== "";
 
 const getCliCdkContext = (cliArg: string): string | undefined => {
-  const cdkContextEnv = process.env.CDK_CONTEXT_JSON ?? "{}";
+  const cdkContextEnv = process.env.CDK_CONTEXT_JSON;
   const parsedCdKContext: unknown = JSON.parse(cdkContextEnv);
 
   if (isRecord(parsedCdKContext) && cliArg in parsedCdKContext) {
