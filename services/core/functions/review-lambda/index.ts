@@ -5,12 +5,12 @@ import { ReviewArgs, ReviewFile } from "../../../../src/common/types";
 import { logger } from "../../../../src/common/utils/logger";
 import { review } from "../../../../src/review/index";
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
-import { getVariableFromSSM } from "../helpers/getVariable";
+import { getVariableFromSSM } from "../utils/getVariable";
 
 type ReviewLambdasBody = {
   args: ReviewArgs;
   files: ReviewFile[];
-}
+};
 
 logger.settings.minLevel = 4;
 

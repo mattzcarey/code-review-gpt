@@ -1,7 +1,13 @@
+import { Duration } from "aws-cdk-lib";
 import { Architecture, Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunctionProps } from "aws-cdk-lib/aws-lambda-nodejs";
 
-import { sharedCdkEsbuildConfig } from "./sharedCdkEsbuildconfig";
+import { getRegion, getStage, sharedCdkEsbuildConfig } from "./env-helpers";
+
+export const commonLambdaEnvironment: Record<string, string> = {
+  STAGE: getStage(),
+  REGION: getRegion(),
+};
 
 export const commonLambdaProps: Omit<NodejsFunctionProps, "code"> = {
   runtime: Runtime.NODEJS_18_X,
@@ -9,6 +15,7 @@ export const commonLambdaProps: Omit<NodejsFunctionProps, "code"> = {
   memorySize: 512,
   awsSdkConnectionReuse: true,
   architecture: Architecture.ARM_64,
+  timeout: Duration.seconds(5),
   bundling: sharedCdkEsbuildConfig,
   tracing: Tracing.ACTIVE,
 };
