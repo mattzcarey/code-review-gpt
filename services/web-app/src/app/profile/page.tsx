@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -8,31 +7,18 @@ import { ReturnToHome } from "../../components/cards/returnToHome";
 import UpdateAPIKey from "../../components/dialog/updateApiKey";
 import Loading from "../../components/loading/loading";
 import { RepoTable } from "../../components/tables/repoTable";
-import useAxios from "../../lib/hooks/useAxios";
+import { UserBody } from "../../lib/types";
+import { useUserApi } from "../../pages/api/user/useUser";
 
-const containsUserDataFields = (input: object): boolean =>
-  "email" in input &&
-  typeof input.email === "string" &&
-  "userId" in input &&
-  typeof input.userId === "string" &&
-  "apiKey" in input &&
-  typeof input.apiKey === "string" &&
-  "name" in input &&
-  typeof input.name === "string";
-
-const isValidUserData = (input: unknown): input is User =>
-  typeof input === "object" && input !== null && containsUserDataFields(input);
-
-export default async function Profile(): Promise<JSX.Element> {
-  let user: User;
+export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
-  const { axiosInstance } = await useAxios();
-  const [data, setData] = useState<string | null>(null);
+  const [user, setUser] = useState<UserBody | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const { getUser } = useUserApi();
       try {
         if (
           session === null ||
@@ -41,23 +27,20 @@ export default async function Profile(): Promise<JSX.Element> {
         ) {
           throw new Error("Session data not fetched correctly.");
         }
-        const response = await axiosInstance.get(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `/getUser?userId=${session.user.userId}`
-        );
-        //We need response.data to be of type string so that it can be parsed into user data
-        if (typeof response.data !== "string") {
-          throw new Error("Session data not fetched correctly.");
-        }
-        setData(response.data);
+        const userId = session.user.userId;
+        const parsedUser = await getUser({ userId });
+        setUser(parsedUser);
       } catch (err) {
         console.error("Failed to getUser, due to the following error ", err);
       } finally {
         setLoading(false);
       }
     };
-    void fetchData();
-  }, [session?.user]);
+
+    if (!user) {
+      void fetchData();
+    }
+  }, [session?.user?.userId, user]);
 
   if (status === "loading" || loading) {
     return <Loading />;
@@ -67,25 +50,19 @@ export default async function Profile(): Promise<JSX.Element> {
     return <ReturnToHome message="You are not logged in" />;
   }
 
-  if (!data) {
+  // Check this error
+  if (!user) {
     return <ReturnToHome message="Could not retrieve User data." />;
-  } else {
-    const parsedData: unknown = JSON.parse(data);
-    if (!isValidUserData(parsedData)) {
-      return <ReturnToHome message="Could not retrieve valid User data." />;
-    } else {
-      user = parsedData;
-    }
   }
 
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
-      const response = await axiosInstance.post(`/updateUser`, {
+      const { updateUser } = useUserApi();
+      await updateUser({
         apiKey: newApiKey,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         userId: user.userId,
       });
-      console.log("API key updated successfully:", response.data);
+      console.log("API key updated successfully");
     } catch (error) {
       console.error("Failed to update API key:", error);
     }
