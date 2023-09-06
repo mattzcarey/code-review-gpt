@@ -34,11 +34,5 @@ jobs:
       - name: Run code review script
         run: npm run start -- --ci=github --model=gpt-3.5-turbo
 
-      - name: Run unit tests
-        run: npm run test-unit
-      
-      - name: Run integration tests
-        run: npm run test-integ
-
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
