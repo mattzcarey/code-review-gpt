@@ -4,7 +4,7 @@ import { UserEntity } from "../../entities";
 import {
   formatResponse,
   FormattedHandlerResponse,
-} from "../../helpers/format-response";
+} from "../utils/format-response";
 
 export const main = async (
   event: APIGatewayProxyEvent

@@ -5,12 +5,12 @@ import { UserEntity } from "../../entities";
 import {
   formatResponse,
   FormattedHandlerResponse,
-} from "../../helpers/format-response";
+} from "../utils/format-response";
 
 type UpdateUserLambdaInput = {
   apiKey: string;
   userId: string;
-}
+};
 
 const isValidEventBody = (input: unknown): input is UpdateUserLambdaInput =>
   typeof input === "object" &&
