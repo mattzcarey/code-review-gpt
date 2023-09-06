@@ -15,3 +15,8 @@ export type UpdateUserProps = {
     apiKey: string;
     userId: string;
 };
+
+export type UseUserApiResponse = {
+    updateUser: (updateUserProps: UpdateUserProps) => Promise<void>; 
+    getUser: (getUserProps: GetUserProps) => Promise<UserBody>; 
+  }

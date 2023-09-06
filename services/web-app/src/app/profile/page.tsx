@@ -8,7 +8,7 @@ import UpdateAPIKey from "../../components/dialog/updateApiKey";
 import Loading from "../../components/loading/loading";
 import { RepoTable } from "../../components/tables/repoTable";
 import { UserBody } from "../../lib/types";
-import { useUser } from "../../pages/api/user/useUser";
+import { useUserApi } from "../../pages/api/user/useUser";
 
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
@@ -18,7 +18,7 @@ export default function Profile(): JSX.Element {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const { getUser } = await useUser();
+      const { getUser } = useUserApi();
       try {
         if (
           session === null ||
@@ -54,10 +54,10 @@ export default function Profile(): JSX.Element {
   if (!user) {
     return <ReturnToHome message="Could not retrieve User data." />;
   }
-  
+
   const handleUpdateApiKey = async (newApiKey: string) => {
     try {
-      const { updateUser } = await useUser();
+      const { updateUser } = useUserApi();
       await updateUser({
         apiKey: newApiKey,
         userId: user.userId,

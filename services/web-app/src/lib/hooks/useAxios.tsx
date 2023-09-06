@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
   baseURL: `${BASE_URL}`,
 });
 
-export const useAxios = async (): Promise<{ axiosInstance: AxiosInstance }> => {
+export const useAxios = (): { axiosInstance: AxiosInstance } => {
   return { axiosInstance };
 };
 
