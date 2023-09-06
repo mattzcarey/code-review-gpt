@@ -1,6 +1,6 @@
 import { EncryptCommand, KMSClient } from "@aws-sdk/client-kms";
 
-import { getEnvVariable } from "../helpers/getVariable";
+import { getEnvVariable } from "../utils/getVariable";
 
 const kmsClient = new KMSClient({});
 

@@ -37,6 +37,9 @@ export const languageMap: { [key: string]: string } = {
   ".hpp": "C++",
   ".hxx": "C++",
   ".rb": "Ruby",
+  ".kt": "Kotlin",
+  ".kts": "Kotlin",
+  ".java": "Java",
 };
 
 export const supportedFiles = new Set(Object.keys(languageMap));

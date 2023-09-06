@@ -9,10 +9,12 @@ import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
-import { buildResourceName } from "../../helpers";
-import { commonLambdaEnvironment } from "../helpers/commonLambdaEnvironment";
-import { commonLambdaProps } from "../helpers/commonLambdaProps";
-import { reviewLambdaEnvironment } from "../helpers/reviewLambdaEnvironment";
+import {
+  buildResourceName,
+  commonLambdaEnvironment,
+  commonLambdaProps,
+} from "../../helpers";
+import { reviewLambdaEnvironment } from "../utils/reviewLambdaEnvironment";
 
 export class ReviewLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {

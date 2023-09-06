@@ -1,5 +1,7 @@
-export interface PullRequestIdentifier {
-  owner: string;
-  repo: string;
-  prNumber: number;
+export class PullRequestIdentifier {
+  constructor(
+    public owner: string,
+    public repo: string,
+    public prNumber: number
+  ) {}
 }
