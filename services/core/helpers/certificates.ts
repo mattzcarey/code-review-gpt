@@ -2,7 +2,7 @@ import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 import { getStage } from "./env-helpers";
-import { isDev } from "./environment";
+import { isDev } from "./env-helpers/environment";
 
 export const getCertificateArn = (
   scope: Construct,

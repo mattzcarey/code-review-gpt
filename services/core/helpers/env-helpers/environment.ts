@@ -1,4 +1,4 @@
-import { getStage } from "./env-helpers";
+import { getStage } from "./getStage";
 
 export const isProduction = (): boolean => {
   const stage = getStage();
