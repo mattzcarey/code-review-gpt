@@ -60,7 +60,7 @@ export class GitHubRESTClient {
   }
 
   async fetchPullRequestFile(rawFile: GithubFile): Promise<ReviewFile> {
-    const content = await this.fetchPullRequestFileContent(rawFile.raw_url);
+    const content = await this.fetchPullRequestFileContent(rawFile.contents_url);
 
     return {
       fileName: rawFile.filename,
@@ -71,11 +71,10 @@ export class GitHubRESTClient {
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
     const response = await this.client.request(`GET ${url}`);
+    return this.decodeBase64(response.data.content);
+  }
 
-    if('data' in response && typeof response.data === 'string'){
-      return response.data;
-    } else{
-      throw new Error('Error fetching data from octokit')
-    }
+  decodeBase64(encoded: string): string {
+    return Buffer.from(encoded, "base64").toString("utf-8");
   }
 }
