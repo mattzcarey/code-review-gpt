@@ -11,7 +11,7 @@ const IconButton: React.FC<HeaderButtonProps> = ({ icon, to, setOpen }) => {
   return (
     <li className="group relative">
       <Link
-        className="p-1 sm:mx-10 justify-right"
+        className="p-1 sm:mx-10 text-black justify-right"
         onClick={() => setOpen && setOpen(false)}
         href={to}
       >
