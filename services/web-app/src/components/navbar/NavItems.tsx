@@ -1,5 +1,5 @@
 "use client";
-import { HomeIcon, PersonIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Pencil1Icon, PersonIcon } from "@radix-ui/react-icons";
 import { signIn, signOut, useSession } from "next-auth/react";
 import React, { Dispatch, HTMLAttributes, SetStateAction } from "react";
 
@@ -36,6 +36,11 @@ export const NavItems = ({
               setOpen={setOpen}
             />
             <IconButton
+              icon={<Pencil1Icon height={20} width={20} />}
+              to="/demo"
+              setOpen={setOpen}
+            />
+            <IconButton
               icon={<PersonIcon height={20} width={20} />}
               to="/profile"
               setOpen={setOpen}
@@ -53,6 +58,11 @@ export const NavItems = ({
             <IconButton
               icon={<HomeIcon height={20} width={20} />}
               to="/"
+              setOpen={setOpen}
+            />
+            <IconButton
+              icon={<Pencil1Icon height={20} width={20} />}
+              to="/demo"
               setOpen={setOpen}
             />
             <BasicButton
