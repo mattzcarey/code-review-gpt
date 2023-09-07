@@ -12,7 +12,7 @@ export const ReviewDemoCounterEntity = new Entity({
       0,
       {
         type: "string",
-        default: () => new Date().toDateString(),
+        default: () => new Date().toISOString().split("T")[0],
       },
     ],
     dailyCount: { type: "number" },
