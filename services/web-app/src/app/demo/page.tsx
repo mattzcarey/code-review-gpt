@@ -1,27 +1,31 @@
 "use client";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import BasicButton from "../../components/buttons/basicButton";
 import Loading from "../../components/loading/loading";
 import CodeTextArea from "../../components/textFields/codeBox";
 import ReviewedCode from "../../components/textFields/reviewedCode";
+import { useDemoApi } from "../../lib/api/demo/useDemoApi";
 
 export default function Demo(): JSX.Element {
   const { status } = useSession();
-  const [loading ] = useState(false);
-  const [passedText, setSyncedText] = useState<string>('');
-  const [displayedText, setDisplayedText] = useState<string>('');
+  const [loading] = useState(false);
+  const [passedText, setSyncedText] = useState<string>("");
+  const [displayedText, setDisplayedText] = useState<string>("");
   const [isHidden, setIsHidden] = useState<boolean>(true);
+  const { postDemoReview } = useDemoApi();
 
   const handleText = (text: string) => {
     setSyncedText(text);
   };
 
-  const onClick = () => {
+  const onClick = async () => {
     setIsHidden(false);
-    setDisplayedText(passedText);
-  }
+    const review = await postDemoReview(passedText);
+
+    setDisplayedText(JSON.stringify(review));
+  };
 
   if (status === "loading" || loading) {
     return <Loading />;

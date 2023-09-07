@@ -7,6 +7,7 @@ import { logger } from "../../../../src/common/utils/logger";
 import { askAI } from "../../../../src/review/llm/askAI";
 import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { ReviewDemoCounterEntity } from "../../entities";
+import { formatResponse } from "../utils/format-response";
 import { getEnvVariable, getVariableFromSSM } from "../utils/getVariable";
 import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 
@@ -38,10 +39,10 @@ export const main = async (
   const demoReviewId = uuidv4();
 
   if (event.body === null) {
-    return {
-      statusCode: 400,
-      body: "The request does not contain a body as expected.",
-    };
+    return formatResponse(
+      "The request does not contain a body as expected.",
+      400
+    );
   }
 
   try {
@@ -56,10 +57,10 @@ export const main = async (
     const inputBody: unknown = JSON.parse(event.body);
 
     if (!isReviewLambdaInput(inputBody)) {
-      return {
-        statusCode: 400,
-        body: "The request body does not contain the expected data.",
-      };
+      return formatResponse(
+        "The request body does not contain the expected data.",
+        400
+      );
     }
 
     await ReviewDemoCounterEntity.update({
@@ -70,10 +71,10 @@ export const main = async (
     const prompt = demoPrompt + inputBody.code;
 
     if (prompt.length > maxPromptLength) {
-      return {
-        statusCode: 400,
-        body: `The provided code is too large for the model ${DEFAULT_DEMO_MODEL}. Please try and provide a smaller code snippet.`,
-      };
+      return formatResponse(
+        `The provided code is too large for the model ${DEFAULT_DEMO_MODEL}. Please try and provide a smaller code snippet.`,
+        400
+      );
     }
 
     const { markdownReport } = await askAI(
@@ -91,16 +92,10 @@ export const main = async (
       markdownReport
     );
 
-    return {
-      statusCode: 200,
-      body: markdownReport,
-    };
+    return formatResponse(markdownReport, 200);
   } catch (err) {
     console.error(err);
 
-    return {
-      statusCode: 500,
-      body: "Error when reviewing code.",
-    };
+    return formatResponse("Error when reviewing code.", 500);
   }
 };
