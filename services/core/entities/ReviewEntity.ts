@@ -11,7 +11,6 @@ export const ReviewEntity = new Entity({
     inputLocation: { type: "string", required: true },
     responseLocation: { type: "string", required: true },
     demo: { type: "boolean", default: false },
-    date: { type: "string", default: () => new Date().toDateString() },
   },
   table: Table,
 } as const);
