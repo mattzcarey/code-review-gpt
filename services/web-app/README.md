@@ -12,7 +12,10 @@ For setting them in SST you would need to use the following commands:
 npx sst secrets set GITHUB_ID sk_test_abc123
 npx sst secrets set GITHUB_SECRET sk_test_abc123
 npx sst secrets set NEXTAUTH_SECRET sk_test_abc123
+npx sst secrets set USER_API_KEY sk_test_abc123
 ```
+The `USER_API_KEY` found once you have deployed your API. Note: that the value of the key will change if you rename the API key.
+
 
 To run the development server locally:
 

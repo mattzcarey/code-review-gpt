@@ -1,4 +1,5 @@
-export const BASE_URL = "https://n9iql3ntpe.execute-api.eu-west-2.amazonaws.com/prod";
+export const BASE_USER_ENDPOINT =
+  "https://uakt7irum1.execute-api.eu-west-2.amazonaws.com/prod";
 export const InstallationInstructions = `
 ## We give engineers their weekends back
 

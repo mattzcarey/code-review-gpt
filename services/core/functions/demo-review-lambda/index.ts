@@ -2,13 +2,13 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { v4 as uuidv4 } from "uuid";
 
+import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
 import { logger } from "../../../../src/common/utils/logger";
 import { askAI } from "../../../../src/review/llm/askAI";
 import { demoPrompt } from "../../../../src/review/prompt/prompts";
 import { ReviewDemoCounterEntity } from "../../entities";
 import { getEnvVariable, getVariableFromSSM } from "../utils/getVariable";
-import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 
