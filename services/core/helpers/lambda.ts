@@ -13,7 +13,7 @@ const cdkEsbuildConfig = {
   minify: true,
   keepNames: true,
   sourceMap: true,
-  externalModules: ["aws-sdk", "aws-cdk-lib"],
+  externalModules: ["aws-sdk"],
   platform: "node",
   metafile: true,
   mainFields: ["module", "main"],

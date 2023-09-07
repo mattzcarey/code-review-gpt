@@ -37,32 +37,32 @@ module.exports = {
       },
     ],
     "prefer-const": "error",
-    "import/order": [
-      "error",
-      {
-        groups: [
-          ["external", "builtin"],
-          "unknown",
-          "internal",
-          ["parent", "sibling", "index"],
-        ],
-        alphabetize: {
-          order: "asc",
-          caseInsensitive: false,
-        },
-        "newlines-between": "always",
-        pathGroupsExcludedImportTypes: ["builtin"],
-      },
-    ],
-    "sort-imports": [
-      "error",
-      {
-        ignoreCase: true,
-        ignoreDeclarationSort: true,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
-      },
-    ],
+    // "import/order": [
+    //   "error",
+    //   {
+    //     groups: [
+    //       ["external", "builtin"],
+    //       "unknown",
+    //       "internal",
+    //       ["parent", "sibling", "index"],
+    //     ],
+    //     alphabetize: {
+    //       order: "asc",
+    //       caseInsensitive: false,
+    //     },
+    //     "newlines-between": "always",
+    //     pathGroupsExcludedImportTypes: ["builtin"],
+    //   },
+    // ],
+    // "sort-imports": [
+    //   "error",
+    //   {
+    //     ignoreCase: true,
+    //     ignoreDeclarationSort: true,
+    //     ignoreMemberSort: false,
+    //     memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
+    //   },
+    // ],
     "padding-line-between-statements": [
       "error",
       {
