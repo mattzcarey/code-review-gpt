@@ -24,6 +24,7 @@ export default function Demo(): JSX.Element {
     setIsHidden(false);
     const review = await postDemoReview(passedText);
 
+    console.log(review);
     setDisplayedText(JSON.stringify(review));
   };
 
