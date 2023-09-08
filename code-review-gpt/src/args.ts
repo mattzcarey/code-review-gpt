@@ -1,3 +1,4 @@
+import rawlist from "@inquirer/rawlist";
 import dotenv from "dotenv";
 import yargs from "yargs";
 
@@ -7,28 +8,18 @@ import { logger } from "./common/utils/logger";
 dotenv.config();
 
 const handleNoCommand = async (): Promise<string | number> => {
-  const inquirer = await import("inquirer");
-  const questions = [
-    {
-      type: "list",
-      name: "command",
-      message: "What do you want to do?",
-      choices: [
-        { name: "Review the staged files", value: "review" },
-        {
-          name: "Configure the script (Recommended for first time use)",
-          value: "configure",
-        },
-      ],
-    },
-  ];
+  const command = await rawlist({
+    message: "What do you want to do?",
+    choices: [
+      { name: "Review staged files", value: "review" },
+      {
+        name: "Configure the script for CI (Recommended for first time use)",
+        value: "configure",
+      },
+    ],
+  });
 
-  //TODO: this is very sus - review this
-  const answers = (await inquirer.default.prompt(questions)) as {
-    command: string;
-  };
-
-  return answers.command;
+  return command;
 };
 
 export const getYargs = async (): Promise<ReviewArgs> => {

@@ -12,8 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "jest"]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
+  "include": ["**/*.ts"],
+  "exclude": ["./node_modules", "./dist", "./src/**/*.test.ts"],
   "engines": {
     "node": ">=18"
   }

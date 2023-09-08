@@ -11,6 +11,8 @@ const main = async () => {
   const openAIApiKey = getOpenAIApiKey();
   logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3;
 
+  logger.debug(`Args: ${JSON.stringify(argv)}`);
+
   switch (argv._[0]) {
     case "configure": {
       const { configure } = await import("./configure");

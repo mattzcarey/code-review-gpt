@@ -2,10 +2,10 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { v4 as uuidv4 } from "uuid";
 
-import { getMaxPromptLength } from "../../../../src/common/model/getMaxPromptLength";
-import { logger } from "../../../../src/common/utils/logger";
-import { askAI } from "../../../../src/review/llm/askAI";
-import { demoPrompt } from "../../../../src/review/prompt/prompts";
+import { getMaxPromptLength } from "../../../../code-review-gpt/src/common/model/getMaxPromptLength";
+import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
+import { askAI } from "../../../../code-review-gpt/src/review/llm/askAI";
+import { demoPrompt } from "../../../../code-review-gpt/src/review/prompt/prompts";
 import { ReviewDemoCounterEntity } from "../../entities";
 import { formatResponse } from "../utils/format-response";
 import { getEnvVariable, getVariableFromSSM } from "../utils/getVariable";

@@ -5,17 +5,18 @@
   "bin": {
     "code-review-gpt": "./dist/index.js"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts,tsx",
-    "start": "ts-node ./src/index.ts review",
+    "start": "ts-node ./src/index.ts",
+    "review": "ts-node ./src/index.ts review",
+    "configure": "ts-node ./src/index.ts configure",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
-    "test-integ": "jest -c services/tests/jest.config.js",
-    "build": "node utils/build.js",
-    "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
+    "build": "node ./utils/build.js",
+    "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js"
   },
   "keywords": [
     "code-review",
@@ -36,10 +37,11 @@
   "dependencies": {
     "@actions/github": "^5.1.1",
     "@gitbeaker/rest": "^39.10.2",
+    "@inquirer/prompts": "^3.0.4",
+    "@inquirer/rawlist": "^1.2.9",
     "@radix-ui/themes": "^1.0.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
-    "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
     "octokit": "^3.1.0",
     "ts-retry": "^4.2.1",
