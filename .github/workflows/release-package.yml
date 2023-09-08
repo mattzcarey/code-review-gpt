@@ -25,6 +25,7 @@ jobs:
         with:
           release-type: node
           package-name: code-review-gpt
+          path: code-review-gpt
   publish-package:
     runs-on: ubuntu-latest
     needs: release-please
