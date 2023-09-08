@@ -21,6 +21,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug - List files
+        run: ls -al ./code-review-gpt # List the content of the directory to debug
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
