@@ -28,17 +28,17 @@ jobs:
       - run: cd code-review-gpt && npm ci
 
       - name: Build
-        run: cd code-review-gpt && npm run build
+        run: npm run build
 
       - name: Run code review script
-        run: cd code-review-gpt && npm run start -- --ci=github --model=gpt-3.5-turbo
+        run: npm run start -- --ci=github --model=gpt-3.5-turbo
 
       - name: Run unit tests
-        run: cd code-review-gpt && npm run test-unit
+        run: npm run test-unit
 
       # Removing integration tests for now, till we have a proper workspace setup
       # - name: Run integration tests
       #   run: npm run test-integ
 
       - name: Run prompt tests
-        run: cd code-review-gpt && npm run test -- --ci=github --model=gpt-3.5-turbo
+        run: npm run test -- --ci=github --model=gpt-3.5-turbo
