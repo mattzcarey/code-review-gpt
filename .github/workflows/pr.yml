@@ -8,10 +8,6 @@ permissions:
   pull-requests: write
   contents: read
 
-defaults:
-  run:
-    working-directory: code-review-gpt
-
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -25,27 +21,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List files in working directory
-        run: ls -al
-
       - uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - run: npm ci
+      - run: cd code-review-gpt && npm ci
 
       - name: Build
-        run: npm run build
+        run: cd code-review-gpt && npm run build
 
       - name: Run code review script
-        run: npm run start -- --ci=github --model=gpt-3.5-turbo
+        run: cd code-review-gpt && npm run start -- --ci=github --model=gpt-3.5-turbo
 
       - name: Run unit tests
-        run: npm run test-unit
+        run: cd code-review-gpt && npm run test-unit
 
       # Removing integration tests for now, till we have a proper workspace setup
       # - name: Run integration tests
       #   run: npm run test-integ
 
       - name: Run prompt tests
-        run: npm run test -- --ci=github --model=gpt-3.5-turbo
+        run: cd code-review-gpt && npm run test -- --ci=github --model=gpt-3.5-turbo
