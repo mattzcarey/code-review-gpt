@@ -5,8 +5,8 @@
   "bin": {
     "code-review-gpt": "./dist/index.js"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts,tsx",
@@ -15,7 +15,7 @@
     "configure": "ts-node ./src/index.ts configure",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
-    "build": "node ./utils/build.js",
+    "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
   "keywords": [
