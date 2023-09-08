@@ -23,9 +23,7 @@ jobs:
       CLOUDFLARE_WORKER_HEALTH_URL: ${{ secrets.CLOUDFLARE_WORKER_HEALTH_URL }}
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
       - name: List files in working directory
         run: ls -al
