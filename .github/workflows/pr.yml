@@ -25,16 +25,21 @@ jobs:
         with:
           node-version: 18
 
-      - run: cd code-review-gpt && npm ci
+      - name: Install dependencies
+        run: npm ci
+        working-directory: code-review-gpt # Set working directory here
 
       - name: Build
         run: npm run build
+        working-directory: code-review-gpt # Set working directory here
 
       - name: Run code review script
         run: npm run start -- --ci=github --model=gpt-3.5-turbo
+        working-directory: code-review-gpt # Set working directory here
 
       - name: Run unit tests
         run: npm run test-unit
+        working-directory: code-review-gpt # Set working directory here
 
       # Removing integration tests for now, till we have a proper workspace setup
       # - name: Run integration tests
@@ -42,3 +47,4 @@ jobs:
 
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
+        working-directory: code-review-gpt # Set working directory here
