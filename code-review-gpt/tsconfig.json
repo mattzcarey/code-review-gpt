@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["es2017", "dom"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "src",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -13,7 +13,7 @@
     "types": ["node", "jest"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
+  "exclude": ["./node_modules", "./dist", "./src/**/*.test.ts"],
   "engines": {
     "node": ">=18"
   }

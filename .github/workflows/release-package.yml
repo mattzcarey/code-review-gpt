@@ -3,6 +3,7 @@ name: Release Package
 defaults:
   run:
     shell: bash
+    working-directory: code-review-gpt
 
 on:
   push:
@@ -24,7 +25,6 @@ jobs:
         with:
           release-type: node
           package-name: code-review-gpt
-          path: src
   publish-package:
     runs-on: ubuntu-latest
     needs: release-please

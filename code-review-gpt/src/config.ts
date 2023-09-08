@@ -10,18 +10,18 @@ import { logger } from "./common/utils/logger";
 
 export const getOpenAIApiKey = (): string => {
   if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not set");
+    logger.error("OPENAI_API_KEY is not set");
   }
 
-  return process.env.OPENAI_API_KEY;
+  return process.env.OPENAI_API_KEY ?? "";
 };
 
 export const githubToken = (): string => {
   if (!process.env.GITHUB_TOKEN) {
-    throw new Error("GITHUB_TOKEN is not set");
+    logger.error("GITHUB_TOKEN is not set");
   }
 
-  return process.env.GITHUB_TOKEN;
+  return process.env.GITHUB_TOKEN ?? "";
 };
 
 export const getGitHubEnvVariables = (): Record<string, string> => {
@@ -35,9 +35,9 @@ export const getGitHubEnvVariables = (): Record<string, string> => {
   }
 
   return {
-    githubSha: process.env.GITHUB_SHA ?? '',
-    baseSha: process.env.BASE_SHA ?? '',
-    githubToken: process.env.GITHUB_TOKEN ?? '',
+    githubSha: process.env.GITHUB_SHA ?? "",
+    baseSha: process.env.BASE_SHA ?? "",
+    githubToken: process.env.GITHUB_TOKEN ?? "",
   };
 };
 
@@ -57,10 +57,10 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
   }
 
   return {
-    mergeRequestBaseSha: process.env.CI_MERGE_REQUEST_DIFF_BASE_SHA ?? '',
-    gitlabSha: process.env.CI_COMMIT_SHA ?? '',
-    gitlabToken: process.env.GITLAB_TOKEN ?? '',
-    projectId: process.env.CI_PROJECT_ID ?? '',
-    mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID ?? '',
+    mergeRequestBaseSha: process.env.CI_MERGE_REQUEST_DIFF_BASE_SHA ?? "",
+    gitlabSha: process.env.CI_COMMIT_SHA ?? "",
+    gitlabToken: process.env.GITLAB_TOKEN ?? "",
+    projectId: process.env.CI_PROJECT_ID ?? "",
+    mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID ?? "",
   };
 };

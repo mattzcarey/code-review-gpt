@@ -8,6 +8,10 @@ permissions:
   pull-requests: write
   contents: read
 
+defaults:
+  run:
+    working-directory: code-review-gpt
+
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -36,9 +40,10 @@ jobs:
 
       - name: Run unit tests
         run: npm run test-unit
-      
-      - name: Run integration tests
-        run: npm run test-integ
+
+      # Removing integration tests for now, till we have a proper workspace setup
+      # - name: Run integration tests
+      #   run: npm run test-integ
 
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo

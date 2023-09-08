@@ -1,3 +1,4 @@
+import { password } from "@inquirer/prompts";
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
@@ -14,13 +15,21 @@ export const configure = async (yargs: ReviewArgs): Promise<void> => {
   }
 };
 
+const captureApiKey = async (): Promise<string | undefined> => {
+  const apiKey = await password({
+    message: "Please input your OpenAI API key:",
+  });
+
+  return apiKey;
+};
+
 const configureGitHub = async () => {
   const workflowContent = fs.readFileSync(
-    path.join(__dirname, "github-pr.yml"),
+    path.join(__dirname, "../..templates", "github-pr.yml"),
     "utf8"
   );
 
-  const workflowsDir = path.join(process.cwd(), ".github", "workflows");
+  const workflowsDir = path.join(__dirname, "../../..", ".github", "workflows");
   fs.mkdirSync(workflowsDir, { recursive: true });
 
   const workflowFile = path.join(workflowsDir, "code-review-gpt.yml");
@@ -28,30 +37,18 @@ const configureGitHub = async () => {
 
   logger.info(`Created GitHub Actions workflow at: ${workflowFile}`);
 
-  const inquirer = await import("inquirer");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { apiKey } = await inquirer.default.prompt([
-    {
-      type: "input",
-      name: "apiKey",
-      message: "Please input your OpenAI API key:",
-      mask: "*",
-    },
-  ]);
+  const apiKey = await captureApiKey();
 
   if (!apiKey) {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitHub repository."
     );
-
     return;
   }
 
   try {
     execSync(`gh auth status || gh auth login`, { stdio: "inherit" });
-    execSync(
-      `gh secret set OPENAI_API_KEY --body=${String(apiKey)}`
-    );
+    execSync(`gh secret set OPENAI_API_KEY --body=${String(apiKey)}`);
     logger.info(
       "Successfully added the OPENAI_API_KEY secret to your GitHub repository."
     );
@@ -64,11 +61,11 @@ const configureGitHub = async () => {
 
 const configureGitLab = async () => {
   const pipelineContent = fs.readFileSync(
-    path.join(__dirname, "gitlab-pr.yml"),
+    path.join(__dirname, "../../templates", "gitlab-pr.yml"),
     "utf8"
   );
 
-  const pipelineDir = process.cwd();
+  const pipelineDir = path.join(__dirname, "../../..");
   fs.mkdirSync(pipelineDir, { recursive: true });
 
   const pipelineFile = path.join(pipelineDir, ".gitlab-ci.yml");
@@ -76,16 +73,7 @@ const configureGitLab = async () => {
 
   logger.info(`Created GitLab CI at: ${pipelineFile}`);
 
-  const inquirer = await import("inquirer");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { apiKey } = await inquirer.default.prompt([
-    {
-      type: "input",
-      name: "apiKey",
-      message: "Please input your OpenAI API key:",
-      mask: "*",
-    },
-  ]);
+  const apiKey = await captureApiKey();
 
   if (!apiKey) {
     logger.error(
