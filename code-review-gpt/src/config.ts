@@ -64,3 +64,28 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
     mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID ?? "",
   };
 };
+
+export const getAzureDevOpsEnvVariables = (): Record<string, string> => {
+  const missingVars = [
+    "AZURE_DEVOPS_PROJECT_ID",         // ID del proyecto en Azure DevOps
+    "AZURE_DEVOPS_REPOSITORY_NAME",    // Nombre del repositorio en Azure DevOps
+    "AZURE_DEVOPS_PAT",                // Token de Acceso Personal (PAT) de Azure DevOps
+    "AZURE_DEVOPS_COMMIT_SHA",         // SHA de la confirmación actual
+  ].filter((varName) => !process.env[varName]);
+
+  if (missingVars.length > 0) {
+    logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
+    throw new Error(
+      "One or more Azure DevOps environment variables are not set. Did you set up your Azure DevOps PAT and project details?"
+    );
+  }
+
+  return {
+    projectId: process.env.AZURE_DEVOPS_PROJECT_ID ?? "",
+    repositoryName: process.env.AZURE_DEVOPS_REPOSITORY_NAME ?? "",
+    azureDevOpsPat: process.env.AZURE_DEVOPS_PAT ?? "",
+    commitSha: process.env.AZURE_DEVOPS_COMMIT_SHA ?? "",
+  };
+};
+
+

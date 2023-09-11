@@ -13,6 +13,9 @@ export const configure = async (yargs: ReviewArgs): Promise<void> => {
   if (yargs.setupTarget === PlatformOptions.GITLAB) {
     await configureGitLab();
   }
+  if (yargs.setupTarget == PlatformOptions.AZURE) {
+    await configureAzureDevOps();
+  }
 };
 
 const captureApiKey = async (): Promise<string | undefined> => {
@@ -94,4 +97,23 @@ const configureGitLab = async () => {
       "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY and the GITLAB_TOKEN to the repo's CI/CD Variables manually. Refer to the README (Gitlab CI section)for information on how to set up your access token."
     );
   }
+};
+
+const configureAzureDevOps = async () => {
+  const pipelineContent = fs.readFileSync(
+    path.join(__dirname, "../../templates", "azure-pipelines.yml"),
+    "utf8"
+  );
+
+  const pipelineDir = path.join(__dirname, "../../..");
+  fs.mkdirSync(pipelineDir, { recursive: true });
+
+  const pipelineFile = path.join(pipelineDir, "azure-pipelines.yml");
+  fs.writeFileSync(pipelineFile, pipelineContent, "utf8");
+
+  logger.info(`Created Azure DevOps pipeline at: ${pipelineFile}`);
+
+  logger.info(
+    "Please configure your Azure DevOps pipeline to include the necessary steps and variables for your project."
+  );
 };

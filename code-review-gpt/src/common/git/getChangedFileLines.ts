@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 
-import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
+import { getGitHubEnvVariables, getGitLabEnvVariables, getAzureDevOpsEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = (
   isCi: string | undefined,
@@ -14,6 +14,9 @@ export const getChangesFileLinesCommand = (
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
     return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
+  } else if (isCi == PlatformOptions.AZURE) {
+    const {commitSha} = getAzureDevOpsEnvVariables();
+    return `git diff --name-only ${commitSha}^ ${commitSha} ${fileName ? `-- ${fileName}` : ''}`;
   }
 
   return `git diff -U0 --diff-filter=AMRT --cached ${fileName}`;

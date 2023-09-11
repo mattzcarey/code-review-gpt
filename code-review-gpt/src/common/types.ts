@@ -32,6 +32,7 @@ export type IFeedback = {
 export enum PlatformOptions {
   GITHUB = "github",
   GITLAB = "gitlab",
+  AZURE = "azure",
 }
 
 export type ReviewArgs = {

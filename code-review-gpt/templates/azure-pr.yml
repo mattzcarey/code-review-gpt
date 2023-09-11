@@ -1,0 +1,17 @@
+trigger:
+- '*'
+
+pr:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: codeReview
+  steps:
+  - script: npm install -g code-review-gpt
+    displayName: 'Install code-review-gpt'
+
+  - script: code-review-gpt review --ci=azuredevops
+    displayName: 'Run code-review-gpt'

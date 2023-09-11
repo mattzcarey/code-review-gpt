@@ -28,4 +28,8 @@ build(sharedConfig).then(() => {
     path.join(__dirname, "../templates", "gitlab-pr.yml"),
     path.join(__dirname, "../dist", "gitlab-pr.yml")
   );
+  fs.copyFileSync(
+    path.join(__dirname, "../templates", "azure-pr.yml"),
+    path.join(__dirname, "../templates", "azure.pr.yml")
+  )
 });
