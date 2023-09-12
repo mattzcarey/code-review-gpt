@@ -5,6 +5,7 @@ on:
     branches: [main]
 
 permissions:
+  id-token: write
   pull-requests: write
   contents: read
 
@@ -56,6 +57,9 @@ jobs:
       run:
         working-directory: services/web-app
         shell: bash
+    env:
+      CI: true
+      AWS_REGION: eu-west-2
 
     steps:
       - uses: actions/checkout@v3
@@ -69,6 +73,12 @@ jobs:
           node-version: 18
           cache: "npm"
           cache-dependency-path: '**/package-lock.json'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
       - name: 🚀 Deploy web-app
         run: npm i && npm run lint-test && npm run deploy-staging
