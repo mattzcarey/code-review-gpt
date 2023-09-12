@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - feat/github-marketplace-action
-      
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Use My Custom Action
-        uses: ../action.yml # Reference your custom action directory
+        uses: ../ # Reference your custom action directory
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-3.5-turbo'
