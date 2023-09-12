@@ -8,6 +8,7 @@ permissions:
   id-token: write
   pull-requests: write
   contents: read
+  actions: read
 
 jobs:
   build_and_test_code_review_gpt:
