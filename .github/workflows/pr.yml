@@ -68,11 +68,10 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: './package-lock.json'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: 🚀 Deploy web-app
         run: npm i && npm run lint-test && npm run deploy-staging
-
 
   build_and_test_core:
     runs-on: ubuntu-latest
@@ -96,7 +95,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: './package-lock.json'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3

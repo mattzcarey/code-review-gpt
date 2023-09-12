@@ -20,10 +20,13 @@ defaults:
     shell: bash
 
 jobs:
-  build-deploy:
-    name: 🏗 Build Project & 🚀 Deploy
+ build_and_test_web_app:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: services/web-app
+        shell: bash
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -35,9 +38,34 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
+          cache-dependency-path: '**/package-lock.json'
 
-      - name: Install package dependencies
-        run: cd code-review-gpt && npm ci
+      - name: 🚀 Deploy web-app
+        run: npm i && npm run deploy-staging
+
+  build_and_test_core:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      AWS_REGION: eu-west-2
+
+    defaults:
+      run:
+        working-directory: services/core
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -46,7 +74,4 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
       - name: 🚀 Deploy core
-        run: cd services/core && npm i && npm run deploy-staging
-
-      - name: 🚀 Deploy web-app
-        run: cd services/web-app && npm i && npm run deploy-staging
+        run: npm i && npm run deploy-staging
