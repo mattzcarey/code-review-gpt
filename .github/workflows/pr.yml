@@ -8,13 +8,12 @@ permissions:
   pull-requests: write
   contents: read
 
-defaults:
-  run:
-    working-directory: code-review-gpt
-
 jobs:
-  build_and_test:
+  build_and_test_code_review_gpt:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code-review-gpt
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -38,6 +37,9 @@ jobs:
       - name: Run code review script
         run: npm run start -- --ci=github --model=gpt-3.5-turbo
 
+      - name: Run linting test
+        run: npm run lint-test
+
       - name: Run unit tests
         run: npm run test-unit
 
@@ -47,3 +49,59 @@ jobs:
 
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
+
+  build_and_test_web_app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/web-app
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: 🚀 Deploy web-app
+        run: npm i && npm run lint-test && npm run deploy-staging
+
+
+  build_and_test_core:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      AWS_REGION: eu-west-2
+
+    defaults:
+      run:
+        working-directory: services/core
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+
+      - name: 🚀 Deploy core
+        run: npm i && npm run lint-test && npm run deploy-staging
+
