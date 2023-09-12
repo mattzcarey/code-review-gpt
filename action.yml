@@ -31,5 +31,5 @@ runs:
       shell: bash
       run: |
         cd code-review-gpt
-        npm run start -- --ci=github --model=${{ inputs.MODEL }}
+        npx ts-node ./src/index.ts -- --ci=github --model=${{ inputs.MODEL }}
 
