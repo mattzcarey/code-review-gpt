@@ -1,0 +1,34 @@
+name: 'Code Review GPT'
+description: 'A description of what your action does.'
+author: 'Orion Tools'
+inputs:
+  MODEL:
+    description: 'The GPT model to use'
+    required: true
+    default: 'gpt-3.5-turbo'
+  # OPENAI_API_KEY:
+  #   description: 'OpenAI API Key'
+  #   required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+    
+    # - name: Export OpenAI Api Key
+    #   shell: bash
+    #   run: export OPENAI_API_KEY=${{ inputs.OPENAI_API_KEY }}
+
+    - name: Run Code Review GPT
+      shell: bash
+      run: |
+        cd code-review-gpt
+        npm run start -- --ci=github --model=${{ inputs.MODEL }}
+

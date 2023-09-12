@@ -1,0 +1,18 @@
+name: Test My Custom Action
+
+on:
+  push:
+    branches:
+      - feat/github-marketplace-action
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use My Custom Action
+        uses: ./action.yml # Reference your custom action directory
+        with:
+          MODEL: 'gpt-3.5-turbo'
