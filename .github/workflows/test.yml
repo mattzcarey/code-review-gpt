@@ -13,6 +13,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use My Custom Action
-        uses: ./action.yml # Reference your custom action directory
+        uses: ../action.yml # Reference your custom action directory
         with:
           MODEL: 'gpt-3.5-turbo'
