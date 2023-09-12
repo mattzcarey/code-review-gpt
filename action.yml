@@ -21,7 +21,7 @@ runs:
     - name: Install code-review-gpt
       shell: bash
       run: |
-        npm code-review-gpt
+        npm install code-review-gpt
         npx code-review-gpt configure --setupTarget=github
 
     - name: Export OpenAI Api Key
