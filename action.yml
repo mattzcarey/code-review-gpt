@@ -26,18 +26,12 @@ runs:
     - name: Export OpenAI Api Key
       shell: bash
       run: export OPENAI_API_KEY=$OPENAI_API_KEY
-
-    - name: Change directory
-      shell: bash
-      run: cd code-review-gpt
-    
-    - name: Npm clean install
-      shell: bash
-      run: npm ci
     
     - name: Run Code Review GPT
       shell: bash
-      run: npx ts-node ./src/index.ts -- --ci=github --model=$MODEL
+      run: |
+        cd code-review-gpt
+        npx ts-node ./src/index.ts -- --ci=github --model=$MODEL
       
       env:
         MODEL: ${{ inputs.MODEL }}
