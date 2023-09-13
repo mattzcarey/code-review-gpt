@@ -32,10 +32,6 @@ runs:
         npm install code-review-gpt
         npx code-review-gpt configure --setupTarget=github
       
-    - name: Export OpenAI Api Key
-      shell: bash
-      run: export OPENAI_API_KEY=$OPENAI_API_KEY
-      
       env:
         MODEL: ${{ inputs.MODEL }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
