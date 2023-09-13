@@ -1,14 +1,10 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
-
 import {
   ReviewArgs,
   ReviewFile,
 } from "../../../../code-review-gpt/src/common/types";
 import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
 import { review } from "../../../../code-review-gpt/src/review/index";
-import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 import { getVariableFromSSM } from "../utils/getVariable";
-import { authenticate } from "./auth";
 
 type ReviewLambdasBody = {
   args: ReviewArgs;
@@ -22,32 +18,7 @@ type ReviewLambdaResponse = {
   body: string | undefined;
 };
 
-export const main = async (
-  event: APIGatewayProxyEvent
-): Promise<ReviewLambdaResponse> => {
-  if (event.body === null) {
-    return {
-      statusCode: 400,
-      body: "The request does not contain a body as expected.",
-    };
-  }
-
-  const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
-  if (header === undefined) {
-    return {
-      statusCode: 401,
-      body: "No authentication token found.",
-    };
-  }
-
-  const authenticated = await authenticate(header, event.body);
-  if (!authenticated) {
-    return {
-      statusCode: 401,
-      body: "Unauthorized.",
-    };
-  }
-
+export const main = async (event: any): Promise<ReviewLambdaResponse> => {
   try {
     // Use the same OpenAI key for everyone for now
     const openAIApiKey = await getVariableFromSSM(

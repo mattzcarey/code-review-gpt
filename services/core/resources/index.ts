@@ -4,6 +4,7 @@ import { App, Aspects, Tags } from "aws-cdk-lib";
 import { RemovalPolicyAspect } from "../aspects";
 import { getRegion, getStage } from "../helpers";
 import { CoreStack, DemoStack } from "./stacks";
+import { WebhookStack } from "./stacks/webhook-stack";
 
 const app = new App();
 
@@ -21,6 +22,11 @@ new DemoStack(app, "crgpt-demo", {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
   userTable: coreStack.userTable,
+});
+
+new WebhookStack(app, "crgpt-webhook", {
+  stage,
+  env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
 });
 
 //Aspects
