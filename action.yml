@@ -9,15 +9,14 @@ inputs:
   OPENAI_API_KEY:
     description: 'OpenAI API Key'
     required: true
-  BASE_SHA:
-    description: 'Base SHA'
-    required: true
   GITHUB_TOKEN:
     description: 'Github token'
     required: true
 runs:
   using: 'composite'
   steps:
+    - uses: actions/checkout@v4
+
     - uses: actions/setup-node@v3
       with:
         node-version: 18
@@ -29,16 +28,9 @@ runs:
     - name: Run Code Review GPT
       shell: bash
       run: npx code-review-gpt review --ci=github --model=$MODEL
-      # run: npx ts-node ./src/index.ts -- --ci=github --model=$MODEL
-
-    # - name: Install & add code-review-gpt to CI
-    #   shell: bash
-    #   run: |
-    #     npm install code-review-gpt
-    #     npx code-review-gpt configure --setupTarget=github
       
       env:
         MODEL: ${{ inputs.MODEL }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
-        BASE_SHA: ${{ inputs.BASE_SHA }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}s
