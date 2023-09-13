@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { App, Aspects, Tags } from "aws-cdk-lib";
 
+import { CoreStack, DemoStack } from "./stacks";
 import { RemovalPolicyAspect } from "../aspects";
 import { getRegion, getStage } from "../helpers";
-import { CoreStack, DemoStack } from "./stacks";
 
 const app = new App();
 

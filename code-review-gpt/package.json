@@ -9,7 +9,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
-    "lint-test": "eslint . --ext=js,ts,tsx",
+    "lint-test": "eslint . --ext=js,ts",
     "start": "ts-node ./src/index.ts",
     "review": "ts-node ./src/index.ts review",
     "configure": "ts-node ./src/index.ts configure",

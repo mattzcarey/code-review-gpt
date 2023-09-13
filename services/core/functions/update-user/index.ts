@@ -1,11 +1,11 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
+import { encryptKey } from "./encryptKey";
 import { UserEntity } from "../../entities";
 import {
   formatResponse,
   FormattedHandlerResponse,
 } from "../utils/format-response";
-import { encryptKey } from "./encryptKey";
 
 type UpdateUserLambdaInput = {
   apiKey: string;

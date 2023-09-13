@@ -39,8 +39,6 @@ const formatTestResult = (result: testResult, message: string): string => {
       return chalk.yellow(`⚠️ [WARN] - ${message}`);
     case testResult.FAIL:
       return chalk.red(`❌ [FAIL] - ${message}`);
-    default:
-      throw new Error(`Unknown test result: ${result}`);
   }
 };
 

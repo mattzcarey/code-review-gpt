@@ -43,6 +43,7 @@ const configureGitHub = async () => {
     logger.error(
       "No API key provided. Please manually add the OPENAI_API_KEY secret to your GitHub repository."
     );
+
     return;
   }
 

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "lint-fix": "eslint . --ext=js,ts,tsx --fix",
+    "lint-test": "eslint . --ext=js,ts,tsx",
     "dev": "sst bind next dev",
     "dev-local": "next dev",
     "build": "sst bind next build",
@@ -26,8 +28,6 @@
     "aws-lambda": "^1.0.7",
     "axios": "^1.4.0",
     "clsx": "^2.0.0",
-    "eslint": "8.46.0",
-    "eslint-config-next": "13.4.12",
     "framer-motion": "^10.16.1",
     "next": "13.4.12",
     "next-auth": "^4.23.1",
@@ -47,6 +47,12 @@
     "aws-cdk-lib": "^2.93.0",
     "constructs": "10.1.156",
     "sst": "^2.22.10",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "eslint": "^8.44.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1"
   }
 }

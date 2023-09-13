@@ -2,6 +2,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { v4 as uuidv4 } from "uuid";
 
+import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 import { getMaxPromptLength } from "../../../../code-review-gpt/src/common/model/getMaxPromptLength";
 import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
 import { askAI } from "../../../../code-review-gpt/src/review/llm/askAI";
@@ -9,7 +10,6 @@ import { demoPrompt } from "../../../../code-review-gpt/src/review/prompt/prompt
 import { ReviewDemoCounterEntity } from "../../entities";
 import { formatResponse } from "../utils/format-response";
 import { getEnvVariable, getVariableFromSSM } from "../utils/getVariable";
-import { saveInputAndResponseToS3 } from "./saveInputAndResponseToS3";
 
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";
 

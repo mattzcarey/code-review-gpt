@@ -1,5 +1,6 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
+import { authenticate } from "./auth";
 import {
   ReviewArgs,
   ReviewFile,
@@ -8,7 +9,6 @@ import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
 import { review } from "../../../../code-review-gpt/src/review/index";
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 import { getVariableFromSSM } from "../utils/getVariable";
-import { authenticate } from "./auth";
 
 type ReviewLambdasBody = {
   args: ReviewArgs;
