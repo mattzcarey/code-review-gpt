@@ -15,13 +15,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
 
     - uses: actions/setup-node@v3
       with:
         node-version: 18
 
-    - name: Install code-review-gpt
+    - name: Install Code Review GPT
       shell: bash
       run: npm install code-review-gpt
     
