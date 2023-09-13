@@ -30,7 +30,7 @@ runs:
       shell: bash
       run: |
         npm install code-review-gpt
-        npx code-review-gpt configure
+        npx code-review-gpt configure --setupTarget=github
       
       env:
         MODEL: ${{ inputs.MODEL }}
