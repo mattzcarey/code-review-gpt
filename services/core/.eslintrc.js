@@ -98,6 +98,12 @@ module.exports = {
     "@typescript-eslint/no-unnecessary-condition": "error",
     "@typescript-eslint/no-unnecessary-type-arguments": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
+    // TODO: The four lines below are warn rather than error because this is not a monorepo and we were having import issues
+    // Once we have a monorepo setup, these should be changed.
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-unsafe-call": "warn",
+    "@typescript-eslint/no-unsafe-argument": "warn",
+    "@typescript-eslint/no-unsafe-member-access": "warn",
   },
   parserOptions: {
     ecmaVersion: "latest",
