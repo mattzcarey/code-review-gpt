@@ -9,6 +9,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Use My Custom Action
         uses: ./ # Reference your custom action directory
         with:
