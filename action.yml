@@ -16,13 +16,13 @@ runs:
       with:
         node-version: 18
 
-    - name: Install code-review-gpt dependencies
+    - name: Install code-review-gpt
       shell: bash
-      run: cd code-review-gpt && npm ci
+      run: npm install code-review-gpt
     
     - name: Run Code Review GPT
       shell: bash
-      run: npm run start -- --ci=github --model=gpt-3.5-turbo
+      run: npx code-review-gpt review
       # run: npx ts-node ./src/index.ts -- --ci=github --model=$MODEL
 
     # - name: Install & add code-review-gpt to CI
