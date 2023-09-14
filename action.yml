@@ -25,9 +25,9 @@ runs:
       shell: bash
       run: npm install code-review-gpt
 
-    - name: Configure Code Review GPT
-      shell: bash
-      run: npx code-review-gpt configure --setupTarget=github
+    # - name: Configure Code Review GPT
+    #   shell: bash
+    #   run: npx code-review-gpt configure --setupTarget=github
     
     - name: Run Code Review GPT
       shell: bash
