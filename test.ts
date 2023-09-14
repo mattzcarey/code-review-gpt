@@ -33,4 +33,8 @@ function inefficientFactorial(n: number): number {
 getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
 console.log("hello");
 
+for (let i = 0; i< 5; ++i) {
+  console.log("this is number ", i);
+}
+
 console.log("factorial is 4 -> ", inefficientFactorial(4));
