@@ -11,6 +11,7 @@ export const authenticate = async (
     process.env.GITHUB_WEBHOOK_SECRET_PARAM_NAME ?? ""
   );
 
+
   //Import Key
   const encoder = new TextEncoder();
   const keyBytes = encoder.encode(githubSecret);

@@ -1,4 +1,4 @@
-export * from "../functions/utils/format-response";
+export * from "../functions/utils/formatResponse";
 export * from "./certificates";
 export * from "./domains";
 export * from "./env-helpers";

@@ -36,12 +36,6 @@ export class ReviewLambda extends NodejsFunction {
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
 
-    const githubSecretParameterStoreArn = Stack.of(scope).formatArn({
-      service: "ssm",
-      resource: "parameter",
-      resourceName: GITHUB_WEBHOOK_SECRET_PARAM_NAME,
-    });
-
     const langchainApiKeyParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
@@ -53,7 +47,6 @@ export class ReviewLambda extends NodejsFunction {
         actions: ["ssm:GetParameter"],
         resources: [
           openAIApiKeyParameterStoreArn,
-          githubSecretParameterStoreArn,
           langchainApiKeyParameterStoreArn,
         ],
       })
