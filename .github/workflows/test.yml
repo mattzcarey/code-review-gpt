@@ -14,7 +14,7 @@ permissions:
 jobs:
   test:
     env:
-      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      BASE_SHA: dcdb31e1190a8054c3360d88ade8e19fb6abecdb
       GITHUB_SHA: ${{ github.sha }}
 
     runs-on: ubuntu-latest
