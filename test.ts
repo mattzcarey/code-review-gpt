@@ -24,3 +24,9 @@ const getDailyForecast = async(location: string, countryCode: string): Promise<a
 
 getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
 console.log("hello");
+getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
+console.log("hello");
+getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
+console.log("hello");
+getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
+console.log("hello");
