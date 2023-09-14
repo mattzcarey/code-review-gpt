@@ -21,20 +21,3 @@ const getDailyForecast = async(location: string, countryCode: string): Promise<a
 
     return data;
 }
-
-function inefficientFactorial(n: number): number {
-  if (n <= 0) {
-    return 1;
-  } else {
-    return n * inefficientFactorial(n - 1);
-  }
-}
-
-getDailyForecast("Cape Town", "ZA").then((data) => console.log(data.city));
-console.log("hello");
-
-for (let i = 0; i< 5; ++i) {
-  console.log("this is number ", i);
-}
-
-console.log("factorial is 4 -> ", inefficientFactorial(4));
