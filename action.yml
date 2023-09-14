@@ -27,10 +27,9 @@ runs:
     
     - name: Run Code Review GPT
       shell: bash
-      run: npx code-review-gpt review --ci=github --model=${{ env.MODEL }}
+      run: npx code-review-gpt review --ci=github --model=${{ inputs.MODEL }}
       
       env:
-        MODEL: ${{ inputs.MODEL }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
