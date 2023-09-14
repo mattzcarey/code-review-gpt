@@ -38,10 +38,9 @@ export const main = async (event: ReviewEvent): Promise<ReviewLambdaResponse> =>
       process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
     );
 
-    const inputBody = JSON.parse(event.body) as ReviewLambdaBody;
     const reviewResponse = await review(
-      inputBody.args,
-      inputBody.files,
+      event.detail.args,
+      event.detail.files,
       openAIApiKey
     );
 

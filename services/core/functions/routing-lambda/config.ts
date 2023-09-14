@@ -1,8 +1,9 @@
+import { EventBus } from "aws-cdk-lib/aws-events";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
-import { buildResourceName, commonLambdaProps } from "../../helpers";
 import { join } from "path";
-import { EventBus } from "aws-cdk-lib/aws-events";
+
+import { buildResourceName, commonLambdaProps } from "../../helpers";
 
 type RoutingLambdaProps = {
   eventBus: EventBus;

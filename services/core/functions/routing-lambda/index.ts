@@ -1,13 +1,18 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
 import {
   EventBridgeClient,
   PutEventsCommand,
 } from "@aws-sdk/client-eventbridge";
+import { APIGatewayProxyEvent } from "aws-lambda";
+
 import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
 import { authenticate } from "../review-lambda/auth";
 
+type WebhookApiResponse = {
+  statusCode: number;
+  body?: string;
+};
 
-export const main = async (event: APIGatewayProxyEvent) => {
+export const main = async (event: APIGatewayProxyEvent): Promise<WebhookApiResponse> => {
   if (event.body === null) {
     return {
       statusCode: 400,
@@ -35,7 +40,6 @@ export const main = async (event: APIGatewayProxyEvent) => {
     // Create an EventBridge Client
     const eventBridgeClient = new EventBridgeClient();
 
-    console.log(process.env.EVENT_BUS_NAME)
     // Create Event
     const eventParams = {
       Entries: [
@@ -49,9 +53,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     };
 
     // Add the event to the EventBridge event bus
-    await eventBridgeClient.send(
-      new PutEventsCommand(eventParams)
-    );
+    await eventBridgeClient.send(new PutEventsCommand(eventParams));
 
     // Return a successful response
     return {
@@ -59,6 +61,7 @@ export const main = async (event: APIGatewayProxyEvent) => {
     };
   } catch (error) {
     console.error("Error handling API Gateway request:", error);
+
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Internal Server Error" }),
