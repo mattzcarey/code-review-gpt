@@ -5,6 +5,12 @@ on:
     branches:
       - chore/action-testing
 
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+  actions: read
+
 jobs:
   test:
     env:
