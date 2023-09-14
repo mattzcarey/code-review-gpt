@@ -5,7 +5,6 @@ import { Key } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
 
 import { GetUserLambda } from "../../functions/get-user/config";
-import { ReviewLambda } from "../../functions/review-lambda/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
 import { getCertificateArn, getDomainName, getStage } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
@@ -37,7 +36,6 @@ export class CoreStack extends Stack {
     this.userTable = new UserTable(this, "user-database");
 
     //Lambda
-    const reviewLambda = new ReviewLambda(this, "review-lambda");
     const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
       table: this.userTable,
       kmsKey: kmsKey,
@@ -47,9 +45,6 @@ export class CoreStack extends Stack {
     });
 
     //Routes
-    const postReviewRoute = api.root.addResource("postReview");
-    postReviewRoute.addMethod("POST", new LambdaIntegration(reviewLambda));
-
     const updateUserRoute = api.root.addResource("updateUser");
     updateUserRoute.addMethod("POST", new LambdaIntegration(updateUserLambda));
 

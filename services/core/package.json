@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.388.0",
+    "@aws-sdk/client-eventbridge": "^3.410.0",
     "@aws-sdk/client-kms": "^3.388.0",
     "@aws-sdk/client-s3": "^3.388.0",
     "@aws-sdk/client-ssm": "^3.388.0",
