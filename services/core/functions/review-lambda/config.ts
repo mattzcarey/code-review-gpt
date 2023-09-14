@@ -5,7 +5,6 @@ import { Construct } from "constructs";
 import { join } from "path";
 
 import {
-  GITHUB_SECRET_PARAM_NAME,
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
@@ -23,7 +22,6 @@ export class ReviewLambda extends NodejsFunction {
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
       environment: {
-        GITHUB_SECRET_PARAM_NAME: GITHUB_SECRET_PARAM_NAME,
         LANGCHAIN_PROJECT: "review",
         ...commonLambdaEnvironment,
         ...reviewLambdaEnvironment,
@@ -41,7 +39,7 @@ export class ReviewLambda extends NodejsFunction {
     const githubSecretParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
-      resourceName: GITHUB_SECRET_PARAM_NAME,
+      resourceName: GITHUB_WEBHOOK_SECRET_PARAM_NAME,
     });
 
     const langchainApiKeyParameterStoreArn = Stack.of(scope).formatArn({
