@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { App, Aspects, Tags } from "aws-cdk-lib";
 
+import { CoreStack, DemoStack, WebhookStack } from "./stacks";
 import { RemovalPolicyAspect } from "../aspects";
 import { getRegion, getStage } from "../helpers";
-import { CoreStack, DemoStack } from "./stacks";
-import { WebhookStack } from "./stacks/webhook-stack";
+
 
 const app = new App();
 

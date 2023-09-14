@@ -26,6 +26,19 @@ type GithubFile = {
   previous_filename?: string | undefined;
 };
 
+type ValidClientResponse = {
+  data: { content: string };
+};
+
+const isValidOctokitResponse = (input: unknown): input is ValidClientResponse =>
+  typeof input === "object" &&
+  input !== null &&
+  "data" in input &&
+  typeof input.data === "object" &&
+  input.data !== null &&
+  "content" in input.data &&
+  typeof input.data.content === "string";
+
 export class GitHubRESTClient {
   private client: Octokit = new Octokit({ auth: githubToken() });
 
@@ -60,18 +73,27 @@ export class GitHubRESTClient {
   }
 
   async fetchPullRequestFile(rawFile: GithubFile): Promise<ReviewFile> {
-    const content = await this.fetchPullRequestFileContent(rawFile.contents_url);
+    const content = await this.fetchPullRequestFileContent(
+      rawFile.contents_url
+    );
 
     return {
       fileName: rawFile.filename,
       fileContent: content,
-      changedLines: rawFile.patch ?? '',
+      changedLines: rawFile.patch ?? "",
     };
   }
 
   async fetchPullRequestFileContent(url: string): Promise<string> {
-    const response = await this.client.request(`GET ${url}`);
-    return this.decodeBase64(response.data.content);
+    const response: unknown = await this.client.request(`GET ${url}`);
+
+    if (isValidOctokitResponse(response)) {
+      return this.decodeBase64(response.data.content);
+    } else {
+      throw new Error(
+        `Unexpected response from Octokit. Response was ${JSON.stringify(response)}.`
+      );
+    }
   }
 
   decodeBase64(encoded: string): string {

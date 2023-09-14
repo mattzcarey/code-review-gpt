@@ -1,3 +1,5 @@
+import { EventBridgeEvent } from "aws-lambda";
+
 import {
   ReviewArgs,
   ReviewFile,
@@ -6,7 +8,7 @@ import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
 import { review } from "../../../../code-review-gpt/src/review/index";
 import { getVariableFromSSM } from "../utils/getVariable";
 
-type ReviewLambdasBody = {
+type ReviewLambdaBody = {
   args: ReviewArgs;
   files: ReviewFile[];
 };
@@ -18,7 +20,10 @@ type ReviewLambdaResponse = {
   body: string | undefined;
 };
 
-export const main = async (event: any): Promise<ReviewLambdaResponse> => {
+type ReviewEvent = EventBridgeEvent<'WebhookRequestEvent', ReviewLambdaBody>;
+
+
+export const main = async (event: ReviewEvent): Promise<ReviewLambdaResponse> => {
   try {
     // Use the same OpenAI key for everyone for now
     const openAIApiKey = await getVariableFromSSM(
@@ -33,7 +38,7 @@ export const main = async (event: any): Promise<ReviewLambdaResponse> => {
       process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
     );
 
-    const inputBody = JSON.parse(event.body) as ReviewLambdasBody;
+    const inputBody = JSON.parse(event.body) as ReviewLambdaBody;
     const reviewResponse = await review(
       inputBody.args,
       inputBody.files,

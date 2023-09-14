@@ -1,0 +1,40 @@
+name: 'Code Review GPT'
+description: 'Reviews the staged files with a GPT model from OpenAI'
+author: 'Orion Tools'
+inputs:
+  MODEL:
+    description: 'The GPT model to use'
+    required: true
+    default: 'gpt-3.5-turbo'
+  OPENAI_API_KEY:
+    description: 'OpenAI API Key'
+    required: true
+  GITHUB_TOKEN:
+    description: 'Github token'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Code Review GPT
+      shell: bash
+      run: npm install code-review-gpt
+    
+    - name: Run Code Review GPT
+      shell: bash
+      run: npx code-review-gpt review --ci=github --model=$MODEL
+      
+      env:
+        MODEL: ${{ inputs.MODEL }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+branding:
+  icon: 'code'
+  color: 'blue'
