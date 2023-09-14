@@ -34,6 +34,7 @@ export const review = async (
   const organization = yargs.org;
 
   const filteredFiles = filterFiles(files);
+  console.log("Filtered files -> ", filteredFiles);
 
   if (filteredFiles.length === 0) {
     logger.info("No file to review, finishing review now.");
