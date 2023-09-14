@@ -9,6 +9,9 @@ inputs:
   OPENAI_API_KEY:
     description: 'OpenAI API Key'
     required: true
+  BASE_SHA:
+    description: 'Base SHA'
+    required: true
   GITHUB_TOKEN:
     description: 'Github token'
     required: true
@@ -31,7 +34,7 @@ runs:
       
       env:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
-        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        BASE_SHA: ${{ inputs.BASE_SHA }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
 branding:
