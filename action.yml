@@ -31,7 +31,6 @@ runs:
       
       env:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
-        BASE_SHA: 4fec360
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
 branding:
