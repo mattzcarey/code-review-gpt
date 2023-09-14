@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Code Review GPT custom action
-        #uses: ./
-        uses: mattzcarey/code-review-gpt@v0.1.4-alpha
+        uses: ./
+        #uses: mattzcarey/code-review-gpt@v0.1.4-alpha
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-3.5-turbo'

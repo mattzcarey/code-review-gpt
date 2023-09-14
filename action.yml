@@ -12,6 +12,10 @@ inputs:
   GITHUB_TOKEN:
     description: 'Github token'
     required: true
+outputs:
+  response:
+    description: 'The reviewed code with suggestions'
+    value: ${{ steps.code-review-gpt.response }}
 runs:
   using: 'composite'
   steps:
