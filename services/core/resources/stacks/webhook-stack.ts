@@ -49,13 +49,13 @@ export class WebhookStack extends Stack {
     webhookRoute.addMethod("POST", new LambdaIntegration(routingLambda));
 
     // EventBridge Rule
-    const eventRule = new Rule(this, "WebhookEventRule", {
+    const reviewEventRule = new Rule(this, "WebhookEventRule", {
       eventBus: eventBus,
       eventPattern: {
-        detailType: ["WebhookRequestEvent"],
+        detailType: ["GithubPullRequestEvent"],
       },
     });
     // Add the Lambda function as a target for the EventBridge rule
-    eventRule.addTarget(new LambdaFunction(reviewLambda));
+    reviewEventRule.addTarget(new LambdaFunction(reviewLambda));
   }
 }

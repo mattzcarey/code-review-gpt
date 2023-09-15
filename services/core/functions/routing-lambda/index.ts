@@ -11,12 +11,8 @@ import {
   GITHUB_EVENT_HEADER_KEY,
   GITHUB_SIGNATURE_HEADER_KEY,
 } from "../../constants";
-import { createPullRequestEvent } from "../utils/createEvents";
-
-type WebhookApiResponse = {
-  statusCode: number;
-  body?: string;
-};
+import { createEventParams } from "../utils/createEventParams";
+import { WebhookApiResponse } from "../utils/types";
 
 export const main = async (
   event: APIGatewayProxyEvent
@@ -30,11 +26,10 @@ export const main = async (
 
   const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
   const githubEventHeader = event.headers[GITHUB_EVENT_HEADER_KEY];
-
   if (header === undefined || githubEventHeader === undefined) {
     return {
       statusCode: 401,
-      body: "No authentication token found.",
+      body: `Required headers not found. ${GITHUB_SIGNATURE_HEADER_KEY} and/or ${GITHUB_EVENT_HEADER_KEY}.`,
     };
   }
 
@@ -46,30 +41,25 @@ export const main = async (
     };
   }
 
-  // const pr = jsonBody["pull_request"];
-  // console.log("pull requests: ", pr);
-  // console.log(pr["head"]["sha"]); //the most recent commit sha
-  // console.log(pr["base"]["sha"]); //the commit sha of most recent on main
-
   try {
     // Create an EventBridge Client
     const eventBridgeClient = new EventBridgeClient();
 
-    //Create event based on GithubEvent header
-    let event;
+    // Create and route events
+    let eventParams;
     switch (githubEventHeader) {
       case "pull_request":
-        event = createPullRequestEvent("detail");
+        eventParams = createEventParams(event.body, "GithubPullRequestEvent");
         break;
-      default: //todo think of something better here
+      default:
         return {
-          statusCode: 403,
-          body: JSON.stringify({ error: "Bad Request" }),
+          statusCode: 400,
+          body: JSON.stringify({ error: "Unknown Github Event" }),
         };
     }
 
-    // Add the event to the EventBridge event bus
-    await eventBridgeClient.send(new PutEventsCommand(event));
+    // Add event to the EventBridge event bus
+    await eventBridgeClient.send(new PutEventsCommand(eventParams));
 
     // Return a successful response
     return {
