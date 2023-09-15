@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { EventBridgeEvent } from "aws-lambda";
 
 import { review } from "../../../../code-review-gpt/src/review/index";
@@ -9,10 +5,35 @@ import { getFilesWithChanges } from "../utils/getReviewFiles";
 import { getVariableFromSSM } from "../utils/getVariable";
 type ReviewEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
 
-export const main = async (event: ReviewEvent): Promise<void> => {
-  event.detail;
+type ShaObject = { sha: string };
 
-  const pr = JSON.parse(event.detail)["pull_request"];
+type ValidEventDetail = {
+  pull_request: { base: ShaObject; head: ShaObject };
+};
+
+const isValidObject = (entry: unknown): entry is object =>
+  typeof entry === "object" && entry !== null;
+
+const isShaObject = (entry: object): entry is ShaObject =>
+  "sha" in entry && typeof entry.sha === "string";
+
+const isValidEventDetail = (input: unknown): input is ValidEventDetail =>
+  isValidObject(input) &&
+  "base" in input &&
+  isValidObject(input.base) &&
+  isShaObject(input.base) &&
+  "head" in input &&
+  isValidObject(input.head) &&
+  isShaObject(input.head);
+
+export const main = async (event: ReviewEvent): Promise<void> => {
+  const eventDetail: unknown = JSON.parse(event.detail);
+
+  if (!isValidEventDetail(eventDetail)) {
+    throw new Error('Error fetching event in review-lambda- event is of an unexpected shape');
+  }
+
+  const pr = eventDetail["pull_request"];
   console.log(pr["head"]["sha"]); //the most recent commit sha
   console.log(pr["base"]["sha"]); //the commit sha of most recent on main
 
@@ -26,11 +47,13 @@ export const main = async (event: ReviewEvent): Promise<void> => {
     commentPerFile: false,
     remote: undefined,
     _: [],
-    $0: ""
+    $0: "",
   };
 
   // Get files
-  console.log(`Get files with changes, base: ${pr["base"]["sha"]}, head ${pr["head"]["sha"]}`)
+  console.log(
+    `Get files with changes, base: ${pr["base"]["sha"]}, head ${pr["head"]["sha"]}`
+  );
   const reviewFiles = await getFilesWithChanges(
     pr["base"]["sha"],
     pr["head"]["sha"]
