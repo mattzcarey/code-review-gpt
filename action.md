@@ -1,0 +1,40 @@
+# Code Review GPT Action
+
+## Setup
+
+First thing you'd need to do is create an OpenAI Api Key secret in github, more info on how to set secrets for your github actions can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions).
+
+Once you've set your secret you can create a new file in your workflow called crgpt.yml, which should look like something seen below. An important attribute to include, is the fetch-depth of the checkout action below. Currently the action only works when it has access to the repo's entire commit history.
+
+```shell
+name: Code Review GPT
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+  actions: read
+
+jobs:
+  run_code_review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Code Review GPT
+        uses: mattzcarey/code-review-gpt@v0.1.4-alpha
+        with:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL: 'gpt-3.5-turbo'
+          GITHUB_TOKEN: ${{ github.token }}
+```
+
+## Publishing a new version of the action
+
+To publish a later version of the github action is simple. All you need to do is draft a new release for the repo and the current version of the action.yml on the main branch will be published to github marketplace.
