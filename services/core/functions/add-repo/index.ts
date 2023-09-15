@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
+import { v4 as uuidv4 } from "uuid";
+import { instructionPrompt } from '../../../../code-review-gpt/src/review/prompt/prompts';
 
-import { UserEntity } from "../../entities";
+import { RepoEntity, UserEntity } from "../../entities";
 import {
   formatResponse,
   FormattedHandlerResponse,
@@ -46,6 +48,19 @@ export const main = async (
       },
       { conditions: { attr: "userId", exists: true } }
     );
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    inputBody.reposAdded.forEach( async (repo): Promise<void> => {
+      const repoId = uuidv4();
+      await RepoEntity.put(
+        {
+          repoId: repoId,
+          prompt: instructionPrompt,
+          name: repo,
+          ownerId: inputBody.userId,
+        }
+      );
+    });
 
     return formatResponse("User updated successfully.");
   } catch (err) {
