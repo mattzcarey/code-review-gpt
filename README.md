@@ -29,6 +29,10 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
 
 See the [package documentation](code-review-gpt/README.md) for more information.
 
+## Action Usage
+
+See the [action documentation](action.md) for more information.
+
 ## Getting Started 💫
 
 1. Clone the repository:
