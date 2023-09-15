@@ -13,12 +13,6 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  id-token: write
-  pull-requests: write
-  contents: read
-  actions: read
-
 jobs:
   run_code_review:
     runs-on: ubuntu-latest
