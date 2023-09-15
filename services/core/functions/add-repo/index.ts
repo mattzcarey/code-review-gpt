@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { v4 as uuidv4 } from "uuid";
-import { instructionPrompt } from '../../../../code-review-gpt/src/review/prompt/prompts';
 
+import { instructionPrompt } from '../../../../code-review-gpt/src/review/prompt/prompts';
 import { RepoEntity, UserEntity } from "../../entities";
 import {
   formatResponse,
