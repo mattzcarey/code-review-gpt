@@ -49,17 +49,18 @@ export const main = async (
       { conditions: { attr: "userId", exists: true } }
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    inputBody.reposAdded.forEach( async (repo): Promise<void> => {
+    inputBody.reposAdded.forEach((repo) => {
       const repoId = uuidv4();
-      await RepoEntity.put(
-        {
-          repoId: repoId,
-          prompt: instructionPrompt,
-          name: repo,
-          ownerId: inputBody.userId,
-        }
-      );
+      async () => {
+        await RepoEntity.put(
+          {
+            repoId: repoId,
+            prompt: instructionPrompt,
+            name: repo,
+            ownerId: inputBody.userId,
+          }
+        );
+      }
     });
 
     return formatResponse("User updated successfully.");
