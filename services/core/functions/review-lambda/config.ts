@@ -5,6 +5,10 @@ import { Construct } from "constructs";
 import { join } from "path";
 
 import {
+  GITHUB_APP_CLIENT_ID_PARAM_NAME,
+  GITHUB_APP_CLIENT_SECRET_PARAM_NAME,
+  GITHUB_APP_ID_PARAM_NAME,
+  GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
@@ -42,12 +46,40 @@ export class ReviewLambda extends NodejsFunction {
       resourceName: LANGCHAIN_API_KEY_PARAM_NAME,
     });
 
+    const githubAppIdParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_ID_PARAM_NAME,
+    });
+
+    const githubAppPrivateKeyParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
+    });
+
+    const githubAppClientIdParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_CLIENT_ID_PARAM_NAME,
+    });
+
+    const githubAppClientSecretParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_CLIENT_SECRET_PARAM_NAME,
+    });
+
     this.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
         resources: [
           openAIApiKeyParameterStoreArn,
           langchainApiKeyParameterStoreArn,
+          githubAppIdParameterStoreArn,
+          githubAppPrivateKeyParameterStoreArn,
+          githubAppClientIdParameterStoreArn,
+          githubAppClientSecretParameterStoreArn,
         ],
       })
     );

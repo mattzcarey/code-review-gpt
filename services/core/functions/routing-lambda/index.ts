@@ -49,6 +49,9 @@ export const main = async (
       case "pull_request":
         eventParams = createEventParams(event.body, "GithubPullRequestEvent");
         break;
+      case "installation":
+        eventParams = createEventParams(event.body, "GithubInstallationRequestEvent");
+        break;
       default:
         return {
           statusCode: 400,

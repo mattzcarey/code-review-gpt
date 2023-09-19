@@ -5,3 +5,7 @@ export const GITHUB_SIGNATURE_HEADER_KEY = "X-Hub-Signature-256";
 export const GITHUB_EVENT_HEADER_KEY = "X-GitHub-Event";
 export const TABLE_NAME = "crgpt-data";
 export const WEBHOOK_EVENT_BUS_NAME = "webhook-event-bus";
+export const GITHUB_APP_ID_PARAM_NAME = "GITHUB_APP_ID";
+export const GITHUB_APP_PRIVATE_KEY_PARAM_NAME = "GITHUB_APP_PRIVATE_KEY";
+export const GITHUB_APP_CLIENT_SECRET_PARAM_NAME = "GITHUB_APP_CLIENT_SECRET";
+export const GITHUB_APP_CLIENT_ID_PARAM_NAME = "GITHUB_APP_CLIENT_ID";

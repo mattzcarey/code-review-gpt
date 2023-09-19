@@ -4,6 +4,7 @@
   "bin": {
     "core": "resources/index.js"
   },
+  "main": "./dist/index.js",
   "scripts": {
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts,tsx",
@@ -41,9 +42,11 @@
     "@aws-sdk/lib-dynamodb": "^3.388.0",
     "aws-cdk-lib": "2.86.0",
     "aws-lambda": "^1.0.7",
+    "axios": "^1.5.0",
     "constructs": "^10.0.0",
     "dynamodb-toolbox": "^0.8.5",
     "esbuild": "0.19.1",
+    "octokit": "^3.1.0",
     "source-map-support": "^0.5.21",
     "uuid": "^9.0.0"
   }

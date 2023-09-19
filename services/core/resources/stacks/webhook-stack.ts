@@ -1,7 +1,7 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
-import { EventBus , Rule } from "aws-cdk-lib/aws-events";
+import { EventBus, Rule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { Construct } from "constructs";
 
@@ -14,8 +14,6 @@ import {
   getDomainName,
 } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
-
-
 
 interface WebhookStackProps extends StackProps {
   stage: string;
