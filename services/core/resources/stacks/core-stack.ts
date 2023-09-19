@@ -4,10 +4,11 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Key } from "aws-cdk-lib/aws-kms";
 import { Construct } from "constructs";
 
-import { AddRepoLambda } from '../../functions/add-repo/config';
+import { getCertificateArn } from "../../cdk-helpers/certificates";
+import { AddRepoLambda } from "../../functions/add-repo/config";
 import { GetUserLambda } from "../../functions/get-user/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
-import { getCertificateArn, getDomainName, getStage } from "../../helpers";
+import { getDomainName, getStage } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
 import { UserTable } from "../constructs/user-table";
 
