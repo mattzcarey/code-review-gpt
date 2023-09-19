@@ -13,7 +13,7 @@ const cdkEsbuildConfig: NodejsFunctionProps["bundling"] = {
   minify: true,
   keepNames: true,
   sourceMap: true,
-  externalModules: ["aws-sdk", "aws-cdk"],
+  externalModules: ["aws-sdk"],
   target: "node18",
   mainFields: ["module", "main"],
   metafile: true,
