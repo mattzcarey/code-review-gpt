@@ -4,10 +4,10 @@ import { Construct } from "constructs";
 import { join } from "path";
 
 import {
-  buildResourceName,
   commonLambdaEnvironment,
   commonLambdaProps,
-} from "../../helpers";
+} from "../../cdk-helpers/lambda";
+import { buildResourceName } from "../../helpers";
 
 type AddRepoLambdaProps = {
   table: Table;
