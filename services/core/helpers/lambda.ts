@@ -9,14 +9,14 @@ export const commonLambdaEnvironment: Record<string, string> = {
   REGION: getRegion(),
 };
 
-const cdkEsbuildConfig = {
+const cdkEsbuildConfig: NodejsFunctionProps["bundling"] = {
   minify: true,
   keepNames: true,
   sourceMap: true,
   externalModules: ["aws-sdk"],
-  platform: "node",
-  metafile: true,
+  target: "node18",
   mainFields: ["module", "main"],
+  metafile: true,
 };
 
 export const commonLambdaProps: Omit<NodejsFunctionProps, "code"> = {
