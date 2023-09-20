@@ -5,6 +5,10 @@ import { Construct } from "constructs";
 import { join } from "path";
 
 import {
+  commonLambdaEnvironment,
+  commonLambdaProps,
+} from "../../cdk-helpers/lambda";
+import {
   GITHUB_APP_CLIENT_ID_PARAM_NAME,
   GITHUB_APP_CLIENT_SECRET_PARAM_NAME,
   GITHUB_APP_ID_PARAM_NAME,
@@ -12,11 +16,7 @@ import {
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
-import {
-  buildResourceName,
-  commonLambdaEnvironment,
-  commonLambdaProps,
-} from "../../helpers";
+import { buildResourceName } from "../../helpers";
 import { reviewLambdaEnvironment } from "../utils/reviewLambdaEnvironment";
 
 export class ReviewLambda extends NodejsFunction {

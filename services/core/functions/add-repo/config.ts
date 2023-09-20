@@ -9,12 +9,12 @@ import {
 } from "../../cdk-helpers/lambda";
 import { buildResourceName } from "../../helpers";
 
-type GetUserLambdaProps = {
+type AddRepoLambdaProps = {
   table: Table;
 };
 
-export class GetUserLambda extends NodejsFunction {
-  constructor(scope: Construct, id: string, props: GetUserLambdaProps) {
+export class AddRepoLambda extends NodejsFunction {
+  constructor(scope: Construct, id: string, props: AddRepoLambdaProps) {
     const { table } = props;
 
     super(scope, id, {
@@ -26,6 +26,6 @@ export class GetUserLambda extends NodejsFunction {
       },
     });
 
-    table.grantReadData(this);
+    table.grantWriteData(this);
   }
 }

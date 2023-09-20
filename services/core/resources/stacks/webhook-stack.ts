@@ -5,12 +5,12 @@ import { EventBus, Rule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { Construct } from "constructs";
 
+import { getCertificateArn } from "../../cdk-helpers/certificates";
 import { WEBHOOK_EVENT_BUS_NAME } from "../../constants";
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { RoutingLambda } from "../../functions/routing-lambda/config";
 import {
   buildResourceName,
-  getCertificateArn,
   getDomainName,
 } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
