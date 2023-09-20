@@ -2,21 +2,21 @@ import { Duration } from "aws-cdk-lib";
 import { Architecture, Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunctionProps } from "aws-cdk-lib/aws-lambda-nodejs";
 
-import { getRegion, getStage } from "./env-helpers";
+import { getRegion, getStage } from "../helpers";
 
 export const commonLambdaEnvironment: Record<string, string> = {
   STAGE: getStage(),
   REGION: getRegion(),
 };
 
-const cdkEsbuildConfig = {
+const cdkEsbuildConfig: NodejsFunctionProps["bundling"] = {
   minify: true,
   keepNames: true,
   sourceMap: true,
   externalModules: ["aws-sdk"],
-  platform: "node",
-  metafile: true,
+  target: "node18",
   mainFields: ["module", "main"],
+  metafile: true,
 };
 
 export const commonLambdaProps: Omit<NodejsFunctionProps, "code"> = {

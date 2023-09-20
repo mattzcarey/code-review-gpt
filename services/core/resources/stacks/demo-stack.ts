@@ -3,8 +3,9 @@ import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
 
+import { getCertificateArn } from "../../cdk-helpers/certificates";
 import { DemoReviewLambda } from "../../functions/demo-review-lambda/config";
-import { getCertificateArn, getDomainName } from "../../helpers";
+import { getDomainName } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
 import { ReviewBucket } from "../constructs/review-bucket";
 
