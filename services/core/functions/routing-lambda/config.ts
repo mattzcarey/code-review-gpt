@@ -5,8 +5,9 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
 
-import { GITHUB_WEBHOOK_SECRET_PARAM_NAME } from "../../constants";
-import { buildResourceName, commonLambdaProps } from "../../helpers";
+import { commonLambdaProps } from "../../cdk-helpers/lambda";
+import { GITHUB_WEBHOOK_SECRET_PARAM_NAME } from '../../constants';
+import { buildResourceName } from "../../helpers";
 
 type RoutingLambdaProps = {
   eventBus: EventBus;
