@@ -13,18 +13,18 @@ const stage = getStage();
 const region = getRegion();
 
 //Stacks
-const coreStack = new CoreStack(app, "crgpt-core", {
+const coreStack = new CoreStack(app, `${stage}-crgpt-core`, {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
 });
 
-new DemoStack(app, "crgpt-demo", {
+new DemoStack(app, `${stage}-crgpt-demo`, {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
   userTable: coreStack.userTable,
 });
 
-new WebhookStack(app, "crgpt-webhook", {
+new WebhookStack(app, `${stage}-crgpt-webhook`, {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
 });

@@ -1,4 +1,4 @@
-import { Table } from "aws-cdk-lib/aws-dynamodb";
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { join } from "path";
@@ -9,13 +9,10 @@ import {
   commonLambdaProps,
 } from "../../helpers";
 
-type AddRepoLambdaProps = {
-  table: Table;
-};
-
 export class AddRepoLambda extends NodejsFunction {
-  constructor(scope: Construct, id: string, props: AddRepoLambdaProps) {
-    const { table } = props;
+  constructor(scope: Construct, id: string) {
+    const authDB = buildResourceName("web-app-auth");
+    const coreDB = buildResourceName("crgpt-data");
 
     super(scope, id, {
       ...commonLambdaProps,
@@ -23,9 +20,21 @@ export class AddRepoLambda extends NodejsFunction {
       entry: join(__dirname, "index.ts"),
       environment: {
         ...commonLambdaEnvironment,
+        AUTH_DB: authDB,
+        CORE_DB: coreDB,
       },
     });
 
-    table.grantWriteData(this);
+    const dynamoDbPolicyStatement = new iam.PolicyStatement({
+      actions: [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:Query",
+      ],
+      resources: ["*"],
+    });
+
+    this.addToRolePolicy(dynamoDbPolicyStatement);
   }
 }
