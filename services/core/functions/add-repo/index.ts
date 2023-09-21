@@ -3,10 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { instructionPrompt } from '../../../../code-review-gpt/src/review/prompt/prompts';
 import { AuthEntity, RepoEntity, UserEntity } from "../../entities";
-import {
-  formatResponse,
-  FormattedHandlerResponse,
-} from "../utils/format-response";
 
 type AddRepoEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
 
@@ -35,7 +31,7 @@ type Repo = {
 
 export const main = async(
   event: AddRepoEvent
-): Promise<FormattedHandlerResponse> => {
+): Promise<void> => {
   const eventBody = event as unknown as AddRepoEventBody;
 
   try {
@@ -49,7 +45,9 @@ export const main = async(
     });
 
     if (!response.Items || response.Items.length === 0) {
-      return formatResponse("Error, no user found with corresponding github id.", 204);
+      console.error("Error, no user found with corresponding github id.");
+      
+      return;
     }
 
     const githubUser = response.Items[0] as User;
@@ -103,10 +101,8 @@ export const main = async(
       });
     }));
     
-    return formatResponse("User repos updated successfully.", 200);
+    console.log("User repos updated successfully.");
   } catch (err) {
-    console.error(err);
-
-    return formatResponse("Error when updating user.", 500);
+    console.error("Error when updating user: ", err);
   }
 };
