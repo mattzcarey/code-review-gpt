@@ -8,31 +8,29 @@ import {
   FormattedHandlerResponse,
 } from "../utils/format-response";
 
-// Currently assuming that the input will be a eventbridge detail that is the Installation github event
-// https://docs.github.com/en/webhooks/webhook-events-and-payloads#installation
 type AddRepoEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
 
 type AddRepoEventBody = {
-  "detail": {
-    "repositories" : [[{
-      "name": string,
-      "full_name": string,
+  detail: {
+    repositories : [[{
+      name: string,
+      full_name: string,
     }]],
-    "sender": {
-      "login": string,
-      "id": string,
+    sender: {
+      login: string,
+      id: string,
     }
   }
 };
 
 type User = {
-  "userId" : string,
-  "repos": string[],
+  userId : string,
+  repos: string[],
 }
 
 type Repo = {
-  "name": string,
-  "full_name": string,
+  name: string,
+  full_name: string,
 }
 
 export const main = async(
@@ -50,7 +48,7 @@ export const main = async(
       attributes: [ "userId" ],
     });
 
-    if (response.Items === undefined) {
+    if (!response.Items || response.Items.length === 0) {
       return formatResponse("Error, no user found with corresponding github id.", 204);
     }
 
@@ -61,11 +59,11 @@ export const main = async(
     });
 
     let hasRepos = false;
-    if (Object.prototype.hasOwnProperty.call(userResponse, "repo")) {
+    if (userResponse.Item && "repos" in userResponse.Item) {
       hasRepos = true;
     }
 
-    const user = userResponse as unknown as User;
+    const user = userResponse.Item as unknown as User;
 
     let newRepos: string[];
     if (hasRepos) {
@@ -95,20 +93,16 @@ export const main = async(
       { conditions: { attr: "userId", exists: true } }
     );
 
-    newRepos.forEach((repo) => {
-      async() => {
-        const repoId = uuidv4();
-        await RepoEntity.put(
-          {
-            repoId: repoId,
-            prompt: instructionPrompt,
-            name: repo,
-            ownerId: githubUser.userId,
-          }
-        );
-      }
-    })
-
+    await Promise.all(newRepos.map(async (repo) => {
+      const repoId = uuidv4();
+      await RepoEntity.put({
+        repoId: repoId,
+        prompt: instructionPrompt,
+        name: repo,
+        ownerId: githubUser.userId,
+      });
+    }));
+    
     return formatResponse("User repos updated successfully.", 200);
   } catch (err) {
     console.error(err);
