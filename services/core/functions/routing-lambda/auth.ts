@@ -8,8 +8,9 @@ export const authenticate = async (
 ): Promise<boolean> => {
   // Get Github Secret
   const githubSecret = await getVariableFromSSM(
-    process.env.GITHUB_SECRET_PARAM_NAME ?? ""
+    process.env.GITHUB_WEBHOOK_SECRET_PARAM_NAME ?? ""
   );
+
 
   //Import Key
   const encoder = new TextEncoder();

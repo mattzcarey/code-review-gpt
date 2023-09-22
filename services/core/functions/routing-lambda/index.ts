@@ -4,15 +4,18 @@ import {
 } from "@aws-sdk/client-eventbridge";
 import { APIGatewayProxyEvent } from "aws-lambda";
 
-import { GITHUB_SIGNATURE_HEADER_KEY } from "../../constants";
-import { authenticate } from "../review-lambda/auth";
+import { authenticate } from "./auth";
+import {
+  GITHUB_EVENT_HEADER_KEY,
+  GITHUB_SIGNATURE_HEADER_KEY,
+} from "../../constants";
+import { createEventParams } from "../utils/createEventParams";
+import { WebhookApiResponse } from "../utils/types";
 
-type WebhookApiResponse = {
-  statusCode: number;
-  body?: string;
-};
-
-export const main = async (event: APIGatewayProxyEvent): Promise<WebhookApiResponse> => {
+// eslint-disable-next-line complexity
+export const main = async (
+  event: APIGatewayProxyEvent
+): Promise<WebhookApiResponse> => {
   if (event.body === null) {
     return {
       statusCode: 400,
@@ -21,10 +24,12 @@ export const main = async (event: APIGatewayProxyEvent): Promise<WebhookApiRespo
   }
 
   const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
-  if (header === undefined) {
+  console.log(event);
+  const githubEventHeader = event.headers[GITHUB_EVENT_HEADER_KEY];
+  if (header === undefined || githubEventHeader === undefined) {
     return {
       statusCode: 401,
-      body: "No authentication token found.",
+      body: `Required headers not found. ${GITHUB_SIGNATURE_HEADER_KEY} and/or ${GITHUB_EVENT_HEADER_KEY}.`,
     };
   }
 
@@ -40,19 +45,26 @@ export const main = async (event: APIGatewayProxyEvent): Promise<WebhookApiRespo
     // Create an EventBridge Client
     const eventBridgeClient = new EventBridgeClient();
 
-    // Create Event
-    const eventParams = {
-      Entries: [
-        {
-          Source: "github-webhook.routingLambda",
-          Detail: event.body,
-          DetailType: "WebhookRequestEvent",
-          EventBusName: process.env.EVENT_BUS_NAME,
-        },
-      ],
-    };
+    // Create and route events
+    let eventParams;
+    switch (githubEventHeader) {
+      case "pull_request":
+        eventParams = createEventParams(event.body, "GithubPullRequestEvent");
+        break;
+      case "installation":
+        eventParams = createEventParams(event.body, "GithubInstallationEvent");
+        break;
+      case "installation_repositories":
+        eventParams = createEventParams(event.body, "GithubInstallationReposEvent");
+        break;
+      default:
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "Unknown Github Event" }),
+        };
+    }
 
-    // Add the event to the EventBridge event bus
+    // Add event to the EventBridge event bus
     await eventBridgeClient.send(new PutEventsCommand(eventParams));
 
     // Return a successful response

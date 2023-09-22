@@ -1,12 +1,12 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
-import { Table } from "aws-cdk-lib/aws-dynamodb";
-import { EventBus , Rule } from "aws-cdk-lib/aws-events";
+import { EventBus, Rule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { Construct } from "constructs";
 
 import { getCertificateArn } from "../../cdk-helpers/certificates";
 import { WEBHOOK_EVENT_BUS_NAME } from "../../constants";
+import { AddRepoLambda } from '../../functions/add-repo/config';
 import { ReviewLambda } from "../../functions/review-lambda/config";
 import { RoutingLambda } from "../../functions/routing-lambda/config";
 import {
@@ -22,7 +22,6 @@ interface WebhookStackProps extends StackProps {
 }
 
 export class WebhookStack extends Stack {
-  userTable: Table;
   constructor(scope: Construct, id: string, props: WebhookStackProps) {
     super(scope, id, props);
 
@@ -39,6 +38,7 @@ export class WebhookStack extends Stack {
     });
 
     //Lambda
+    const addRepoLambda = new AddRepoLambda(this, "add-repo-lambda");
     const reviewLambda = new ReviewLambda(this, "review-lambda");
     const routingLambda = new RoutingLambda(this, "routing-lambda", {
       eventBus,
@@ -49,13 +49,21 @@ export class WebhookStack extends Stack {
     webhookRoute.addMethod("POST", new LambdaIntegration(routingLambda));
 
     // EventBridge Rule
-    const eventRule = new Rule(this, "WebhookEventRule", {
+    const reviewEventRule = new Rule(this, "WebhookEventRule", {
       eventBus: eventBus,
       eventPattern: {
-        detailType: ["WebhookRequestEvent"],
+        detailType: ["GithubPullRequestEvent"],
       },
     });
+    const addRepoEventRule = new Rule(this, "WebhookAddRepoEventRule", {
+      eventBus: eventBus,
+      eventPattern: {
+        detailType: ["GithubInstallationEvent", "GithubInstallationReposEvent"],
+      },
+    });
+
     // Add the Lambda function as a target for the EventBridge rule
-    eventRule.addTarget(new LambdaFunction(reviewLambda));
+    reviewEventRule.addTarget(new LambdaFunction(reviewLambda));
+    addRepoEventRule.addTarget(new LambdaFunction(addRepoLambda));
   }
 }
