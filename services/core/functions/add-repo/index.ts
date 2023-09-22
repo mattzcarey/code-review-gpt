@@ -4,11 +4,28 @@ import { v4 as uuidv4 } from "uuid";
 import { instructionPrompt } from '../../../../code-review-gpt/src/review/prompt/prompts';
 import { AuthEntity, RepoEntity, UserEntity } from "../../entities";
 
-type AddRepoEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
+type AddRepoEvent = EventBridgeEvent<"GithubInstallationEvent" | "GithubInstallationReposEvent", InstallationEventBody | InstallationReposEventBody>;
 
-type AddRepoEventBody = {
+type InstallationEventBody = {
   detail: {
     repositories : [[{
+      name: string,
+      full_name: string,
+    }]],
+    sender: {
+      login: string,
+      id: string,
+    }
+  }
+};
+
+type InstallationReposEventBody = {
+  detail: {
+    repositories_added : [[{
+      name: string,
+      full_name: string,
+    }]],
+    repositories_removed : [[{
       name: string,
       full_name: string,
     }]],
@@ -29,13 +46,20 @@ type Repo = {
   full_name: string,
 }
 
+// eslint-disable-next-line complexity
 export const main = async(
   event: AddRepoEvent
 ): Promise<void> => {
-  const eventBody = event as unknown as AddRepoEventBody;
-
   try {
-    const repositories = eventBody.detail.repositories as unknown as [Repo];
+    let eventBody, repositories;
+    if (event["detail-type"] === "GithubInstallationEvent") {
+      eventBody = event as unknown as InstallationEventBody;
+      repositories = eventBody.detail.repositories as unknown as [Repo];
+    }
+    else {
+      eventBody = event as unknown as InstallationReposEventBody;
+      repositories = eventBody.detail.repositories_added as unknown as [Repo];
+    }
     const sender = eventBody.detail.sender;
 
     const response = await AuthEntity.query("ACCOUNT#github", {

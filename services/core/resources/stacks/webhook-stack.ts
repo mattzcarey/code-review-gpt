@@ -58,7 +58,7 @@ export class WebhookStack extends Stack {
     const addRepoEventRule = new Rule(this, "WebhookAddRepoEventRule", {
       eventBus: eventBus,
       eventPattern: {
-        detailType: ["GithubInstallationEvent"],
+        detailType: ["GithubInstallationEvent", "GithubInstallationReposEvent"],
       },
     });
 

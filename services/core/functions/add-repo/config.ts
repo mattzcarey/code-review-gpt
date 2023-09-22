@@ -8,15 +8,13 @@ import {
   commonLambdaProps,
 } from "../../cdk-helpers/lambda";
 import { buildResourceName, getRegion } from "../../helpers";
-import { getVariableFromSSM } from '../utils/getVariable';
-
-const accountId = await getVariableFromSSM("ACCOUNT_ID");
 
 export class AddRepoLambda extends NodejsFunction {
   constructor(scope: Construct, id: string) {
     const authDB = buildResourceName("web-app-auth");
     const coreDB = buildResourceName("crgpt-data");
     const region = getRegion();
+    const account = process.env.CDK_DEFAULT_ACCOUNT ?? "";
 
     super(scope, id, {
       ...commonLambdaProps,
@@ -35,9 +33,10 @@ export class AddRepoLambda extends NodejsFunction {
         "dynamodb:Query",
       ],
       resources: [
-        `arn:aws:dynamodb:${region}:${accountId}:table/${authDB}`, 
-        `arn:aws:dynamodb:${region}:${accountId}:table/${coreDB}
-      `],
+        `arn:aws:dynamodb:${region}:${account}:table/${authDB}`, 
+        `arn:aws:dynamodb:${region}:${account}:table/${authDB}/index/GSI1`, 
+        `arn:aws:dynamodb:${region}:${account}:table/${coreDB}`
+      ],
     });
 
     this.addToRolePolicy(dynamoDbPolicyStatement);
