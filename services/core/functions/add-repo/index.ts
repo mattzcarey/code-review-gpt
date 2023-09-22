@@ -1,10 +1,8 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { UserEntity } from "../../entities";
-import {
-  formatResponse,
-  FormattedHandlerResponse,
-} from "../utils/format-response";
+import { formatResponse } from "../utils/formatResponse";
+import { FormattedHandlerResponse } from "../utils/types";
 
 type AddRepoLambdaInput = {
   reposAdded: [string];

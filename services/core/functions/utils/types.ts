@@ -30,71 +30,75 @@ export type ReviewFile = {
   changedLines: string;
 };
 
-export type GetFilesWithChangesProps = {
-  eventDetail: ValidEventDetail,
+export type GetFilesWithChangesArgs = {
+  eventDetail: ValidEventDetail;
   appId: string;
   clientSecret: string;
   clientId: string;
   privateKey: string;
   installationId: number;
-}
+};
 // Review Lambda
 export type ReviewEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
 
 type ShaObject = { sha: string };
 type UserObject = { login: string };
 type RepoObject = { name: string };
-type InstallationObject = {id: number}
+type InstallationObject = { id: number };
 
 type ValidEventDetail = {
-  pull_request: { 
-    diff_url: string
-    base: ShaObject; 
-    head: ShaObject; 
+  pull_request: {
+    diff_url: string;
+    base: ShaObject;
+    head: ShaObject;
     user: UserObject;
   };
-  repository: RepoObject; 
+  repository: RepoObject;
   installation: InstallationObject;
 };
 
+export type ValidFileObject = {
+  filename: string;
+  raw_url: string;
+  patch: string;
+};
+
 type ValidCompareCommitResponse = {
-  files: [{
-    filename:  string,
-    contents_url: string
-  }]
-}
+  files: [
+    {
+      filename: string;
+      raw_url: string;
+      patch: string;
+    }
+  ];
+};
 
 const isValidObject = (entry: unknown): entry is object => {
   const result = typeof entry === "object" && entry !== null;
-  console.log("isValidObject:", result);
 
   return result;
 };
 
 const isValidString = (entry: unknown): entry is object => {
   const result = typeof entry === "string" && entry !== "";
-  console.log("isValidString:", result);
 
   return result;
 };
 
 const isShaObject = (entry: object): entry is ShaObject => {
   const result = "sha" in entry && typeof entry.sha === "string";
-  console.log("isShaObject:", result);
 
   return result;
 };
 
 const isUserObject = (entry: object): entry is ShaObject => {
   const result = "login" in entry && typeof entry.login === "string";
-  console.log("isUserObject:", result);
 
   return result;
 };
 
 const isRepoObject = (entry: object): entry is ShaObject => {
   const result = "name" in entry && typeof entry.name === "string";
-  console.log("isUserObject:", result);
 
   return result;
 };
@@ -121,12 +125,17 @@ export const isValidEventDetail = (
     isValidObject(input.repository) &&
     isRepoObject(input.repository);
 
-
   return isValid;
 };
 
-export const isValidCompareCommitsResponse = (input: unknown): input is ValidCompareCommitResponse => {
-  if (!isValidObject(input) || !("files" in input) || !Array.isArray(input.files)) {
+export const isValidCompareCommitsResponse = (
+  input: unknown
+): input is ValidCompareCommitResponse => {
+  if (
+    !isValidObject(input) ||
+    !("files" in input) ||
+    !Array.isArray(input.files)
+  ) {
     return false;
   }
 
@@ -137,14 +146,16 @@ export const isValidCompareCommitsResponse = (input: unknown): input is ValidCom
   }
 
   return true;
-}
+};
 
-const isValidFileObject = (file: unknown): file is { filename: string, contents_url: string } => {
+const isValidFileObject = (file: unknown): file is ValidFileObject => {
   return (
     isValidObject(file) &&
     "filename" in file &&
     typeof file.filename === "string" &&
-    "contents_url" in file &&
-    typeof file.contents_url === "string"
+    "raw_url" in file &&
+    typeof file.raw_url === "string" &&
+    "patch" in file &&
+    typeof file.patch === "string"
   );
 };

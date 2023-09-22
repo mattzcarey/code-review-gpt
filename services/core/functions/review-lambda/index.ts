@@ -1,3 +1,4 @@
+import { getFilesWithChanges } from "./getFilesWithChanges";
 import { review } from "../../../../code-review-gpt/src/review/index";
 import {
   GITHUB_APP_CLIENT_ID_PARAM_NAME,
@@ -5,7 +6,6 @@ import {
   GITHUB_APP_ID_PARAM_NAME,
   GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
 } from "../../constants";
-import { getFilesWithChanges } from "../utils/getReviewFiles";
 import { getVariableFromSSM } from "../utils/getVariable";
 import { isValidEventDetail, ReviewEvent } from "../utils/types";
 

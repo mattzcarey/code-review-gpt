@@ -1,30 +1,32 @@
-import axios from "axios";
 import { App } from "octokit";
 
 import {
-  GetFilesWithChangesProps,
+  GetFilesWithChangesArgs,
   isValidCompareCommitsResponse,
   ReviewFile,
-} from "./types";
+} from "../utils/types";
 
 export const getFilesWithChanges = async (
-  props: GetFilesWithChangesProps
+  args: GetFilesWithChangesArgs
 ): Promise<ReviewFile[] | undefined> => {
   try {
-    console.log("before");
-    crypto.randomUUID();
+    console.log("before create app");
+
     const app = new App({
-      appId: props.appId,
-      privateKey: props.privateKey,
+      appId: args.appId,
+      privateKey: args.privateKey,
     });
 
+    console.log("before installation");
+    console.log(`args.installationId: ${args.installationId}`);
+    const octokit = await app.getInstallationOctokit(args.installationId);
     console.log("before request");
-    const response = await app.octokit.request(
+    const response = await octokit.request(
       `GET /repos/{owner}/{repo}/compare/{basehead}`,
       {
-        owner: props.eventDetail.pull_request.user.login,
-        repo: props.eventDetail.repository.name,
-        basehead: `${props.eventDetail.pull_request.base.sha}...${props.eventDetail.pull_request.head.sha}`,
+        owner: args.eventDetail.pull_request.user.login,
+        repo: args.eventDetail.repository.name,
+        basehead: `${args.eventDetail.pull_request.base.sha}...${args.eventDetail.pull_request.head.sha}`,
       }
     );
 
@@ -34,7 +36,7 @@ export const getFilesWithChanges = async (
         response.files.map(async (file) => {
           const fileContent = file.contents_url;
           const fileName = file.filename;
-          const changedLines = await getChangedFileLines(file.contents_url);
+          // const changedLines = await getChangedFileLines(file.contents_url);
 
           return { fileName, fileContent, changedLines };
         })
@@ -49,11 +51,4 @@ export const getFilesWithChanges = async (
   }
 };
 
-export const getChangedFileLines = async (
-  diff_url: string
-): Promise<string> => {
-  const response = await axios.get(diff_url);
-  const diffContent = response.data as string;
 
-  return diffContent;
-};

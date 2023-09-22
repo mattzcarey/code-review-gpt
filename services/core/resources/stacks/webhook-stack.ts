@@ -14,6 +14,7 @@ import {
   getDomainName,
 } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
+import { TestLambda } from "../../functions/test-lambda/config";
 
 interface WebhookStackProps extends StackProps {
   stage: string;
@@ -37,7 +38,8 @@ export class WebhookStack extends Stack {
     });
 
     //Lambda
-    const reviewLambda = new ReviewLambda(this, "review-lambda");
+    // const reviewLambda = new ReviewLambda(this, "review-lambda");
+    const testLambda = new TestLambda(this, "test-lambda");
     const routingLambda = new RoutingLambda(this, "routing-lambda", {
       eventBus,
     });
@@ -54,6 +56,6 @@ export class WebhookStack extends Stack {
       },
     });
     // Add the Lambda function as a target for the EventBridge rule
-    reviewEventRule.addTarget(new LambdaFunction(reviewLambda));
+    reviewEventRule.addTarget(new LambdaFunction(testLambda));
   }
 }
