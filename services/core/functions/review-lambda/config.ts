@@ -37,7 +37,7 @@ export class ReviewLambda extends NodejsFunction {
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
-
+    
     const langchainApiKeyParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",

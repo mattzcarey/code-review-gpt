@@ -12,6 +12,7 @@ import {
 import { createEventParams } from "../utils/createEventParams";
 import { WebhookApiResponse } from "../utils/types";
 
+// eslint-disable-next-line complexity
 export const main = async (
   event: APIGatewayProxyEvent
 ): Promise<WebhookApiResponse> => {
@@ -50,7 +51,10 @@ export const main = async (
         eventParams = createEventParams(event.body, "GithubPullRequestEvent");
         break;
       case "installation":
-        eventParams = createEventParams(event.body, "GithubInstallationRequestEvent");
+        eventParams = createEventParams(event.body, "GithubInstallationEvent");
+        break;
+      case "installation_repositories":
+        eventParams = createEventParams(event.body, "GithubInstallationReposEvent");
         break;
       default:
         return {
