@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from "axios";
 
 import {
   getChangedFileLines,
   getCompareCommitsResponse,
   getInstallationAccessToken,
+  postReviewComment,
 } from "./utils";
 import { review } from "../../../../code-review-gpt/src/review";
+import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
+import { getVariableFromSSM } from "../utils/getVariable";
 import {
   isValidEventDetail,
   ReviewEvent,
@@ -23,6 +25,10 @@ export const main = async (event: ReviewEvent): Promise<void> => {
       "Error fetching event in review-lambda event is of an unexpected shape"
     );
   }
+
+  process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
+    process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
+  );
 
   try {
     //Get installation access token from GitHub
@@ -64,11 +70,22 @@ export const main = async (event: ReviewEvent): Promise<void> => {
 
     //Review Code
     //todo get user open-ai-api-key from dynamodb for this user.
-    const openAiApiKey = "open-ai-api-key - get me from dynamodb";
-    await review(args, reviewFiles, openAiApiKey);
+    const openAiApiKey = await getVariableFromSSM(OPENAI_API_KEY_PARAM_NAME);
+    const reviewComment = await review(args, reviewFiles, openAiApiKey);
+    console.log(reviewComment);
+
+    if (reviewComment === undefined) {
+      console.log("No review comment to post");
+
+      return;
+    }
 
     //Add review to github pull request
-    //todo add review comment on Github pull request
+    await postReviewComment(
+      reviewComment,
+      installationAccessToken,
+      eventDetail
+    );
   } catch (error) {
     console.log(error);
   }

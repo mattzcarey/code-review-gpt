@@ -87,7 +87,6 @@ export const getCompareCommitsResponse = async (
     TokenType.Token,
     installationAccessToken
   ).axiosInstance.get(`/repos/${owner}/${repo}/compare/${base}...${head}`);
-  console.log(response.data);
 
   if (!isValidCompareCommitsResponse(response.data)) {
     throw new Error(
@@ -96,4 +95,20 @@ export const getCompareCommitsResponse = async (
   }
 
   return response.data;
+};
+
+export const postReviewComment = async (
+  reviewComment: string,
+  installationAccessToken: string,
+  eventDetail: PullRequestEventDetail
+): Promise<void> => {
+  const owner = eventDetail.repository.owner.login;
+  const repo = eventDetail.repository.name;
+  const prNum = eventDetail.pull_request.number;
+  await useAxios(
+    TokenType.Token,
+    installationAccessToken
+  ).axiosInstance.post(`/repos/${owner}/${repo}/issues/${prNum}/comments`, {
+    body: reviewComment,
+  });
 };

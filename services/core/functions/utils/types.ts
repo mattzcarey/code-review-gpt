@@ -69,6 +69,7 @@ export type PullRequestEventDetail = {
     diff_url: string;
     base: BranchObject;
     head: BranchObject;
+    number: number;
   };
   repository: RepoObject;
   installation: InstallationObject;
@@ -98,6 +99,12 @@ const isValidObject = (entry: unknown): entry is object => {
 
 const isValidString = (entry: unknown): entry is object => {
   const result = typeof entry === "string" && entry !== "";
+
+  return result;
+};
+
+const isValidNumber = (entry: unknown): entry is object => {
+  const result = typeof entry === "number";
 
   return result;
 };
@@ -135,6 +142,8 @@ export const isValidEventDetail = (
     "head" in input.pull_request &&
     isValidObject(input.pull_request.head) &&
     isBranchObject(input.pull_request.head) &&
+    "number" in input.pull_request &&
+    isValidNumber(input.pull_request.number) &&
     "user" in input.pull_request &&
     isValidObject(input.pull_request.user) &&
     isUserObject(input.pull_request.user) &&
