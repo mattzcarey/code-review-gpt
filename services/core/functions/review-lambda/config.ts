@@ -9,8 +9,6 @@ import {
   commonLambdaProps,
 } from "../../cdk-helpers/lambda";
 import {
-  GITHUB_APP_CLIENT_ID_PARAM_NAME,
-  GITHUB_APP_CLIENT_SECRET_PARAM_NAME,
   GITHUB_APP_ID_PARAM_NAME,
   GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
   LANGCHAIN_API_KEY_PARAM_NAME,
@@ -58,18 +56,6 @@ export class ReviewLambda extends NodejsFunction {
       resourceName: GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
     });
 
-    const githubAppClientIdParameterStoreArn = Stack.of(scope).formatArn({
-      service: "ssm",
-      resource: "parameter",
-      resourceName: GITHUB_APP_CLIENT_ID_PARAM_NAME,
-    });
-
-    const githubAppClientSecretParameterStoreArn = Stack.of(scope).formatArn({
-      service: "ssm",
-      resource: "parameter",
-      resourceName: GITHUB_APP_CLIENT_SECRET_PARAM_NAME,
-    });
-
     this.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
@@ -78,8 +64,6 @@ export class ReviewLambda extends NodejsFunction {
           langchainApiKeyParameterStoreArn,
           githubAppIdParameterStoreArn,
           githubAppPrivateKeyParameterStoreArn,
-          githubAppClientIdParameterStoreArn,
-          githubAppClientSecretParameterStoreArn,
         ],
       })
     );

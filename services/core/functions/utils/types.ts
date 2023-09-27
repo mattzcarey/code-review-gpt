@@ -31,27 +31,44 @@ export type ReviewFile = {
 };
 
 export type GetFilesWithChangesArgs = {
-  eventDetail: ValidEventDetail;
+  eventDetail: PullRequestEventDetail;
   appId: string;
   clientSecret: string;
   clientId: string;
   privateKey: string;
   installationId: number;
 };
-// Review Lambda
+
 export type ReviewEvent = EventBridgeEvent<"WebhookRequestEvent", string>;
 
-type ShaObject = { sha: string };
-type UserObject = { login: string };
-type RepoObject = { name: string };
+export type JWTPayload = {
+  iat: number;
+  exp: number;
+  iss: string;
+  alg: string;
+};
+
+export enum TokenType {
+  Bearer = "Bearer",
+  Token = "token",
+}
+
+/** Webhook Object Validation */
+type BranchObject = {
+  label: string;
+};
+type OwnerObject = { login: string };
+type RepoObject = {
+  name: string;
+  owner: OwnerObject;
+};
 type InstallationObject = { id: number };
 
-type ValidEventDetail = {
+export type PullRequestEventDetail = {
   pull_request: {
     diff_url: string;
-    base: ShaObject;
-    head: ShaObject;
-    user: UserObject;
+    base: BranchObject;
+    head: BranchObject;
   };
   repository: RepoObject;
   installation: InstallationObject;
@@ -63,7 +80,7 @@ export type ValidFileObject = {
   patch: string;
 };
 
-type ValidCompareCommitResponse = {
+export type ValidCompareCommitResponse = {
   files: [
     {
       filename: string;
@@ -85,19 +102,19 @@ const isValidString = (entry: unknown): entry is object => {
   return result;
 };
 
-const isShaObject = (entry: object): entry is ShaObject => {
-  const result = "sha" in entry && typeof entry.sha === "string";
+const isBranchObject = (entry: object): entry is BranchObject => {
+  const result = "label" in entry && typeof entry.label === "string";
 
   return result;
 };
 
-const isUserObject = (entry: object): entry is ShaObject => {
+const isUserObject = (entry: object): entry is OwnerObject => {
   const result = "login" in entry && typeof entry.login === "string";
 
   return result;
 };
 
-const isRepoObject = (entry: object): entry is ShaObject => {
+const isRepoObject = (entry: object): entry is RepoObject => {
   const result = "name" in entry && typeof entry.name === "string";
 
   return result;
@@ -105,7 +122,7 @@ const isRepoObject = (entry: object): entry is ShaObject => {
 // eslint-disable-next-line complexity
 export const isValidEventDetail = (
   input: unknown
-): input is ValidEventDetail => {
+): input is PullRequestEventDetail => {
   const isValid =
     isValidObject(input) &&
     "pull_request" in input &&
@@ -114,10 +131,10 @@ export const isValidEventDetail = (
     isValidString(input.pull_request.diff_url) &&
     "base" in input.pull_request &&
     isValidObject(input.pull_request.base) &&
-    isShaObject(input.pull_request.base) &&
+    isBranchObject(input.pull_request.base) &&
     "head" in input.pull_request &&
     isValidObject(input.pull_request.head) &&
-    isShaObject(input.pull_request.head) &&
+    isBranchObject(input.pull_request.head) &&
     "user" in input.pull_request &&
     isValidObject(input.pull_request.user) &&
     isUserObject(input.pull_request.user) &&
@@ -158,4 +175,27 @@ const isValidFileObject = (file: unknown): file is ValidFileObject => {
     "patch" in file &&
     typeof file.patch === "string"
   );
+};
+
+
+// Installation Access Token Object Validation
+type AccessTokenObject = {
+  token: string;
+};
+
+const isAccessTokenObject = (entry: object): entry is AccessTokenObject => {
+  const result = "token" in entry && typeof entry.token === "string";
+
+  return result;
+};
+
+// eslint-disable-next-line complexity
+export const isValidAccessTokenObject = (
+  input: unknown
+): input is AccessTokenObject => {
+  const isValid =
+    isValidObject(input) &&
+    isAccessTokenObject(input);
+
+  return isValid;
 };
