@@ -17,7 +17,6 @@ import {
 } from "../utils/types";
 
 export const main = async (event: ReviewEvent): Promise<void> => {
-  console.log(event.detail);
   const eventDetail = event.detail;
 
   if (!isValidEventDetail(eventDetail)) {
@@ -43,7 +42,6 @@ export const main = async (event: ReviewEvent): Promise<void> => {
     );
 
     //Create args object for review
-    //todo is there a better way to get this object?
     const args = {
       model: "gpt-3.5-turbo",
       reviewType: "changed",
@@ -66,13 +64,15 @@ export const main = async (event: ReviewEvent): Promise<void> => {
         return { fileName, fileContent, changedLines };
       })
     );
-    console.log(reviewFiles);
 
     //Review Code
     //todo get user open-ai-api-key from dynamodb for this user.
+    // The following can be used once the key is retrieved from user data in DynamoDB
+    // Which will contain an encrypted key
+    // const openAIKey = await decryptKey(userEncrypedKey);
+
     const openAiApiKey = await getVariableFromSSM(OPENAI_API_KEY_PARAM_NAME);
     const reviewComment = await review(args, reviewFiles, openAiApiKey);
-    console.log(reviewComment);
 
     if (reviewComment === undefined) {
       console.log("No review comment to post");

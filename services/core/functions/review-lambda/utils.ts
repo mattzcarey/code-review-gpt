@@ -64,7 +64,6 @@ export const getInstallationAccessToken = async (
     TokenType.Bearer,
     token
   ).axiosInstance.post(`/app/installations/${installationId}/access_tokens`);
-  console.log(accessTokenResponse.data);
 
   if (!isValidAccessTokenObject(accessTokenResponse.data)) {
     throw new Error(
