@@ -21,7 +21,7 @@ const coreStack = new CoreStack(app, `${stage}-crgpt-core`, {
 new DemoStack(app, `${stage}-crgpt-demo`, {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
-  userTable: coreStack.userTable,
+  table: coreStack.table,
 });
 
 new WebhookStack(app, `${stage}-crgpt-webhook`, {

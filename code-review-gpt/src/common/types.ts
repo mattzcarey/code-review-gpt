@@ -16,7 +16,7 @@ export type ReviewFile = {
   fileName: string;
   fileContent: string;
   changedLines: string;
-}
+};
 
 export type PromptFile = {
   fileName: string;
@@ -27,7 +27,7 @@ export type IFeedback = {
   fileName: string;
   riskScore: number;
   details: string;
-}
+};
 
 export enum PlatformOptions {
   GITHUB = "github",
@@ -43,6 +43,7 @@ export type ReviewArgs = {
   reviewType: string;
   org: string | undefined;
   remote: string | undefined;
+  provider: string;
   _: (string | number)[];
   $0: string;
-}
+};

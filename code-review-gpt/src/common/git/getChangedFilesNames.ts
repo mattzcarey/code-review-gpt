@@ -20,7 +20,9 @@ export const getChangedFilesNamesCommand = (
   return "git diff --name-only --diff-filter=AMRT --cached";
 };
 
-export const getChangedFilesNames = async (isCi: string | undefined): Promise<string[]> => {
+export const getChangedFilesNames = async (
+  isCi: string | undefined
+): Promise<string[]> => {
   const commandString = getChangedFilesNamesCommand(isCi);
 
   return new Promise((resolve, reject) => {
@@ -33,7 +35,7 @@ export const getChangedFilesNames = async (isCi: string | undefined): Promise<st
         const files = stdout
           .split("\n")
           .filter((fileName) => fileName.trim() !== "")
-          .map((fileName) => join(process.cwd(), fileName.trim()));
+          .map((fileName) => join(process.cwd(), "..", fileName.trim()));
         resolve(files);
       }
     });

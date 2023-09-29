@@ -2,10 +2,9 @@ import { Tags } from "aws-cdk-lib";
 import { type SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
 
-import { getDomainName } from "./helpers";
+import { getDomainName, getStackOutput } from "./helpers";
 
 export default {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   config(_input) {
     return {
       name: "web-app",
@@ -65,6 +64,10 @@ export default {
       const site = new NextjsSite(stack, "site", {
         bind: [GITHUB_ID, GITHUB_SECRET, NEXTAUTH_URL, NEXTAUTH_SECRET, table],
         customDomain: getDomainName(stack.stage),
+        environment: {
+          NEXT_PUBLIC_DEMO_URL: getStackOutput(stack.stage, "DemoUrl"),
+          NEXT_PUBLIC_BASE_URL: getStackOutput(stack.stage, "BaseUrl"),
+        },
       });
 
       stack.addOutputs({

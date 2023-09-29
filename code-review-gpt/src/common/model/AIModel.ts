@@ -7,6 +7,7 @@ import { parseAttributes } from "../utils/parseAttributes";
 
 interface IAIModel {
   modelName: string;
+  provider: string;
   temperature: number;
   apiKey: string;
   retryCount?: number;
@@ -20,12 +21,21 @@ class AIModel {
   private retryCount: number;
 
   constructor(options: IAIModel) {
-    this.model = new OpenAIChat({
-      openAIApiKey: options.apiKey,
-      modelName: options.modelName,
-      temperature: options.temperature,
-      configuration: { organization: options.organization },
-    });
+    switch (options.provider) {
+      case "openai":
+        this.model = new OpenAIChat({
+          openAIApiKey: options.apiKey,
+          modelName: options.modelName,
+          temperature: options.temperature,
+          configuration: { organization: options.organization },
+        });
+        break;
+      case "bedrock":
+        throw new Error("Bedrock provider not implemented");
+      default:
+        throw new Error("Provider not supported");
+    }
+
     this.retryCount = options.retryCount || defaultRetryCount;
   }
 

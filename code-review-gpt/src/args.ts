@@ -75,6 +75,12 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "string",
       default: undefined,
     })
+    .option("provider", {
+      description: "Provider to use for AI",
+      choices: ["openai", "bedrock"],
+      type: "string",
+      default: "openai",
+    })
     .command("review", "Review the pull request.")
     .command("configure", "Configure the script.")
     .parseSync();

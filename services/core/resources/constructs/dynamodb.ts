@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 import { TABLE_NAME } from "../../constants";
 import { buildResourceName, isProduction } from "../../helpers";
 
-export class UserTable extends Table {
+export class CoreTable extends Table {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
       tableName: buildResourceName(TABLE_NAME),

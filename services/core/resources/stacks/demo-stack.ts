@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
@@ -11,7 +11,7 @@ import { ReviewBucket } from "../constructs/review-bucket";
 
 interface DemoStackProps extends StackProps {
   stage: string;
-  userTable: Table;
+  table: Table;
 }
 
 export class DemoStack extends Stack {
@@ -34,12 +34,18 @@ export class DemoStack extends Stack {
 
     //Lambda
     const demoReviewLambda = new DemoReviewLambda(this, "demo-review-lambda", {
-      table: props.userTable,
+      table: props.table,
       bucket: demoReviewBucket,
     });
 
     //Routes
     const demoReviewRoute = demoApi.root.addResource("demoReview");
     demoReviewRoute.addMethod("POST", new LambdaIntegration(demoReviewLambda));
+
+    //Exports
+    new CfnOutput(this, "demoUrl", {
+      value: demoApi.url,
+      exportName: `${props.stage}DemoUrl`,
+    });
   }
 }

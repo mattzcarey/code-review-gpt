@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Key } from "aws-cdk-lib/aws-kms";
@@ -9,14 +9,14 @@ import { GetUserLambda } from "../../functions/get-user/config";
 import { UpdateUserLambda } from "../../functions/update-user/config";
 import { getDomainName, getStage } from "../../helpers";
 import { OrionApi } from "../constructs/api-gateway";
-import { UserTable } from "../constructs/user-table";
+import { CoreTable } from "../constructs/dynamodb";
 
 interface CoreStackProps extends StackProps {
   stage: string;
 }
 
 export class CoreStack extends Stack {
-  userTable: Table;
+  table: Table;
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
@@ -34,15 +34,15 @@ export class CoreStack extends Stack {
     });
 
     //DynamoDB
-    this.userTable = new UserTable(this, "user-database");
+    this.table = new CoreTable(this, "core-table");
 
     //Lambda
     const updateUserLambda = new UpdateUserLambda(this, "update-user-lambda", {
-      table: this.userTable,
+      table: this.table,
       kmsKey: kmsKey,
     });
     const getUserLambda = new GetUserLambda(this, "get-user-lambda", {
-      table: this.userTable,
+      table: this.table,
     });
 
     //Routes
@@ -51,5 +51,11 @@ export class CoreStack extends Stack {
 
     const getUserRoute = api.root.addResource("getUser");
     getUserRoute.addMethod("GET", new LambdaIntegration(getUserLambda));
+
+    //Exports
+    new CfnOutput(this, "baseUrl", {
+      value: api.url,
+      exportName: `${props.stage}BaseUrl`,
+    });
   }
 }

@@ -1,14 +1,14 @@
 /* eslint-disable complexity */
-import { signOff } from "./constants";
-import { askAI } from "./llm/askAI";
-import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { filterFiles } from "./prompt/filterFiles";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs, ReviewFile } from "../common/types";
 import { logger } from "../common/utils/logger";
+import { signOff } from "./constants";
+import { askAI } from "./llm/askAI";
+import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
+import { filterFiles } from "./prompt/filterFiles";
 
 export const review = async (
   yargs: ReviewArgs,
@@ -32,6 +32,7 @@ export const review = async (
   const modelName = yargs.model;
   const reviewType = yargs.reviewType;
   const organization = yargs.org;
+  const provider = yargs.provider;
 
   const filteredFiles = filterFiles(files);
 
@@ -42,9 +43,9 @@ export const review = async (
   }
 
   logger.debug(
-    `Files to review after filtering: ${
-      filteredFiles.map((file) => file.fileName).toString()
-    }`
+    `Files to review after filtering: ${filteredFiles
+      .map((file) => file.fileName)
+      .toString()}`
   );
 
   const maxPromptLength = getMaxPromptLength(modelName);
@@ -61,7 +62,8 @@ export const review = async (
     prompts,
     modelName,
     openAIApiKey,
-    organization
+    organization,
+    provider
   );
 
   logger.debug(`Markdown report:\n ${response}`);

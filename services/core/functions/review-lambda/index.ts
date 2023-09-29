@@ -1,20 +1,20 @@
 import axios from "axios";
 
+import { review } from "../../../../code-review-gpt/src/review";
+import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
+import { getVariableFromSSM } from "../utils/getVariable";
+import {
+  ReviewEvent,
+  ReviewFile,
+  ValidFileObject,
+  isValidEventDetail,
+} from "../utils/types";
 import {
   getChangedFileLines,
   getCompareCommitsResponse,
   getInstallationAccessToken,
   postReviewComment,
 } from "./utils";
-import { review } from "../../../../code-review-gpt/src/review";
-import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
-import { getVariableFromSSM } from "../utils/getVariable";
-import {
-  isValidEventDetail,
-  ReviewEvent,
-  ReviewFile,
-  ValidFileObject,
-} from "../utils/types";
 
 export const main = async (event: ReviewEvent): Promise<void> => {
   const eventDetail = event.detail;
@@ -50,6 +50,7 @@ export const main = async (event: ReviewEvent): Promise<void> => {
       org: undefined,
       commentPerFile: false,
       remote: undefined,
+      provider: "openai",
       _: [],
       $0: "",
     };

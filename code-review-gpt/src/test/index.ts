@@ -1,15 +1,15 @@
 import path from "path";
 
-import { signOff } from "./constants";
-import { loadSnapshots } from "./load/loadSnapshots";
-import { loadTestCases } from "./load/loadTestCases";
-import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
-import { runTests } from "./run/runTest";
 import { commentOnPR as commentOnPRGitHub } from "../common/ci/github/commentOnPR";
 import { commentOnPR as commentOnPRGitLab } from "../common/ci/gitlab/commentOnPR";
 import AIModel from "../common/model/AIModel";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs } from "../common/types";
+import { signOff } from "./constants";
+import { loadSnapshots } from "./load/loadSnapshots";
+import { loadTestCases } from "./load/loadTestCases";
+import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
+import { runTests } from "./run/runTest";
 
 export const test = async (
   { ci, model, reviewType }: ReviewArgs,
@@ -28,7 +28,8 @@ export const test = async (
       modelName: model,
       temperature: 0.0,
       apiKey: openAIApiKey,
-      organization: undefined
+      organization: undefined,
+      provider: "openai",
     })
   );
 
