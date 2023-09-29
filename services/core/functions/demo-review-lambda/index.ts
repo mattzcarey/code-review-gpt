@@ -8,7 +8,7 @@ import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
 import { askAI } from "../../../../code-review-gpt/src/review/llm/askAI";
 import { demoPrompt } from "../../../../code-review-gpt/src/review/prompt/prompts";
 import { ReviewDemoCounterEntity } from "../../entities";
-import { formatResponse } from "../utils/format-response";
+import { formatResponse } from "../utils/formatResponse";
 import { getEnvVariable, getVariableFromSSM } from "../utils/getVariable";
 
 const DEFAULT_DEMO_MODEL = "gpt-3.5-turbo";

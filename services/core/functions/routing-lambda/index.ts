@@ -24,7 +24,6 @@ export const main = async (
   }
 
   const header = event.headers[GITHUB_SIGNATURE_HEADER_KEY];
-  console.log(event);
   const githubEventHeader = event.headers[GITHUB_EVENT_HEADER_KEY];
   if (header === undefined || githubEventHeader === undefined) {
     return {

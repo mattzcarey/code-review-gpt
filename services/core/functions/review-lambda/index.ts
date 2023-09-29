@@ -1,59 +1,92 @@
-import { EventBridgeEvent } from "aws-lambda";
+import axios from "axios";
 
 import {
-  ReviewArgs,
-  ReviewFile,
-} from "../../../../code-review-gpt/src/common/types";
-import { logger } from "../../../../code-review-gpt/src/common/utils/logger";
-import { review } from "../../../../code-review-gpt/src/review/index";
+  getChangedFileLines,
+  getCompareCommitsResponse,
+  getInstallationAccessToken,
+  postReviewComment,
+} from "./utils";
+import { review } from "../../../../code-review-gpt/src/review";
+import { OPENAI_API_KEY_PARAM_NAME } from "../../constants";
 import { getVariableFromSSM } from "../utils/getVariable";
+import {
+  isValidEventDetail,
+  ReviewEvent,
+  ReviewFile,
+  ValidFileObject,
+} from "../utils/types";
 
-type ReviewLambdaBody = {
-  args: ReviewArgs;
-  files: ReviewFile[];
-};
+export const main = async (event: ReviewEvent): Promise<void> => {
+  const eventDetail = event.detail;
 
-logger.settings.minLevel = 4;
+  if (!isValidEventDetail(eventDetail)) {
+    throw new Error(
+      "Error fetching event in review-lambda event is of an unexpected shape"
+    );
+  }
 
-type ReviewLambdaResponse = {
-  statusCode: number;
-  body: string | undefined;
-};
+  process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
+    process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
+  );
 
-type ReviewEvent = EventBridgeEvent<'WebhookRequestEvent', ReviewLambdaBody>;
-
-
-export const main = async (event: ReviewEvent): Promise<ReviewLambdaResponse> => {
   try {
-    // Use the same OpenAI key for everyone for now
-    const openAIApiKey = await getVariableFromSSM(
-      process.env.OPENAI_API_KEY_PARAM_NAME ?? ""
+    //Get installation access token from GitHub
+    const installationAccessToken = await getInstallationAccessToken(
+      eventDetail
     );
 
+    //Compare base and head commits for pull request
+    const compareCommitsResponse = await getCompareCommitsResponse(
+      eventDetail,
+      installationAccessToken
+    );
+
+    //Create args object for review
+    const args = {
+      model: "gpt-3.5-turbo",
+      reviewType: "changed",
+      setupTarget: "github",
+      ci: undefined,
+      org: undefined,
+      commentPerFile: false,
+      remote: undefined,
+      _: [],
+      $0: "",
+    };
+
+    //Create review files array for review
+    const reviewFiles: ReviewFile[] = await Promise.all(
+      compareCommitsResponse.files.map(async (file: ValidFileObject) => {
+        const fileName = file.filename;
+        const fileContent = (await axios.get(file.raw_url)).data as string;
+        const changedLines = getChangedFileLines(file.patch);
+
+        return { fileName, fileContent, changedLines };
+      })
+    );
+
+    //Review Code
+    //todo get user open-ai-api-key from dynamodb for this user.
     // The following can be used once the key is retrieved from user data in DynamoDB
     // Which will contain an encrypted key
     // const openAIKey = await decryptKey(userEncrypedKey);
 
-    process.env.LANGCHAIN_API_KEY = await getVariableFromSSM(
-      process.env.LANGCHAIN_API_KEY_PARAM_NAME ?? ""
+    const openAiApiKey = await getVariableFromSSM(OPENAI_API_KEY_PARAM_NAME);
+    const reviewComment = await review(args, reviewFiles, openAiApiKey);
+
+    if (reviewComment === undefined) {
+      console.log("No review comment to post");
+
+      return;
+    }
+
+    //Add review to github pull request
+    await postReviewComment(
+      reviewComment,
+      installationAccessToken,
+      eventDetail
     );
-
-    const reviewResponse = await review(
-      event.detail.args,
-      event.detail.files,
-      openAIApiKey
-    );
-
-    return {
-      statusCode: 200,
-      body: reviewResponse,
-    };
-  } catch (err) {
-    console.error(err);
-
-    return {
-      statusCode: 500,
-      body: "Error when reviewing code.",
-    };
+  } catch (error) {
+    console.log(error);
   }
 };

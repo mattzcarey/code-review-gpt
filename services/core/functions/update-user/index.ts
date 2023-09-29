@@ -5,7 +5,7 @@ import { UserEntity } from "../../entities";
 import {
   formatResponse,
   FormattedHandlerResponse,
-} from "../utils/format-response";
+} from "../utils/formatResponse";
 
 type UpdateUserLambdaInput = {
   apiKey: string;

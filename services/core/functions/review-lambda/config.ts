@@ -9,7 +9,8 @@ import {
   commonLambdaProps,
 } from "../../cdk-helpers/lambda";
 import {
-  GITHUB_WEBHOOK_SECRET_PARAM_NAME,
+  GITHUB_APP_ID_PARAM_NAME,
+  GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
   LANGCHAIN_API_KEY_PARAM_NAME,
   OPENAI_API_KEY_PARAM_NAME,
 } from "../../constants";
@@ -23,7 +24,6 @@ export class ReviewLambda extends NodejsFunction {
       functionName: buildResourceName(id),
       entry: join(__dirname, "index.ts"),
       environment: {
-        GITHUB_SECRET_PARAM_NAME: GITHUB_WEBHOOK_SECRET_PARAM_NAME,
         LANGCHAIN_PROJECT: "review",
         ...commonLambdaEnvironment,
         ...reviewLambdaEnvironment,
@@ -37,17 +37,23 @@ export class ReviewLambda extends NodejsFunction {
       resource: "parameter",
       resourceName: OPENAI_API_KEY_PARAM_NAME,
     });
-
-    const githubSecretParameterStoreArn = Stack.of(scope).formatArn({
-      service: "ssm",
-      resource: "parameter",
-      resourceName: GITHUB_WEBHOOK_SECRET_PARAM_NAME,
-    });
-
+    
     const langchainApiKeyParameterStoreArn = Stack.of(scope).formatArn({
       service: "ssm",
       resource: "parameter",
       resourceName: LANGCHAIN_API_KEY_PARAM_NAME,
+    });
+
+    const githubAppIdParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_ID_PARAM_NAME,
+    });
+
+    const githubAppPrivateKeyParameterStoreArn = Stack.of(scope).formatArn({
+      service: "ssm",
+      resource: "parameter",
+      resourceName: GITHUB_APP_PRIVATE_KEY_PARAM_NAME,
     });
 
     this.addToRolePolicy(
@@ -55,8 +61,9 @@ export class ReviewLambda extends NodejsFunction {
         actions: ["ssm:GetParameter"],
         resources: [
           openAIApiKeyParameterStoreArn,
-          githubSecretParameterStoreArn,
           langchainApiKeyParameterStoreArn,
+          githubAppIdParameterStoreArn,
+          githubAppPrivateKeyParameterStoreArn,
         ],
       })
     );

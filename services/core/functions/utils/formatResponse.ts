@@ -1,11 +1,4 @@
-export type FormattedHandlerResponse = {
-  statusCode: number;
-  headers: {
-    "Access-Control-Allow-Origin": string;
-    "Access-Control-Allow-Credentials": boolean;
-  };
-  body: string;
-};
+import { FormattedHandlerResponse } from "./types";
 
 export const formatResponse = (
   response: string,

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import { PutEventsCommandInput } from "@aws-sdk/client-eventbridge/dist-types/commands";
 
 export const createEventParams = (detail: string, detailType: string): PutEventsCommandInput => {
