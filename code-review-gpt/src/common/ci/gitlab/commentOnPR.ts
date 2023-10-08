@@ -14,11 +14,16 @@ export const commentOnPR = async (
   signOff: string
 ): Promise<void> => {
   try {
-    const { gitlabToken, projectId, mergeRequestIIdString } =
+    const { gitlabToken, projectId, mergeRequestIIdString,host } =
       getGitLabEnvVariables();
+
+    logger.debug("project id: "+projectId);
+    logger.debug("merge request id: "+mergeRequestIIdString);
+
     const mergeRequestIId = parseInt(mergeRequestIIdString, 10);
     const api = new Gitlab({
-      token: gitlabToken,
+       token: gitlabToken,
+       host
     });
 
     const notes = await api.MergeRequestNotes.all(projectId, mergeRequestIId);
@@ -42,7 +47,9 @@ export const commentOnPR = async (
       );
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`);
+    logger.error(`Failed to comment on Gitlab PR: ${JSON.stringify(error)}`);
+    //JSON.stringify often gives empty strting on error, while the following works well
+    logger.error(error);
     throw error;
   }
 };
