@@ -1,3 +1,26 @@
+# Code Review GPT - the SCD Fork
+
+It is a fork from the original Code Review GPT project, which focuses on
+
+- saving the cost of calls to open.ai model
+- Providing users with complete feedback (including information about the files that were not reviewed for any reason)
+- Ensuring all the files where review is possible were reviewed
+- Adding first-class support for GitLab
+
+Bugs/issues fixed:
+
+- It does not spend your money to repeat the model calls if the model answered and the answer was not parserable.
+- It does not spend your money to add a funcy emoji to the feedback summary.
+- It shows all feedback (not just the three randomly selected comments, as in the original project).
+- When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch.
+- This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version).
+
+
+Features added:
+- It supports projects with more than one programming language.
+- It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand.
+- For GitLab, it adds first class review the same way as humans would (via discussion placed using the correct line locations inside the merge request's changes).
+
 # Code Review GPT
 
 [![NPM][npm_badge]][npm]
