@@ -1,5 +1,6 @@
 import { IFeedback } from "../types";
 
+//TODO - delete?
 const encodeDetails = (jsonString: string): string => {
   const regex = new RegExp(`"details"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"`, "g");
 
@@ -30,8 +31,8 @@ const isIFeedbackArray = (input: unknown): input is IFeedback[] =>
   Array.isArray(input) && input.every((entry) => isIFeedback(entry));
 
 export const parseAttributes = (jsonString: string): IFeedback[] => {
-  let encodedJsonString = jsonString;
-  encodedJsonString = encodeDetails(encodedJsonString);
+  const encodedJsonString = jsonString;
+  //encodedJsonString = encodeDetails(encodedJsonString);
 
   // Parse the JSON string
   const parsedObject: unknown = JSON.parse(encodedJsonString);

@@ -1,5 +1,5 @@
 export type AskAIResponse = {
-  markdownReport: string;
+  summary: string;
   feedbacks: IFeedback[];
 };
 
@@ -27,6 +27,7 @@ export type IFeedback = {
   fileName: string;
   riskScore: number;
   details: string;
+  line: string;
 };
 
 export enum PlatformOptions {

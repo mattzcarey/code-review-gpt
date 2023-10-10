@@ -11,7 +11,7 @@
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts",
     "start": "ts-node ./src/index.ts",
-    "review": "ts-node ./src/index.ts review",
+    "review": "ts-node ./src/index.ts review --model=gpt-3.5-turbo --debug=true",
     "configure": "ts-node ./src/index.ts configure",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
@@ -44,6 +44,7 @@
     "dotenv": "^16.3.1",
     "langchain": "^0.0.103",
     "octokit": "^3.1.0",
+    "parse-git-patch": "^1.2.2",
     "ts-retry": "^4.2.1",
     "tslog": "^4.8.2",
     "yargs": "^17.7.2"

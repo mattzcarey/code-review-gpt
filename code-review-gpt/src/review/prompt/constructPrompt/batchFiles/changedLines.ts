@@ -4,9 +4,10 @@ import { PromptFile, ReviewFile } from "../../../../common/types";
 
 export const changedLinesIntoBatches = (
   files: ReviewFile[],
-  maxPromptPayloadLength: number
+  maxPromptPayloadLength: number,
+  largeFileCollector: (promptFile:PromptFile)=>void
 ): PromptFile[][] => {
   const promptFiles = createPromptFiles(files, maxPromptPayloadLength);
 
-  return promptsIntoBatches(promptFiles, maxPromptPayloadLength);
+  return promptsIntoBatches(promptFiles, maxPromptPayloadLength,largeFileCollector);
 };
