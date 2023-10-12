@@ -2,6 +2,8 @@
 
 This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment
 
+<img width="983" alt="Screenshot 2023-10-12 at 22 54 21" src="https://github.com/SCD-company/code-review-gpt/assets/5467120/73cbd59b-92df-4e4c-b8d6-d5f87ad7e3d7">
+
 It focuses on:
 
 - Adding first-class support for GitLab
