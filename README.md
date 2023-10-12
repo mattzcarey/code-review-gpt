@@ -1,6 +1,8 @@
 # Code Review GPT - the SCD Fork
 
-It is a fork from the original Code Review GPT project, which focuses on
+This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment
+
+It focuses on:
 
 - Adding first-class support for GitLab
 - Saving the cost of calls to open.ai model
@@ -9,19 +11,17 @@ It is a fork from the original Code Review GPT project, which focuses on
 
 ### Bugs/issues fixed
 
-- It does not spend your money to repeat the model calls if the model answered and the answer was not parserable.
-- It does not spend your money to add a funcy emoji to the feedback summary.
-- It shows all feedback (not just the three randomly selected comments, as in the original project).
-- When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch.
-- This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version).
+- It does not spend your money to repeat the model calls if the model answered and the answer was not parserable
+- It does not spend your money to add a funcy emoji to the feedback summary
+- It shows all feedback (not just the three randomly selected comments, as in the original project)
+- When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch
+- This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version)
 
 ### Features added
 
-- It supports projects with more than one programming language.
-- It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand.
-- For GitLab, it adds first class review the same way as humans would (via discussion placed using the correct line locations inside the merge request's changes).
-
-  This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment
+- It supports projects with more than one programming language
+- It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand
+- For GitLab, it adds first class review the same way as humans would (via discussion placed using the correct line locations inside the merge request's changes)
 
 ### Getting started
 
@@ -46,6 +46,7 @@ gpt-review:
 
 Replace "npm run gitlab3" with "npm run gitlab4" to use GPT4 (note that it is 10 times more expensive)
 
+Original readme follows:
 
 # Code Review GPT
 
