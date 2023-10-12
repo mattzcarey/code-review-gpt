@@ -18,7 +18,7 @@ It focuses on:
 - It does not spend your money to repeat the model calls if the model answered and the answer was not parserable
 - It does not spend your money to add a funcy emoji to the feedback summary
 - It shows all feedback (not just the three randomly selected comments, as in the original project)
-- When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch
+- When one file can't be parsed by the model, it is no longer a reason to skip all the other files from the same bunch
 - This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version)
 
 ### Features added
@@ -32,8 +32,8 @@ It focuses on:
 To use it with Gitlab CI:
 
  - Create an access token in your gitlab project with "api" permission and at least maintainer level. Copy it.
- - Create a variable in Gitlab CI/CD named GITLAB_TOKEN containg the access token
- - Create a variable in Gitlab CI/CD named OPENAI_API_KEY and copy your access token for https://openai.com/ to its value
+ - Create a variable in Gitlab CI/CD named GITLAB_TOKEN containg the access token.
+ - Create a variable in Gitlab CI/CD named OPENAI_API_KEY and copy your access token for https://openai.com/ to its value.
  - Add following snippet to your .gitlab-ci.yml
 
 ```
