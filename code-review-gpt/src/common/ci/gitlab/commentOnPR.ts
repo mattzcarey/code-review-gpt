@@ -3,9 +3,10 @@ import {
   DiscussionNotePositionOptions,
   Gitlab,
 } from "@gitbeaker/rest";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import parseGitPatch, { ParsedPatchModifiedLineType } from "parse-git-patch";
 
+import parseGitPatch, {
+  ParsedPatchModifiedLineType,
+} from "../../../../node_modules/parse-git-patch/dist/src/index.js";
 import { getGitLabEnvVariables } from "../../../config";
 import { formatFeedback } from "../../../review/llm/generateMarkdownReport";
 import { IFeedback } from "../../types";
@@ -17,20 +18,10 @@ interface ParsedPatch {
   new_path: string;
   lines: ParsedPatchModifiedLineType[] | undefined;
 }
-
 interface PreparedNote {
   botCommentBody: string;
   position: DiscussionNotePositionOptions;
 }
-
-const header = `---
-diff --git a/oldName b/newName
-index a 1
-`;
-
-const footer = `
---
-`;
 
 function getApi() {
   const { gitlabToken, host } = getGitLabEnvVariables();
@@ -97,7 +88,7 @@ const prepareNote = (
     line.line.includes(feedbackLine)
   );
 
-  //if the above attempt was not successful, do vise versa - trying to find line from the patch that is included 
+  //if the above attempt was not successful, do vise versa - trying to find line from the patch that is included
   //into feedback (this criteria is worse). Also, use only at least 3 characters lines as lines like "};" are included into too many places
   const patchedLinePrio2 =
     patchedLine ??
@@ -188,11 +179,9 @@ const createDiscussion = async (
 };
 
 /**
- * Publish a comment on the pull request. If the bot has already commented (i.e. a comment with the same sign off exists), update the comment instead of creating a new one.
- * The comment will be signed off with the provided sign off.
+ * Publish a comment on the pull request. The comment will be signed off with the provided sign off.
  * @param comment The body of the comment to publish.
  * @param signOff The sign off to use. This also serves as key to check if the bot has already commented and update the comment instead of posting a new one if necessary.
- * @returns
  */
 export const commentOnPR = async (
   feedbacks: IFeedback[],
@@ -219,8 +208,12 @@ export const commentOnPR = async (
 
     const parsedDiffs: ParsedPatch[] = diffs.map((diff) => {
       return {
-        lines: parseGitPatch(header + diff.diff + footer)?.files[0]
-          .modifiedLines,
+        lines: parseGitPatch(`---
+        diff --git a/oldName b/newName
+        index a 1
+        ${diff.diff}
+        --
+        `)?.files[0].modifiedLines,
         new_path: diff.new_path,
         old_path: diff.old_path,
       };
@@ -238,7 +231,7 @@ export const commentOnPR = async (
       }, [])
     );
   } catch (error) {
-    logger.error(`Failed to comment on Gitlab PR: ${JSON.stringify(error)}`,error);
+    logger.error(`Failed to comment on Gitlab MR:`, error);
     throw error;
   }
 };
