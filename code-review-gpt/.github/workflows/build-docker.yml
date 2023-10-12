@@ -1,0 +1,26 @@
+name: Publish Docker
+on:
+  push:
+    branches:    
+      - main
+    paths-ignore:
+    - 'README.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: scdcompany
+        password: ${{ secrets.DOCKER_PWD }}
+    - uses: actions/checkout@master
+    - name: Build
+      uses: docker/build-push-action@v4
+      with:
+        context: ./code-review-gpt
+        repository: scdcompany/code-review-gpt
+        push: true
+        tags: scdcompany/code-review-gpt:latest
+   

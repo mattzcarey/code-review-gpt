@@ -11,12 +11,14 @@
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts",
     "start": "ts-node ./src/index.ts",
-    "review": "ts-node ./src/index.ts review --model=gpt-3.5-turbo --debug=true",
+    "review": "ts-node ./src/index.ts review",
     "configure": "ts-node ./src/index.ts configure",
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
     "build": "node ./utils/build.js",
-    "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js"
+    "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js",
+    "gitlab3": "ts-node ./src/index.ts review --model=gpt-3.5-turbo --debug=true --ci=gitlab",
+    "gitlab4": "ts-node ./src/index.ts review --debug=true --ci=gitlab"
   },
   "keywords": [
     "code-review",
