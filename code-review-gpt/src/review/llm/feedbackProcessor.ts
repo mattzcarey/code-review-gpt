@@ -1,4 +1,4 @@
-import PriorityQueue from "./PriorityQueue";
+//import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
 import { IFeedback, ReviewFile } from "../../common/types";
@@ -42,29 +42,29 @@ const createSummary = async (
 };
 
 //TODO: delete?
-const pickWorstFeedbacks = (
-  feedbacks: IFeedback[],
-  limit: number
-): IFeedback[] => {
-  const pickingPriorityQueue = new PriorityQueue<IFeedback>();
+// const pickWorstFeedbacks = (
+//   feedbacks: IFeedback[],
+//   limit: number
+// ): IFeedback[] => {
+//   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
-  //remove feedbacks with risk score of 1 from consideration.
-  const filteredFeedbacks = feedbacks.filter(
-    (feedback) => feedback.riskScore > 1
-  );
+//   //remove feedbacks with risk score of 1 from consideration.
+//   const filteredFeedbacks = feedbacks.filter(
+//     (feedback) => feedback.riskScore > 1
+//   );
 
-  filteredFeedbacks.forEach((feedback) => {
-    pickingPriorityQueue.enqueue(
-      feedback,
-      feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
-    );
-    if (pickingPriorityQueue.size() > limit) {
-      pickingPriorityQueue.dequeue();
-    }
-  });
+//   filteredFeedbacks.forEach((feedback) => {
+//     pickingPriorityQueue.enqueue(
+//       feedback,
+//       feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
+//     );
+//     if (pickingPriorityQueue.size() > limit) {
+//       pickingPriorityQueue.dequeue();
+//     }
+//   });
 
-  return pickingPriorityQueue.getItems();
-};
+//   return pickingPriorityQueue.getItems();
+// };
 
 const extractFulfilledFeedbacks = (
   feedbackResults: PromiseSettledResult<IFeedback[]>[]

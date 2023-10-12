@@ -1,6 +1,7 @@
-import { ReviewFile } from "../../types";
 import { GitHubRESTClient } from "./GitHubRESTClient";
 import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier";
+import { ReviewFile } from "../../types";
+import { logger } from "../../utils/logger";
 
 export const getRemotePullRequestFiles = async (
   remotePullRequest: string
@@ -13,7 +14,7 @@ export const getRemotePullRequestFiles = async (
 
     return files;
   } catch (error) {
-    logger.error(error);
+    logger.error("Fetch review files error:",error);
     throw new Error(
       `Failed to get remote Pull Request files: ${JSON.stringify(error)}`
     );
