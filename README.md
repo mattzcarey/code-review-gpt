@@ -7,7 +7,7 @@ It is a fork from the original Code Review GPT project, which focuses on
 - Providing users with complete feedback (including information about the files that were not reviewed for any reason)
 - Ensuring all the files where review is possible were reviewed
 
-###Bugs/issues fixed
+### Bugs/issues fixed
 
 - It does not spend your money to repeat the model calls if the model answered and the answer was not parserable.
 - It does not spend your money to add a funcy emoji to the feedback summary.
@@ -15,7 +15,7 @@ It is a fork from the original Code Review GPT project, which focuses on
 - When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch.
 - This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version).
 
-###Features added
+### Features added
 
 - It supports projects with more than one programming language.
 - It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand.
@@ -23,9 +23,9 @@ It is a fork from the original Code Review GPT project, which focuses on
 
   This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment
 
-###Getting started
+### Getting started
 
-To ise it with Gitlab CI:
+To use it with Gitlab CI:
 
  - Create an access token in your gitlab project with "api" permission and at least maintainer level. Copy it.
  - Create a variable in Gitlab CI/CD named GITLAB_TOKEN containg the access token
