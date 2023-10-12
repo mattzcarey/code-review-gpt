@@ -1,4 +1,4 @@
-# Code Review GPT - the SCD Fork
+# Code Review GPT - Gitlab edition
 
 This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment
 
