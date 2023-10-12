@@ -1,7 +1,7 @@
 FROM node:18.17
 
-WORKDIR /app
-COPY . /app
+WORKDIR /
+COPY . /
 
 RUN npm install
 
