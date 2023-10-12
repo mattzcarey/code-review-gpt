@@ -12,6 +12,13 @@ import { formatFeedback } from "../../../review/llm/generateMarkdownReport";
 import { IFeedback } from "../../types";
 import { logger } from "../../utils/logger";
 
+const header = `---
+diff --git a/oldName b/newName
+index a 1
+`;
+const footer = `
+--
+`;
 //TODO: refactor
 interface ParsedPatch {
   old_path: string;
@@ -208,12 +215,8 @@ export const commentOnPR = async (
 
     const parsedDiffs: ParsedPatch[] = diffs.map((diff) => {
       return {
-        lines: parseGitPatch(`---
-        diff --git a/oldName b/newName
-        index a 1
-        ${diff.diff}
-        --
-        `)?.files[0].modifiedLines,
+        lines: parseGitPatch(header + diff.diff + footer)?.files[0]
+          .modifiedLines,
         new_path: diff.new_path,
         old_path: diff.old_path,
       };
