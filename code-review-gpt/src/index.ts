@@ -38,6 +38,6 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  logger.error(`Error: ${JSON.stringify(error)}`);
+  logger.error(`Error: ${JSON.stringify(error)}`,error);
   process.exit(1);
 });

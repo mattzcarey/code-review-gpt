@@ -238,9 +238,7 @@ export const commentOnPR = async (
       }, [])
     );
   } catch (error) {
-    logger.error(`Failed to comment on Gitlab PR: ${JSON.stringify(error)}`);
-    //JSON.stringify often gives empty strting on error, while the following works well
-    logger.error(error);
+    logger.error(`Failed to comment on Gitlab PR: ${JSON.stringify(error)}`,error);
     throw error;
   }
 };
