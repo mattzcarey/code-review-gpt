@@ -1,25 +1,56 @@
-# Code Review GPT - the SCD Fork
+# Code Review GPT - Gitlab edition
 
-It is a fork from the original Code Review GPT project, which focuses on
+This is a fork of https://github.com/mattzcarey/code-review-gpt specially tuned to work in gitlab ci environment.
 
-- saving the cost of calls to open.ai model
+It starts discussions the same way as a human code reviewer would do:
+
+<img width="983" alt="Screenshot 2023-10-12 at 22 54 21" src="https://github.com/SCD-company/code-review-gpt/assets/5467120/73cbd59b-92df-4e4c-b8d6-d5f87ad7e3d7">
+
+It focuses on:
+
+- Adding first-class support for GitLab
+- Saving the cost of calls to open.ai model
 - Providing users with complete feedback (including information about the files that were not reviewed for any reason)
 - Ensuring all the files where review is possible were reviewed
-- Adding first-class support for GitLab
 
-Bugs/issues fixed:
+### Bugs/issues fixed
 
-- It does not spend your money to repeat the model calls if the model answered and the answer was not parserable.
-- It does not spend your money to add a funcy emoji to the feedback summary.
-- It shows all feedback (not just the three randomly selected comments, as in the original project).
-- When one file can't be parsed by the model, there is no longer a reason to skip all the other files from the same bunch.
-- This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version).
+- It does not spend your money to repeat the model calls if the model answered and the answer was not parserable
+- It does not spend your money to add a funcy emoji to the feedback summary
+- It shows all feedback (not just the three randomly selected comments, as in the original project)
+- When one file can't be parsed by the model, it is no longer a reason to skip all the other files from the same bunch
+- This fork works when Gitlab runners are not at the same machine where the Gitlab is (it does not work in the original version)
 
+### Features added
 
-Features added:
-- It supports projects with more than one programming language.
-- It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand.
-- For GitLab, it adds first class review the same way as humans would (via discussion placed using the correct line locations inside the merge request's changes).
+- It supports projects with more than one programming language
+- It adds feedback to the files that were too large for sending to the GPT model or were too complicated for the model to understand
+- For GitLab, it adds first class review the same way as humans would (via discussion placed using the correct line locations inside the merge request's changes)
+
+### Getting started
+
+To use it with Gitlab CI:
+
+ - Create an access token in your gitlab project with "api" permission and at least maintainer level. Copy it.
+ - Create a variable in Gitlab CI/CD named GITLAB_TOKEN containg the access token.
+ - Create a variable in Gitlab CI/CD named OPENAI_API_KEY and copy your access token for https://openai.com/ to its value.
+ - Add following snippet to your .gitlab-ci.yml
+
+```
+gpt-review:
+  image: scdcompany/code-review-gpt
+  stage: review
+  script:
+    - mv /code-review-gpt $CI_PROJECT_DIR/
+    - cd ./code-review-gpt && npm run gitlab3
+  only:
+    - merge_requests 
+  when: manual
+```
+
+Replace "npm run gitlab3" with "npm run gitlab4" to use GPT4 (note that it is 10 times more expensive)
+
+Original readme follows:
 
 # Code Review GPT
 
