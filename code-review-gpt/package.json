@@ -1,6 +1,6 @@
 {
   "name": "code-review-gpt",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
   "bin": {
     "code-review-gpt": "./dist/index.js"
@@ -39,7 +39,6 @@
     "@gitbeaker/rest": "^39.10.2",
     "@inquirer/prompts": "^3.0.4",
     "@inquirer/rawlist": "^1.2.9",
-    "@radix-ui/themes": "^1.0.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
     "glob": "^10.3.10",
