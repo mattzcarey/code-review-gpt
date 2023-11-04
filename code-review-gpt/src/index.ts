@@ -38,6 +38,14 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  logger.error(`Error: ${JSON.stringify(error)}`);
+  const message =
+    error instanceof Error ? error.message : "An unknown error occurred";
+  const stack =
+    error instanceof Error ? error.stack : "No stack trace available";
+
+  logger.error(`Error: ${message}`);
+  if (stack) {
+    logger.debug(`Stack trace: ${stack}`);
+  }
   process.exit(1);
 });
