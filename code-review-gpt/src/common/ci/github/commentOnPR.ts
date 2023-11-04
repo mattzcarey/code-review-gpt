@@ -56,7 +56,7 @@ export const commentOnPR = async (
       });
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`);
+    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`,error);
     throw error;
   }
 };

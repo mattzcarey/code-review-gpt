@@ -1,6 +1,6 @@
 import { IFeedback } from "../../common/types";
 
-const formatFeedback = (feedback: IFeedback): string => `
+export const formatFeedback = (feedback: IFeedback): string => `
 **Risk Level ${feedback.riskScore} - ${feedback.fileName}**
 
 ${feedback.details}
@@ -12,9 +12,12 @@ ${feedbacks.map(formatFeedback).join("\n---\n")}
 `;
 
 export const generateMarkdownReport = (
+  modelName: string,
   feedbacks: IFeedback[],
   summary: string
 ): string => `
+Model: ${modelName}
+--
 ${formatFeedbacks(feedbacks)}
 ---
 ${summary}

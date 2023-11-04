@@ -3,7 +3,8 @@ import { PromptFile, ReviewFile } from "../../../../common/types";
 
 export const fullFilesIntoBatches = (
   files: ReviewFile[],
-  maxBatchSize: number
+  maxBatchSize: number,
+  largeFileCollector: (promptFile:PromptFile)=>void
 ): PromptFile[][] => {
   const promptFiles = files.map((file) => ({
     fileName: file.fileName,
@@ -13,5 +14,5 @@ export const fullFilesIntoBatches = (
       .join("\n"),
   }));
 
-  return promptsIntoBatches(promptFiles, maxBatchSize);
+  return promptsIntoBatches(promptFiles, maxBatchSize,largeFileCollector);
 };

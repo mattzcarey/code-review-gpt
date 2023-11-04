@@ -1,10 +1,16 @@
-import PriorityQueue from "./PriorityQueue";
+//import PriorityQueue from "./PriorityQueue";
 import { formatFeedbacks } from "./generateMarkdownReport";
 import AIModel from "../../common/model/AIModel";
-import { IFeedback } from "../../common/types";
+import { IFeedback, ReviewFile } from "../../common/types";
 import { logger } from "../../common/utils/logger";
-import { maxFeedbackCount } from "../constants";
+import { constructPromptsArray } from "../prompt/constructPrompt/constructPrompt";
 import { completionPrompt } from "../prompt/prompts";
+
+export interface Review {
+  files:ReviewFile[];
+  maxPromptLength:number;
+  reviewType:string;
+}
 
 const collectAndLogFeedback = async (
   feedbackPromise: Promise<IFeedback[]>
@@ -35,29 +41,30 @@ const createSummary = async (
   return summary;
 };
 
-const pickWorstFeedbacks = (
-  feedbacks: IFeedback[],
-  limit: number
-): IFeedback[] => {
-  const pickingPriorityQueue = new PriorityQueue<IFeedback>();
+//TODO: delete?
+// const pickWorstFeedbacks = (
+//   feedbacks: IFeedback[],
+//   limit: number
+// ): IFeedback[] => {
+//   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
 
-  //remove feedbacks with risk score of 1 from consideration.
-  const filteredFeedbacks = feedbacks.filter(
-    (feedback) => feedback.riskScore > 1
-  );
+//   //remove feedbacks with risk score of 1 from consideration.
+//   const filteredFeedbacks = feedbacks.filter(
+//     (feedback) => feedback.riskScore > 1
+//   );
 
-  filteredFeedbacks.forEach((feedback) => {
-    pickingPriorityQueue.enqueue(
-      feedback,
-      feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
-    );
-    if (pickingPriorityQueue.size() > limit) {
-      pickingPriorityQueue.dequeue();
-    }
-  });
+//   filteredFeedbacks.forEach((feedback) => {
+//     pickingPriorityQueue.enqueue(
+//       feedback,
+//       feedback.riskScore + Math.random() // We add a random number to the weight to avoid picking the same feedbacks every time. The weight is the risk score itself, so that feedbacks with higher risk scores are more likely to be picked.
+//     );
+//     if (pickingPriorityQueue.size() > limit) {
+//       pickingPriorityQueue.dequeue();
+//     }
+//   });
 
-  return pickingPriorityQueue.getItems();
-};
+//   return pickingPriorityQueue.getItems();
+// };
 
 const extractFulfilledFeedbacks = (
   feedbackResults: PromiseSettledResult<IFeedback[]>[]
@@ -73,8 +80,20 @@ const extractFulfilledFeedbacks = (
 
 const processFeedbacks = async (
   model: AIModel,
-  prompts: string[]
+  review:Review
 ): Promise<IFeedback[]> => {
+
+  const largeFilesFeedback:IFeedback[] = [];
+
+  const prompts = constructPromptsArray(
+    review.files,
+    review.maxPromptLength,
+    review.reviewType,
+    (largeFile)=>{
+      const firstLine = largeFile.promptContent.split("\n")[0];
+      largeFilesFeedback.push({details:"\n **The file is too large for GPT Code review. Please review it manually** \n",fileName:largeFile.fileName,line:firstLine,riskScore:6});
+    }
+  );
 
   const feedbackPromises = prompts.map((prompt) =>
     model.callModelJSON(prompt)
@@ -86,11 +105,17 @@ const processFeedbacks = async (
 
   const feedbacks = extractFulfilledFeedbacks(feedbackResults);
 
-  const worstFeedbacks = pickWorstFeedbacks(feedbacks, maxFeedbackCount);
+  //TODO: allow posting those with score 1?
+  const worstFeedbacks  = feedbacks.filter(
+    (feedback) => feedback.riskScore > 1
+  );
+  
+  
+  //= pickWorstFeedbacks(feedbacks, maxFeedbackCount);
 
   logger.info(formatFeedbacks(worstFeedbacks));
 
-  return worstFeedbacks;
+  return worstFeedbacks.concat(largeFilesFeedback);
 };
 
 export { createSummary, processFeedbacks };

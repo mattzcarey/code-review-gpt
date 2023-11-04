@@ -14,7 +14,8 @@ export const filterFiles = (files: ReviewFile[]): ReviewFile[] => {
       ) &&
       file.changedLines.trim() !== ""
     );
-  });
+  //group files by language to provide model with more context (3 java giles are better than 1 java + 2 typescript)
+  }).sort((a,b)=>extname(a.fileName).localeCompare(extname(b.fileName)));
 
   return filteredFiles;
 };

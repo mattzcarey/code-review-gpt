@@ -1,14 +1,14 @@
 /* eslint-disable complexity */
+import { signOff } from "./constants";
+import { askAI } from "./llm/askAI";
+import { generateMarkdownReport } from "./llm/generateMarkdownReport";
+import { filterFiles } from "./prompt/filterFiles";
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs, ReviewFile } from "../common/types";
 import { logger } from "../common/utils/logger";
-import { signOff } from "./constants";
-import { askAI } from "./llm/askAI";
-import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt";
-import { filterFiles } from "./prompt/filterFiles";
 
 export const review = async (
   yargs: ReviewArgs,
@@ -50,21 +50,20 @@ export const review = async (
 
   const maxPromptLength = getMaxPromptLength(modelName);
 
-  const prompts = constructPromptsArray(
-    filteredFiles,
-    maxPromptLength,
-    reviewType
-  );
-
-  logger.debug(`Prompts used:\n ${prompts.toString()}`);
-
-  const { markdownReport: response, feedbacks } = await askAI(
-    prompts,
+  //TODO: get rid of the summary at all
+  const { summary, feedbacks } = await askAI(
+    { files: filteredFiles, maxPromptLength, reviewType },
     modelName,
     openAIApiKey,
     organization,
-    provider
+    provider,
+    //skip generating summary when we do not plan to use it
+    //summary does not get used with GitLab and does not get used with GitHub in shouldCommentPerFile mode
+    (isCi === PlatformOptions.GITHUB && shouldCommentPerFile) ||
+      isCi === PlatformOptions.GITLAB
   );
+
+  const response = generateMarkdownReport(modelName, feedbacks, summary);
 
   logger.debug(`Markdown report:\n ${response}`);
 
@@ -77,7 +76,7 @@ export const review = async (
     }
   }
   if (isCi === PlatformOptions.GITLAB) {
-    await commentOnPRGitlab(response, signOff);
+    await commentOnPRGitlab(feedbacks, signOff);
   }
 
   return response;

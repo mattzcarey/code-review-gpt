@@ -5,7 +5,8 @@ import { MAX_SURROUNDING_LINES } from "../../../constants";
 
 export const costOptimizedChangedLinesIntoBatches = (
   files: ReviewFile[],
-  maxPromptPayloadLength: number
+  maxPromptPayloadLength: number,
+  largeFileCollector: (promptFile:PromptFile)=>void
 ): PromptFile[][] => {
   const promptFiles = createPromptFiles(
     files,
@@ -13,5 +14,5 @@ export const costOptimizedChangedLinesIntoBatches = (
     MAX_SURROUNDING_LINES
   );
 
-  return promptsIntoBatches(promptFiles, maxPromptPayloadLength);
+  return promptsIntoBatches(promptFiles, maxPromptPayloadLength,largeFileCollector);
 };

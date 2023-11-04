@@ -1,17 +1,22 @@
+import { createSummary, processFeedbacks, Review } from "./feedbackProcessor";
 import AIModel from "../../common/model/AIModel";
 import { AskAIResponse } from "../../common/types";
 import { logger } from "../../common/utils/logger";
-import { createSummary, processFeedbacks } from "./feedbackProcessor";
-import { generateMarkdownReport } from "./generateMarkdownReport";
+
+
+
 
 export const askAI = async (
-  prompts: string[],
+  review:Review,
   modelName: string,
   openAIApiKey: string,
   organization: string | undefined,
-  provider: string
+  provider: string,
+  skipSummary: boolean
 ): Promise<AskAIResponse> => {
+
   logger.info("Asking the experts...");
+
 
   const model = new AIModel({
     modelName: modelName,
@@ -21,22 +26,25 @@ export const askAI = async (
     provider,
   });
 
-  const feedbacks = await processFeedbacks(model, prompts);
+  const feedbacks = await processFeedbacks(model, review);
 
   logger.debug(
     `Feedback received:\n ${feedbacks
       .map(
         (feedback) =>
-          `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
+          `Filename: ${feedback.fileName},Line: ${feedback.line}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
       )
       .toString()}`
   );
-  const summary = await createSummary(model, feedbacks);
+
+  
+  const summary = skipSummary?"":await createSummary(model, feedbacks);
 
   logger.debug(`Summary of feedbacks: ${summary}`);
 
   return {
-    markdownReport: generateMarkdownReport(feedbacks, summary),
+
+    summary,
     feedbacks: feedbacks,
   };
 };

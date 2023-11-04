@@ -4,7 +4,8 @@ import { getLengthOfFile } from "../../getLengthOfFile";
 
 export const promptsIntoBatches = (
   promptFiles: PromptFile[],
-  maxBatchSize: number
+  maxBatchSize: number,
+  largeFileCollector: (promptFile:PromptFile)=>void
 ): PromptFile[][] => {
   const batches: PromptFile[][] = [];
   let currentBatch: PromptFile[] = [];
@@ -16,6 +17,7 @@ export const promptsIntoBatches = (
       logger.error(
         `Changes to file ${file.fileName} are larger than the max prompt length, consider using a model with a larger context window. Skipping file changes...`
       );
+      largeFileCollector(file);
       continue;
     } else if (currentBatchSize + currentFileSize > maxBatchSize) {
       batches.push(currentBatch);
