@@ -25,7 +25,7 @@ const captureApiKey = async (): Promise<string | undefined> => {
 
 const configureGitHub = async () => {
   const workflowContent = fs.readFileSync(
-    path.join(__dirname, "../..templates", "github-pr.yml"),
+    path.join(__dirname, "../..", "templates", "github-pr.yml"),
     "utf8"
   );
 
@@ -62,7 +62,7 @@ const configureGitHub = async () => {
 
 const configureGitLab = async () => {
   const pipelineContent = fs.readFileSync(
-    path.join(__dirname, "../../templates", "gitlab-pr.yml"),
+    path.join(__dirname, "../..", "templates", "gitlab-pr.yml"),
     "utf8"
   );
 
