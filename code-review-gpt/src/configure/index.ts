@@ -3,6 +3,7 @@ import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 
+import { findTemplateFile } from "./findTemplateFile";
 import { PlatformOptions, ReviewArgs } from "../common/types";
 import { logger } from "../common/utils/logger";
 
@@ -24,16 +25,19 @@ const captureApiKey = async (): Promise<string | undefined> => {
 };
 
 const configureGitHub = async () => {
-  const workflowContent = fs.readFileSync(
-    path.join(__dirname, "../..", "templates", "github-pr.yml"),
-    "utf8"
+  const githubWorkflowTemplate = await findTemplateFile(
+    "**/templates/github-pr.yml"
   );
 
-  const workflowsDir = path.join(__dirname, "../../..", ".github", "workflows");
+  const workflowsDir = path.join(process.cwd(), ".github", "workflows");
   fs.mkdirSync(workflowsDir, { recursive: true });
 
   const workflowFile = path.join(workflowsDir, "code-review-gpt.yml");
-  fs.writeFileSync(workflowFile, workflowContent, "utf8");
+  fs.writeFileSync(
+    workflowFile,
+    fs.readFileSync(githubWorkflowTemplate, "utf8"),
+    "utf8"
+  );
 
   logger.info(`Created GitHub Actions workflow at: ${workflowFile}`);
 
@@ -61,16 +65,18 @@ const configureGitHub = async () => {
 };
 
 const configureGitLab = async () => {
-  const pipelineContent = fs.readFileSync(
-    path.join(__dirname, "../..", "templates", "gitlab-pr.yml"),
-    "utf8"
+  const gitlabPipelineTemplate = await findTemplateFile(
+    "**/templates/gitlab-pr.yml"
   );
 
-  const pipelineDir = path.join(__dirname, "../../..");
-  fs.mkdirSync(pipelineDir, { recursive: true });
-
+  const pipelineDir = process.cwd();
   const pipelineFile = path.join(pipelineDir, ".gitlab-ci.yml");
-  fs.writeFileSync(pipelineFile, pipelineContent, "utf8");
+
+  fs.writeFileSync(
+    pipelineFile,
+    fs.readFileSync(gitlabPipelineTemplate, "utf8"),
+    "utf8"
+  );
 
   logger.info(`Created GitLab CI at: ${pipelineFile}`);
 
