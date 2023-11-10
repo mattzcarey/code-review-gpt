@@ -2,7 +2,7 @@ import { Duration } from "aws-cdk-lib";
 import { Architecture, Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunctionProps } from "aws-cdk-lib/aws-lambda-nodejs";
 
-import { getRegion, getStage } from "../helpers";
+import { getRegion, getStage } from "../env-helpers";
 
 export const commonLambdaEnvironment: Record<string, string> = {
   STAGE: getStage(),
