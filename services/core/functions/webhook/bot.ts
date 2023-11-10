@@ -9,6 +9,7 @@ export const app = (app: Probot): void => {
     async (context: Context) => {
       const repo = context.repo();
 
+      console.log("Hereeee...");
       console.log("Received event:", context.name, repo);
 
       const chat = await loadChat(context);
