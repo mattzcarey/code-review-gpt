@@ -26,7 +26,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "aws-lambda": "^1.0.7",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "clsx": "^2.0.0",
     "framer-motion": "^10.16.1",
     "next": "13.4.12",
