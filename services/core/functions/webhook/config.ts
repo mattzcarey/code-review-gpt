@@ -14,13 +14,13 @@ export class WebhookLambda extends NodejsFunction {
     super(scope, id, {
       ...commonLambdaProps,
       functionName: buildResourceName(id),
-      entry: join(__dirname, "index.ts"),
+      entry: join(__dirname, "handler.cjs"),
       environment: {
         APP_ID: getEnvVariable("APP_ID"),
         PRIVATE_KEY: getEnvVariable("PRIVATE_KEY"),
         WEBHOOK_SECRET: getEnvVariable("WEBHOOK_SECRET"),
-        NODE_ENV: getEnvVariableOrDefault("NODE_ENV", "production"),
-        LOG_LEVEL: getEnvVariableOrDefault("LOG_LEVEL", "info"),
+        NODE_ENV: getEnvVariableOrDefault("NODE_ENV", "development"),
+        LOG_LEVEL: getEnvVariableOrDefault("LOG_LEVEL", "debug"),
       },
     });
   }
