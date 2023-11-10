@@ -1,4 +1,4 @@
-import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
+import { Stack, StackProps } from "aws-cdk-lib";
 import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
@@ -32,13 +32,7 @@ export class WebhookStack extends Stack {
     const webhookLambda = new WebhookLambda(this, "webhook-lambda");
 
     //Routes
-    const webhookRoute = api.root.addResource("/api/github/webhooks");
+    const webhookRoute = api.root.addResource("webhook");
     webhookRoute.addMethod("POST", new LambdaIntegration(webhookLambda));
-
-    //Exports
-    new CfnOutput(this, "webhookUrl", {
-      value: api.url,
-      exportName: `${props.stage}WebhookUrl`,
-    });
   }
 }
