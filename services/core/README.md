@@ -6,6 +6,14 @@ Note this service uses pnpm as the package manager.
 npm install -g pnpm
 ```
 
+## About the Service
+
+This service allows you to deploy a GitHub app to AWS Lambda which will run code reviews on pull requests.
+
+Set up your GitHub app in the GiHub UI and then set up your environment variables in this service by copying the `.env.example` file to `.env` and filling in the values.
+
+You will not yest have a webhook url so set it to `https://example.com` for now.
+
 ## Getting Started
 
 ### Install dependencies
@@ -38,3 +46,7 @@ or ideally use the deploy script. This script includes packaging of the webhook 
 ```bash
 pnpm deploy-staging
 ```
+
+### Update the GitHub app webhook URL
+
+Once you have deployed the service you will need to update the webhook URL in the GitHub app settings.
