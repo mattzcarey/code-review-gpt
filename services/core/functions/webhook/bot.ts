@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Context, Probot } from "probot";
 
 import { loadChat } from "./chat/loadChat";
@@ -9,7 +8,6 @@ export const app = (app: Probot): void => {
     async (context: Context) => {
       const repo = context.repo();
 
-      console.log("Hereeee...");
       console.log("Received event:", context.name, repo);
 
       const chat = await loadChat(context);
@@ -30,11 +28,12 @@ export const app = (app: Probot): void => {
       }
 
       console.info(
-        "successfully reviewed",
-        context.payload.pull_request.html_url
+        `Successfully reviewed: ${context.pullRequest().owner as string}/${
+          context.pullRequest().repo as string
+        }/${context.pullRequest().pull_number as number}`
       );
 
-      return "success";
+      return "Success";
     }
   );
 };

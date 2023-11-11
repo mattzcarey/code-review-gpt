@@ -25,7 +25,7 @@ export const commonLambdaProps: Omit<NodejsFunctionProps, "code"> = {
   memorySize: 512,
   awsSdkConnectionReuse: true,
   architecture: Architecture.ARM_64,
-  timeout: Duration.seconds(5),
+  timeout: Duration.seconds(600),
   bundling: cdkEsbuildConfig,
   tracing: Tracing.ACTIVE,
 };

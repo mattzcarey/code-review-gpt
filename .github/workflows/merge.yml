@@ -20,40 +20,6 @@ defaults:
     shell: bash
 
 jobs:
-  build_and_test_web_app:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/web-app
-        shell: bash
-    env:
-      CI: true
-      AWS_REGION: eu-west-2
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        id: setup-node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
-
-      # TODO: uncomment commented code- when we configure AWS credentials, we currently get the error 'Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity'
-
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     aws-region: ${{ env.AWS_REGION }}
-      #     role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
-
-      # - name: 🚀 Deploy web-app
-      #   run: npm i && npm run deploy-staging
-
   build_and_test_core:
     runs-on: ubuntu-latest
     env:
@@ -78,11 +44,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
 
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     aws-region: ${{ env.AWS_REGION }}
-      #     role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
-      # - name: 🚀 Deploy core
-      #   run: npm i && npm run deploy-staging
+      - name: 🚀 Deploy core
+        run: npm i && npm run deploy-staging

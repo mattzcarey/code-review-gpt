@@ -1,12 +1,9 @@
-import { Stack, StackProps } from "aws-cdk-lib";
-import { LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
-import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { HttpMethod } from "@aws-cdk/aws-apigatewayv2-alpha";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
+import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
-import { getDomainName } from "../cdk-helpers";
-import { getCertificateArn } from "../cdk-helpers/certificates";
-import { DDBTable } from "../constructs";
-import { CRGPTApi } from "../constructs/api-gateway";
+import { WebhookApi } from "../constructs";
 import { WebhookLambda } from "../functions/webhook/config";
 
 interface WebhookStackProps extends StackProps {
@@ -14,25 +11,25 @@ interface WebhookStackProps extends StackProps {
 }
 
 export class WebhookStack extends Stack {
-  table: Table;
   constructor(scope: Construct, id: string, props: WebhookStackProps) {
     super(scope, id, props);
 
     //API
-    const api = new CRGPTApi(this, "crgpt-api", {
-      rootDomain: getDomainName(props.stage),
-      subDomain: "crgpt",
-      certificateArn: getCertificateArn(this, "crgpt"),
-    });
-
-    //DynamoDB
-    this.table = new DDBTable(this, "crgpt-table");
+    const api = new WebhookApi(this, "webhook-api");
 
     // Lambda
     const webhookLambda = new WebhookLambda(this, "webhook-lambda");
 
     //Routes
-    const webhookRoute = api.root.addResource("webhook");
-    webhookRoute.addMethod("POST", new LambdaIntegration(webhookLambda));
+    api.addRoutes({
+      path: "/api/github/webhooks",
+      methods: [HttpMethod.POST],
+      integration: new HttpLambdaIntegration("webhook-lambda", webhookLambda),
+    });
+
+    // Exports
+    new CfnOutput(this, "webhook-api-url", {
+      value: api.apiEndpoint,
+    });
   }
 }

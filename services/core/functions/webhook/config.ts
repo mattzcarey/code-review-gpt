@@ -14,7 +14,7 @@ export class WebhookLambda extends NodejsFunction {
     super(scope, id, {
       ...commonLambdaProps,
       functionName: buildResourceName(id),
-      entry: join(__dirname, "handler.cjs"),
+      entry: join(__dirname, "dist/index.js"),
       environment: {
         APP_ID: getEnvVariable("APP_ID"),
         PRIVATE_KEY: getEnvVariable("PRIVATE_KEY"),
