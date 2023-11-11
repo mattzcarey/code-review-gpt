@@ -38,7 +38,7 @@
     "@aws-sdk/lib-dynamodb": "^3.388.0",
     "aws-cdk-lib": "2.86.0",
     "aws-lambda": "^1.0.7",
-    "axios": "^1.5.0",
+    "axios": "^1.6.0",
     "constructs": "^10.0.0",
     "dynamodb-toolbox": "^0.8.5",
     "esbuild": "0.19.1",
