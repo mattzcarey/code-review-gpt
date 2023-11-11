@@ -2,7 +2,7 @@
   "name": "core",
   "version": "0.1.0",
   "scripts": {
-    "build-lambda": "ncc build functions/webhook/handler.cjs -o functions/webhook/dist",
+    "build-lambda": "ncc build functions/webhook/handler.js -o functions/webhook/dist",
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts,tsx",
     "test": "jest",
