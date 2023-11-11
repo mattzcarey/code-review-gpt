@@ -31,5 +31,7 @@ export class WebhookStack extends Stack {
     new CfnOutput(this, "webhook-api-url", {
       value: api.apiEndpoint,
     });
+
+    console.log("Test");
   }
 }
