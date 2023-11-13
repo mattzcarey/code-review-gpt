@@ -3,8 +3,8 @@ import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-al
 import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
+import { WebhookLambda } from "./webhook-lambda";
 import { WebhookApi } from "../constructs";
-import { WebhookLambda } from "../functions/webhook/config";
 
 interface WebhookStackProps extends StackProps {
   stage: string;

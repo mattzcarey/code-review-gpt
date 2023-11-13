@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": ["es2020"],
-    "declaration": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -12,12 +12,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": false,
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
+    "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types"]
   },
-  "exclude": ["node_modules", "cdk.out"]
+  "exclude": ["node_modules"]
 }

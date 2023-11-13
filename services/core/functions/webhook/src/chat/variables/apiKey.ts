@@ -1,12 +1,8 @@
 import { Context } from "probot";
 
-import { Chat } from "./chat";
-
-export const loadChat = async (context: Context): Promise<Chat> => {
-  if (process.env.OPENAI_API_KEY) {
-    return new Chat(process.env.OPENAI_API_KEY, context);
-  }
-
+export const getAPIKeyFromGH = async (
+  context: Context<"pull_request">
+): Promise<string> => {
   const repo = context.repo();
 
   try {
@@ -23,15 +19,13 @@ export const loadChat = async (context: Context): Promise<Chat> => {
       throw new Error("Error fetching OPENAI_API_KEY");
     }
 
-    return new Chat(data.value, context);
+    return data.value;
   } catch {
     await context.octokit.issues.createComment({
       repo: repo.repo,
       owner: repo.owner,
       issue_number: context.pullRequest().pull_number,
-      body: `@${
-        repo.owner as string
-      } I can't access your OPENAI_API_KEY. This is set in your GitHub repository at Settings/Actions/Repository Variables/Secrets. Please contact the repository owner to set this up.`,
+      body: `@${repo.owner} I can't access your OPENAI_API_KEY. This is set in your GitHub repository at Settings/Actions/Repository Variables/Secrets. Please contact the repository owner to set this up.`,
     });
 
     throw new Error("Error fetching OPENAI_API_KEY");
