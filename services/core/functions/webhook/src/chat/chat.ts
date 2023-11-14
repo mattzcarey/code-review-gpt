@@ -12,7 +12,7 @@ export class Chat {
     openaiModelName?: string,
     temperature?: string
   ) {
-    this.modelName = openaiModelName ?? "gpt-4";
+    this.modelName = openaiModelName ?? "gpt-4-1106-preview";
     this.ai = new AIModel({
       modelName: this.modelName,
       apiKey: openaiApiKey,

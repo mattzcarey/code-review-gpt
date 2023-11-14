@@ -7,7 +7,7 @@ import { getOptionalVariablesFromGH } from "./variables/optional";
 export const loadChat = async (
   context: Context<"pull_request">
 ): Promise<Chat> => {
-  if (process.env.OPENAI_API_KEY) {
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_MODEL_NAME) {
     return new Chat(process.env.OPENAI_API_KEY, process.env.OPENAI_MODEL_NAME);
   }
 
