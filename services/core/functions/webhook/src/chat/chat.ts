@@ -54,6 +54,8 @@ export class Chat {
         throw new Error("No review json data returned by AI");
       }
 
+      console.log("jsonResponse", jsonResponse);
+
       // Remove Markdown code block formatting if present
       jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
 
