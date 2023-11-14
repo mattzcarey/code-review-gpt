@@ -46,13 +46,18 @@ export class Chat {
       return undefined;
     }
     try {
-      const jsonResponse = await this.ai.callModel(prompt);
+      let jsonResponse = await this.ai.callModel(prompt);
 
-      console.log("jsonResponse", jsonResponse);
+      console.log("Original jsonResponse", jsonResponse);
 
       if (!jsonResponse) {
         throw new Error("No review json data returned by AI");
       }
+
+      // Remove Markdown code block formatting if present
+      jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
+
+      console.log("Processed jsonResponse", jsonResponse);
 
       return JSON.parse(jsonResponse) as ReviewFile[];
     } catch (error) {
