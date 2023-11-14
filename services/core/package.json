@@ -18,7 +18,6 @@
     "@types/aws-lambda": "^8.10.119",
     "@types/jest": "^29.5.1",
     "@types/node": "20.1.7",
-    "@vercel/ncc": "^0.38.1",
     "aws-cdk": "2.106.0",
     "aws-cdk-lib": "2.106.0",
     "constructs": "^10.0.0",
