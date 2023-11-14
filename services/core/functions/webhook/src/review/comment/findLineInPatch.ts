@@ -2,9 +2,9 @@ import { ReviewFile } from "../../types";
 
 export const findPositionsFromSnippet = (
   review: ReviewFile
-): { firstLine: number; lastLine: number } => {
+): { firstLine: number | undefined; lastLine: number | undefined } => {
   if (!review.patch) {
-    return { firstLine: -1, lastLine: -1 };
+    return { firstLine: undefined, lastLine: undefined };
   }
   const lines = review.patch.split("\n");
   const snippetLines = review.codeSnippet.split("\n");
@@ -17,7 +17,7 @@ export const findPositionsFromSnippet = (
     }
   }
 
-  return { firstLine: -1, lastLine: -1 }; // Not found in any file
+  return { firstLine: undefined, lastLine: undefined }; // Not found in any file
 };
 
 const checkSnippetMatch = (
