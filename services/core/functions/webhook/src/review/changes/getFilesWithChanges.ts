@@ -1,7 +1,7 @@
 import { Context } from "probot";
 
-import { filterFiles } from "./filterFiles";
 import { ChangedFile, Commit } from "../../types";
+import { filterFiles } from "./filterFiles";
 
 // This function retrieves files with changes for a given pull request
 export const getFilesWithChanges = async (
@@ -9,6 +9,8 @@ export const getFilesWithChanges = async (
 ): Promise<{ files: ChangedFile[]; commits: Commit[] }> => {
   const { owner, repo } = context.repo();
   const pullRequest = context.payload.pull_request;
+
+  console.log(`Fetching files with changes for PR #${pullRequest.number}`);
 
   // Fetch comparison data for the entire pull request
   const comparisonData = await fetchComparisonData(
@@ -20,7 +22,7 @@ export const getFilesWithChanges = async (
   );
 
   if (!comparisonData.files) {
-    throw new Error("No files to review");
+    throw new Error(`No files to review ${JSON.stringify(comparisonData)}`);
   }
 
   let changedFilesInLastCommit: string[] = [];
@@ -30,6 +32,7 @@ export const getFilesWithChanges = async (
     isSynchronizeAction(context) &&
     hasMultipleCommits(comparisonData.commits)
   ) {
+    console.log("Synchronize action detected");
     const secondLastCommitSha =
       comparisonData.commits[comparisonData.commits.length - 2].sha;
     const lastCommitSha =
@@ -45,6 +48,10 @@ export const getFilesWithChanges = async (
     );
     changedFilesInLastCommit =
       lastCommitData.files?.map((file) => file.filename) || [];
+
+    console.log(
+      `Files changed in last commit: ${changedFilesInLastCommit.toString()}`
+    );
   }
 
   const filteredFiles = filterFiles(
@@ -53,7 +60,7 @@ export const getFilesWithChanges = async (
   );
 
   if (!filteredFiles.length) {
-    throw new Error("No files to review");
+    throw new Error("No files to review: all files hav been filtered out.");
   }
 
   return { files: filteredFiles, commits: comparisonData.commits };
@@ -73,8 +80,12 @@ const fetchComparisonData = async (
     head,
   });
 
+  console.log(`Fetched comparison data: ${JSON.stringify(data.files)}`);
+
   //for each file check that the patch is not empty, if it is remove the file from the list
   data.files = data.files?.filter((file) => file.patch !== undefined);
+
+  console.log(`Filtered comparison data: ${JSON.stringify(data.files)}`);
 
   if (!data.files) {
     throw new Error("No files to review");
