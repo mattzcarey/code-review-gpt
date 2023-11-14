@@ -48,6 +48,8 @@ export class Chat {
     try {
       const jsonResponse = await this.ai.callModel(prompt);
 
+      console.log("jsonResponse", jsonResponse);
+
       if (!jsonResponse) {
         throw new Error("No review json data returned by AI");
       }
