@@ -1,0 +1,18 @@
+{
+  "name": "webhook-lambda",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "build-lambda": "ncc build src/handler.js -o dist"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@probot/adapter-aws-lambda-serverless": "^3.0.4",
+    "dotenv": "^16.3.1",
+    "langchain": "^0.0.186",
+    "probot": "^12.3.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.1"
+  }
+}

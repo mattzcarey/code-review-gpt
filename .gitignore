@@ -19,3 +19,6 @@ cdk.context.json
 .cdk.staging
 cdk.out/
 cdk.context.json
+
+# PEM
+*.pem

@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  ignorePatterns: ["**.js", "**.d.ts"],
+  ignorePatterns: ["**.js", "**.d.ts", "**.cjs", "**.mjs", "**.json"],
   extends: [
     "eslint:recommended",
     "plugin:import/recommended",
@@ -52,15 +52,6 @@ module.exports = {
         },
         "newlines-between": "always",
         pathGroupsExcludedImportTypes: ["builtin"],
-      },
-    ],
-    "sort-imports": [
-      "error",
-      {
-        ignoreCase: true,
-        ignoreDeclarationSort: true,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
       },
     ],
     "padding-line-between-statements": [

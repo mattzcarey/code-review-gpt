@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { App, Aspects, Tags } from "aws-cdk-lib";
+import * as dotenv from "dotenv";
 
-import { CoreStack, DemoStack, WebhookStack } from "./stacks";
-import { RemovalPolicyAspect } from "../aspects";
-import { getRegion, getStage } from "../helpers";
+import { WebhookStack } from "./stack";
+import { RemovalPolicyAspect } from "../constructs/aspects";
+import { getRegion, getStage } from "../env-helpers";
 
+dotenv.config();
 
 const app = new App();
 
@@ -13,17 +15,6 @@ const stage = getStage();
 const region = getRegion();
 
 //Stacks
-const coreStack = new CoreStack(app, `${stage}-crgpt-core`, {
-  stage,
-  env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
-});
-
-new DemoStack(app, `${stage}-crgpt-demo`, {
-  stage,
-  env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
-  table: coreStack.table,
-});
-
 new WebhookStack(app, `${stage}-crgpt-webhook`, {
   stage,
   env: { region, account: process.env.CDK_DEFAULT_ACCOUNT },
