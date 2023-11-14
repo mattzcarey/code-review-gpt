@@ -3,6 +3,8 @@
 
 import { modelInfo } from "../constants";
 import { AIModel } from "../llm/ai";
+import { buildReviewPrompt } from "../prompts/buildPrompt";
+import { ReviewFile } from "../types";
 
 export class Chat {
   ai: AIModel;
@@ -29,7 +31,10 @@ export class Chat {
     return model.maxPromptLength;
   };
 
-  public getReview = async (prompt: string): Promise<string | undefined> => {
+  public getReview = async (
+    patch: string
+  ): Promise<ReviewFile[] | undefined> => {
+    const prompt = buildReviewPrompt(patch);
     const maxPromptLength = this.getMaxPromptLength(this.modelName);
 
     // TODO: fix this hack
@@ -41,7 +46,13 @@ export class Chat {
       return undefined;
     }
     try {
-      return await this.ai.callModel(prompt);
+      const jsonResponse = await this.ai.callModel(prompt);
+
+      if (!jsonResponse) {
+        throw new Error("No review json data returned by AI");
+      }
+
+      return JSON.parse(jsonResponse) as ReviewFile[];
     } catch (error) {
       throw new Error(`Error fetching review: ${(error as Error).message}`);
     }

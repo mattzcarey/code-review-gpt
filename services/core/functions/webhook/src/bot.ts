@@ -1,7 +1,10 @@
 import { Context, Probot } from "probot";
 
-import { getFilesWithChanges } from "./changes/getFilesWithChanges";
 import { loadChat } from "./chat/loadChat";
+import { getFilesWithChanges } from "./review/changes/getFilesWithChanges";
+import { collectAllReviews } from "./review/comment/collectAllReviews";
+import { filterReviews } from "./review/comment/filterReviews";
+import { postReviews } from "./review/comment/postReviews";
 
 export const app = (app: Probot): void => {
   app.on(
@@ -10,50 +13,19 @@ export const app = (app: Probot): void => {
       "pull_request.synchronize",
       "pull_request.reopened",
     ],
-    async (context: Context<"pull_request">) => {
-      const repo = context.repo();
-
-      console.log("Received event:", context.name, repo);
-
+    async (context: Context<"pull_request">): Promise<void> => {
       const chat = await loadChat(context);
 
       const { files, commits } = await getFilesWithChanges(context);
+      const allReviews = await collectAllReviews(files, chat);
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const patch = file.patch;
+      const topReviews = filterReviews(allReviews);
 
-        if (!patch) {
-          continue;
-        }
-
-        try {
-          const review = await chat.getReview(patch);
-
-          if (review) {
-            await context.octokit.pulls.createReviewComment({
-              repo: repo.repo,
-              owner: repo.owner,
-              pull_number: context.pullRequest().pull_number,
-              commit_id: commits[commits.length - 1].sha,
-              path: file.filename,
-              body: review,
-              position: patch.split("\n").length - 1,
-            });
-          }
-          console.log("Commented on file:", file.filename);
-        } catch (error) {
-          console.error(`Failed to review ${file.filename}`, error);
-        }
-      }
+      await postReviews(context, topReviews, commits);
 
       console.info(
-        `Successfully reviewed: ${context.pullRequest().owner}/${
-          context.pullRequest().repo
-        }/${context.pullRequest().pull_number}`
+        `Successfully reviewed PR #${context.pullRequest().pull_number}`
       );
-
-      return "Success";
     }
   );
 };

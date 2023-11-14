@@ -1,7 +1,7 @@
 import { Context } from "probot";
 
-import { ChangedFile, Commit } from "../types";
 import { filterFiles } from "./filterFiles";
+import { ChangedFile, Commit } from "../../types";
 
 // This function retrieves files with changes for a given pull request
 export const getFilesWithChanges = async (
@@ -73,7 +73,14 @@ const fetchComparisonData = async (
     head,
   });
 
-  return { files: data.files, commits: data.commits };
+  //for each file check that the patch is not empty, if it is remove the file from the list
+  data.files = data.files?.filter((file) => file.patch !== undefined);
+
+  if (!data.files) {
+    throw new Error("No files to review");
+  }
+
+  return { files: data.files as ChangedFile[], commits: data.commits };
 };
 
 const isSynchronizeAction = (context: Context<"pull_request">): boolean =>
