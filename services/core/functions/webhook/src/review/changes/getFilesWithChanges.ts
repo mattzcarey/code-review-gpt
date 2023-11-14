@@ -11,6 +11,7 @@ export const getFilesWithChanges = async (
   const pullRequest = context.payload.pull_request;
 
   console.log(`Fetching files with changes for PR #${pullRequest.number}`);
+  console.log("Test")
 
   // Fetch comparison data for the entire pull request
   const comparisonData = await fetchComparisonData(
