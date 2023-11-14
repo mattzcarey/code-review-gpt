@@ -20,6 +20,10 @@ export class AIModel {
   }
 
   public async callModel(prompt: string): Promise<string> {
-    return this.model.call(prompt);
+    const res = await this.model.call(prompt);
+
+    console.log("res", res);
+
+    return res;
   }
 }
