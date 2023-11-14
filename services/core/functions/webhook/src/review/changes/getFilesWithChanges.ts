@@ -1,7 +1,7 @@
 import { Context } from "probot";
 
-import { ChangedFile, Commit } from "../../types";
 import { filterFiles } from "./filterFiles";
+import { ChangedFile, Commit } from "../../types";
 
 // This function retrieves files with changes for a given pull request
 export const getFilesWithChanges = async (

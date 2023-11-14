@@ -10,7 +10,9 @@ export const postReviews = async (
   commits: { sha: string }[]
 ): Promise<void> => {
   for (const review of reviews) {
-    const position = findPositionsFromSnippet(review);
+    const { firstLine, lastLine } = findPositionsFromSnippet(review);
+
+    const isMultiLine = firstLine !== undefined;
 
     await context.octokit.pulls.createReviewComment({
       repo: context.repo().repo,
@@ -20,9 +22,9 @@ export const postReviews = async (
       path: review.filename,
       body: formatReviewComment(review),
       side: "RIGHT",
-      line: position.lastLine,
-      start_side: "RIGHT",
-      start_line: position.firstLine,
+      line: lastLine,
+      start_line: isMultiLine ? firstLine : undefined,
+      start_side: isMultiLine ? "RIGHT" : undefined,
     });
     console.log("Posted review comment on file:", review.filename);
   }
