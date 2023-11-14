@@ -7,7 +7,7 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk deploy",
-    "build-lambda": "cd functions/webhook && pnpm build-lambda",
+    "build-lambda": "cd functions/webhook && pnpm i && pnpm build-lambda",
     "deploy-dev": "pnpm build-lambda && cdk deploy -c stage=dev -c region=eu-west-2 --all --require-approval never",
     "deploy-staging": "pnpm build-lambda && cdk deploy -c stage=staging -c region=eu-west-2 --all --require-approval never",
     "deploy-prod": "pnpm build-lambda && deploy -c stage=prod -c region=eu-west-2 --all"

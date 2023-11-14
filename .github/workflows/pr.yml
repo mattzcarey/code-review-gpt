@@ -57,6 +57,9 @@ jobs:
     env:
       CI: true
       AWS_REGION: eu-west-2
+      APP_ID: ${{ secrets.APP_ID }}
+      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
 
     defaults:
       run:
@@ -80,5 +83,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
+      - name: Install pnpm
+        run: npm i -g pnpm
+
       - name: 🚀 Deploy core to staging
-        run: npm i && npm run lint-test && npm run deploy-staging
+        run: pnpm i && pnpm deploy-staging
