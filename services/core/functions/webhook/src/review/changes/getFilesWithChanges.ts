@@ -1,7 +1,7 @@
 import { Context } from "probot";
 
-import { filterFiles } from "./filterFiles";
 import { ChangedFile, Commit } from "../../types";
+import { filterFiles } from "./filterFiles";
 
 // This function retrieves files with changes for a given pull request
 export const getFilesWithChanges = async (
@@ -11,7 +11,6 @@ export const getFilesWithChanges = async (
   const pullRequest = context.payload.pull_request;
 
   console.log(`Fetching files with changes for PR #${pullRequest.number}`);
-  console.log("Test")
 
   // Fetch comparison data for the entire pull request
   const comparisonData = await fetchComparisonData(
