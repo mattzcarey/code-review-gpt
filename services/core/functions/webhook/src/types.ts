@@ -25,7 +25,7 @@ export interface Commit {
 
 export interface ReviewFile {
   category: "Bugs" | "Performance" | "Security";
-  issue: string;
+  description: string;
   suggestedCode: string;
   codeSnippet: string;
   filename?: string;
