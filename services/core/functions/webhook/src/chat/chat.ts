@@ -113,8 +113,8 @@ export class Chat {
         ) as ReviewFile[];
       } catch (fixError) {
         console.error(
-          `Error fixing JSON from AI: ${
-            (fixError as Error).message
+          `Error fixing JSON from AI. Stack:${
+            (fixError as Error).stack as string
           }. Returning undefined. Data: ${cleanJsonResponse}`
         );
 
