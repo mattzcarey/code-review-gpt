@@ -125,9 +125,10 @@ export class Chat {
 }
 
 const removeMarkdownJsonQuotes = (jsonString: string): string => {
+  // Remove Markdown code block syntax from the start of the JSON string
   return jsonString
-    .replace(/^`+json[\s\S]*?\[/, "[")
-    .replace(/\]`+$/, "]")
+    .replace(/^`+\s*json\s*/, "")
+    .replace(/\s*`+$/, "")
     .trim();
 };
 
