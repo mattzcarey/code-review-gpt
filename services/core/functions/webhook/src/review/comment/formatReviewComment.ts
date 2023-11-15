@@ -6,5 +6,5 @@ export const formatReviewComment = (review: ReviewFile): string => {
     ? `\`\`\`suggestion\n${review.suggestedCode}\n\`\`\`\n`
     : "";
 
-  return `Category:${review.category}\n${review.description}\n\n${suggestionSection}\n\n---\n\n${signOff}`;
+  return `*Category: ${review.category}*\n\n${review.description}\n\n${suggestionSection}\n\n---\n\n${signOff}`;
 };
