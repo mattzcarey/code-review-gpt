@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 // Reviewing multiple files inline > prioritising them > adding review comments
 // Answer questions > get the comments on the PR (by me and the questioner) as context > answer the question as comment
 
@@ -46,30 +47,60 @@ export class Chat {
       return undefined;
     }
 
+    //call model
+    const jsonResponse = await this.ai.callModel(prompt);
+
+    //trim the response to remove the ```json tags
+    const cleanJsonResponse = removeMarkdownJsonQuotes(jsonResponse);
+
+    // several strategies to try to parse the json
     try {
-      let jsonResponse = await this.ai.callModel(prompt);
+      //try to parse the json normally
+      let reviewData: ReviewFile[];
+      try {
+        reviewData = JSON.parse(cleanJsonResponse) as ReviewFile[];
+      } catch (error) {
+        console.error(
+          `Error parsing JSON from AI: ${
+            (error as Error).message
+          }. Trying to recover.`
+        );
+      }
 
-      jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
-      jsonResponse = encodeCodeInJson(jsonResponse);
+      //if we failed to parse the json, try to fix it
+      let encodedJsonResponse: string;
+      let decodedReviewData: ReviewFile[];
 
-      const reviewData = JSON.parse(jsonResponse) as ReviewFile[];
-      const decodedReviewData = decodeCodeInReviewData(reviewData);
+      //encoding the Suggested Code and Code Snippet fields in base64
+      try {
+        encodedJsonResponse = encodeCodeInJson(jsonResponse);
+      } catch (error) {
+        throw new Error(`Error encoding JSON: ${(error as Error).message}.`);
+      }
+
+      //try to parse the json again
+      try {
+        reviewData = JSON.parse(encodedJsonResponse) as ReviewFile[];
+      } catch (error) {
+        throw new Error(
+          `Error parsing encoded JSON from AI: ${(error as Error).message}.`
+        );
+      }
+
+      // decoding the Suggested Code and Code Snippet fields from base64
+      try {
+        decodedReviewData = decodeCodeInReviewData(reviewData);
+      } catch (error) {
+        throw new Error(`Error decoding JSON: ${(error as Error).message}.`);
+      }
 
       return decodedReviewData;
     } catch (error) {
-      // assume we failed to encode and decode the code snippets. Set them to "" and then parse the json.
-      console.log(
-        `Error encoding, decoding and parsing JSON: ${
-          (error as Error).message
-        }. Now removing code suggestions and trying again.`
-      );
+      // Last chance... Failed to encode and decode the suggestions. Set them to "" and then parse the json.
       try {
-        let jsonResponse = await this.ai.callModel(prompt);
-
-        jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
-        jsonResponse = removeSuggestionsFromJSON(jsonResponse);
-
-        return JSON.parse(jsonResponse) as ReviewFile[];
+        return JSON.parse(
+          removeSuggestionsFromJSON(cleanJsonResponse)
+        ) as ReviewFile[];
       } catch (fixError) {
         console.error(
           `Error fixing JSON from AI: ${
@@ -82,6 +113,13 @@ export class Chat {
     }
   };
 }
+
+const removeMarkdownJsonQuotes = (jsonString: string): string => {
+  return jsonString
+    .replace(/^`+json[\s\S]*?\[/, "[")
+    .replace(/\]`+$/, "]")
+    .trim();
+};
 
 const removeSuggestionsFromJSON = (jsonString: string): string => {
   return jsonString.replace(/("suggestedCode":\s*").+?(",)/g, '$1""$2');
