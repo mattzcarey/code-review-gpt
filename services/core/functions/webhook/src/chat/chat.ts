@@ -69,6 +69,7 @@ export class Chat {
       );
       try {
         let jsonResponse = await this.ai.callModel(prompt);
+        jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
         jsonResponse = removeCodeFromJSON(jsonResponse);
 
         return JSON.parse(jsonResponse) as ReviewFile[];
