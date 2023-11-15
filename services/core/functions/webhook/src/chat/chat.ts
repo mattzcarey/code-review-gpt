@@ -63,7 +63,7 @@ export class Chat {
         console.error(
           `Error parsing JSON from AI: ${
             (error as Error).message
-          }. Trying to recover.`
+          }. Trying to recover. Data: ${cleanJsonResponse}`
         );
       }
 
@@ -75,7 +75,11 @@ export class Chat {
       try {
         encodedJsonResponse = encodeCodeInJson(jsonResponse);
       } catch (error) {
-        throw new Error(`Error encoding JSON: ${(error as Error).message}.`);
+        throw new Error(
+          `Error encoding JSON: ${
+            (error as Error).message
+          }. Data: ${jsonResponse}`
+        );
       }
 
       //try to parse the json again
@@ -83,7 +87,9 @@ export class Chat {
         reviewData = JSON.parse(encodedJsonResponse) as ReviewFile[];
       } catch (error) {
         throw new Error(
-          `Error parsing encoded JSON from AI: ${(error as Error).message}.`
+          `Error parsing encoded JSON from AI: ${
+            (error as Error).message
+          }. Data: ${encodedJsonResponse}`
         );
       }
 
@@ -91,7 +97,11 @@ export class Chat {
       try {
         decodedReviewData = decodeCodeInReviewData(reviewData);
       } catch (error) {
-        throw new Error(`Error decoding JSON: ${(error as Error).message}.`);
+        throw new Error(
+          `Error decoding JSON: ${
+            (error as Error).message
+          }. Data: ${JSON.stringify(reviewData)}`
+        );
       }
 
       return decodedReviewData;
@@ -105,7 +115,7 @@ export class Chat {
         console.error(
           `Error fixing JSON from AI: ${
             (fixError as Error).message
-          }. Returning undefined.`
+          }. Returning undefined. Data: ${cleanJsonResponse}`
         );
 
         return undefined;
