@@ -45,25 +45,76 @@ export class Chat {
 
       return undefined;
     }
+
     try {
       let jsonResponse = await this.ai.callModel(prompt);
-
-      console.log("Original jsonResponse", jsonResponse);
 
       if (!jsonResponse) {
         throw new Error("No review json data returned by AI");
       }
 
-      console.log("jsonResponse", jsonResponse);
-
-      // Remove Markdown code block formatting if present
       jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
+      jsonResponse = encodeCodeInJson(jsonResponse);
 
-      console.log("Processed jsonResponse", jsonResponse);
+      const reviewData = JSON.parse(jsonResponse) as ReviewFile[];
+      decodeCodeInReviewData(reviewData);
 
-      return JSON.parse(jsonResponse) as ReviewFile[];
+      return reviewData;
     } catch (error) {
-      throw new Error(`Error fetching review: ${(error as Error).message}`);
+      // assume we failed to encode and decode the code snippets. Set them to "" and then parse the json.
+      console.log(
+        `Error encoding, decoding and parsing JSON: ${
+          (error as Error).message
+        }. Now removing code snippets and trying again.`
+      );
+      try {
+        let jsonResponse = await this.ai.callModel(prompt);
+        jsonResponse = removeCodeFromJSON(jsonResponse);
+
+        return JSON.parse(jsonResponse) as ReviewFile[];
+      } catch (fixError) {
+        console.error(
+          `Error fixing JSON from AI: ${
+            (fixError as Error).message
+          }. Returning undefined.`
+        );
+
+        return undefined;
+      }
     }
   };
 }
+
+const removeCodeFromJSON = (jsonString: string): string => {
+  return jsonString.replace(
+    /("suggestedCode":\s*").+?(",|"codeSnippet":)/g,
+    '$1""$2'
+  );
+};
+
+const encodeCodeInJson = (jsonString: string): string => {
+  return jsonString.replace(
+    /("suggestedCode":\s*")(.+?)(",|"codeSnippet":)/g,
+    (p1: string, p2: string, p3: string) => {
+      const encodedCode = Buffer.from(p2).toString("base64");
+
+      return p1 + encodedCode + p3;
+    }
+  );
+};
+
+const decodeCodeInReviewData = (reviewData: ReviewFile[]): void => {
+  reviewData.forEach((review) => {
+    if (review.suggestedCode) {
+      review.suggestedCode = Buffer.from(
+        review.suggestedCode,
+        "base64"
+      ).toString("utf-8");
+    }
+    if (review.codeSnippet) {
+      review.codeSnippet = Buffer.from(review.codeSnippet, "base64").toString(
+        "utf-8"
+      );
+    }
+  });
+};
