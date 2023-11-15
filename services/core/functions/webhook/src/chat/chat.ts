@@ -106,6 +106,11 @@ export class Chat {
 
       return decodedReviewData;
     } catch (error) {
+      console.error(
+        `Error parsing JSON using encode/decode from AI: ${
+          (error as Error).message
+        }. Stack: ${(error as Error).stack as string} Data: ${jsonResponse}`
+      );
       // Last chance... Failed to encode and decode the suggestions. Set them to "" and then parse the json.
       try {
         return JSON.parse(
