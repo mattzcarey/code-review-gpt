@@ -49,28 +49,25 @@ export class Chat {
     try {
       let jsonResponse = await this.ai.callModel(prompt);
 
-      if (!jsonResponse) {
-        throw new Error("No review json data returned by AI");
-      }
-
       jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
       jsonResponse = encodeCodeInJson(jsonResponse);
 
       const reviewData = JSON.parse(jsonResponse) as ReviewFile[];
-      decodeCodeInReviewData(reviewData);
+      const decodedReviewData = decodeCodeInReviewData(reviewData);
 
-      return reviewData;
+      return decodedReviewData;
     } catch (error) {
       // assume we failed to encode and decode the code snippets. Set them to "" and then parse the json.
       console.log(
         `Error encoding, decoding and parsing JSON: ${
           (error as Error).message
-        }. Now removing code snippets and trying again.`
+        }. Now removing code suggestions and trying again.`
       );
       try {
         let jsonResponse = await this.ai.callModel(prompt);
+
         jsonResponse = jsonResponse.replace(/```json\n?|```/g, "").trim();
-        jsonResponse = removeCodeFromJSON(jsonResponse);
+        jsonResponse = removeSuggestionsFromJSON(jsonResponse);
 
         return JSON.parse(jsonResponse) as ReviewFile[];
       } catch (fixError) {
@@ -86,11 +83,8 @@ export class Chat {
   };
 }
 
-const removeCodeFromJSON = (jsonString: string): string => {
-  return jsonString.replace(
-    /("suggestedCode":\s*").+?(",|"codeSnippet":)/g,
-    '$1""$2'
-  );
+const removeSuggestionsFromJSON = (jsonString: string): string => {
+  return jsonString.replace(/("suggestedCode":\s*").+?(",)/g, '$1""$2');
 };
 
 const encodeCodeInJson = (jsonString: string): string => {
@@ -104,7 +98,7 @@ const encodeCodeInJson = (jsonString: string): string => {
   );
 };
 
-const decodeCodeInReviewData = (reviewData: ReviewFile[]): void => {
+const decodeCodeInReviewData = (reviewData: ReviewFile[]): ReviewFile[] => {
   reviewData.forEach((review) => {
     if (review.suggestedCode) {
       review.suggestedCode = Buffer.from(
@@ -118,4 +112,6 @@ const decodeCodeInReviewData = (reviewData: ReviewFile[]): void => {
       );
     }
   });
+
+  return reviewData;
 };
