@@ -142,8 +142,10 @@ export const createPromptFiles = (
       maxSurroundingLines
     );
 
-    // Expand the range and create the prompt content
-    ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
+    // Expand the range and create the prompt content, only if maxSurroundingLines is defined
+    if (!maxSurroundingLines) {
+      ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
+    }
     const promptContent = createPromptContent(
       start,
       end,
