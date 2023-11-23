@@ -15,7 +15,7 @@ export const findPositionsFromSnippet = (review: ReviewFile): number => {
   // Found the first line of the snippet
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].includes(snippetLines[0].trim())) {
-      return i + 1;
+      return i;
     }
   }
 
