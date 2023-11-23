@@ -20,6 +20,13 @@ export class AIModel {
   }
 
   public async callModel(prompt: string): Promise<string> {
-    return this.model.call(prompt);
+    try {
+      const res = await this.model.call(prompt);
+      console.debug(`Response from AI model: ${res}`);
+
+      return res;
+    } catch (error) {
+      throw new Error(`Error calling AI model: ${(error as Error).message}`);
+    }
   }
 }

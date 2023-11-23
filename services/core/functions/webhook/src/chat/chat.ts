@@ -1,8 +1,14 @@
+/* eslint-disable max-depth */
+/* eslint-disable complexity */
 // Reviewing multiple files inline > prioritising them > adding review comments
 // Answer questions > get the comments on the PR (by me and the questioner) as context > answer the question as comment
 
+import jsesc from "jsesc";
+
 import { modelInfo } from "../constants";
 import { AIModel } from "../llm/ai";
+import { buildReviewPrompt } from "../prompts/buildPrompt";
+import { ReviewFile } from "../types";
 
 export class Chat {
   ai: AIModel;
@@ -29,10 +35,12 @@ export class Chat {
     return model.maxPromptLength;
   };
 
-  public getReview = async (prompt: string): Promise<string | undefined> => {
+  public getReview = async (
+    patch: string
+  ): Promise<ReviewFile[] | undefined> => {
+    const prompt = buildReviewPrompt(patch);
     const maxPromptLength = this.getMaxPromptLength(this.modelName);
 
-    // TODO: fix this hack
     if (prompt.length > maxPromptLength) {
       console.error(
         `File ${prompt} is too large to review, skipping review for this file`
@@ -40,10 +48,50 @@ export class Chat {
 
       return undefined;
     }
+
     try {
-      return await this.ai.callModel(prompt);
+      let jsonResponse = await this.ai.callModel(prompt);
+      jsonResponse = removeMarkdownJsonQuotes(jsonResponse);
+
+      try {
+        return JSON.parse(jsonResponse) as ReviewFile[];
+      } catch (parseError) {
+        console.error(
+          `Error parsing JSON: ${
+            (parseError as Error).message
+          }. Escaping special characters and retrying.`
+        );
+
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+          const escapedJsonResponse: string = jsesc(jsonResponse, {
+            json: true,
+          });
+
+          return JSON.parse(escapedJsonResponse) as ReviewFile[];
+        } catch (escapeParseError) {
+          console.error(
+            `Error parsing escaped JSON: ${
+              (escapeParseError as Error).message
+            }. Returning undefined.`
+          );
+
+          return undefined;
+        }
+      }
     } catch (error) {
-      throw new Error(`Error fetching review: ${(error as Error).message}`);
+      console.error(
+        `Error processing review data: ${(error as Error).message}`
+      );
+
+      return undefined;
     }
   };
 }
+
+const removeMarkdownJsonQuotes = (jsonString: string): string => {
+  return jsonString
+    .replace(/^`+\s*json\s*/, "")
+    .replace(/\s*`+$/, "")
+    .trim();
+};

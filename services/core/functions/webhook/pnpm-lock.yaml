@@ -11,6 +11,9 @@ dependencies:
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
+  jsesc:
+    specifier: ^3.0.2
+    version: 3.0.2
   langchain:
     specifier: ^0.0.186
     version: 0.0.186
@@ -19,6 +22,9 @@ dependencies:
     version: 12.3.1
 
 devDependencies:
+  '@types/jsesc':
+    specifier: ^3.0.3
+    version: 3.0.3
   '@vercel/ncc':
     specifier: ^0.38.1
     version: 0.38.1
@@ -464,6 +470,10 @@ packages:
   /@types/js-yaml@4.0.9:
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
     dev: false
+
+  /@types/jsesc@3.0.3:
+    resolution: {integrity: sha512-YZZ9ZOAiiSVC6KApWd/fTCDTdTOOMiRU4Lq3/VSmXNPse8IvCVOn5kYRRLu900Ub1lTPurVZFI5unEqLDJR7wg==}
+    dev: true
 
   /@types/jsonwebtoken@9.0.5:
     resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
@@ -1330,6 +1340,12 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
+    dev: false
+
+  /jsesc@3.0.2:
+    resolution: {integrity: sha512-xKqzzWXDttJuOcawBt4KnKHHIf5oQ/Cxax+0PWFG+DFDgHNAdi+TXECADI+RYiFUMmx8792xsMbbgXj4CwnP4g==}
+    engines: {node: '>=6'}
+    hasBin: true
     dev: false
 
   /json-parse-better-errors@1.0.2:

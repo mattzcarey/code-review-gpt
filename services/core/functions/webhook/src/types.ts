@@ -15,10 +15,19 @@ export interface ChangedFile {
   blob_url: string;
   raw_url: string;
   contents_url: string;
-  patch?: string | undefined;
+  patch: string;
   previous_filename?: string | undefined;
 }
 
 export interface Commit {
   sha: string;
+}
+
+export interface ReviewFile {
+  category: "Bugs" | "Performance" | "Security";
+  description: string;
+  suggestedCode: string;
+  codeSnippet: string;
+  filename?: string;
+  patch?: string;
 }

@@ -1,6 +1,5 @@
-import { reviewPrompt } from "../constants";
+import { reviewPrompt, takeADeepBreath } from "./prompts";
 
-export const buildPrompt = (patch: string): string => {
-  return `${reviewPrompt}
-    ${patch}`;
+export const buildReviewPrompt = (patch: string): string => {
+  return `Human:${reviewPrompt}\n\n${patch}\n\n${takeADeepBreath}\n\nAssistant:`;
 };

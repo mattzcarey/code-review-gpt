@@ -24,7 +24,7 @@ export const getOptionalVariablesFromGH = async (
 
         variablesData[variable] = data.value;
       } catch (error) {
-        console.log("Using default value for", variable);
+        console.error("Using default value for", variable);
 
         return undefined;
       }
