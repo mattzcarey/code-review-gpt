@@ -2,18 +2,26 @@ import { maxReviewCount } from "../../constants";
 import { ReviewFile } from "../../types";
 
 export const filterReviews = (reviews: ReviewFile[]): ReviewFile[] => {
-  const securityReviews = reviews.filter((r) => r.category === "Security");
-  if (securityReviews.length > 0) {
-    return securityReviews.slice(0, maxReviewCount);
-  }
+  console.log({ reviewsBeforeFiltering: reviews });
+  console.log({ maxReviewCount });
 
-  const performanceReviews = reviews.filter(
-    (r) => r.category === "Performance"
+  const filterReviews: ReviewFile[] = [];
+  // order by Security, Bugs, Performance, Style
+  filterReviews.push(...filterByCategory(reviews, "Security"));
+  filterReviews.push(...filterByCategory(reviews, "Bugs"));
+  filterReviews.push(...filterByCategory(reviews, "Performance"));
+  filterReviews.push(...filterByCategory(reviews, "Style"));
+
+  return filterReviews.slice(0, maxReviewCount);
+};
+
+const filterByCategory = (
+  reviews: ReviewFile[],
+  category: string
+): ReviewFile[] => {
+  const categoryReviews = reviews.filter(
+    (review) => review.category === category
   );
-  if (performanceReviews.length > 0) {
-    return performanceReviews.slice(0, maxReviewCount);
-  }
 
-  // Return other reviews if no security or performance issues found
-  return reviews.slice(0, maxReviewCount);
+  return categoryReviews;
 };

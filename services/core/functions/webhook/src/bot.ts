@@ -20,6 +20,7 @@ export const app = (app: Probot): void => {
       const allReviews = await collectAllReviews(files, chat);
 
       const topReviews = filterReviews(allReviews);
+      console.log({ topReviews });
 
       await postReviews(context, topReviews, commits);
 
