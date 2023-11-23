@@ -22,7 +22,7 @@ export class AIModel {
   public async callModel(prompt: string): Promise<string> {
     try {
       const res = await this.model.call(prompt);
-      console.log(`Response from AI model: ${res}`);
+      console.debug(`Response from AI model: ${res}`);
 
       return res;
     } catch (error) {

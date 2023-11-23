@@ -2,9 +2,6 @@ import { maxReviewCount } from "../../constants";
 import { ReviewFile } from "../../types";
 
 export const filterReviews = (reviews: ReviewFile[]): ReviewFile[] => {
-  console.log({ reviewsBeforeFiltering: reviews });
-  console.log({ maxReviewCount });
-
   const filterReviews: ReviewFile[] = [];
   // order by Security, Bugs, Performance, Style
   filterReviews.push(...filterByCategory(reviews, "Security"));

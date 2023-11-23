@@ -1,8 +1,8 @@
 import { Context } from "probot";
 
+import { ReviewFile } from "../../types";
 import { findPositionsFromSnippet } from "./findLineInPatch";
 import { formatReviewComment } from "./formatReviewComment";
-import { ReviewFile } from "../../types";
 
 export const postReviews = async (
   context: Context<"pull_request">,
@@ -21,6 +21,6 @@ export const postReviews = async (
       body: formatReviewComment(review),
       position,
     });
-    console.log("Posted review comment on file:", review.filename);
+    console.debug("Posted review comment on file:", review.filename);
   }
 };

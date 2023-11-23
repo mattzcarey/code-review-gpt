@@ -52,39 +52,39 @@ jobs:
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
 
-  # build_and_test_core:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     CI: true
-  #     AWS_REGION: eu-west-2
-  #     APP_ID: ${{ secrets.APP_ID }}
-  #     WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-  #     PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  build_and_test_core:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      AWS_REGION: eu-west-2
+      APP_ID: ${{ secrets.APP_ID }}
+      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
 
-  #   defaults:
-  #     run:
-  #       working-directory: services/core
-  #       shell: bash
+    defaults:
+      run:
+        working-directory: services/core
+        shell: bash
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-  #     - name: Setup Node.js
-  #       id: setup-node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         aws-region: ${{ env.AWS_REGION }}
-  #         role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
-  #     - name: Install pnpm
-  #       run: npm i -g pnpm
+      - name: Install pnpm
+        run: npm i -g pnpm
 
-  #     - name: 🚀 Deploy core to staging
-  #       run: pnpm i && pnpm deploy-staging
+      - name: 🚀 Deploy core to staging
+        run: pnpm i && pnpm deploy-staging

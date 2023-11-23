@@ -15,8 +15,7 @@ export const collectAllReviews = async (
     try {
       const reviewArray = await chat.getReview(patch);
 
-      console.log(`Reviewing ${file.filename}`);
-      console.log({ reviewArray });
+      console.debug(`Reviewing ${file.filename}`);
 
       if (reviewArray === undefined) {
         continue;
@@ -29,8 +28,6 @@ export const collectAllReviews = async (
       });
 
       allReviews = allReviews.concat(reviewArray);
-
-      console.log({ allReviews });
     } catch (error) {
       console.error(`Failed to review ${file.filename}`, error);
     }

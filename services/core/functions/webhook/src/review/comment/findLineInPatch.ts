@@ -19,7 +19,7 @@ export const findPositionsFromSnippet = (review: ReviewFile): number => {
     }
   }
 
-  console.log("Could not find position for snippet:", review.codeSnippet);
+  console.error("Could not find position for snippet:", review.codeSnippet);
 
   return lines.length - 1;
 };
