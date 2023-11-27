@@ -1,7 +1,7 @@
 import { extname } from "path";
 
-import { excludedKeywords, supportedFiles } from "../../constants";
-import { ChangedFile } from "../../types";
+import { excludedKeywords, supportedFiles } from "../../../constants";
+import { ChangedFile } from "../../../types";
 
 export const filterFiles = (
   changedFiles: string[],

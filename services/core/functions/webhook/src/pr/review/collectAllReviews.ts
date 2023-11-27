@@ -2,18 +2,17 @@ import { Chat } from "../../chat/chat";
 import { ReviewFile } from "../../types";
 
 export const collectAllReviews = async (
-  files: { patch: string; filename: string }[],
+  files: { patch?: string; filename: string }[],
   chat: Chat
 ): Promise<ReviewFile[]> => {
   let allReviews: ReviewFile[] = [];
   for (const file of files) {
-    const patch: string = file.patch;
-    if (!patch) {
+    if (!file.patch) {
       continue;
     }
 
     try {
-      const reviewArray = await chat.getReview(patch);
+      const reviewArray = await chat.getReview(file.patch);
 
       console.debug(`Reviewing ${file.filename}`);
 
@@ -24,7 +23,7 @@ export const collectAllReviews = async (
       // Add the filename and patch to the review data
       reviewArray.forEach((review) => {
         review.filename = file.filename;
-        review.patch = patch;
+        review.patch = file.patch;
       });
 
       allReviews = allReviews.concat(reviewArray);

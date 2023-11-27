@@ -1,10 +1,7 @@
 import { Context, Probot } from "probot";
 
 import { loadChat } from "./chat/loadChat";
-import { getFilesWithChanges } from "./review/changes/getFilesWithChanges";
-import { collectAllReviews } from "./review/comment/collectAllReviews";
-import { filterReviews } from "./review/comment/filterReviews";
-import { postReviews } from "./review/comment/postReviews";
+import { review } from "./pr";
 
 export const app = (app: Probot): void => {
   app.on(
@@ -16,12 +13,7 @@ export const app = (app: Probot): void => {
     async (context: Context<"pull_request">): Promise<void> => {
       const chat = await loadChat(context);
 
-      const { files, commits } = await getFilesWithChanges(context);
-      const allReviews = await collectAllReviews(files, chat);
-
-      const topReviews = filterReviews(allReviews);
-
-      await postReviews(context, topReviews, commits);
+      await review(context, chat);
 
       console.info(
         `Successfully reviewed PR #${context.pullRequest().pull_number}`

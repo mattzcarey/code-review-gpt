@@ -37,23 +37,6 @@ module.exports = {
       },
     ],
     "prefer-const": "error",
-    "import/order": [
-      "error",
-      {
-        groups: [
-          ["external", "builtin"],
-          "unknown",
-          "internal",
-          ["parent", "sibling", "index"],
-        ],
-        alphabetize: {
-          order: "asc",
-          caseInsensitive: false,
-        },
-        "newlines-between": "always",
-        pathGroupsExcludedImportTypes: ["builtin"],
-      },
-    ],
     "padding-line-between-statements": [
       "error",
       {

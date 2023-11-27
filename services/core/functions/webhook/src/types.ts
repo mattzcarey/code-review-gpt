@@ -15,7 +15,7 @@ export interface ChangedFile {
   blob_url: string;
   raw_url: string;
   contents_url: string;
-  patch: string;
+  patch?: string;
   previous_filename?: string | undefined;
 }
 
