@@ -1,5 +1,5 @@
 export const signOff =
-  "#### Powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)";
+  "#### Pwered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)";
 
 export const modelInfo = [
   {
