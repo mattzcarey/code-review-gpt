@@ -1,7 +1,8 @@
 import { Context, Probot } from "probot";
 
-import { loadChat } from "./chat/loadChat";
-import { review } from "./pr";
+import { loadChat } from "./controllers/chat/loadChat";
+import { review } from "./pr/review";
+import { qa } from "./pr/qa";
 
 export const app = (app: Probot): void => {
   app.on(
@@ -20,4 +21,20 @@ export const app = (app: Probot): void => {
       );
     }
   );
+
+  //chat with bot about PR
+  app.on([
+    "pull_request_review_thread",
+  ], async (context: Context<"pull_request_review_thread">): Promise<void> => {
+    const chat = await loadChat(context);
+
+    await qa(context, chat);
+
+    console.info(
+      `Successfully answered question in PR #${context.payload.pull_request.number}`
+    );
+
+    
+
+
 };

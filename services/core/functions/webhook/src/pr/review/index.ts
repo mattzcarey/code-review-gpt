@@ -1,10 +1,10 @@
 import { Context } from "probot";
 
-import { Chat } from "../chat/chat";
-import { getFilesWithChanges } from "./review/changes/getFilesWithChanges";
-import { collectAllReviews } from "./review/collectAllReviews";
-import { filterReviews } from "./review/filterReviews";
-import { postReviews } from "./review/postReviews";
+import { Chat } from "../../controllers/chat/chat";
+import { getFilesWithChanges } from "./changes/getFilesWithChanges";
+import { collectAllReviews } from "./collectAllReviews";
+import { filterReviews } from "./filterReviews";
+import { postReviews } from "./postReviews";
 
 export const review = async (
   context: Context<"pull_request">,

@@ -1,4 +1,4 @@
-import { Chat } from "../../chat/chat";
+import { Chat } from "../../controllers/chat/chat";
 import { ReviewFile } from "../../types";
 
 export const collectAllReviews = async (

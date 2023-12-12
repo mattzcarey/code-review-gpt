@@ -1,45 +1,21 @@
-/* eslint-disable max-depth */
-/* eslint-disable complexity */
-// Reviewing multiple files inline > prioritising them > adding review comments
 // Answer questions > get the comments on the PR (by me and the questioner) as context > answer the question as comment
-
 import jsesc from "jsesc";
 
-import { modelInfo } from "../constants";
-import { AIModel } from "../llm/ai";
-import { buildReviewPrompt } from "../prompts/buildPrompt";
-import { ReviewFile } from "../types";
+import { buildReviewPrompt } from "../../prompts/buildPrompt";
+import { ReviewFile } from "../../types";
+import { AIModel } from "../ai";
 
 export class Chat {
   ai: AIModel;
-  modelName: string;
-  constructor(
-    openaiApiKey: string,
-    openaiModelName?: string,
-    temperature?: string
-  ) {
-    this.modelName = openaiModelName ?? "gpt-4-1106-preview";
-    this.ai = new AIModel({
-      modelName: this.modelName,
-      apiKey: openaiApiKey,
-      temperature: temperature ? parseFloat(temperature) : 0,
-    });
+  constructor(ai: AIModel) {
+    this.ai = ai;
   }
-
-  private getMaxPromptLength = (modelName: string): number => {
-    const model = modelInfo.find((info) => info.model === modelName);
-    if (!model) {
-      throw new Error(`Model ${modelName} not found`);
-    }
-
-    return model.maxPromptLength;
-  };
 
   public getReview = async (
     patch: string
   ): Promise<ReviewFile[] | undefined> => {
     const prompt = buildReviewPrompt(patch);
-    const maxPromptLength = this.getMaxPromptLength(this.modelName);
+    const maxPromptLength = this.ai.getMaxPromptLength();
 
     if (prompt.length > maxPromptLength) {
       console.error(
@@ -83,6 +59,16 @@ export class Chat {
       console.error(
         `Error processing review data: ${(error as Error).message}`
       );
+
+      return undefined;
+    }
+  };
+
+  public getAnswer = async (question: string): Promise<string | undefined> => {
+    try {
+      return await this.ai.callModel(question);
+    } catch (error) {
+      console.error(`Error processing question: ${(error as Error).message}`);
 
       return undefined;
     }

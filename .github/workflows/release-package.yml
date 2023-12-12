@@ -3,7 +3,7 @@ name: Release Package
 defaults:
   run:
     shell: bash
-    working-directory: code-review-gpt
+    working-directory: packages/code-review-gpt
 
 on:
   push:

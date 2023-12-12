@@ -5,7 +5,7 @@ interface GHVariables {
 }
 export const getOptionalVariablesFromGH = async (
   variables: string[],
-  context: Context<"pull_request">
+  context: Context
 ): Promise<GHVariables> => {
   const repo = context.repo();
   const variablesData: GHVariables = {};

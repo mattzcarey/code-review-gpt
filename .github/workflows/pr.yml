@@ -15,13 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: code-review-gpt
+        working-directory: packages/code-review-gpt
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       GITHUB_SHA: ${{ github.sha }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      CLOUDFLARE_WORKER_HEALTH_URL: ${{ secrets.CLOUDFLARE_WORKER_HEALTH_URL }}
 
     steps:
       - uses: actions/checkout@v4
@@ -44,10 +43,6 @@ jobs:
 
       - name: Run unit tests
         run: npm run test-unit
-
-      # Removing integration tests for now, till we have a proper workspace setup
-      # - name: Run integration tests
-      #   run: npm run test-integ
 
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
