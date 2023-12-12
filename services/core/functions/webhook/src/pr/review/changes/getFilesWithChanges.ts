@@ -5,7 +5,9 @@ import { filterFiles } from "./filterFiles";
 
 // This function retrieves files with changes for a given pull request
 export const getFilesWithChanges = async (
-  context: Context<"pull_request">
+  context: Context<
+    "pull_request.opened" | "pull_request.synchronize" | "pull_request.reopened"
+  >
 ): Promise<{ files: ChangedFile[]; commits: Commit[] }> => {
   const { owner, repo } = context.repo();
   const pullRequest = context.payload.pull_request;
@@ -60,7 +62,9 @@ export const getFilesWithChanges = async (
 };
 
 const fetchComparisonData = async (
-  context: Context<"pull_request">,
+  context: Context<
+    "pull_request.opened" | "pull_request.synchronize" | "pull_request.reopened"
+  >,
   owner: string,
   repo: string,
   base: string,
@@ -76,7 +80,10 @@ const fetchComparisonData = async (
   return { files: data.files, commits: data.commits };
 };
 
-const isSynchronizeAction = (context: Context<"pull_request">): boolean =>
-  context.payload.action === "synchronize";
+const isSynchronizeAction = (
+  context: Context<
+    "pull_request.opened" | "pull_request.synchronize" | "pull_request.reopened"
+  >
+): boolean => context.payload.action === "synchronize";
 
 const hasMultipleCommits = (commits: Commit[]): boolean => commits.length > 1;

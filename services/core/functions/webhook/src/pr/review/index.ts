@@ -7,7 +7,9 @@ import { filterReviews } from "./filterReviews";
 import { postReviews } from "./postReviews";
 
 export const review = async (
-  context: Context<"pull_request">,
+  context: Context<
+    "pull_request.opened" | "pull_request.synchronize" | "pull_request.reopened"
+  >,
   chat: Chat
 ): Promise<void> => {
   const { files, commits } = await getFilesWithChanges(context);

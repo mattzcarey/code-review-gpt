@@ -1,6 +1,13 @@
 import { Context } from "probot";
 
-export const getAPIKeyFromGH = async (context: Context): Promise<string> => {
+export const getAPIKeyFromGH = async (
+  context: Context<
+    | "pull_request.opened"
+    | "pull_request.synchronize"
+    | "pull_request.reopened"
+    | "pull_request_review_thread"
+  >
+): Promise<string> => {
   const repo = context.repo();
 
   try {
@@ -23,9 +30,7 @@ export const getAPIKeyFromGH = async (context: Context): Promise<string> => {
       repo: repo.repo,
       owner: repo.owner,
       issue_number: context.pullRequest().pull_number,
-      body: `@${
-        repo.owner as string
-      } I can't access your OPENAI_API_KEY. This is set in your GitHub repository at Settings/Actions/Repository Variables/Secrets. Please contact the repository owner to set this up.`,
+      body: `@${repo.owner} I can't access your OPENAI_API_KEY. This is set in your GitHub repository at Settings/Actions/Repository Variables/Secrets. Please contact the repository owner to set this up.`,
     });
 
     throw new Error("Error fetching OPENAI_API_KEY");
