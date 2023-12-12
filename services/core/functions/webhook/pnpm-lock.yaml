@@ -8,9 +8,6 @@ dependencies:
   '@probot/adapter-aws-lambda-serverless':
     specifier: ^3.0.4
     version: 3.0.4
-  dotenv:
-    specifier: ^16.3.1
-    version: 16.3.1
   jsesc:
     specifier: ^3.0.2
     version: 3.0.2
@@ -913,11 +910,6 @@ packages:
     dependencies:
       base-64: 0.1.0
       md5: 2.3.0
-    dev: false
-
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
-    engines: {node: '>=12'}
     dev: false
 
   /dotenv@8.6.0:
