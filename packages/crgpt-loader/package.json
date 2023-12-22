@@ -14,5 +14,14 @@
     "crgpt"
   ],
   "author": "Matt Carey",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ignore": "^5.3.0",
+    "langchain": "^0.0.204"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
 }
