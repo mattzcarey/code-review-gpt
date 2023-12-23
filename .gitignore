@@ -5,6 +5,8 @@ dist
 !jest.config.js
 *.d.ts
 
+**/data
+
 cdk.context.json
 
 # nextjs and sst
