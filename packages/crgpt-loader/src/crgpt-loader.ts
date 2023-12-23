@@ -1,11 +1,10 @@
-import axios, { AxiosResponse } from "axios";
 import dotenv from "dotenv";
 import { promises as fsPromises } from "fs";
 import { Document } from "langchain/document";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import os from "os";
-import path from "path";
+import { tmpdir } from "os";
+import { join } from "path";
 import { removeFilesCommand, removeFoldersCommand } from "./constants";
 import { executeCommand, openFile, savePage } from "./utils";
 
@@ -67,15 +66,15 @@ export class CRGPTLoader {
         "Content-Type": "application/json",
       };
 
-      await axios.post(
-        apiEndpoint,
-        {
+      await fetch(apiEndpoint, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
           ids,
           vectors: embeddings,
           attributes,
-        },
-        { headers }
-      );
+        }),
+      });
     } catch (error) {
       console.error("Error storing documents:", error);
       throw error;
@@ -102,9 +101,7 @@ export class CRGPTLoader {
   }
 
   private async cloneRepository(): Promise<string> {
-    const tempDir = await fsPromises.mkdtemp(
-      path.join(os.tmpdir(), "CRGPTLoader-")
-    );
+    const tempDir = await fsPromises.mkdtemp(join(tmpdir(), "CRGPTLoader-"));
     const cloneCommand = `git clone --depth 1 ${this.link} ${tempDir}`;
     await executeCommand(cloneCommand);
     return tempDir;
@@ -132,7 +129,7 @@ export class CRGPTLoader {
     const documents: Document<{ source: string }>[] = [];
 
     for (const entry of entries) {
-      const fullPath = path.join(directory, entry.name);
+      const fullPath = join(directory, entry.name);
       if (entry.isDirectory()) {
         documents.push(...(await this.createDocuments(fullPath)));
       } else if (entry.isFile()) {
@@ -164,7 +161,10 @@ export class CRGPTLoader {
           continue;
         }
 
-        const { ids, vectors, attributes, next_cursor } = response.data;
+        // Parse the response body as JSON
+        const data = await response.json();
+        const { ids, vectors, attributes, next_cursor } = data;
+
         savePage(dataDir, pageIndex, ids, vectors, attributes);
 
         nextCursor = next_cursor;
@@ -179,16 +179,27 @@ export class CRGPTLoader {
   private async fetchPage(
     namespace: string,
     cursor: string | null
-  ): Promise<AxiosResponse> {
-    const apiEndpoint = `https://api.turbopuffer.com/v1/vectors/${namespace}`;
-    const params = cursor ? { cursor } : {};
+  ): Promise<Response> {
+    const apiEndpoint = new URL(
+      `https://api.turbopuffer.com/v1/vectors/${namespace}`
+    );
 
-    return axios.get(apiEndpoint, {
-      headers: { Authorization: `Bearer ${process.env.TURBOPUFFER_API_KEY}` },
-      params,
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
+    if (cursor) {
+      apiEndpoint.searchParams.append("cursor", cursor);
+    }
+
+    const response = await fetch(apiEndpoint.toString(), {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.TURBOPUFFER_API_KEY}`,
+      },
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response;
   }
 
   public async delete(indexName = this.extractRepoName()): Promise<void> {
@@ -200,7 +211,13 @@ export class CRGPTLoader {
       };
 
       // Make the DELETE request
-      const response = await axios.delete(apiEndpoint, { headers });
+      const res = await fetch(apiEndpoint, {
+        method: "DELETE",
+        headers,
+      });
+
+      // Parse the response
+      const response = await res.json();
 
       // Log the response status
       console.log("Delete response:", response.data);
