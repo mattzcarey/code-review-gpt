@@ -2,49 +2,49 @@ import { Document } from "langchain/document";
 import { Embeddings } from "langchain/embeddings/base";
 import { VectorStore } from "langchain/vectorstores/base";
 
-interface TurboPufferIntegrationParams {
+interface TurbopufferIntegrationParams {
   apiKey?: string;
   namespace?: string;
 }
 
-interface TurboPufferHeaders {
+interface TurbopufferHeaders {
   headers: {
     Authorization: string;
     "Content-Type": string;
   };
 }
 
-enum TurboPufferDistanceMetric {
+enum TurbopufferDistanceMetric {
   Cosine = "cosine_distance",
   Euclidean = "euclidean_squared",
 }
 
-interface TurboPufferQueryResult {
+interface TurbopufferQueryResult {
   dist: number;
   id: number;
   vector: number[];
   attributes: Record<string, any>;
 }
 
-export class TurboPuffer extends VectorStore {
+export class TurbopufferVectorStore extends VectorStore {
   get lc_secrets(): { [key: string]: string } {
     return {
-      apiKey: "TURBOPUFFER_API_KEY",
+      apiKey: "Turbopuffer_API_KEY",
     };
   }
 
   get lc_aliases(): { [key: string]: string } {
     return {
-      apiKey: "turbopuffer_api_key",
+      apiKey: "Turbopuffer_api_key",
     };
   }
 
   private apiKey: string;
   private namespace: string;
-  private apiEndpoint = "https://api.turbopuffer.com/v1/";
+  private apiEndpoint = "https://api.Turbopuffer.com/v1/";
 
   public _vectorstoreType(): string {
-    return "turbopuffer";
+    return "Turbopuffer";
   }
 
   constructor(
@@ -56,15 +56,15 @@ export class TurboPuffer extends VectorStore {
   ) {
     super(embeddings, args);
 
-    const apiKey = args.apiKey ?? process.env["TURBOPUFFER_API_KEY"];
+    const apiKey = args.apiKey ?? process.env["Turbopuffer_API_KEY"];
     if (!apiKey) {
-      throw new Error("TurboPuffer api key is not provided.");
+      throw new Error("Turbopuffer api key is not provided.");
     }
     this.apiKey = apiKey;
     this.namespace = args.namespace ?? "default";
   }
 
-  getJsonHeader(): TurboPufferHeaders {
+  getJsonHeader(): TurbopufferHeaders {
     return {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
@@ -133,12 +133,12 @@ export class TurboPuffer extends VectorStore {
   async queryVectors(
     query: number[],
     k: number,
-    distanceMetric: TurboPufferDistanceMetric,
+    distanceMetric: TurbopufferDistanceMetric,
     includeAttributes?: string[],
     includeVector?: boolean,
-    // See https://turbopuffer.com/docs/reference/query for more info
+    // See https://Turbopuffer.com/docs/reference/query for more info
     filters?: Record<string, any>
-  ): Promise<TurboPufferQueryResult[]> {
+  ): Promise<TurbopufferQueryResult[]> {
     const data = {
       query,
       k,
@@ -170,7 +170,7 @@ export class TurboPuffer extends VectorStore {
     const search = await this.queryVectors(
       query,
       k,
-      TurboPufferDistanceMetric.Cosine,
+      TurbopufferDistanceMetric.Cosine,
       ["source", "pageContent"],
       false,
       filter
@@ -194,8 +194,8 @@ export class TurboPuffer extends VectorStore {
   static async fromDocuments(
     docs: Document[],
     embeddings: Embeddings,
-    dbConfig: TurboPufferIntegrationParams
-  ): Promise<TurboPuffer> {
+    dbConfig: TurbopufferIntegrationParams
+  ): Promise<TurbopufferVectorStore> {
     const instance = new this(embeddings, dbConfig);
     await instance.addDocuments(docs);
     return instance;
