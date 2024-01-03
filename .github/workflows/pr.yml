@@ -47,7 +47,7 @@ jobs:
       - name: Run prompt tests
         run: npm run test -- --ci=github --model=gpt-3.5-turbo
 
-  build_and_test_core:
+  deploy_core_to_dev:
     runs-on: ubuntu-latest
     env:
       CI: true
@@ -76,10 +76,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_DEV }}
 
       - name: Install pnpm
         run: npm i -g pnpm
 
-      - name: 🚀 Deploy core to staging
-        run: pnpm i && pnpm deploy-staging
+      - name: 🚀 Deploy core to dev
+        run: pnpm i && pnpm deploy-dev

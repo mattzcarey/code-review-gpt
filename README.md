@@ -80,6 +80,10 @@ Thanks to our wonderful contributors!
 
 ## Roadmap (see projects tab) 🌏
 
+The roadmap shifts the focus to a Github app which can be installed on any repo. This will allow for a more seamless UX and better features including a chatbot to discuss the PR and make suggestions. 
+
+The code-review-gpt package will continue to be maintained and improved based on the feedback from the Github app.
+
 ## Sponsors ❤️
 
 <a href="https://www.quivr.app/">
