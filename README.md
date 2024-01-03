@@ -39,7 +39,7 @@ See the [action documentation](action.md) for more information.
 
    ```shell
    git clone https://github.com/mattzcarey/code-review-gpt.git
-   cd code-review-gpt && cd code-review-gpt
+   cd code-review-gpt && cd packages/code-review-gpt
    ```
 
 2. Install dependencies:
