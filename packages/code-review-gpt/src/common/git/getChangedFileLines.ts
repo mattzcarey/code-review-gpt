@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 
-import { getGitHubEnvVariables, getGitLabEnvVariables } from "../../config";
+import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } from "../../config";
 import { PlatformOptions } from "../types";
 export const getChangesFileLinesCommand = (
   isCi: string | undefined,
@@ -14,6 +14,10 @@ export const getChangesFileLinesCommand = (
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
     return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
+  } else if (isCi === PlatformOptions.AZDEV) {
+    const { azdevSha, baseSha } = gitAzdevEnvVariables();
+    
+    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${azdevSha} ${fileName}`;
   }
 
   return `git diff -U0 --diff-filter=AMRT --cached ${fileName}`;

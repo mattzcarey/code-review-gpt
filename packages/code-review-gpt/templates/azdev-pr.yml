@@ -1,0 +1,36 @@
+name: Code Review GPT
+trigger:
+  - main
+pr:
+  - main
+
+# Important: code-reivew-gpt needs additional Git history available for affected to function correctly. 
+# Make sure Shallow fetching is disabled in your pipeline settings UI. 
+# For more info, check out this article from Microsoft https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch.
+variables:
+  TARGET_BRANCH: $[replace(variables['System.PullRequest.TargetBranch'],'refs/heads/','origin/')]
+  BASE_SHA: $(git merge-base $(TARGET_BRANCH) HEAD)
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: GTP_Review
+    jobs:
+      - job: gpt_review
+        displayName: Code Review GPT
+        workspace:
+          clean: all
+        steps:
+          - script: |
+              npm install code-review-gpt
+            displayName: "Install code-review-gpt"  
+          
+          - script: |
+              npx code-review-gpt review --ci=azdev --model=gpt-3.5-turbo
+            env:
+              API_TOKEN: $(API_TOKEN)
+              OPENAI_API_KEY: $(OPENAI_API_KEY)
+              BASE_SHA: $(BASE_SHA)
+            workingDirectory: $(Build.SourcesDirectory)
+            displayName: "Run code review script"

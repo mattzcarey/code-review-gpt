@@ -14,6 +14,9 @@ export const configure = async (yargs: ReviewArgs): Promise<void> => {
   if (yargs.setupTarget === PlatformOptions.GITLAB) {
     await configureGitLab();
   }
+  if (yargs.setupTarget === PlatformOptions.AZDEV) {
+    await configureAzureDevOps();
+  }
 };
 
 const captureApiKey = async (): Promise<string | undefined> => {
@@ -101,4 +104,25 @@ const configureGitLab = async () => {
       "It seems that the GitLab CLI is not installed or there was an error during authentication. Don't forget to add the OPENAI_API_KEY and the GITLAB_TOKEN to the repo's CI/CD Variables manually. Refer to the README (Gitlab CI section)for information on how to set up your access token."
     );
   }
+};
+
+const configureAzureDevOps = async () => {
+  const azdevPipelineTemplate = await findTemplateFile(
+    "**/templates/azdev-pr.yml"
+  );
+
+  const pipelineDir = process.cwd();
+  const pipelineFile = path.join(pipelineDir, "code-review-gpt.yaml");
+
+  fs.writeFileSync(
+    pipelineFile,
+    fs.readFileSync(azdevPipelineTemplate, "utf8"),
+    "utf8"
+  );
+
+  logger.info(`Created Azure DevOps Pipeline at: ${pipelineFile}`);
+
+  logger.info(
+    "Please manually add the OPENAI_API_KEY and API_TOKEN secrets as encrypted variables in the UI."
+  );
 };

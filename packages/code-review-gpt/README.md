@@ -46,6 +46,35 @@ npm install code-review-gpt
 npx code-review-gpt configure --setupTarget=gitlab
 ```
 
+See templates for example yaml files. Copy and paste them to perform a manual setup.
+
+### Azure DevOps
+
+If you are running this tool in Azure DevOps, you will need to do some additional setup.
+
+The code-reivew-gpt needs additional Git history available for affected to function correctly. Make sure Shallow fetching is disabled in your pipeline settings UI. For more info, check out this article from Microsoft [doc](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch).
+
+You will need to create a **personal access token** in Gitlab and store it in your CI/CD variables to allow the bot access to your Azure DevOps account. Follow the steps below.
+
+#### Set Personal Access Token as a CI/CD Variable
+
+1. **Sign in to Azure DevOps:** Go to the Azure DevOps portal and sign in to your account.
+2. **Navigate to User Settings:** Click on your profile picture in the top right corner and select "Security" from the dropdown menu.
+3. **Generate Personal Access Token (PAT):** In the Security page, select "Personal access tokens" and click on the "+ New Token" button.
+4. **Configure Token Details:** Provide a name for your token, choose the organization, and set the expiration date.
+5. **Define Token Permissions:** Specify the necessary permissions for the token based on the tasks you want to perform. For pipeline access, you might need to select "Read & manage" under "Build" and "Release."
+6. **Create Token:** Click on the "Create" button to generate the token.
+7. **Copy Token:** Copy the generated token immediately, as it will not be visible again.
+8. **Add Token as YAML Pipeline Variable:** Go to your Azure DevOps project, open the pipeline for which you want to use the PAT, and select "Edit."
+9. **Navigate to Variables:** In the pipeline editor, go to the "Variables" tab.
+10. **Add New Variable:** Add a new variable with a relevant name (e.g., `API_TOKEN`) and paste the copied PAT as the value.
+11. **Save Changes:** Save the pipeline changes, ensuring that the PAT is securely stored as a variable.
+12. **Use Variable in Pipeline:** Modify your YAML pipeline code to reference the variable where needed, replacing hard-coded values with the variable (e.g., `$(API_TOKEN)`).
+
+```shell
+npm install code-review-gpt
+npx code-review-gpt configure --setupTarget=azdev
+```
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
 
