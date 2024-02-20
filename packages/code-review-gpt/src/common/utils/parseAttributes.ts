@@ -30,7 +30,7 @@ const isIFeedbackArray = (input: unknown): input is IFeedback[] =>
   Array.isArray(input) && input.every((entry) => isIFeedback(entry));
 
 export const parseAttributes = (jsonString: string): IFeedback[] => {
-  let encodedJsonString = jsonString;
+  let encodedJsonString = jsonString.trim().startsWith('```json')?jsonString.trim().slice(8, -4): jsonString.trim()
   encodedJsonString = encodeDetails(encodedJsonString);
 
   // Parse the JSON string
