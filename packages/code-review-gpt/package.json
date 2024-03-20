@@ -39,6 +39,7 @@
     "@gitbeaker/rest": "^39.10.2",
     "@inquirer/prompts": "^3.0.4",
     "@inquirer/rawlist": "^1.2.9",
+    "azure-devops-node-api": "^12.3.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.3.1",
     "glob": "^10.3.10",

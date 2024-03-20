@@ -2,6 +2,7 @@
 import { commentOnPR as commentOnPRGithub } from "../common/ci/github/commentOnPR";
 import { commentPerFile } from "../common/ci/github/commentPerFile";
 import { commentOnPR as commentOnPRGitlab } from "../common/ci/gitlab/commentOnPR";
+import { commentOnPR as commentOnPRAzdev } from "../common/ci/azdev/commentOnPR";
 import { getMaxPromptLength } from "../common/model/getMaxPromptLength";
 import { PlatformOptions, ReviewArgs, ReviewFile } from "../common/types";
 import { logger } from "../common/utils/logger";
@@ -78,6 +79,10 @@ export const review = async (
   }
   if (isCi === PlatformOptions.GITLAB) {
     await commentOnPRGitlab(response, signOff);
+  }
+
+  if (isCi === PlatformOptions.AZDEV) {
+    await commentOnPRAzdev(response, signOff);
   }
 
   return response;

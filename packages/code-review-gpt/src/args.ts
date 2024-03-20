@@ -26,8 +26,8 @@ export const getYargs = async (): Promise<ReviewArgs> => {
   const argv = yargs
     .option("ci", {
       description:
-        "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github' or 'gitlab'. Defaults to 'github'.",
-      choices: ["github", "gitlab"],
+        "Indicates that the script is running on a CI environment. Specifies which platform the script is running on, 'github', 'azdev' or 'gitlab'. Defaults to 'github'.",
+      choices: ["github", "gitlab", "azdev"],
       type: "string",
       coerce: (arg: string | undefined) => {
         return arg || "github";
@@ -35,8 +35,8 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     })
     .option("setupTarget", {
       description:
-        "Specifies for which platform ('github' or 'gitlab') the project should be configured for. Defaults to 'github'.",
-      choices: ["github", "gitlab"],
+        "Specifies for which platform ('github', 'gitlab' or 'azdev') the project should be configured for. Defaults to 'github'.",
+      choices: ["github", "gitlab", "azdev"],
       type: "string",
       default: "github",
     })
@@ -97,7 +97,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
 
   if (argv.isCi === PlatformOptions.GITLAB && argv.shouldCommentPerFile) {
     logger.warn(
-      "The 'commentPerFile' flag only works for GitHub, not for GitLab."
+      "The 'commentPerFile' flag only works for GitHub, not for GitLab and AzureDevOps."
     );
   }
 

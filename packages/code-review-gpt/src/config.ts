@@ -64,3 +64,20 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
     mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID ?? "",
   };
 };
+
+export const gitAzdevEnvVariables = (): Record<string, string> => {
+  const envVars = ["SYSTEM_PULLREQUEST_SOURCECOMMITID", "BASE_SHA", "API_TOKEN"];
+  const missingVars: string[] = [];
+  envVars.forEach((envVar) => process.env[envVar] ?? missingVars.push(envVar));
+
+  if (missingVars.length > 0) {
+    logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
+    throw new Error("One or more Azure DevOps environment variables are not set");
+  }
+
+  return {
+    azdevSha: process.env.SYSTEM_PULLREQUEST_SOURCECOMMITID ?? "",
+    baseSha: process.env.BASE_SHA ?? "",
+    azdevToken: process.env.API_TOKEN ?? "",
+  };
+};
