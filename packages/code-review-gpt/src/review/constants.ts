@@ -3,8 +3,16 @@ export const signOff =
 
 export const modelInfo = [
   {
-    model: "gpt-4-1106-preview",
-    maxPromptLength: 128000, //128k tokens
+    model: "gpt-4o",
+    maxPromptLength: 300000, //128k tokens
+  },
+  {
+    model: "gpt-4-turbo",
+    maxPromptLength: 300000, //128k tokens
+  },
+  {
+    model: "gpt-4-turbo-preview",
+    maxPromptLength: 300000, //128k tokens
   },
   {
     model: "gpt-4",

@@ -1,6 +1,6 @@
 {
   "name": "code-review-gpt",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
   "bin": {
     "code-review-gpt": "./dist/index.js"
@@ -16,7 +16,8 @@
     "test": "ts-node ./src/index.ts test",
     "test-unit": "dotenv -e .env jest",
     "build": "node ./utils/build.js",
-    "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js"
+    "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js",
+    "publish-package": "npm i && npm run build && npm publish --access public"
   },
   "keywords": [
     "code-review",
