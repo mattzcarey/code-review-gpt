@@ -48,6 +48,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
     "CI_MERGE_REQUEST_IID",
     "CI_COMMIT_SHA",
     "GITLAB_TOKEN",
+    "GITLAB_HOST",
   ].filter((varName) => !process.env[varName]);
   if (missingVars.length > 0) {
     logger.error(`Missing environment variables: ${missingVars.join(", ")}`);
@@ -62,6 +63,7 @@ export const getGitLabEnvVariables = (): Record<string, string> => {
     gitlabToken: process.env.GITLAB_TOKEN ?? "",
     projectId: process.env.CI_PROJECT_ID ?? "",
     mergeRequestIIdString: process.env.CI_MERGE_REQUEST_IID ?? "",
+    host: process.env.GITLAB_HOST ?? "https://gitlab.com",
   };
 };
 

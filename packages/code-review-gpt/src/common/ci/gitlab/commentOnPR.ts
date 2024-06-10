@@ -14,11 +14,12 @@ export const commentOnPR = async (
   signOff: string
 ): Promise<void> => {
   try {
-    const { gitlabToken, projectId, mergeRequestIIdString } =
+    const { gitlabToken, projectId, mergeRequestIIdString, host } =
       getGitLabEnvVariables();
     const mergeRequestIId = parseInt(mergeRequestIIdString, 10);
     const api = new Gitlab({
       token: gitlabToken,
+      host: host,
     });
 
     const notes = await api.MergeRequestNotes.all(projectId, mergeRequestIId);
