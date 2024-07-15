@@ -7,7 +7,7 @@ export default defineConfig((options) => {
   return {
     splitting: true,
     sourcemap: true,
-    minify: false, // Change to true when you're ready to ship
+    minify: true,
     entry: ["src/index.ts"],
     target: "es2022",
     format: ["cjs", "esm"],

@@ -17,6 +17,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "bin": {
+    "code-review-gpt": "./dist/index.js"
+  },
   "files": [
     "dist/*"
   ],
