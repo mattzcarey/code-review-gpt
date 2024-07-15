@@ -1,1 +1,1 @@
-export { filterFiles } from "./filterFiles";
+export { filterFiles } from "./filterFiles"

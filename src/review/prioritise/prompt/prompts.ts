@@ -31,13 +31,13 @@ Format the response in a valid JSON format as a list of feedbacks, where the val
 
 The filenames and file contents to review are provided below as a list of JSON objects:
 
-`;
+`
 
 export const completionPrompt = `
 You are a senior developer and have just reviewed a pull request. This was your feedback:
 {feedback}
 Please summarise the review using 3 emojis.
-`;
+`
 
 export const demoPrompt = `You are an senior developer, your task is to review a code snippet.
 Note that you do not have the full context of the code.
@@ -70,4 +70,4 @@ Format the response in a valid JSON format as a list of feedbacks, where the val
 
 The code to review is provided below:
 
-`;
+`

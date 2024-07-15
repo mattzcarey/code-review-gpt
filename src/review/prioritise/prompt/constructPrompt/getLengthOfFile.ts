@@ -1,4 +1,4 @@
-import type { PromptFile } from "../../../../common/types";
+import type { PromptFile } from "../../../../common/types"
 
 export const getLengthOfFile = (file: PromptFile): number =>
-  file.fileName.length + file.promptContent.length;
+  file.fileName.length + file.promptContent.length

@@ -1,12 +1,12 @@
-import { createPromptFiles } from "./utils/createPromptFiles";
-import { promptsIntoBatches } from "./utils/promptsIntoBatches";
-import { type PromptFile, type ReviewFile } from "../../../../../common/types";
+import { type PromptFile, type ReviewFile } from "../../../../../common/types"
+import { createPromptFiles } from "./utils/createPromptFiles"
+import { promptsIntoBatches } from "./utils/promptsIntoBatches"
 
 export const changedLinesIntoBatches = (
   files: ReviewFile[],
   maxPromptPayloadLength: number
 ): PromptFile[][] => {
-  const promptFiles = createPromptFiles(files, maxPromptPayloadLength);
+  const promptFiles = createPromptFiles(files, maxPromptPayloadLength)
 
-  return promptsIntoBatches(promptFiles, maxPromptPayloadLength);
-};
+  return promptsIntoBatches(promptFiles, maxPromptPayloadLength)
+}

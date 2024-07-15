@@ -1,0 +1,15 @@
+node_modules
+dist
+*.tsbuildinfo
+*.lock
+*.npmignore
+Dockerfile
+Dockerfile.*
+.env
+.env.*
+*.log
+.DS_Store
+.dockerignore
+*.patch
+*.toml
+.vscode

@@ -1,20 +1,18 @@
-import { extname } from "path";
+import { extname } from "path"
 
-import { type ReviewFile } from "../../../../common/types";
-import { excludedKeywords, supportedFiles } from "../../../constants";
+import { type ReviewFile } from "../../../../common/types"
+import { excludedKeywords, supportedFiles } from "../../../constants"
 
 export const filterFiles = (files: ReviewFile[]): ReviewFile[] => {
-  const filteredFiles = files.filter((file) => {
-    const ext = extname(file.fileName);
+  const filteredFiles = files.filter(file => {
+    const ext = extname(file.fileName)
 
     return (
       supportedFiles.has(ext) &&
-      ![...excludedKeywords].some((keyword) =>
-        file.fileName.includes(keyword)
-      ) &&
+      ![...excludedKeywords].some(keyword => file.fileName.includes(keyword)) &&
       file.changedLines.trim() !== ""
-    );
-  });
+    )
+  })
 
-  return filteredFiles;
-};
+  return filteredFiles
+}

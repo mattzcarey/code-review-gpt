@@ -1,18 +1,16 @@
-import { type ReviewFile } from "../types";
+import { type ReviewFile } from "../types"
 
 export const getReviewFiles = async (
   isCi: string | undefined,
   remotePullRequest: string | undefined
 ): Promise<ReviewFile[]> => {
   if (remotePullRequest !== undefined) {
-    const { getRemotePullRequestFiles } = await import(
-      "../remote/github/getRemotePullRequestFiles"
-    );
+    const { getRemotePullRequestFiles } = await import("../remote/github/getRemotePullRequestFiles")
 
-    return await getRemotePullRequestFiles(remotePullRequest);
+    return await getRemotePullRequestFiles(remotePullRequest)
   } else {
-    const { getFilesWithChanges } = await import("../git/getFilesWithChanges");
+    const { getFilesWithChanges } = await import("../git/getFilesWithChanges")
 
-    return await getFilesWithChanges(isCi);
+    return await getFilesWithChanges(isCi)
   }
-};
+}

@@ -1,6 +1,6 @@
-import crypto from "crypto";
+import crypto from "crypto"
 
-const hashAlgorithm = "sha256";
+const hashAlgorithm = "sha256"
 
 /**
  * Generate a hash from a string
@@ -8,5 +8,5 @@ const hashAlgorithm = "sha256";
  * @returns The hash.
  */
 export const generateHash = (data: string): string => {
-  return crypto.createHash(hashAlgorithm).update(data).digest("hex");
-};
+  return crypto.createHash(hashAlgorithm).update(data).digest("hex")
+}

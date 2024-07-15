@@ -1,15 +1,9 @@
-import { Document } from "langchain/document";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { Document } from "langchain/document"
+import { OpenAIEmbeddings } from "langchain/embeddings/openai"
+import { MemoryVectorStore } from "langchain/vectorstores/memory"
 
-export const CreateMemoryStore = async (
-  initialFiles: Document[]
-): Promise<MemoryVectorStore> => {
-  const embeddingModel = new OpenAIEmbeddings();
+export const CreateMemoryStore = async (initialFiles: Document[]): Promise<MemoryVectorStore> => {
+  const embeddingModel = new OpenAIEmbeddings()
 
-  return await MemoryVectorStore.fromDocuments(
-    initialFiles,
-    embeddingModel,
-    {}
-  );
-};
+  return await MemoryVectorStore.fromDocuments(initialFiles, embeddingModel, {})
+}

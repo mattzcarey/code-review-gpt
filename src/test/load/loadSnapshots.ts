@@ -1,9 +1,9 @@
-import { readdirSync } from "fs";
-import { TextLoader } from "langchain/document_loaders/fs/text";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import path from "path";
+import { readdirSync } from "fs"
+import path from "path"
+import { TextLoader } from "langchain/document_loaders/fs/text"
+import { MemoryVectorStore } from "langchain/vectorstores/memory"
 
-import { CreateMemoryStore } from "../../common/model/createMemoryStore";
+import { CreateMemoryStore } from "../../common/model/createMemoryStore"
 
 /**
  * Load a snapshot for a test from a file.
@@ -11,26 +11,24 @@ import { CreateMemoryStore } from "../../common/model/createMemoryStore";
  * @returns The snapshot as a Document.
  */
 const loadSnapshot = async (snapshotPath: string) => {
-  const snapshotLoader = new TextLoader(snapshotPath);
+  const snapshotLoader = new TextLoader(snapshotPath)
 
-  return await snapshotLoader.load();
-};
+  return await snapshotLoader.load()
+}
 
 /**
  * Load all snapshots from a directory.
  * @param snapshotsDir The directory containing the snapshots.
  * @returns The snapshots in a MemoryVectorStore.
  */
-export const loadSnapshots = async (
-  snapshotsDir: string
-): Promise<MemoryVectorStore> => {
-  const snapshotFiles = readdirSync(snapshotsDir);
+export const loadSnapshots = async (snapshotsDir: string): Promise<MemoryVectorStore> => {
+  const snapshotFiles = readdirSync(snapshotsDir)
 
   const snapshots = await Promise.all(
-    snapshotFiles.map(async (snapshotFile) => {
-      return loadSnapshot(path.join(snapshotsDir, snapshotFile));
+    snapshotFiles.map(async snapshotFile => {
+      return loadSnapshot(path.join(snapshotsDir, snapshotFile))
     })
-  );
+  )
 
-  return await CreateMemoryStore(snapshots.flat());
-};
+  return await CreateMemoryStore(snapshots.flat())
+}

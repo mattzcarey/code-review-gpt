@@ -1,15 +1,11 @@
-import chalk from "chalk";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import chalk from "chalk"
+import { MemoryVectorStore } from "langchain/vectorstores/memory"
 
-import { logger } from "../../common/utils/logger";
-import { askAI } from "../../review/prioritise/llm/askAI";
-import { constructPromptsArray } from "../../review/prioritise/prompt/constructPrompt/constructPrompt";
-import type { TestCase } from "../types";
-import {
-  generateTestReport,
-  generateTestResultsSummary,
-  testResult,
-} from "./generateTestReport";
+import { logger } from "../../common/utils/logger"
+import { askAI } from "../../review/prioritise/llm/askAI"
+import { constructPromptsArray } from "../../review/prioritise/prompt/constructPrompt/constructPrompt"
+import type { TestCase } from "../types"
+import { generateTestReport, generateTestResultsSummary, testResult } from "./generateTestReport"
 
 /**
  * Run a single test case.
@@ -29,17 +25,13 @@ const runTest = async (
   openAIApiKey: string
 ): Promise<testResult> => {
   if (!testCase.snippet) {
-    throw new Error(`Test case ${testCase.name} does not have a snippet.`);
+    throw new Error(`Test case ${testCase.name} does not have a snippet.`)
   }
 
-  logger.info(chalk.blue(`Running test case ${testCase.name}...`));
+  logger.info(chalk.blue(`Running test case ${testCase.name}...`))
 
   // First step: run the review on the code snippet.
-  const prompts = constructPromptsArray(
-    [testCase.snippet],
-    maxPromptLength,
-    reviewType
-  );
+  const prompts = constructPromptsArray([testCase.snippet], maxPromptLength, reviewType)
 
   const { markdownReport: reviewResponse } = await askAI(
     prompts,
@@ -47,30 +39,27 @@ const runTest = async (
     openAIApiKey,
     undefined,
     "openai"
-  );
+  )
 
-  const similarityResponse = await vectorStore.similaritySearchWithScore(
-    reviewResponse,
-    1
-  );
+  const similarityResponse = await vectorStore.similaritySearchWithScore(reviewResponse, 1)
 
   if (similarityResponse.length === 0 || !similarityResponse[0]) {
-    throw new Error(`No similar reviews found for test case ${testCase.name}.`);
+    throw new Error(`No similar reviews found for test case ${testCase.name}.`)
   }
 
-  const [similarDocument, similarity] = similarityResponse[0];
+  const [similarDocument, similarity] = similarityResponse[0]
 
   const { result, report } = generateTestReport(
     testCase,
     reviewResponse,
     similarDocument.pageContent,
     similarity
-  );
+  )
 
-  logger.info(report);
+  logger.info(report)
 
-  return result;
-};
+  return result
+}
 
 /**
  * Run all the test cases.
@@ -90,13 +79,13 @@ export const runTests = async (
   openAIApiKey: string
 ): Promise<string> => {
   if (testCases.length === 0) {
-    return "No test cases found.";
+    return "No test cases found."
   }
 
-  logger.info(`Running ${testCases.length} test cases...\n`);
+  logger.info(`Running ${testCases.length} test cases...\n`)
 
   // Keep track of all test results.
-  const testResults: { [key: string]: testResult } = {};
+  const testResults: { [key: string]: testResult } = {}
 
   for (const testCase of testCases) {
     try {
@@ -107,15 +96,15 @@ export const runTests = async (
         vectorStore,
         reviewType,
         openAIApiKey
-      );
-      testResults[testCase.name] = result;
+      )
+      testResults[testCase.name] = result
     } catch (error) {
-      logger.error(`Error running test case ${testCase.name}:`, error);
+      logger.error(`Error running test case ${testCase.name}:`, error)
     }
   }
-  const testSummary = generateTestResultsSummary(testResults);
+  const testSummary = generateTestResultsSummary(testResults)
 
-  logger.info(testSummary);
+  logger.info(testSummary)
 
-  return testSummary;
-};
+  return testSummary
+}

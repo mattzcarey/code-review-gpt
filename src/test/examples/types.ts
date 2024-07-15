@@ -1,3 +1,3 @@
 export interface SomeInterface {
-  someProperty: string;
+  someProperty: string
 }
