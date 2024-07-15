@@ -1,24 +1,25 @@
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-  },
-  ignorePatterns: ["**.js", "**.d.ts", "**.cjs", "**.mjs", "**.json"],
+  parser: "@typescript-eslint/parser",
+  ignorePatterns: [
+    "**.d.ts",
+    "**.json",
+    "node_modules/",
+    "dist/",
+    "docs/",
+    "eslintrc.js",
+  ],
   extends: [
     "eslint:recommended",
     "plugin:import/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:prettier/recommended",
   ],
   rules: {
     "import/extensions": 0,
     "import/no-unresolved": 0,
     "import/prefer-default-export": 0,
     "import/no-duplicates": "error",
-    complexity: ["error", 8],
-    "max-lines": ["error", { max: 200, skipBlankLines: true }],
-    "max-depth": ["error", 3],
-    "max-params": ["error", 6],
+    "prettier/prettier": "error",
     eqeqeq: ["error", "smart"],
     "@typescript-eslint/no-misused-promises": [
       2,
@@ -50,17 +51,12 @@ module.exports = {
       {
         paths: [
           {
-            name: "aws-sdk",
-            message: "Please use aws-sdk/{module} import instead",
-          },
-          {
             name: ".",
             message: "Please use explicit import file",
           },
         ],
       },
     ],
-    curly: ["error", "all"],
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-member-accessibility": 0,
     "@typescript-eslint/camelcase": 0,
@@ -73,10 +69,10 @@ module.exports = {
     "@typescript-eslint/no-unnecessary-type-arguments": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
   },
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.eslint.json"],
-    tsconfigRootDir: __dirname,
-  },
+  overrides: [
+    {
+      extends: ["plugin:@typescript-eslint/disable-type-checked"],
+      files: ["*.mjs", "*.js"],
+    },
+  ],
 };

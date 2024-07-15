@@ -27,59 +27,30 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun i
 
       - name: Build package
-        run: npm run build
-
-      - name: Run code review script
-        run: npm run start -- --ci=github --model=gpt-4o
+        run: bun run build
 
       - name: Run linting test
-        run: npm run lint-test
+        run: bun run lint
 
       - name: Run unit tests
-        run: npm run test-unit
+        run: bun run test
+
+      - name: Run type checking
+        run: bun run typecheck
+
+      - name: Run review
+        run: bun run start:review
 
       - name: Run prompt tests
-        run: npm run test -- --ci=github --model=gpt-4o
-
-  deploy_core_to_dev:
-    runs-on: ubuntu-latest
-    env:
-      CI: true
-      AWS_REGION: eu-west-2
-      APP_ID: ${{ secrets.APP_ID }}
-      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-
-    defaults:
-      run:
-        working-directory: services/core
-        shell: bash
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        id: setup-node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN_DEV }}
-
-      - name: Install pnpm
-        run: npm i -g pnpm
-
-      - name: 🚀 Deploy core to dev
-        run: pnpm i && pnpm deploy-dev
+        run: bun run start:test

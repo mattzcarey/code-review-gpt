@@ -1,8 +1,16 @@
 node_modules
 .env
-dist
-**/.cache/*.ts
-!jest.config.js
-*.d.ts
+.env.*
 
-**/data
+dist/
+*.d.ts
+tsconfig.tsbuildinfo
+
+
+.vscode/
+.idea/
+
+
+
+
+

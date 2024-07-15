@@ -1,20 +1,45 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "lib": ["es2017", "dom"],
-    "outDir": "./dist",
-    "rootDir": "crgpt",
-    "strict": true,
-    "moduleResolution": "node",
+    // Base options
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "incremental": true,
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo",
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "module": "esnext",
+    "outDir": "dist",
+    "sourceMap": true,
+    "rootDir": "src",
+    "baseUrl": ".",
+    "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "jest"]
+    "lib": ["es2022"],
+    // TSC added options
+    "allowSyntheticDefaultImports": true,
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "preserveConstEnums": true,
+    "useDefineForClassFields": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "alwaysStrict": true,
+    "useUnknownInCatchVariables": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["./node_modules", "./dist", "crgpt/**/*.test.ts"],
-  "engines": {
-    "node": ">=18"
-  }
+  "include": ["src/**/*.ts"],
+  "exclude": ["./node_modules", "./dist", "src/**/*.test.ts"]
 }

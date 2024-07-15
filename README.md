@@ -27,11 +27,11 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
 
 ## Package Usage
 
-See the [package documentation](code-review-gpt/README.md) for more information.
+See the [package documentation](docs/getting-started.md) for more information.
 
 ## Action Usage
 
-See the [action documentation](action.md) for more information.
+See the [action documentation](docs/action.md) for more information.
 
 ## Getting Started 💫
 
@@ -39,7 +39,7 @@ See the [action documentation](action.md) for more information.
 
    ```shell
    git clone https://github.com/mattzcarey/code-review-gpt.git
-   cd code-review-gpt && cd packages/code-review-gpt
+   cd code-review-gpt
    ```
 
 2. Install dependencies:
@@ -78,11 +78,12 @@ Thanks to our wonderful contributors!
   <img src="https://contrib.rocks/image?repo=mattzcarey/code-review-gpt" />
 </a>
 
-## Roadmap (see projects tab) 🌏
+## Roadmap (see [latest announcement](https://github.com/mattzcarey/code-review-gpt/discussions/338)) 🌏
 
-The roadmap shifts the focus to a Github app which can be installed on any repo. This will allow for a more seamless UX and better features including a chatbot to discuss the PR and make suggestions. 
-
-The code-review-gpt package will continue to be maintained and improved based on the feedback from the Github app.
+- [] Better algorithms to understand the codebase. Store a map in an artifacts folder.
+- [] Better testing and evals.
+- [] Multiple methods of code understanding and judgement. Users will be able to pick the one they want and contribute new methods.
+- [] Finetuned models and an ability to make them easily.
 
 ## Sponsors ❤️
 
@@ -108,7 +109,5 @@ The code-review-gpt package will continue to be maintained and improved based on
 [contributors_badge]: https://img.shields.io/github/contributors/mattzcarey/code-review-gpt
 [pulse]: https://github.com/mattzcarey/code-review-gpt/pulse
 [pulse_badge]: https://img.shields.io/github/commit-activity/m/mattzcarey/code-review-gpt
-[twitter]: https://twitter.com/intent/follow?screen_name=oriontools.ai
-[twitter_badge]: https://img.shields.io/twitter/follow/oriontoolsai?style=social&logo=twitter
-[slack]: https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg
-[slack_badge]: https://img.shields.io/badge/slack-Orion_Community-purple.svg?logo=slack
+[twitter]: https://twitter.com/intent/follow?screen_name=mattzcarey
+[twitter_badge]: https://img.shields.io/twitter/follow/mattzcarey?style=social&logo=twitter
