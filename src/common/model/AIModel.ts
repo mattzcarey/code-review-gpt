@@ -1,9 +1,6 @@
-import { OpenAIChat } from "langchain/llms/openai"
-import { retryAsync } from "ts-retry"
-
-import { type IFeedback } from "../types"
-import { logger } from "../utils/logger"
-import { parseAttributes } from "../utils/parseAttributes"
+import Instructor from "@instructor-ai/instructor"
+import OpenAI from "openai"
+import { z } from "zod"
 
 interface IAIModel {
   modelName: string
@@ -14,21 +11,42 @@ interface IAIModel {
   organization: string | undefined
 }
 
-const defaultRetryCount = 3
+const FeedbackSchema = z.object({
+  fileName: z.string().describe("The name of the file"),
+  riskScore: z
+    .number()
+    .describe(
+      "The risk score of the file. A number between 0 and 5, with 5 being the highest risk and 0 being the lowest."
+    ),
+  details: z.string().describe("The details of the feedback")
+})
+
+const FeedbackArraySchema = z.array(FeedbackSchema)
+
+const FeedbackResult = z.object({
+  feedback: FeedbackArraySchema
+})
+
+export type IFeedback = z.infer<typeof FeedbackSchema>
 
 class AIModel {
-  private model: OpenAIChat
-  private retryCount: number
+  private instruct
+  private oai: OpenAI
+  private modelName: string
 
   constructor(options: IAIModel) {
     switch (options.provider) {
       case "openai":
-        this.model = new OpenAIChat({
-          openAIApiKey: options.apiKey,
-          modelName: options.modelName,
-          temperature: options.temperature,
-          configuration: { organization: options.organization }
+        this.oai = new OpenAI({
+          apiKey: options.apiKey,
+          organization: options.organization
         })
+
+        this.instruct = Instructor({
+          client: this.oai,
+          mode: "TOOLS"
+        })
+
         break
       case "bedrock":
         throw new Error("Bedrock provider not implemented")
@@ -36,40 +54,42 @@ class AIModel {
         throw new Error("Provider not supported")
     }
 
-    this.retryCount = options.retryCount || defaultRetryCount
+    this.modelName = options.modelName
   }
 
-  public async callModel(prompt: string): Promise<string> {
-    return this.model.call(prompt)
-  }
-
-  public async callModelJSON(prompt: string): Promise<IFeedback[]> {
-    return retryAsync(
-      async () => {
-        const modelResponse = await this.callModel(prompt)
-        logger.debug(`Model response: ${modelResponse}`)
-        try {
-          // Use the utility function to parse and decode the specified attributes
-          const parsedObject = parseAttributes(modelResponse)
-
-          return parsedObject
-        } catch (error) {
-          logger.error(`Error parsing JSON response from the model: ${modelResponse}`, error)
-          throw error
+  public async getFeedback(prompt: string): Promise<IFeedback[]> {
+    const res = await this.instruct.chat.completions.create({
+      model: this.modelName,
+      messages: [
+        {
+          role: "user",
+          content: prompt
         }
-      },
-      {
-        maxTry: this.retryCount,
-        onError: error => {
-          logger.error(`Error in callModelJSON`, error)
-        },
-        onMaxRetryFunc: () => {
-          throw new Error(
-            `Couldn't call model after ${this.retryCount} tries with prompt: ${prompt}`
-          )
-        }
+      ],
+      response_model: {
+        name: "Feedback",
+        schema: FeedbackResult
       }
-    )
+    })
+
+    return res.feedback
+  }
+  public async callModel(prompt: string): Promise<string> {
+    const res = await this.oai.chat.completions.create({
+      model: this.modelName,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    })
+
+    if (res.choices.length === 0 || !res.choices[0]) {
+      throw new Error("No response from model")
+    }
+
+    return res.choices[0].message.content || ""
   }
 }
 

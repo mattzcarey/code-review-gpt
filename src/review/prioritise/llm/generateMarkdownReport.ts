@@ -1,4 +1,4 @@
-import { type IFeedback } from "../../../common/types"
+import { type IFeedback } from "../../../common/model/AIModel"
 
 const formatFeedback = (feedback: IFeedback): string => `
 **Risk Level ${feedback.riskScore} - ${feedback.fileName}**

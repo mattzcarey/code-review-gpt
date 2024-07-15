@@ -1,5 +1,4 @@
-import AIModel from "../../../common/model/AIModel"
-import { type IFeedback } from "../../../common/types"
+import AIModel, { type IFeedback } from "../../../common/model/AIModel"
 import { logger } from "../../../common/utils/logger"
 import { maxFeedbackCount } from "../../constants"
 import { completionPrompt } from "../prompt/prompts"
@@ -61,7 +60,7 @@ const extractFulfilledFeedbacks = (
 }
 
 const processFeedbacks = async (model: AIModel, prompts: string[]): Promise<IFeedback[]> => {
-  const feedbackPromises = prompts.map(prompt => model.callModelJSON(prompt))
+  const feedbackPromises = prompts.map(prompt => model.getFeedback(prompt))
 
   const feedbackResults = await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback))
 

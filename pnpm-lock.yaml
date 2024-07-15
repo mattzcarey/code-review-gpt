@@ -17,12 +17,12 @@ dependencies:
   '@inquirer/rawlist':
     specifier: ^1.2.9
     version: 1.2.16
+  '@instructor-ai/instructor':
+    specifier: ^1.5.0
+    version: 1.5.0(openai@4.52.7)(zod@3.23.8)
   azure-devops-node-api:
     specifier: ^12.3.0
     version: 12.5.0
-  chalk:
-    specifier: ^4.1.2
-    version: 4.1.2
   dotenv:
     specifier: ^16.3.1
     version: 16.4.5
@@ -35,6 +35,9 @@ dependencies:
   octokit:
     specifier: ^3.1.0
     version: 3.2.1
+  openai:
+    specifier: ^4.52.7
+    version: 4.52.7
   ts-retry:
     specifier: ^4.2.1
     version: 4.2.5
@@ -44,6 +47,9 @@ dependencies:
   yargs:
     specifier: ^17.7.2
     version: 17.7.2
+  zod:
+    specifier: ^3.23.8
+    version: 3.23.8
 
 devDependencies:
   '@ianvs/prettier-plugin-sort-imports':
@@ -67,6 +73,9 @@ devDependencies:
   bun:
     specifier: ^1.1.20
     version: 1.1.20
+  chalk:
+    specifier: ^4.1.2
+    version: 4.1.2
   dotenv-cli:
     specifier: ^7.2.1
     version: 7.4.2
@@ -787,6 +796,18 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       mute-stream: 1.0.0
+    dev: false
+
+  /@instructor-ai/instructor@1.5.0(openai@4.52.7)(zod@3.23.8):
+    resolution: {integrity: sha512-lRn1qCrZBIVHzcU5fpFPMFooue9kELQmc+gy62Yw/fVf6y/2b0FSyFZ5uW4K7xoQjBCT2QkWcuCSchy54o/YFQ==}
+    peerDependencies:
+      openai: '>=4.28.0'
+      zod: '>=3.22.4'
+    dependencies:
+      openai: 4.52.7
+      zod: 3.23.8
+      zod-stream: 1.0.3(openai@4.52.7)(zod@3.23.8)
+      zod-validation-error: 2.1.0(zod@3.23.8)
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -4427,6 +4448,10 @@ packages:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
 
+  /ramda@0.29.1:
+    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+    dev: false
+
   /rate-limiter-flexible@4.0.1:
     resolution: {integrity: sha512-2/dGHpDFpeA0+755oUkW+EKyklqLS9lu0go9pDsbhqQjZcxfRyJ6LA4JI0+HAdZ2bemD/oOjUeZQB2lCZqXQfQ==}
     dev: false
@@ -4567,6 +4592,15 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+    dev: false
+
+  /schema-stream@3.1.0(zod@3.23.8):
+    resolution: {integrity: sha512-R4PoSFJnMORRGJ5i5BTHRO2Ed3Lf2h8DMofHd5XBU4ZE0lEBCTGRqOXBurjTEO2QntPSYAhv93jLt8PFMqDEPw==}
+    peerDependencies:
+      zod: 3.22.4
+    dependencies:
+      ramda: 0.29.1
+      zod: 3.23.8
     dev: false
 
   /semver@6.3.1:
@@ -5326,10 +5360,31 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /zod-stream@1.0.3(openai@4.52.7)(zod@3.23.8):
+    resolution: {integrity: sha512-HxK/PZ0faOMgI1Pgjhcwin22StvlwiaYo6R7jWCT3jOFcPa4wGyFLVpeC5TwmpT6YlZhNJfDoB0qJoa+rQLYmQ==}
+    peerDependencies:
+      openai: '>=4.24.1'
+      zod: '>=3.22.4'
+    dependencies:
+      openai: 4.52.7
+      schema-stream: 3.1.0(zod@3.23.8)
+      zod: 3.23.8
+      zod-to-json-schema: 3.23.1(zod@3.23.8)
+    dev: false
+
   /zod-to-json-schema@3.23.1(zod@3.23.8):
     resolution: {integrity: sha512-oT9INvydob1XV0v1d2IadrR74rLtDInLvDFfAa1CG0Pmg/vxATk7I2gSelfj271mbzeM4Da0uuDQE/Nkj3DWNw==}
     peerDependencies:
       zod: ^3.23.3
+    dependencies:
+      zod: 3.23.8
+    dev: false
+
+  /zod-validation-error@2.1.0(zod@3.23.8):
+    resolution: {integrity: sha512-VJh93e2wb4c3tWtGgTa0OF/dTt/zoPCPzXq4V11ZjxmEAFaPi/Zss1xIZdEB5RD8GD00U0/iVXgqkF77RV7pdQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      zod: ^3.18.0
     dependencies:
       zod: 3.23.8
     dev: false

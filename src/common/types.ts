@@ -23,12 +23,6 @@ export type PromptFile = {
   promptContent: string
 }
 
-export type IFeedback = {
-  fileName: string
-  riskScore: number
-  details: string
-}
-
 export enum PlatformOptions {
   GITHUB = "github",
   GITLAB = "gitlab",
