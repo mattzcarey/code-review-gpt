@@ -38,7 +38,9 @@
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
     "alwaysStrict": true,
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    // tests
+    "types": ["vitest/globals"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", ".eslintrc.cjs", "tsup.config.ts", "vitest.config.ts"]
