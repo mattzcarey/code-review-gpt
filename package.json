@@ -45,6 +45,7 @@
     "gpt3",
     "openai",
     "gpt4",
+    "gpt4o",
     "vertexai",
     "huggingface",
     "ai",
