@@ -26,6 +26,6 @@ export const getFilesWithChanges = async (isCi: string | undefined): Promise<Rev
 
     return files
   } catch (error) {
-    throw new Error(`Failed to get files with changes: ${JSON.stringify(error)}`)
+    throw new Error(`Failed to get files with changes: ${error}`)
   }
 }
