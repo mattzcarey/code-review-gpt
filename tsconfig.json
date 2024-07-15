@@ -43,5 +43,12 @@
     "types": ["vitest/globals"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".eslintrc.cjs", "tsup.config.ts", "vitest.config.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".eslintrc.cjs",
+    "tsup.config.ts",
+    "vitest.config.ts",
+    "src/test/examples"
+  ]
 }

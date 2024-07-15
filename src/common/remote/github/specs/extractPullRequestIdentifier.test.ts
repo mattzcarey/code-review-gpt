@@ -1,5 +1,5 @@
-import { extractPullRequestIdentifier } from "./extractPullRequestIdentifier"
-import { PullRequestIdentifier } from "./types"
+import { extractPullRequestIdentifier } from "../extractPullRequestIdentifier"
+import { PullRequestIdentifier } from "../types"
 
 describe("extract Pull Request Identifier", () => {
   it("Extracts from valid identifiers", () => {

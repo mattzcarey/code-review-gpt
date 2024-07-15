@@ -1,36 +1,36 @@
 /* eslint-disable */
 // Import necessary modules
-import { useState } from "react";
+import { useState } from "react"
 
 // Define the interface for the form data
 interface FormData {
-  name: string;
-  age: string;
-  dateOfBirth: string;
-  streetAddress: string;
-  city: string;
-  country: string;
-  postCode: string;
-  favouriteDog: string;
-  favouriteCat: string;
-  lastMovie: string;
-  lastBook: string;
-  dreamVacation: string;
-  favouriteTree: string;
-  favouriteFood: string;
-  dreamJob: string;
-  favoriteColor: string;
-  hobby: string;
-  carBrand: string;
-  movieGenre: string;
-  musicGenre: string;
-  favoriteSport: string;
-  favoriteArtist: string;
-  dreamCity: string;
-  favoriteHoliday: string;
-  bestFriend: string;
-  favoriteBookGenre: string;
-  favoriteSeason: string;
+  name: string
+  age: string
+  dateOfBirth: string
+  streetAddress: string
+  city: string
+  country: string
+  postCode: string
+  favouriteDog: string
+  favouriteCat: string
+  lastMovie: string
+  lastBook: string
+  dreamVacation: string
+  favouriteTree: string
+  favouriteFood: string
+  dreamJob: string
+  favoriteColor: string
+  hobby: string
+  carBrand: string
+  movieGenre: string
+  musicGenre: string
+  favoriteSport: string
+  favoriteArtist: string
+  dreamCity: string
+  favoriteHoliday: string
+  bestFriend: string
+  favoriteBookGenre: string
+  favoriteSeason: string
 }
 
 // Define the initial form data
@@ -61,89 +61,77 @@ const initialFormData: FormData = {
   favoriteHoliday: "",
   bestFriend: "",
   favoriteBookGenre: "",
-  favoriteSeason: "",
-};
+  favoriteSeason: ""
+}
 
 // Define the interface for an item
 interface Item {
-  id: number;
-  name: string;
-  checked: boolean;
+  id: number
+  name: string
+  checked: boolean
 }
 
 // Define the component
 const LongForm = () => {
   // Initialize state
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formData, setFormData] = useState<FormData>(initialFormData)
   // Add a state variable for the count
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
   // Add a state variable for the toggle
-  const [isToggled, setIsToggled] = useState(false);
+  const [isToggled, setIsToggled] = useState(false)
 
   // Define a state variable for the rating
-  const [rating, setRating] = useState<number | null>(null);
+  const [rating, setRating] = useState<number | null>(null)
 
   // Define a state variable for the items
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([])
   // Define a state variable for the new item name
-  const [newItemName, setNewItemName] = useState("");
+  const [newItemName, setNewItemName] = useState("")
 
   // Handle input changes
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
-    });
-  };
+      [event.target.name]: event.target.value
+    })
+  }
 
   // Add a function to increment the count
   const incrementCount = () => {
-    setCount(count + 1);
-  };
+    setCount(count + 1)
+  }
 
   const handleToggle = () => {
-    setIsToggled(!isToggled);
-  };
+    setIsToggled(!isToggled)
+  }
 
   // Define a function to handle the rating change
   const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRating(Number(event.target.value));
-  };
+    setRating(Number(event.target.value))
+  }
 
   // Define a function to add a new item
   const addNewItem = () => {
-    setItems([
-      ...items,
-      { id: items.length, name: newItemName, checked: false },
-    ]);
-    setNewItemName("");
-  };
+    setItems([...items, { id: items.length, name: newItemName, checked: false }])
+    setNewItemName("")
+  }
 
   // Define a function to handle the change of the new item name
-  const handleNewItemNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setNewItemName(event.target.value);
-  };
+  const handleNewItemNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewItemName(event.target.value)
+  }
 
   // Define a function to handle the change of an item's checked state
   const handleItemCheckedChange = (id: number) => {
-    setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      )
-    );
-  };
+    setItems(items.map(item => (item.id === id ? { ...item, checked: !item.checked } : item)))
+  }
 
   // Render the component
   return (
     <div className="space-y-4">
       <form className="space-y-4">
         <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name
           </label>
           <input
@@ -155,10 +143,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="age"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="age" className="block text-sm font-medium text-gray-700">
             Age
           </label>
           <input
@@ -170,10 +155,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="dateOfBirth"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
             Date of Birth
           </label>
           <input
@@ -185,10 +167,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="streetAddress"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700">
             Street Address
           </label>
           <input
@@ -200,10 +179,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="city"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="city" className="block text-sm font-medium text-gray-700">
             City
           </label>
           <input
@@ -215,10 +191,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="country"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="country" className="block text-sm font-medium text-gray-700">
             Country
           </label>
           <input
@@ -230,10 +203,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="postCode"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="postCode" className="block text-sm font-medium text-gray-700">
             Post Code
           </label>
           <input
@@ -245,10 +215,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favouriteDog"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favouriteDog" className="block text-sm font-medium text-gray-700">
             Favourite Dog
           </label>
           <input
@@ -260,10 +227,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favouriteCat"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favouriteCat" className="block text-sm font-medium text-gray-700">
             Favourite Cat
           </label>
           <input
@@ -275,10 +239,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="lastMovie"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="lastMovie" className="block text-sm font-medium text-gray-700">
             Last Movie You Saw
           </label>
           <input
@@ -290,10 +251,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="lastBook"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="lastBook" className="block text-sm font-medium text-gray-700">
             Last Book You Read
           </label>
           <input
@@ -305,10 +263,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="dreamVacation"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="dreamVacation" className="block text-sm font-medium text-gray-700">
             Dream Vacation
           </label>
           <input
@@ -320,10 +275,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favouriteTree"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favouriteTree" className="block text-sm font-medium text-gray-700">
             Favourite Tree
           </label>
           <input
@@ -335,10 +287,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favouriteFood"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favouriteFood" className="block text-sm font-medium text-gray-700">
             Favourite Food
           </label>
           <input
@@ -350,10 +299,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="dreamJob"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="dreamJob" className="block text-sm font-medium text-gray-700">
             Dream Job
           </label>
           <input
@@ -365,10 +311,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="hobby"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="hobby" className="block text-sm font-medium text-gray-700">
             Hobby
           </label>
           <input
@@ -380,10 +323,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="carBrand"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="carBrand" className="block text-sm font-medium text-gray-700">
             Favourite Car Brand
           </label>
           <input
@@ -395,10 +335,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="movieGenre"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="movieGenre" className="block text-sm font-medium text-gray-700">
             Favourite Movie Genre
           </label>
           <input
@@ -410,10 +347,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="musicGenre"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="musicGenre" className="block text-sm font-medium text-gray-700">
             Favourite Music Genre
           </label>
           <input
@@ -425,10 +359,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteSport"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteSport" className="block text-sm font-medium text-gray-700">
             Favourite Sport
           </label>
           <input
@@ -440,10 +371,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteArtist"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteArtist" className="block text-sm font-medium text-gray-700">
             Favourite Artist
           </label>
           <input
@@ -455,10 +383,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteSeason"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteSeason" className="block text-sm font-medium text-gray-700">
             Favourite Season
           </label>
           <input
@@ -470,10 +395,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteBookGenre"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteBookGenre" className="block text-sm font-medium text-gray-700">
             Favourite Book Genre
           </label>
           <input
@@ -485,10 +407,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteHoliday"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteHoliday" className="block text-sm font-medium text-gray-700">
             Favourite Holiday
           </label>
           <input
@@ -500,10 +419,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="bestFriend"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="bestFriend" className="block text-sm font-medium text-gray-700">
             Best Friend
           </label>
           <input
@@ -515,10 +431,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="dreamCity"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="dreamCity" className="block text-sm font-medium text-gray-700">
             Dream City
           </label>
           <input
@@ -530,10 +443,7 @@ const LongForm = () => {
           />
         </div>
         <div>
-          <label
-            htmlFor="favoriteColor"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="favoriteColor" className="block text-sm font-medium text-gray-700">
             Favourite Color
           </label>
           <select
@@ -566,10 +476,7 @@ const LongForm = () => {
           </div>
         </div>
         <div>
-          <label
-            htmlFor="rating"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
             Rate this form
           </label>
           <select
@@ -591,11 +498,9 @@ const LongForm = () => {
         {rating && (
           <div>
             <h2>Thank you for your rating!</h2>
-            {rating >= 4 ? (
+            {rating >= 4 ?
               <p>We're glad that you like our form!</p>
-            ) : (
-              <p>We're sorry to hear that. We'll try to improve our form.</p>
-            )}
+            : <p>We're sorry to hear that. We'll try to improve our form.</p>}
           </div>
         )}
         <div className="flex justify-end">
@@ -614,7 +519,7 @@ const LongForm = () => {
       <button onClick={handleToggle}>Toggle Text</button>
       <p>{isToggled ? "The toggle is on." : "The toggle is off."}</p>
 
-      {items.map((item) => (
+      {items.map(item => (
         <div key={item.id}>
           <input
             type="checkbox"
@@ -625,14 +530,10 @@ const LongForm = () => {
           <label htmlFor={`item-${item.id}`}>{item.name}</label>
         </div>
       ))}
-      <input
-        type="text"
-        value={newItemName}
-        onChange={handleNewItemNameChange}
-      />
+      <input type="text" value={newItemName} onChange={handleNewItemNameChange} />
       <button onClick={addNewItem}>Add New Item</button>
     </div>
-  );
-};
+  )
+}
 
-export default LongForm;
+export default LongForm

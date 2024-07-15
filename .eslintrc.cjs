@@ -11,7 +11,8 @@ module.exports = {
     "docs/",
     ".eslintrc.cjs",
     "vitest.config.ts",
-    "tsup.config.ts"
+    "tsup.config.ts",
+    "src/test/examples/"
   ],
   extends: [
     "plugin:import/recommended",
