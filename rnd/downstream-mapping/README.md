@@ -6,8 +6,7 @@ The aim for this project is to get a better understanding of how a code change i
 
 ### Install some dependencies
 
-tree-sitter
-tree-sitter-python
+tree-sitter tree-sitter-python
 
 ### Run the test implementation
 

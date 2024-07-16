@@ -1,15 +1,16 @@
 import AIModel from "../../../common/model/AIModel"
 import type { AskAIResponse } from "../../../common/types"
 import { logger } from "../../../common/utils/logger"
-import { createSummary, processFeedbacks } from "./feedbackProcessor"
-import { generateMarkdownReport } from "./generateMarkdownReport"
+import { processFeedbacks } from "./feedback"
+import { formatReport } from "./formatReport"
+import { createSummary } from "./summary"
 
-export const askAI = async (
+export const priorityReport = async (
   prompts: string[],
   modelName: string,
   openAIApiKey: string,
-  organization: string | undefined,
-  provider: string
+  organization?: string,
+  generateSummary?: boolean
 ): Promise<AskAIResponse> => {
   logger.info("Asking the experts...")
 
@@ -17,8 +18,7 @@ export const askAI = async (
     modelName: modelName,
     temperature: 0.0,
     apiKey: openAIApiKey,
-    organization,
-    provider
+    organization
   })
 
   const feedbacks = await processFeedbacks(model, prompts)
@@ -31,12 +31,18 @@ export const askAI = async (
       )
       .toString()}`
   )
-  const summary = await createSummary(model, feedbacks)
 
-  logger.debug(`Summary of feedbacks: ${summary}`)
+  let summary = ""
+  if (generateSummary) {
+    summary = await createSummary(model, feedbacks)
+
+    logger.debug(`Summary of feedbacks: ${summary}`)
+  } else {
+    logger.debug("Summary generation is disabled.")
+  }
 
   return {
-    markdownReport: generateMarkdownReport(feedbacks, summary),
+    markdownReport: formatReport(feedbacks, summary),
     feedbacks: feedbacks
   }
 }

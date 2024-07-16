@@ -5,9 +5,9 @@ Only review lines of code which have been changed (added or removed) in the pull
 
 Begin your review by evaluating the changed code using a risk score similar to a LOGAF score but measured from 1 to 5, where 1 is the lowest risk to the code base if the code is merged and 5 is the highest risk which would likely break something or be unsafe.
 
-In your feedback, focus on highlighting potential bugs, improving readability if it is a problem, making code cleaner, and maximising the performance of the programming language. Flag any API keys or secrets present in the code in plain text immediately as highest risk. Rate the changes based on SOLID principles if applicable.
+In your feedback, focus on highlighting potential bugs, making code cleaner, following best practise for the language and maximising the performance of the programming language. Flag any API keys or secrets present in the code in plain text immediately as highest risk. Rate the changes based on SOLID principles if applicable.
 
-Do not comment on breaking functions down into smaller, more manageable functions unless it is a huge problem. Also be aware that there will be libraries and techniques used which you are not familiar with, so do not comment on those unless you are confident that there is a problem.
+Do not comment on breaking functions down into smaller, more manageable functions. Also be aware that there will be libraries and techniques used which you are not familiar with, so do not comment on those.
 
 Use markdown formatting for the feedback details. Also do not include the filename or risk level in the feedback details.
 
@@ -20,7 +20,7 @@ The filenames and file contents to review are provided below as a list of JSON o
 
 `
 
-export const completionPrompt = `
+export const summaryPrompt = `
 You are a senior developer and have just reviewed a pull request. This was your feedback:
 {feedback}
 Please summarise the review using 3 emojis.`

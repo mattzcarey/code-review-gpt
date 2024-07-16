@@ -1,4 +1,3 @@
-
 // Test Case: Exposed secret
 // Description: A code snippet with exposed secret
 

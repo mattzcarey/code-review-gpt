@@ -51,7 +51,7 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       })
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`)
+    logger.error(`Failed to comment on PR: ${error}`)
     throw error
   }
 }

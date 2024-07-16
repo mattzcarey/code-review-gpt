@@ -14,11 +14,13 @@ import { generateHash } from "./hash"
  * @returns The code snippet.
  */
 const generateCodeSnippet = async (testCase: TestCase, model: AIModel): Promise<string> => {
-  const prompt = generateCodeSnippetsPrompt.replace("{testCase}", JSON.stringify(testCase))
+  const prompt = generateCodeSnippetsPrompt
+    .replace("{testCaseName}", testCase.name)
+    .replace("{testCaseDescription}", testCase.description)
 
   const modelResponse = await model.callModel(prompt)
 
-  return modelResponse.replace("```typescript", "").replace("```", "")
+  return modelResponse.match(/```(?:typescript)?\s*([\s\S]*?)\s*```/)?.[1] ?? modelResponse.trim()
 }
 
 /**

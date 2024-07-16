@@ -1,3 +1,5 @@
+import type { IFeedback } from "./model/AIModel"
+
 export type AskAIResponse = {
   markdownReport: string
   feedbacks: IFeedback[]
@@ -38,7 +40,7 @@ export type ReviewArgs = {
   reviewType: string
   org: string | undefined
   remote: string | undefined
-  provider: string
+  summary: boolean
   _: (string | number)[]
   $0: string
 }

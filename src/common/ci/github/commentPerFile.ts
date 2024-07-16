@@ -1,4 +1,4 @@
-import { type IFeedback } from "../../types"
+import type { IFeedback } from "../../model/AIModel"
 import { commentOnFile, getOctokitRepoDetails } from "../utils"
 
 /**

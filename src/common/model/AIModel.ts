@@ -4,11 +4,10 @@ import { z } from "zod"
 
 interface IAIModel {
   modelName: string
-  provider: string
   temperature: number
   apiKey: string
   retryCount?: number
-  organization: string | undefined
+  organization?: string
 }
 
 const FeedbackSchema = z.object({
@@ -35,24 +34,15 @@ class AIModel {
   private modelName: string
 
   constructor(options: IAIModel) {
-    switch (options.provider) {
-      case "openai":
-        this.oai = new OpenAI({
-          apiKey: options.apiKey,
-          organization: options.organization
-        })
+    this.oai = new OpenAI({
+      apiKey: options.apiKey,
+      organization: options.organization
+    })
 
-        this.instruct = Instructor({
-          client: this.oai,
-          mode: "TOOLS"
-        })
-
-        break
-      case "bedrock":
-        throw new Error("Bedrock provider not implemented")
-      default:
-        throw new Error("Provider not supported")
-    }
+    this.instruct = Instructor({
+      client: this.oai,
+      mode: "TOOLS"
+    })
 
     this.modelName = options.modelName
   }
@@ -74,6 +64,7 @@ class AIModel {
 
     return res.feedback
   }
+
   public async callModel(prompt: string): Promise<string> {
     const res = await this.oai.chat.completions.create({
       model: this.modelName,

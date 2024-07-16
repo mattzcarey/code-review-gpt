@@ -10,6 +10,8 @@ tsconfig.tsbuildinfo
 .vscode/
 .idea/
 
+**/.cache/
+
 
 
 

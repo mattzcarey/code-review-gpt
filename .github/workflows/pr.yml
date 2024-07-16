@@ -40,14 +40,8 @@ jobs:
       - name: Build package
         run: bun run build
 
-      - name: Run linting test
-        run: bun run lint
-
-      - name: Run unit tests
+      - name: Run static tests
         run: bun run test
-
-      - name: Run type checking
-        run: bun run typecheck
 
       - name: Run review
         run: bun run start:review --ci=github --model=gpt-4o --debug

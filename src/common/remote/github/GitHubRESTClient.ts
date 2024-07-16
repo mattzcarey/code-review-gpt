@@ -1,4 +1,4 @@
-import { Octokit } from "octokit"
+import { getOctokit } from "@actions/github"
 
 import { githubToken } from "../../../config"
 import type { ReviewFile } from "../../types"
@@ -33,7 +33,7 @@ const isValidOctokitResponse = (input: unknown): input is ValidClientResponse =>
   typeof input.data.content === "string"
 
 export class GitHubRESTClient {
-  private client: Octokit = new Octokit({ auth: githubToken() })
+  private client = getOctokit(githubToken())
 
   async fetchReviewFiles(identifier: PullRequestIdentifier): Promise<ReviewFile[]> {
     const rawFiles = await this.client.paginate(this.client.rest.pulls.listFiles, {

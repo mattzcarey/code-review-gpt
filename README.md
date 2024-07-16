@@ -1,11 +1,6 @@
 # Code Review GPT
 
-[![NPM][npm_badge]][npm]
-[![Contributors][contributors_badge]][contributors]
-[![Pulse][pulse_badge]][pulse]
-[![License][license_badge]][license]
-[![Twitter][twitter_badge]][twitter]
-[![Slack][slack_badge]][slack]
+[![NPM][npm_badge]][npm] [![Contributors][contributors_badge]][contributors] [![Pulse][pulse_badge]][pulse] [![License][license_badge]][license] [![Twitter][twitter_badge]][twitter] [![Slack][slack_badge]][slack]
 
 ## We give engineers their weekends back
 

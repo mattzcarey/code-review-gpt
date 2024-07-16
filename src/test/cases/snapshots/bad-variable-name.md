@@ -1,9 +1,18 @@
-**Risk Level 2 - src/test/cases/.cache/4362c4ad1e9424e68ec4e05de677b73b56239f408e0c2cf41517aada1ea2cbf8.ts**
+**Risk Level 3 - src/test/cases/.cache/4362c4ad1e9424e68ec4e05de677b73b56239f408e0c2cf41517aada1ea2cbf8.ts**
 
-1. The variable and function names are not following the TypeScript naming conventions. It's recommended to use camelCase for variable and function names.
+1. **Bad Variable Naming**: Using single-letter variables (`a`, `b`, `c`, `x`, `y`, `z`) significantly reduces code readability and maintainability. It is a high priority to use meaningful variable names in production code to adhere to best practices.
 
-2. Avoid using special characters like `_` and `\` as variable names. It reduces readability and can cause confusion. Use descriptive names instead. For example,`let count = 5;`instead of`let \_ = 5;`
+```typescript
+function addNums(num1: number, num2: number): number {
+  let firstNumber = num1
+  let secondNumber = num2
+  let sum = firstNumber + secondNumber
+  return sum
+}
 
-3. Variable names cannot start with a number. `let 123abc = 15;` is invalid and will cause a syntax error. Consider renaming it to `let abc123 = 15;`
-
-🚫🔤🔢
+// Example usage of the function
+let num1 = 5
+let num2 = 10
+let result = addNums(num1, num2)
+console.log("The sum is: " + result)
+```

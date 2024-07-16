@@ -7,12 +7,12 @@ ${feedback.details}
 
 `
 
-export const formatFeedbacks = (feedbacks: IFeedback[]): string => `
+export const joinFeedbacks = (feedbacks: IFeedback[]): string => `
 ${feedbacks.map(formatFeedback).join("\n---\n")}
 `
 
-export const generateMarkdownReport = (feedbacks: IFeedback[], summary: string): string => `
-${formatFeedbacks(feedbacks)}
+export const formatReport = (feedbacks: IFeedback[], summary: string): string => `
+${joinFeedbacks(feedbacks)}
 ---
 ${summary}
 

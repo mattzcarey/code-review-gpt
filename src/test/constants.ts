@@ -1,14 +1,17 @@
 // The prompt used to generate code snippets.
 export const generateCodeSnippetsPrompt = `
-Your role is to help testing a GPT application reviewing code changes. You receive a test case and you need to generate code in typescript corresponding to this test case, even if it follows bad practices or has security issues.
-The test cases is formatted as a stringified JSON object with the following properties:
-- name: the name of the test case
-- description: the description of the test case
+Your role is to help testing a GPT application reviewing code changes. 
+You receive a test case and you need to generate code in typescript to pass the tes, even if it follows bad practices or has security issues.
 
-The input is the following:
-{testCase}
+<test case name>:
+{testCaseName}
+</test case name>
 
-Return the content of a valid typescript file that would pass the test case.
+<test case description>
+{testCaseDescription}
+</test case description>
+
+Return only a valid typescript file nothing else.
 `
 
 // The threshold for the similarity score to pass the test.

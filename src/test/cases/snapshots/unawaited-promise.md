@@ -1,16 +1,17 @@
-**Risk Level 3 - src/test/cases/.cache/eb303e5498352ed36e5d1d2d4a09e085574ec3d2da6564ea0e7ea6caabec7c0f.ts**
+**Risk Level 4 - src/test/cases/.cache/eb303e5498352ed36e5d1d2d4a09e085574ec3d2da6564ea0e7ea6caabec7c0f.ts**
 
-The function `unawaitedPromise` calls `asyncFunction` but does not await its result. This could lead to unexpected behavior if `asyncFunction` is performing any asynchronous operations that `unawaitedPromise` depends on. Consider using the `await` keyword to wait for the promise to resolve before continuing execution. For example:
+1. **Unawaited Promise:** The `fetchData` function returns a promise, and in the `main` function, this promise is called but not awaited or handled. This can lead to unhandled promise rejections and unpredictable behavior. Consider using `await` or `.then().catch()` to handle the promise properly.
 
-```
-async function unawaitedPromise() {
-    // This is an awaited promise
-    await asyncFunction();
+```typescript
+async function main() {
+  try {
+    const data = await fetchData()
+    console.log(data)
+  } catch (error) {
+    console.error("Error fetching data:", error)
+  }
+  console.log("This will log after the promise is resolved")
 }
 
-unawaitedPromise();
+main()
 ```
-
-Also, it's good practice to handle promise rejections to avoid unhandled promise rejections. You can do this using `.catch()` or a try/catch block.
-
-⏱️🔄❗

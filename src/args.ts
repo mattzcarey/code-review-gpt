@@ -49,7 +49,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     .option("model", {
       description: "The model to use for generating the review.",
       type: "string",
-      default: "gpt-4"
+      default: "gpt-4o"
     })
     .option("reviewType", {
       description:
@@ -75,11 +75,10 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "string",
       default: undefined
     })
-    .option("provider", {
-      description: "Provider to use for AI",
-      choices: ["openai", "bedrock"],
-      type: "string",
-      default: "openai"
+    .option("summary", {
+      description: "Enables emoji summary in the review.",
+      type: "boolean",
+      default: false
     })
     .command("review", "Review the pull request.")
     .command("configure", "Configure the script.")

@@ -31,10 +31,11 @@
     "start:test": "bun run ./src/index.ts test",
     "lint": "eslint \"**/*.{js,json,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier \"**/*.{ts,tsx,md}\"",
     "format:write": "prettier --write \"**/*.{ts,tsx}\"",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit",
+    "test-unit": "vitest run",
+    "test-types": "tsc --noEmit",
+    "test": "bun run lint && bun run format && bun run test-types && bun run test-unit",
     "publish-package": "npm i && npm run build && npm publish --access public"
   },
   "keywords": [
@@ -64,7 +65,6 @@
     "dotenv": "^16.3.1",
     "glob": "^10.3.10",
     "langchain": "^0.0.186",
-    "octokit": "^3.1.0",
     "openai": "^4.52.7",
     "ts-retry": "^4.2.1",
     "tslog": "^4.8.2",
