@@ -46,7 +46,7 @@ If you are running this tool in Azure DevOps, you will need to do some additiona
 
 The code-reivew-gpt needs additional Git history available for affected to function correctly. Make sure Shallow fetching is disabled in your pipeline settings UI. For more info, check out this article from Microsoft [doc](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch).
 
-You will need to create a **personal access token** in Gitlab and store it in your CI/CD variables to allow the bot access to your Azure DevOps account. Follow the steps below.
+You will need to create a **personal access token** in Azure DevOps and store it in your CI/CD variables to allow the bot access to your Azure DevOps account. Follow the steps below.
 
 #### Set Personal Access Token as a CI/CD Variable
 
