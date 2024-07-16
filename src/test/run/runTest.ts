@@ -2,7 +2,7 @@ import chalk from "chalk"
 import { MemoryVectorStore } from "langchain/vectorstores/memory"
 
 import { logger } from "../../common/utils/logger"
-import { priorityReport } from "../../review/prioritise/llm"
+import { priorityReport } from "../../review/prioritise"
 import { constructPromptsArray } from "../../review/prioritise/prompt/constructPrompt/constructPrompt"
 import type { TestCase } from "../types"
 import { generateTestReport, generateTestResultsSummary, testResult } from "./generateTestReport"

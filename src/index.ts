@@ -24,7 +24,7 @@ const main = async () => {
       break
     }
     case "review": {
-      const { review } = await import("./review/prioritise/index")
+      const { review } = await import("./review/index")
       const { getReviewFiles } = await import("./common/utils/getReviewFiles")
       const files = await getReviewFiles(argv.ci, argv.remote)
       await review(argv, files, openAIApiKey)

@@ -11,13 +11,18 @@ interface IAIModel {
 }
 
 const FeedbackSchema = z.object({
-  fileName: z.string().describe("The name of the file"),
+  fileName: z.string(),
   riskScore: z
     .number()
     .describe(
-      "The risk score of the file. A number between 0 and 5, with 5 being the highest risk and 0 being the lowest."
+      "The risk score of the file to the code base if merged. A number between 0 and 5, with 5 being the highest risk and 0 being the lowest."
     ),
-  details: z.string().describe("The details of the feedback")
+  details: z
+    .string()
+    .describe(
+      "Write your review of the changes here. Focus on regressions, code smells, following best practise for the language and maximising the performance. Flag any API keys or secrets present in the code in plain text immediately as highest risk. Rate the changes based on SOLID principles if applicable. Do not comment on breaking functions down into smaller, more manageable functions. Also be aware that there will be libraries used which you are not familiar with, so do not comment on those. Use markdown formatting and do not include the filename or risk level here."
+    ),
+  summary: z.string().describe("A concise 8 word or less summary of the problem")
 })
 
 const FeedbackArraySchema = z.array(FeedbackSchema)

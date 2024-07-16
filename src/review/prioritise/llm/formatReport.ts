@@ -1,19 +1,19 @@
 import { type IFeedback } from "../../../common/model/AIModel"
 
-const formatFeedback = (feedback: IFeedback): string => `
-**Risk Level ${feedback.riskScore} - ${feedback.fileName}**
+const formatFeedback = (
+  feedback: IFeedback
+): string => `**${feedback.riskScore}/5 - ${feedback.summary}**
+<details>
+<summary>More details</summary>
 
+Filename: ${feedback.fileName}
+Score: ${feedback.riskScore}/5 (lower is better)
+Review: 
 ${feedback.details}
-
-`
-
-export const joinFeedbacks = (feedbacks: IFeedback[]): string => `
-${feedbacks.map(formatFeedback).join("\n---\n")}
+</details>
 `
 
 export const formatReport = (feedbacks: IFeedback[], summary: string): string => `
-${joinFeedbacks(feedbacks)}
+${feedbacks.map(formatFeedback).join("\n\n---\n\n")}
 ---
-${summary}
-
-`
+${summary}\n`

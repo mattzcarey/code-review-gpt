@@ -1,78 +1,48 @@
-import { commentOnPR as commentOnPRAzdev } from "../../common/ci/azdev/commentOnPR"
-import { commentOnPR as commentOnPRGithub } from "../../common/ci/github/commentOnPR"
-import { commentPerFile } from "../../common/ci/github/commentPerFile"
-import { commentOnPR as commentOnPRGitlab } from "../../common/ci/gitlab/commentOnPR"
-import { getMaxPromptLength } from "../../common/model/getMaxPromptLength"
-import { PlatformOptions, type ReviewArgs, type ReviewFile } from "../../common/types"
+import AIModel from "../../common/model/AIModel"
+import type { AskAIResponse } from "../../common/types"
 import { logger } from "../../common/utils/logger"
-import { signOff } from "../constants"
-import { priorityReport } from "./llm"
-import { constructPromptsArray } from "./prompt/constructPrompt/constructPrompt"
-import { filterFiles } from "./prompt/filterFiles/index"
+import { processFeedbacks } from "./llm/feedback"
+import { formatReport } from "./llm/formatReport"
+import { createSummary } from "./llm/summary"
 
-export const review = async (
-  yargs: ReviewArgs,
-  files: ReviewFile[],
-  openAIApiKey: string
-): Promise<void> => {
-  logger.debug(`Review started.`)
-  logger.debug(`Model used: ${yargs.model}`)
-  logger.debug(`Ci enabled: ${yargs.ci ?? "ci is undefined"}`)
-  logger.debug(`Comment per file enabled: ${String(yargs.commentPerFile)}`)
-  logger.debug(`Review type chosen: ${yargs.reviewType}`)
-  logger.debug(`Organization chosen: ${yargs.org ?? "organization is undefined"}`)
-  logger.debug(`Remote Pull Request: ${yargs.remote ?? "remote pull request is undefined"}`)
-  logger.debug(`Emoji summary enabled: ${yargs.summary}`)
+export const priorityReport = async (
+  prompts: string[],
+  modelName: string,
+  openAIApiKey: string,
+  organization?: string,
+  generateSummary?: boolean
+): Promise<AskAIResponse> => {
+  logger.info("Asking the experts...")
 
-  const isCi = yargs.ci
-  const shouldCommentPerFile = yargs.commentPerFile
-  const modelName = yargs.model
-  const reviewType = yargs.reviewType
-  const organization = yargs.org
-  const generateSummary = yargs.summary
+  const model = new AIModel({
+    modelName: modelName,
+    temperature: 0.0,
+    apiKey: openAIApiKey,
+    organization
+  })
 
-  const filteredFiles = filterFiles(files)
-
-  if (filteredFiles.length === 0) {
-    logger.info("No file to review, finishing review now.")
-
-    return undefined
-  }
+  const feedbacks = await processFeedbacks(model, prompts)
 
   logger.debug(
-    `Files to review after filtering: ${filteredFiles.map(file => file.fileName).toString()}`
+    `Feedback received:\n ${feedbacks
+      .map(
+        feedback =>
+          `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
+      )
+      .toString()}`
   )
 
-  const maxPromptLength = getMaxPromptLength(modelName)
+  let summary = ""
+  if (generateSummary) {
+    summary = await createSummary(model, feedbacks)
 
-  const prompts = constructPromptsArray(filteredFiles, maxPromptLength, reviewType)
-
-  logger.debug(`Prompts used:\n ${prompts.toString()}`)
-
-  const { markdownReport: report, feedbacks } = await priorityReport(
-    prompts,
-    modelName,
-    openAIApiKey,
-    organization,
-    generateSummary
-  )
-
-  logger.debug(`Markdown report:\n ${report}`)
-
-  if (isCi === PlatformOptions.GITHUB) {
-    if (shouldCommentPerFile) {
-      await commentPerFile(feedbacks, signOff)
-    } else {
-      await commentOnPRGithub(report, signOff)
-    }
-  }
-  if (isCi === PlatformOptions.GITLAB) {
-    await commentOnPRGitlab(report, signOff)
+    logger.debug(`Summary of feedbacks: ${summary}`)
+  } else {
+    logger.debug("Summary generation is disabled.")
   }
 
-  if (isCi === PlatformOptions.AZDEV) {
-    await commentOnPRAzdev(report, signOff)
+  return {
+    markdownReport: formatReport(feedbacks, summary),
+    feedbacks: feedbacks
   }
-
-  return
 }
