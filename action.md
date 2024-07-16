@@ -35,7 +35,7 @@ jobs:
 
 ### Workflow yml option 2: Add a code review bot
 
-In this config, a GPT CR is triggered when a specific user is added as a "reviewer" in the Github UI. Create an additional Github account such as 'YourProject-ML-CR-bot', then speficy the account username in the config.
+In this config, a GPT CR is triggered when a specific user is added as a "reviewer" in the Github UI. Create an additional Github account such as 'YourProject-ML-CR-bot', then specify the account username in the config.
 
 This option can save on API costs by only reviewing when explicity asked to. It can also be used to avoid reviewing PRs before they are ready (draft/WIP PRs).
 
