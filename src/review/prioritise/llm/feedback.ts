@@ -22,7 +22,7 @@ export const processFeedbacks = async (model: AIModel, prompts: string[]): Promi
       worstFeedbacks
     : [
         {
-          fileName: "All files",
+          filePath: "All files",
           details: "All feedbacks are positive",
           riskScore: 0,
           summary: "LGTM 🚀"

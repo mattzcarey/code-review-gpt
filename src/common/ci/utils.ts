@@ -60,7 +60,7 @@ export const commentOnFile = async (
     })
 
     // Check if bot has already commented on this file
-    const relativePath = getRelativePath(data.feedback.fileName, data.repo)
+    const relativePath = getRelativePath(data.feedback.filePath, data.repo)
     const botComment = comments.find(
       comment => comment.path === relativePath && comment.body.includes(data.signOff)
     )

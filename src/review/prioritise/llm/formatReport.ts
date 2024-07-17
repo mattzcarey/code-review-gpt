@@ -7,9 +7,9 @@ const formatFeedback = (
 <summary>More details</summary>
 
 
-### Filename
+### File Path
 
-${feedback.fileName}
+${feedback.filePath}
 
 ### Score
 

@@ -11,7 +11,7 @@ interface IAIModel {
 }
 
 const FeedbackSchema = z.object({
-  fileName: z.string(),
+  filePath: z.string().describe("The complete path of the file"),
   riskScore: z
     .number()
     .describe(

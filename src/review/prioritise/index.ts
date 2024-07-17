@@ -27,7 +27,7 @@ export const priorityReport = async (
     `Feedback received:\n ${feedbacks
       .map(
         feedback =>
-          `Filename: ${feedback.fileName}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
+          `Filename: ${feedback.filePath}, RiskScore: ${feedback.riskScore}, Details: ${feedback.details}\n`
       )
       .toString()}`
   )
