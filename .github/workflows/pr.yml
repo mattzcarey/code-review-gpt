@@ -47,4 +47,4 @@ jobs:
         run: bun run start:review --ci=github --model=gpt-3.5-turbo --debug
 
       - name: Run prompt tests
-        run: bun run start:test
+        run: bun run start:test --ci=github --model=gpt-4o --debug
