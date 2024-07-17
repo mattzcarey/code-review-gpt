@@ -1,0 +1,97 @@
+{
+  "name": "code-review-gpt",
+  "version": "0.1.8",
+  "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "code-review-gpt": "./dist/index.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "start": "node ./dist/index.js",
+    "start:review": "node ./dist/index.js review",
+    "start:configure": "node ./dist/index.js configure",
+    "start:test": "bun run ./src/index.ts test",
+    "lint": "eslint \"**/*.{js,json,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
+    "format": "prettier \"**/*.{ts,tsx,md}\"",
+    "format:write": "prettier --write \"**/*.{ts,tsx}\"",
+    "test-unit": "vitest run",
+    "test-types": "tsc --noEmit",
+    "test": "bun run lint && bun run format && bun run test-types && bun run test-unit",
+    "publish-package": "npm i && npm run build && npm publish --access public"
+  },
+  "keywords": [
+    "code-review",
+    "review",
+    "chatgpt",
+    "gpt",
+    "gpt3",
+    "openai",
+    "gpt4",
+    "gpt4o",
+    "vertexai",
+    "huggingface",
+    "ai",
+    "genai",
+    "llama"
+  ],
+  "author": "Matt Carey",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/github": "^5.1.1",
+    "@gitbeaker/rest": "^39.10.2",
+    "@inquirer/prompts": "^3.0.4",
+    "@inquirer/rawlist": "^1.2.9",
+    "@instructor-ai/instructor": "^1.5.0",
+    "azure-devops-node-api": "^12.3.0",
+    "dotenv": "^16.3.1",
+    "glob": "^10.3.10",
+    "langchain": "^0.0.186",
+    "openai": "^4.52.7",
+    "ts-retry": "^4.2.1",
+    "tslog": "^4.8.2",
+    "yargs": "^17.7.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^20.4.0",
+    "@types/yargs": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^7.5.0",
+    "bun": "^1.1.20",
+    "chalk": "^4.1.2",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.3.3",
+    "tsup": "8.1.0",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.3"
+  }
+}

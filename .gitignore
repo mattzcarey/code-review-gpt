@@ -1,26 +1,18 @@
 node_modules
 .env
-dist
-**/.cache/*.ts
-!jest.config.js
+.env.*
+
+dist/
 *.d.ts
+tsconfig.tsbuildinfo
 
-**/data
 
-cdk.context.json
+.vscode/
+.idea/
 
-# nextjs and sst
-.next
-.sst
-!.sst/types/index.ts
-!sst-env.d.ts
-.open-next
-.DS_Store
+**/.cache/
 
-# CDK asset staging directory
-.cdk.staging
-cdk.out/
-cdk.context.json
 
-# PEM
-*.pem
+
+
+

@@ -1,1 +1,0 @@
-export { filterFiles } from "./filterFiles";
