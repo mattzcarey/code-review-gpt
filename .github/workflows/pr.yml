@@ -44,7 +44,7 @@ jobs:
         run: bun run test
 
       - name: Run review
-        run: bun run start:review --ci=github --model=gpt-4o --debug
+        run: bun run start:review --ci=github --model=gpt-3.5-turbo --debug
 
       - name: Run prompt tests
         run: bun run start:test

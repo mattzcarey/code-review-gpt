@@ -22,4 +22,4 @@ ${feedback.details}
 `
 
 export const formatReport = (feedbacks: IFeedback[], summary: string): string => `
-${feedbacks.map(formatFeedback).join("\n\n---\n\n")}\n\n${summary}\n`
+${feedbacks.map(formatFeedback).join("\n\n")}\n\n${summary}\n`
