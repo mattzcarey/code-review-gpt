@@ -1,12 +1,16 @@
 {
   "name": "code-review-gpt",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
   "bin": {
     "code-review-gpt": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattzcarey/code-review-gpt"
+  },
   "scripts": {
     "lint-fix": "eslint . --ext=js,ts,tsx --fix",
     "lint-test": "eslint . --ext=js,ts",
