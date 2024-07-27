@@ -27,7 +27,7 @@ https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f
 
 ## Package Usage
 
-See the [package documentation](README.md) for more information.
+See the [package documentation](packages/code-review-gpt/README.md) for more information.
 
 ## Action Usage
 
