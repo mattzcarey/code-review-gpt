@@ -1,0 +1,41 @@
+# Run this action every month and retrain your model.
+
+name: Train and Generate
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  train-and-generate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Cache model
+      uses: actions/cache@v2
+      with:
+        path: .crgpt/model_cache
+        key: ${{ runner.os }}-model-${{ github.sha }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Train model
+      run: |
+        python rnd/custom-llm/train.py \
+          --repo ${{ github.repository }} \
+          --github-token ${{ secrets.GITHUB_TOKEN }} \
+          --hf-token ${{ secrets.HF_TOKEN }} \
+          --dataset-name ${{ github.repository_owner }}/pr-comments-dataset \
+          --output-dir .crgpt/trained_model
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}

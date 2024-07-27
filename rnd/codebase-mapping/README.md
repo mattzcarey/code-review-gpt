@@ -10,6 +10,8 @@ We aim to do this:
 - update a mapping based on a diff
 - search for relevant code snippets from a function name/path
 
+Outcomes: a python class which has methods to do the above and script with command line interface to do it.
+
 ### Use case
 
 Proposed Code review flow.

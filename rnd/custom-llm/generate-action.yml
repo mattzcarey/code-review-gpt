@@ -1,0 +1,2 @@
+# run this action every pr opened or synchronized
+# downloads the custom model or cached model and runs it with the generate script on your changes. 
