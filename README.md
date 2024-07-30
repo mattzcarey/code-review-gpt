@@ -49,8 +49,8 @@ See the [action documentation](action.md) for more information.
    ```
 
 3. Set up the API key:
-   - Rename the .env.example file to .env.
-   - Open the .env file and replace YOUR_API_KEY with your actual OPENAI API key.
+   - Rename the `.env.example` file to `.env`.
+   - Open the `.env` file and replace `YOUR_API_KEY` with your actual OPENAI API key.
 
 When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or similar for your operating system) in your terminal to set the API key.
 
