@@ -52,6 +52,7 @@ export const languageMap: { [key: string]: string } = {
   ".cxx": "C++",
   ".hpp": "C++",
   ".hxx": "C++",
+  ".cs": "C#",
   ".rb": "Ruby",
   ".kt": "Kotlin",
   ".kts": "Kotlin",
