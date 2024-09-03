@@ -5,7 +5,6 @@
 [![Pulse][pulse_badge]][pulse]
 [![License][license_badge]][license]
 [![Twitter][twitter_badge]][twitter]
-[![Slack][slack_badge]][slack]
 
 ## We give engineers their weekends back
 
@@ -108,7 +107,5 @@ The code-review-gpt package will continue to be maintained and improved based on
 [contributors_badge]: https://img.shields.io/github/contributors/mattzcarey/code-review-gpt
 [pulse]: https://github.com/mattzcarey/code-review-gpt/pulse
 [pulse_badge]: https://img.shields.io/github/commit-activity/m/mattzcarey/code-review-gpt
-[twitter]: https://twitter.com/intent/follow?screen_name=oriontools.ai
-[twitter_badge]: https://img.shields.io/twitter/follow/oriontoolsai?style=social&logo=twitter
-[slack]: https://join.slack.com/t/orion-tools/shared_invite/zt-20x79nfgm-UGIHK1uWGQ59JQTpODYDwg
-[slack_badge]: https://img.shields.io/badge/slack-Orion_Community-purple.svg?logo=slack
+[twitter]: https://twitter.com/intent/follow?screen_name=mattzcarey
+[twitter_badge]: https://img.shields.io/twitter/follow/mattzcarey?style=social&logo=twitter
