@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Code Review GPT
-        uses: mattzcarey/code-review-gpt@v0.1.9
+        uses: mattzcarey/code-review-gpt@v0.1.10
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-4o'
@@ -58,7 +58,7 @@ jobs:
           fetch-depth: 0
 
       - name: Code Review GPT
-        uses: mattzcarey/code-review-gpt@v0.1.9
+        uses: mattzcarey/code-review-gpt@v0.1.10
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-4o'
