@@ -12,7 +12,7 @@ export const priorityReport = async (
   organization?: string,
   generateSummary?: boolean
 ): Promise<AskAIResponse> => {
-  logger.info("Asking the experts...")
+  logger.info("Building report")
 
   const model = new AIModel({
     modelName: modelName,

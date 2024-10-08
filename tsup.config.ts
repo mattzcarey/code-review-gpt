@@ -14,6 +14,7 @@ export default defineConfig(options => {
     format: ["cjs", "esm"],
     clean: true,
     dts: true,
+    noExternal: ["rnd"],
     external: Object.keys(dependencies),
     onSuccess: async () => {
       const templateFiles = ["github-pr.yml", "gitlab-pr.yml", "azdev-pr.yml"]

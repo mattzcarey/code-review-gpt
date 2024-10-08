@@ -56,7 +56,7 @@ export const review = async (
     generateSummary
   )
 
-  logger.debug(`Markdown report:\n ${report}`)
+  logger.info(`Markdown report:\n ${report}`)
 
   if (isCi === PlatformOptions.GITHUB) {
     if (shouldCommentPerFile) {
