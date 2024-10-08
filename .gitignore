@@ -6,13 +6,12 @@ dist/
 *.d.ts
 tsconfig.tsbuildinfo
 
-
 .vscode/
 .idea/
 
 **/.cache/
 
+__pycache__/
 
-
-
-
+.DS_Store
+.python-version

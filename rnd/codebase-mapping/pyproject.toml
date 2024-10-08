@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "codebase-mapping"
+version = "0.1.0"
+description = ""
+authors = ["Matt Carey <matt@stackone.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.9.2"
+anthropic = {extras = ["bedrock"], version = "^0.35.0"}
+tree-sitter = "0.21.3"
+tree-sitter-languages = "^1.10.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
