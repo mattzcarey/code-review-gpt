@@ -58,6 +58,10 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "string",
       default: "changed",
     })
+    .option("translateLanguage", {
+      description: "Specifies the target natural language for translation",
+      type: "string",
+    })
     .option("remote", {
       description: "The identifier of a remote Pull Request to review",
       type: "string",
