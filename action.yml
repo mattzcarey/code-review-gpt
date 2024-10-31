@@ -6,6 +6,10 @@ inputs:
     description: 'The GPT model to use'
     required: true
     default: 'gpt-4o'
+  REVIEW_LANGUAGE:
+    description: 'Target natural language for translation'
+    required: false
+    default: 'English'
   OPENAI_API_KEY:
     description: 'OpenAI API Key'
     required: true
@@ -27,10 +31,11 @@ runs:
     
     - name: Run Code Review GPT
       shell: bash
-      run: npx code-review-gpt review --ci=github --model=$MODEL
+      run: npx code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
       
       env:
         MODEL: ${{ inputs.MODEL }}
+        REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

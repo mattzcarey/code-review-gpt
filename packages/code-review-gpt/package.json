@@ -17,7 +17,7 @@
     "start": "ts-node ./src/index.ts",
     "review": "ts-node ./src/index.ts review",
     "configure": "ts-node ./src/index.ts configure",
-    "test": "ts-node ./src/index.ts test",
+    "test": "ts-node ./src/index.ts test --reviewLanguage=Korean",
     "test-unit": "dotenv -e .env jest",
     "build": "node ./utils/build.js",
     "postbuild": "node ./utils/shebang.js && chmod +x ./dist/index.js",

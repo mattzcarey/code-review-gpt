@@ -12,7 +12,7 @@ import { loadOrGenerateCodeSnippets } from "./load/loadTestCodeSnippets";
 import { runTests } from "./run/runTest";
 
 export const test = async (
-  { ci, model, reviewType }: ReviewArgs,
+  { ci, model, reviewType, reviewLanguage }: ReviewArgs,
   openAIApiKey: string
 ): Promise<void> => {
   const maxPromptLength = getMaxPromptLength(model);
@@ -40,12 +40,13 @@ export const test = async (
 
   // Run the review on the code snippets and compare the results to the expected results.
   const testSummary = await runTests(
+    openAIApiKey,
     testCasesWithSnippets,
     model,
     maxPromptLength,
     vectorStore,
     reviewType,
-    openAIApiKey
+    reviewLanguage,
   );
 
   if (ci === PlatformOptions.GITHUB) {
