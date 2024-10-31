@@ -9,7 +9,7 @@
   "dependencies": {
     "@probot/adapter-aws-lambda-serverless": "^3.0.4",
     "jsesc": "^3.0.2",
-    "langchain": "^0.0.186",
+    "langchain": "^0.3.3",
     "probot": "^12.3.1"
   },
   "devDependencies": {
