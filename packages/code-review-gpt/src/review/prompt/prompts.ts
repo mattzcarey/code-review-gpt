@@ -11,7 +11,7 @@ Do not comment on breaking functions down into smaller, more manageable function
 
 Use markdown formatting for the feedback details. Also do not include the filename or risk level in the feedback details.
 
-Ensure the feedback details are brief, concise, accurate, and in {TranslateLanguage}. If there are multiple similar issues, only comment on the most critical.
+Ensure the feedback details are brief, concise, accurate, and in {ReviewLanguage}. If there are multiple similar issues, only comment on the most critical.
 
 Include brief example code snippets in the feedback details for your suggested changes when you're confident your suggestions are improvements. Use the same programming language as the file under review.
 If there are multiple improvements you suggest in the feedback details, use an ordered list to indicate the priority of the changes.

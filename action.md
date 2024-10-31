@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-4o'
-          TRANSLATE_LANGUAGE: 'English'
+          REVIEW_LANGUAGE: 'English'
 ```
 
 ### Workflow yml option 2: Add a code review bot
@@ -61,7 +61,8 @@ jobs:
       - name: Code Review GPT
         uses: mattzcarey/code-review-gpt@v0.1.10
         with:
+          GITHUB_TOKEN: ${{ github.token }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-4o'
-          GITHUB_TOKEN: ${{ github.token }}
+          REVIEW_LANGUAGE: 'English'
 ```

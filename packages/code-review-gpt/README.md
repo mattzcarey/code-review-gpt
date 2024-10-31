@@ -105,7 +105,7 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 
 - `--reviewType` - Used with the 'review' command. The options are --reviewType=("changed" | "full" | "costOptimized). Defaults to "changed" if no option is specified. Specifies whether the review is for the full file or just the changed lines. costOptimized limits the context surrounding the changed lines to 5 lines.
 
-- `--translateLanguage` - Specifies the target natural language for translation, such as "German", "Spanish", or "French". Use this parameter to set the language in which the utility will provide output.
+- `--reviewLanguage` - Specifies the target natural language for translation, such as "German", "Spanish", or "French". Use this parameter to set the language in which the utility will provide output.
 
 - `--remote` - Used with the 'review' command. Usage `--remote=mattzcarey/code-review-gpt#96`. Review a remote GitHub Pull Request.
 

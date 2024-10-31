@@ -58,7 +58,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
       type: "string",
       default: "changed",
     })
-    .option("translateLanguage", {
+    .option("reviewLanguage", {
       description: "Specifies the target natural language for translation",
       type: "string",
     })

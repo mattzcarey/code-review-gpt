@@ -19,7 +19,7 @@ import {
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
  * @param reviewType The review type.
- * @param translateLanguage Target natural language for translation.
+ * @param reviewLanguage Target natural language for translation.
  * @returns The test result.
  */
 const runTest = async (
@@ -29,7 +29,7 @@ const runTest = async (
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  translateLanguage?: string,
+  reviewLanguage?: string,
   // eslint-disable-next-line max-params
 ): Promise<testResult> => {
   if (!testCase.snippet) {
@@ -43,7 +43,7 @@ const runTest = async (
     [testCase.snippet],
     maxPromptLength,
     reviewType,
-    translateLanguage
+    reviewLanguage
   );
 
   const { markdownReport: reviewResponse } = await askAI(
@@ -85,7 +85,7 @@ const runTest = async (
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
  * @param reviewType The review type.
- * @param translateLanguage Target natural language for translation.
+ * @param reviewLanguage Target natural language for translation.
  * @returns The test results.
  */
 export const runTests = async (
@@ -95,7 +95,7 @@ export const runTests = async (
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  translateLanguage?: string,
+  reviewLanguage?: string,
   // eslint-disable-next-line max-params
 ): Promise<string> => {
   if (testCases.length === 0) {
@@ -116,7 +116,7 @@ export const runTests = async (
         maxPromptLength,
         vectorStore,
         reviewType,
-        translateLanguage
+        reviewLanguage
       );
       testResults[testCase.name] = result;
     } catch (error) {

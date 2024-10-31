@@ -9,7 +9,7 @@ export const constructPromptsArray = (
   files: ReviewFile[],
   maxPromptLength: number,
   reviewType: string,
-  translateLanguage = 'English',
+  reviewLanguage = 'English',
 ): string[] => {
   const maxPromptPayloadLength = maxPromptLength - instructionPrompt.length;
   let promptPayloads: PromptFile[][];
@@ -36,7 +36,7 @@ export const constructPromptsArray = (
 
   const languageToInstructionPrompt = instructionPrompt
       .replace("{ProgrammingLanguage}", getLanguageName(files[0].fileName))
-      .replace("{TranslateLanguage}", translateLanguage);
+      .replace("{ReviewLanguage}", reviewLanguage);
 
   const prompts = promptPayloads.map((payload) => {
     return languageToInstructionPrompt + JSON.stringify(payload);

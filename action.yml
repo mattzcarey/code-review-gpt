@@ -6,7 +6,7 @@ inputs:
     description: 'The GPT model to use'
     required: true
     default: 'gpt-4o'
-  TRANSLATE_LANGUAGE:
+  REVIEW_LANGUAGE:
     description: 'Target natural language for translation'
     required: false
     default: 'English'
@@ -31,11 +31,11 @@ runs:
     
     - name: Run Code Review GPT
       shell: bash
-      run: npx code-review-gpt review --ci=github --model=$MODEL --translateLanguage=$TRANSLATE_LANGUAGE
+      run: npx code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
       
       env:
         MODEL: ${{ inputs.MODEL }}
-        TRANSLATE_LANGUAGE: ${{ inputs.TRANSLATE_LANGUAGE }}
+        REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
