@@ -19,7 +19,7 @@
   "author": "Matt Carey",
   "license": "MIT",
   "dependencies": {
-    "langchain": "^0.0.204"
+    "langchain": "^0.3.3"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
