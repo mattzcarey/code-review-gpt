@@ -1,4 +1,4 @@
-import { OpenAIChat } from "langchain/llms/openai";
+import { ChatOpenAI, AzureChatOpenAI } from "@langchain/openai";
 import { retryAsync } from "ts-retry";
 
 import { IFeedback } from "../types";
@@ -17,15 +17,21 @@ interface IAIModel {
 const defaultRetryCount = 3;
 
 class AIModel {
-  private model: OpenAIChat;
+  private model: ChatOpenAI;
   private retryCount: number;
 
   constructor(options: IAIModel) {
     switch (options.provider) {
       case "openai":
-        this.model = new OpenAIChat({
+        this.model = new ChatOpenAI({
           openAIApiKey: options.apiKey,
           modelName: options.modelName,
+          temperature: options.temperature,
+          configuration: { organization: options.organization },
+        });
+        break;
+      case "azureai":
+        this.model = new AzureChatOpenAI({
           temperature: options.temperature,
           configuration: { organization: options.organization },
         });
@@ -40,8 +46,15 @@ class AIModel {
   }
 
   public async callModel(prompt: string): Promise<string> {
-    return this.model.call(prompt);
+    const messages = [{ role: "user", content: prompt }];
+    const response = await this.model.invoke(messages);
+    if (typeof response.content === 'string') {
+      return response.content;
+    } else {
+      throw new Error('Response content is not a string');
+    }
   }
+
 
   public async callModelJSON(prompt: string): Promise<IFeedback[]> {
     return retryAsync(
