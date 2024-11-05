@@ -16,5 +16,5 @@ jobs:
         uses: BFRS01757/code-review-gpt@main
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL: 'gpt'
+          MODEL: 'gpt-4o-mini'
           GITHUB_TOKEN: ${{ github.token }}
