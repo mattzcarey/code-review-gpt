@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
 
       - name: Code Review GPT
-        uses: https://github.com/BFRS01757/code-review-gpt@main
+        uses: BFRS01757/code-review-gpt@main
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt'
