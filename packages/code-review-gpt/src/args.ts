@@ -10,7 +10,6 @@ dotenv.config();
 const handleNoCommand = async (): Promise<string | number> => {
   const command = await rawlist({
     message: "What do you want to do?",
-    choices: [
       { name: "Review staged files", value: "review" },
       {
         name: "Configure the script for CI (Recommended for first time use)",
