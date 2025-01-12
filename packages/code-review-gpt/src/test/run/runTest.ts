@@ -13,20 +13,24 @@ import {
 
 /**
  * Run a single test case.
+ * @param openAIApiKey Open AI API Key.
  * @param testCase The test case.
  * @param modelName The name of the model.
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
  * @param reviewType The review type.
+ * @param reviewLanguage Target natural language for translation.
  * @returns The test result.
  */
 const runTest = async (
+  openAIApiKey: string,
   testCase: TestCase,
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  openAIApiKey: string
+  reviewLanguage?: string,
+  // eslint-disable-next-line max-params
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -38,7 +42,8 @@ const runTest = async (
   const prompts = constructPromptsArray(
     [testCase.snippet],
     maxPromptLength,
-    reviewType
+    reviewType,
+    reviewLanguage
   );
 
   const { markdownReport: reviewResponse } = await askAI(
@@ -74,20 +79,24 @@ const runTest = async (
 
 /**
  * Run all the test cases.
+ * @param openAIApiKey Open AI API Key.
  * @param testCases The test cases.
  * @param modelName The name of the model.
  * @param maxPromptLength The maximum prompt length.
  * @param vectorStore The vector store.
  * @param reviewType The review type.
+ * @param reviewLanguage Target natural language for translation.
  * @returns The test results.
  */
 export const runTests = async (
+  openAIApiKey: string,
   testCases: TestCase[],
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  openAIApiKey: string
+  reviewLanguage?: string,
+  // eslint-disable-next-line max-params
 ): Promise<string> => {
   if (testCases.length === 0) {
     return "No test cases found.";
@@ -101,12 +110,13 @@ export const runTests = async (
   for (const testCase of testCases) {
     try {
       const result = await runTest(
+        openAIApiKey,
         testCase,
         modelName,
         maxPromptLength,
         vectorStore,
         reviewType,
-        openAIApiKey
+        reviewLanguage
       );
       testResults[testCase.name] = result;
     } catch (error) {

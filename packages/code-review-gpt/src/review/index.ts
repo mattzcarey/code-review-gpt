@@ -34,6 +34,7 @@ export const review = async (
   const reviewType = yargs.reviewType;
   const organization = yargs.org;
   const provider = yargs.provider;
+  const reviewLanguage = yargs.reviewLanguage;
 
   const filteredFiles = filterFiles(files);
 
@@ -54,7 +55,8 @@ export const review = async (
   const prompts = constructPromptsArray(
     filteredFiles,
     maxPromptLength,
-    reviewType
+    reviewType,
+    reviewLanguage
   );
 
   logger.debug(`Prompts used:\n ${prompts.toString()}`);

@@ -42,6 +42,7 @@ export type ReviewArgs = {
   commentPerFile: boolean;
   model: string;
   reviewType: string;
+  reviewLanguage: string | undefined;
   org: string | undefined;
   remote: string | undefined;
   provider: string;
