@@ -28,11 +28,8 @@ jobs:
       - name: Install dependencies
         run: bun i
 
-      - name: Check types
+      - name: Lint check
         run: bun check
-
-      - name: Linting
-        run: bun lint
 
       - name: Run tests
         run: bun test
