@@ -3,6 +3,7 @@ import { join } from 'path';
 
 import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } from '../../config';
 import { PlatformOptions } from '../types';
+import { logger } from '../utils/logger';
 
 export const getChangedFilesNamesCommand = (isCi: string | undefined): string => {
   if (isCi === PlatformOptions.GITHUB) {
@@ -44,7 +45,9 @@ export const getGitRoot = (): Promise<string> => {
 
 export const getChangedFilesNames = async (isCi: string | undefined): Promise<string[]> => {
   const gitRoot = await getGitRoot();
+  logger.debug('gitRoot', gitRoot);
   const commandString = getChangedFilesNamesCommand(isCi);
+  logger.debug('commandString', commandString);
   return new Promise((resolve, reject) => {
     exec(commandString, { cwd: gitRoot }, (error, stdout, stderr) => {
       if (error) {
