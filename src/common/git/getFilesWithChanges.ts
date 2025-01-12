@@ -31,6 +31,8 @@ export const getFilesWithChanges = async (isCi: string | undefined): Promise<Rev
 
     return files;
   } catch (error) {
-    throw new Error(`Failed to get files with changes: ${(error as Error).message}\n\n${(error as Error).stack}`);
+    throw new Error(
+      `Failed to get files with changes: ${(error as Error).message}\n\n${(error as Error).stack}`
+    );
   }
 };
