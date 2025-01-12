@@ -17,15 +17,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 18
+          bun-version: latest
 
       - name: Install code-review-gpt
-        run: npm install code-review-gpt
+        run: bun i code-review-gpt
 
       - name: Run code review script
-        run: npx code-review-gpt review --ci=github
+        run: bun code-review-gpt review --ci=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}

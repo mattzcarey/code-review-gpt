@@ -27,7 +27,7 @@ stages:
             displayName: "Install code-review-gpt"  
           
           - script: |
-              npx code-review-gpt review --ci=azdev --model=gpt-3.5-turbo
+              npx code-review-gpt review --ci=azdev --model=gpt-4o-mini
             env:
               API_TOKEN: $(API_TOKEN)
               OPENAI_API_KEY: $(OPENAI_API_KEY)
