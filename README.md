@@ -38,13 +38,13 @@ See the [action documentation](action.md) for more information.
 
    ```shell
    git clone https://github.com/mattzcarey/code-review-gpt.git
-   cd code-review-gpt && cd packages/code-review-gpt
+   cd code-review-gpt
    ```
 
-2. Install dependencies:
+2. Install dependencies (we use bun but you can use npm or pnpm if you prefer):
 
    ```shell
-   npm install
+   bun i
    ```
 
 3. Set up the API key:
@@ -56,7 +56,7 @@ When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or simil
 4. Run the application:
 
    ```shell
-   npm start
+   bun start
    ```
 
 See the package.json file for all the npm commands you can run.
@@ -79,7 +79,7 @@ Thanks to our wonderful contributors!
 
 ## Roadmap (see projects tab) 🌏
 
-The roadmap shifts the focus to a Github app which can be installed on any repo. This will allow for a more seamless UX and better features including a chatbot to discuss the PR and make suggestions. 
+The roadmap shifts the focus to a Github app which can be installed on any repo. This will allow for a more seamless UX and better features including a chatbot to discuss the PR and make suggestions.
 
 The code-review-gpt package will continue to be maintained and improved based on the feedback from the Github app.
 
