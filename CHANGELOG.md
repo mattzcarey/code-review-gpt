@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.3.0...v0.4.0) (2025-01-12)
+
+
+### Features
+
+* use bun for bundling ([159e2db](https://github.com/mattzcarey/code-review-gpt/commit/159e2dbd398b36156e18e7a79dce2fa84a53abb8))
+
 ## [0.3.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.2.0...v0.3.0) (2025-01-12)
 
 
