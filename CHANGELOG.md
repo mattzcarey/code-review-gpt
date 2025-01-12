@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.10...v0.2.0) (2025-01-12)
+
+
+### Features
+
+* Add support for o1-preview model ([#353](https://github.com/mattzcarey/code-review-gpt/issues/353)) ([d0d8f7d](https://github.com/mattzcarey/code-review-gpt/commit/d0d8f7db0d3e6208ca2f001ca3e8f221d7274e6b))
+* move to bun and structure output ([#364](https://github.com/mattzcarey/code-review-gpt/issues/364)) ([c042495](https://github.com/mattzcarey/code-review-gpt/commit/c0424952574493f2b35dc386e4d70f6425355407))
+
+
+### Bug Fixes
+
+* action.yml ([#365](https://github.com/mattzcarey/code-review-gpt/issues/365)) ([286aa0d](https://github.com/mattzcarey/code-review-gpt/commit/286aa0d7fe9fb0f7c91b34cde29500ccf29be2c8))
+* change gpt model naming ([#362](https://github.com/mattzcarey/code-review-gpt/issues/362)) ([263dc3d](https://github.com/mattzcarey/code-review-gpt/commit/263dc3df92c692d3edc059713cd4654002d2fd08))
+
 ## [0.1.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.0.34...v0.1.0) (2023-08-16)
 
 ### Features
