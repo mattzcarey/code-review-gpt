@@ -10,7 +10,7 @@ export const reviewSchema = z.array(
     suggestedChanges: z
       .string()
       .describe(
-        'The full code block including any suggested changes if it makes sense to have them. Do not include any other text or comments in the code block. Do not include ``` or any other formatting.'
+        'The full code block including any suggested changes if it makes sense to have them. Do not include any other text or comments in the code block. Do not include ``` or any other formatting. Do not include any + or - to indicate the changes.'
       )
       .optional(),
     reasoning: z
