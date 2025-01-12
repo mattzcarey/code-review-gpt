@@ -27,7 +27,7 @@ runs:
 
     - name: Install Code Review GPT
       shell: bash
-      run: bun i
+      run: bun add code-review-gpt
     
     - name: Run Code Review GPT
       shell: bash
