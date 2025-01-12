@@ -60,17 +60,17 @@ const parseJson = (json: string) => {
   logger.debug("Unparsed JSON", json);
   
   const jsonString = json
+    .replace(/\\/g, '\\\\')
     .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')     // Windows line endings
-    .replace(/\t/g, '\\t')     // Tabs
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t')
     .replace(/```/g, '\\`\\`\\`')
     .replace(/`/g, '\\`')
     .replace(/"/g, '\\"')
-    .replace(/\\/g, '\\\\')    // Backslashes
-    .replace(/\f/g, '\\f')     // Form feeds
-    .replace(/\b/g, '\\b')     // Backspace
-    .replace(/\u2028/g, '\\u2028')  // Line separator
-    .replace(/\u2029/g, '\\u2029'); // Paragraph separator
+    .replace(/\f/g, '\\f')
+    .replace(/\b/g, '\\b')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
   
   logger.debug("Escaped JSON", jsonString);
   return JSON.parse(jsonString);
