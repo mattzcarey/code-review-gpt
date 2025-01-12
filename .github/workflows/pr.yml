@@ -35,7 +35,7 @@ jobs:
         run: bun test
 
       - name: Run code review script
-        run: bun review --ci=github --model=gpt-4o-mini
+        run: bun review -- --ci=github --model=gpt-4o-mini --debug
 
       - name: Run prompt tests
         run: bun test:llm -- --ci=github --model=gpt-4o-mini
