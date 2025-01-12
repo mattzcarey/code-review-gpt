@@ -21,7 +21,7 @@ export const getFilesWithChanges = async (isCi: string | undefined): Promise<Rev
       fileNames.map(async (fileName) => {
         const fileContent = await readFile(fileName, 'utf8');
         const changedLines = await getChangedFileLines(isCi, fileName);
-        
+
         logger.debug('changedLines', changedLines);
 
         return { fileName, fileContent, changedLines };
