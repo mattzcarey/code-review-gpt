@@ -2,7 +2,7 @@ import path from 'path';
 
 import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnPR';
 import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
-import AIModel from '../common/model/AIModel';
+import { AIModel } from '../common/model/AIModel';
 import { getMaxPromptLength } from '../common/model/getMaxPromptLength';
 import { PlatformOptions, type ReviewArgs } from '../common/types';
 import { signOff } from './constants';
