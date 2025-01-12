@@ -53,18 +53,4 @@ jobs:
   run_code_review:
     if: ${{ github.event.requested_reviewer.login == 'YourProject-ML-CR-bot'}}
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Code Review GPT
-        uses: mattzcarey/code-review-gpt@v0.1.11
-        with:
-          GITHUB_TOKEN: ${{ github.token }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL: 'gpt-4o'
-          REVIEW_LANGUAGE: 'English'
-          MODEL: 'gpt-4o-mini' # reference: https://platform.openai.com/settings/organization/limits
-          GITHUB_TOKEN: ${{ github.token }}
 ```

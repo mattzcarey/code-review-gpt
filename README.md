@@ -24,9 +24,9 @@ Code Review GPT is in alpha and should be used for fun only. It may provide usef
 
 https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f-8d15-e1363fcb808e
 
-## Package Usage
+## Setup Instructions
 
-See the [package documentation](code-review-gpt/README.md) for more information.
+See the [setup instructions](setup.md) for more information.
 
 ## Action Usage
 

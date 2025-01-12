@@ -1,9 +1,9 @@
 name: 'Code Review GPT'
-description: 'Reviews the staged files with a GPT model from OpenAI'
+description: 'Reviews PR changes with a GPT model from OpenAI'
 author: 'Orion Tools'
 inputs:
   MODEL:
-    description: 'The GPT model to use'
+    description: 'Model name to use for review'
     required: true
     default: 'gpt-4o'
   REVIEW_LANGUAGE:
@@ -21,17 +21,17 @@ runs:
   steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v3
+    - uses: oven-sh/setup-bun@v2
       with:
-        node-version: 18
+        bun-version: latest
 
     - name: Install Code Review GPT
       shell: bash
-      run: npm install code-review-gpt
+      run: bun i
     
     - name: Run Code Review GPT
       shell: bash
-      run: npx code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
+      run: bun code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
       
       env:
         MODEL: ${{ inputs.MODEL }}
