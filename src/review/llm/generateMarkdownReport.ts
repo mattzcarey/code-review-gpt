@@ -1,19 +1,26 @@
 import type { IFeedback, IReviews } from '../../common/types';
 
-
 const formatReview = (reviews: IReviews): string => {
-  return reviews.map((review) => `
+  return reviews
+    .map(
+      (review) => `
 ${review.reasoning}
 
-${review.suggestedChanges ? `\`\`\`suggestion
+${
+  review.suggestedChanges
+    ? `\`\`\`suggestion
 ${review.suggestedChanges}
 \`\`\`
-` : ''}
+`
+    : ''
+}
 
 \`\`\`code
 ${review.targetCodeBlock}
 \`\`\`
-`).join('\n');
+`
+    )
+    .join('\n');
 };
 
 const formatFeedback = (feedback: IFeedback): string => `

@@ -4,22 +4,26 @@ import { join } from 'path';
 import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } from '../../config';
 import { PlatformOptions } from '../types';
 
-export const getChangedFilesNamesCommand = (
-  isCi: string | undefined
-): string => {
+export const getChangedFilesNamesCommand = (isCi: string | undefined): string => {
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
 
     return `git diff --name-only --diff-filter=AMRT ${baseSha} ${githubSha}`;
-  } else if (isCi === PlatformOptions.GITLAB) {
+  }
+
+  if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
     return `git diff --name-only --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha}`;
-  } else if (isCi === PlatformOptions.AZDEV) {
+  }
+
+  if (isCi === PlatformOptions.AZDEV) {
     const { azdevSha, baseSha } = gitAzdevEnvVariables();
-    
+
     return `git diff --name-only --diff-filter=AMRT ${baseSha} ${azdevSha}`;
-  } else if (isCi === undefined) {
+  }
+
+  if (isCi === undefined) {
     return 'git diff --name-only --diff-filter=AMRT --cached';
   }
 

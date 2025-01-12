@@ -1,4 +1,4 @@
-import { AIModel } from '../../common/model/AIModel';
+import type { AIModel } from '../../common/model/AIModel';
 import type { IFeedback } from '../../common/types';
 import { logger } from '../../common/utils/logger';
 import { feedbackSchema } from '../prompt/schemas';
@@ -20,7 +20,9 @@ const collectAndLogFeedback = async (
 // added some filtering to the feedbacks
 export const processFeedback = (feedbacks: IFeedback[]): IFeedback[] => {
   const pickingPriorityQueue = new PriorityQueue<IFeedback>();
-  const filteredFeedbacks = feedbacks.filter((feedback) => feedback.riskScore > 1 && feedback.confidence > 3);
+  const filteredFeedbacks = feedbacks.filter(
+    (feedback) => feedback.riskScore > 1 && feedback.confidence > 3
+  );
 
   for (const feedback of filteredFeedbacks) {
     pickingPriorityQueue.enqueue(feedback, feedback.riskScore * feedback.confidence);
@@ -41,7 +43,9 @@ const extractFulfilledFeedbacks = (
 };
 
 export const processFeedbacks = async (model: AIModel, prompts: string[]): Promise<IFeedback[]> => {
-  const feedbackPromises = prompts.map((prompt) => model.callStructuredModel(prompt, feedbackSchema));
+  const feedbackPromises = prompts.map((prompt) =>
+    model.callStructuredModel(prompt, feedbackSchema)
+  );
 
   const feedbackResults = await Promise.allSettled(feedbackPromises.map(collectAndLogFeedback));
 

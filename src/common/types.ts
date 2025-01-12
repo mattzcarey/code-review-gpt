@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { feedbackSchema, reviewSchema } from "../review/prompt/schemas";
+import type { z } from 'zod';
+import type { feedbackSchema, reviewSchema } from '../review/prompt/schemas';
 
 export type AskAIResponse = {
   markdownReport: string;

@@ -1,8 +1,8 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI } from '@langchain/openai';
 
-import { ZodType } from "zod";
+import type { ZodType } from 'zod';
 import type { IFeedback } from '../types';
-import { logger } from "../utils/logger";
+import { logger } from '../utils/logger';
 
 interface IAIModel {
   modelName: string;
@@ -39,26 +39,26 @@ export class AIModel {
   }
 
   public async callStructuredModel(prompt: string, schema: ZodType): Promise<IFeedback[]> {
-    const modelWithStructuredOutput = this.model.withStructuredOutput(schema,{
-      method: "jsonSchema",
+    const modelWithStructuredOutput = this.model.withStructuredOutput(schema, {
+      method: 'jsonSchema',
       strict: true,
-      includeRaw: true
+      includeRaw: true,
     });
-    const res = await modelWithStructuredOutput.invoke(prompt)
+    const res = await modelWithStructuredOutput.invoke(prompt);
 
-    logger.debug("LLm response", res);
+    logger.debug('LLm response', res);
 
     if (res.parsed) {
-      return res.parsed
+      return res.parsed;
     }
 
-    return parseJson(res.raw.content[0] as string)
-}}
-
+    return parseJson(res.raw.content[0] as string);
+  }
+}
 
 const parseJson = (json: string) => {
-  logger.debug("Unparsed JSON", json);
-  
+  logger.debug('Unparsed JSON', json);
+
   const jsonString = json
     .replace(/\\/g, '\\\\')
     .replace(/\n/g, '\\n')
@@ -71,7 +71,7 @@ const parseJson = (json: string) => {
     .replace(/\b/g, '\\b')
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029');
-  
-  logger.debug("Escaped JSON", jsonString);
+
+  logger.debug('Escaped JSON', jsonString);
   return JSON.parse(jsonString);
 };
