@@ -22,6 +22,14 @@ export const askAI = async (
   });
 
   const feedbacks = await processFeedbacks(model, prompts);
+
+  if (feedbacks.length === 0) {
+    return {
+      markdownReport: 'No issues found in PR 🎉',
+      feedbacks: [],
+    };
+  }
+
   const report = markdownReport(feedbacks);
 
   return {
