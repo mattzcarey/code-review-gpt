@@ -65,4 +65,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL: 'gpt-4o'
           REVIEW_LANGUAGE: 'English'
+          MODEL: 'gpt-4o-mini' # reference: https://platform.openai.com/settings/organization/limits
+          GITHUB_TOKEN: ${{ github.token }}
 ```
