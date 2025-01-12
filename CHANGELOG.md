@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.2.0...v0.2.1) (2025-01-12)
+
+
+### Bug Fixes
+
+* lock file ([d900fef](https://github.com/mattzcarey/code-review-gpt/commit/d900fef027eb9644a913b5a626fc110f8ab386fc))
+
 ## [0.2.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.1.10...v0.2.0) (2025-01-12)
 
 
