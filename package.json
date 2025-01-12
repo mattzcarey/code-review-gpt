@@ -1,6 +1,6 @@
 {
   "name": "code-review-gpt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Your AI code reviewer. Improve code quality and catch bugs before you break production",
   "bin": {
     "code-review-gpt": "./dist/index.js"
