@@ -10,6 +10,8 @@ export const getFilesWithChanges = async (isCi: string | undefined): Promise<Rev
   try {
     const fileNames = await getChangedFilesNames(isCi);
 
+    logger.debug('fileNames', fileNames);
+
     if (fileNames.length === 0) {
       logger.warn('No files with changes found, you might need to stage your changes.');
       exit(0);
@@ -19,10 +21,13 @@ export const getFilesWithChanges = async (isCi: string | undefined): Promise<Rev
       fileNames.map(async (fileName) => {
         const fileContent = await readFile(fileName, 'utf8');
         const changedLines = await getChangedFileLines(isCi, fileName);
+        
+        logger.debug('changedLines', changedLines);
 
         return { fileName, fileContent, changedLines };
       })
     );
+    logger.debug('files', files);
 
     return files;
   } catch (error) {
