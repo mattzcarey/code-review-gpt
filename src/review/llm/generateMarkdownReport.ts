@@ -8,16 +8,22 @@ ${review.reasoning}
 
 ${
   review.suggestedChanges
-    ? `\`\`\`suggestion
+    ? `Suggested changes:
+\`\`\`suggestion
 ${review.suggestedChanges}
 \`\`\`
 `
     : ''
 }
 
+<details>
+<summary>View Original Code</summary>
+
 \`\`\`code
 ${review.targetCodeBlock}
 \`\`\`
+
+</details>
 `
     )
     .join('\n');
