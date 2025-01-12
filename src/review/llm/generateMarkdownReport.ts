@@ -1,6 +1,6 @@
 import type { IFeedback, IReviews } from '../../common/types';
 
-const formatReview = (reviews: IReviews): string => {
+export const formatReview = (reviews: IReviews): string => {
   return reviews
     .map(
       (review) => `

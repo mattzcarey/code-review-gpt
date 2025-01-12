@@ -1,7 +1,7 @@
 import { context, getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
-
 import { getGitHubEnvVariables } from '../../config';
+import { formatReview } from '../../review/llm/generateMarkdownReport';
 import type { CreateFileCommentData } from '../types';
 import { logger } from '../utils/logger';
 
@@ -51,7 +51,7 @@ export const commentOnFile = async (
   data: CreateFileCommentData
 ): Promise<void> => {
   try {
-    const botCommentBody = `${data.feedback.review}\n\n---\n\n${data.signOff}`;
+    const botCommentBody = `${formatReview(data.feedback.review)}\n\n---\n\n${data.signOff}`;
 
     const { data: comments } = await octokit.rest.pulls.listReviewComments({
       owner: data.owner,
