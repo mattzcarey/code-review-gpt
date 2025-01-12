@@ -19,20 +19,15 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v4
-
     - uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
-
-    - name: Install Code Review GPT
-      shell: bash
-      run: bun add code-review-gpt
     
-    - name: Run Code Review GPT
+    - name: Install and Run Code Review GPT
       shell: bash
-      run: bun code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
-      
+      run: |
+        bun add code-review-gpt@latest
+        bun code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
       env:
         MODEL: ${{ inputs.MODEL }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
