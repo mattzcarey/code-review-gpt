@@ -22,7 +22,7 @@ jobs:
         with:
           bun-version: latest
         if: ${{ steps.release.outputs.release_created }}
-      - run: bun ci
+      - run: bun i
         if: ${{ steps.release.outputs.release_created }}
       - run: bun publish:build
         env:
