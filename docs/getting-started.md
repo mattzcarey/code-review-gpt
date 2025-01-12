@@ -45,7 +45,7 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 
 - `--setupTarget` - Used with the `configure` command. Options are --setupTarget=("github" | "gitlab"). Defaults to "github" if no option is specified. Specifies for which platform ('github' or 'gitlab') the project should be configured for.
 
-- `--model` - The model to use for the review. Defaults to `gpt-4o`. You can use any openai model you have access to.
+- `--model` - The model to use for the review. Defaults to `gpt-4o-mini`. You can use any openai model you have access to.
 
 - `--debug` - Runs the application in debug mode. This will enable debug logging. Defaults to false.
 

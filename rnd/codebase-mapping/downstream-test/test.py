@@ -16,7 +16,7 @@ def get_llm_response(prompt: str) -> str:
     params = {
         "modelId": model_id,
         "messages": [{"role": "user", "content": [{"text": prompt}]}],
-        "inferenceConfig": {"temperature": 0.0, "maxTokens": 500},
+        "inferenceConfig": {"temperature": 0.0, "maxTokens": 100},
     }
 
     resp = bedrock_client.converse(**params)
@@ -258,45 +258,37 @@ Is this a breaking change? Please explain why or why not, considering the potent
     else:
         res_str.append("LLM RESPONSE: " + response)
 
-    if "return a * b" in new_code:
-        res_str.append(
-            "STATISTICAL RESPONSE: Yes, this is a breaking change. The function has been changed to perform multiplication instead of addition. This will cause unexpected behavior in the dependent files and functions listed in the dependants."
-        )
-    else:
-        res_str.append(
-            "STATISTICAL RESPONSE: No breaking change detected. The modification doesn't appear to alter the fundamental behavior of the function in a way that would break dependent code. However, carefully review the dependants to ensure no unexpected side effects occur."
-        )
-
     return "\n\n".join(res_str)
 
 
-def run_test(directory, target_file, target_function):
+def run_test(directory, target_file, target_function, analysis_change: bool = True):
     graph = build_dependency_graph(directory)
-    dependants = find_dependants(graph, target_file, target_function)
+    file_path = os.path.join(directory, "v2", target_file)
+    dependants = find_dependants(graph, file_path, target_function)
 
-    print(f"\nDependency Graph for {os.path.basename(target_file)}:{target_function}")
+    print(f"\nDependency Graph for {target_file}:{target_function}")
     print("=" * 50)
     print_dependency_graph(dependants)
 
     if not dependants:
         print("No dependants found.")
 
-    old_function = get_function_body(target_file, target_function)
-    new_function = """
-def {0}(a, b):
-    return a * b
-""".format(target_function)
+    old_function = get_function_body(
+        os.path.join(directory, "v1", target_file), target_function
+    )
+    new_function = get_function_body(
+        os.path.join(directory, "v2", target_file), target_function
+    )
 
-    result = analyze_change(old_function, new_function, dependants)
-    print("\nAnalysis result:", result)
+    if analysis_change:
+        result = analyze_change(old_function, new_function, dependants)
+        print("\nAnalysis result:", result)
 
 
 if __name__ == "__main__":
     current_file = Path(__file__).resolve()
     directory = current_file.parent / "examples"
 
-    file1 = os.path.join(directory, "math.py")
-    run_test(directory, file1, "add")
-
-    file2 = os.path.join(directory, "util.py")
-    run_test(directory, file2, "printer")
+    run_test(directory, "math.py", "add")
+    run_test(directory, "util.py", "printer")
+    run_test(directory, "more_utils.py", "format_some_text", analysis_change=False)

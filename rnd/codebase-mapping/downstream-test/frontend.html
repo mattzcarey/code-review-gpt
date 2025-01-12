@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dependency Analysis Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div id="app" class="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-md space-y-6 my-10">
+      <h1 class="text-2xl font-bold text-gray-900">Dependency Analysis Results</h1>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      async function fetchOutputFile() {
+        try {
+          const response = await fetch("output.txt")
+          const text = await response.text()
+          return text
+        } catch (error) {
+          console.error("Error fetching the output file:", error)
+          return null
+        }
+      }
+
+      function parseOutput(output) {
+        const sections = output.split("Dependency Graph for")
+        return sections.slice(1).map(section => {
+          const [title, ...rest] = section.split("\n")
+          const graphEndIndex = rest.findIndex(line => line.startsWith("Analysis result:"))
+          const graph = rest.slice(0, graphEndIndex).join("\n").trim()
+          const analysis = rest.slice(graphEndIndex).join("\n").trim()
+          return {
+            title: "Dependency Graph for " + title.trim(),
+            graph,
+            analysis
+          }
+        })
+      }
+
+      function renderResults(results) {
+        const resultsContainer = document.getElementById("results")
+        results.forEach((item, index) => {
+          const sectionDiv = document.createElement("div")
+          sectionDiv.className = "border border-gray-200 rounded-lg p-4 mb-4"
+          sectionDiv.innerHTML = `
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">${item.title}</h2>
+                    <div class="bg-gray-100 p-2 rounded mb-2">
+                        <pre>${item.graph}</pre>
+                    </div>
+                    <button class="flex items-center text-blue-600 hover:text-blue-800" onclick="toggleDetails(${index})">
+                        <svg id="chevron-${index}" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        <span class="ml-1">Show Details</span>
+                    </button>
+                    <div id="details-${index}" class="hidden mt-4 space-y-4">
+                        <div class="bg-gray-50 p-3 rounded">
+                            <h3 class="font-semibold mb-2">Analysis:</h3>
+                            <pre class="text-sm">${item.analysis}</pre>
+                        </div>
+                    </div>
+                `
+          resultsContainer.appendChild(sectionDiv)
+        })
+      }
+
+      function toggleDetails(index) {
+        const detailsDiv = document.getElementById(`details-${index}`)
+        const chevron = document.getElementById(`chevron-${index}`)
+        const button = chevron.parentElement
+
+        if (detailsDiv.classList.contains("hidden")) {
+          detailsDiv.classList.remove("hidden")
+          chevron.innerHTML =
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>'
+          button.querySelector("span").textContent = "Hide Details"
+        } else {
+          detailsDiv.classList.add("hidden")
+          chevron.innerHTML =
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>'
+          button.querySelector("span").textContent = "Show Details"
+        }
+      }
+
+      async function init() {
+        const output = await fetchOutputFile()
+        if (output) {
+          const results = parseOutput(output)
+          renderResults(results)
+        } else {
+          document.getElementById("results").innerHTML =
+            '<p class="text-red-500">Error loading the output file. Please check the console for more details.</p>'
+        }
+      }
+
+      init()
+    </script>
+  </body>
+</html>

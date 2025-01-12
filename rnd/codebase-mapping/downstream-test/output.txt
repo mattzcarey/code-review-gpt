@@ -1,0 +1,103 @@
+Dependency Graph for math.py:add
+==================================================
+main.py:top_level     level: 1
+
+Analysis result: 
+Given the following change in a Python function:
+
+<OLD VERSION>
+def add(a, b):
+    c = a + b
+    printer(c)
+    
+    return c
+</OLD VERSION>
+
+<NEW VERSION>
+def add(a, b):
+    c = a + b
+
+    return printer(c)
+</NEW VERSION>
+
+Use the following dependency tree:
+<node>
+<path>/Users/matt/Documents/Github/code-review-gpt/rnd/codebase-mapping/downstream-test/examples/v1/main.py</path>
+<function_name>top_level</function_name>
+<function_body>from .math import add
+from .more_utils import concat
+
+x = 5
+y = 3
+result = add(x, y)
+
+result2 = concat(x, y)
+</function_body>
+</node>
+
+Is this a breaking change? Please explain why or why not, considering the potential impact on the dependent files and functions. Start your answer with either "Yes" or "No".
+
+
+LLM RESPONSE: Yes, this is a breaking change.
+
+The reason for this is that the `add` function in the new version returns the result of calling the `printer` function, which is likely a different value than the sum of `a` and `b`. This change in the return value of the `add` function can potentially break any code that depends on the original behavior of the function, which was to return the sum of `a` and `b`.
+
+In the provided dependency tree,
+
+Dependency Graph for util.py:printer
+==================================================
+math.py:add     level: 1
+main.py:top_level     level: 2
+
+Analysis result: 
+Given the following change in a Python function:
+
+<OLD VERSION>
+def printer(a):
+    print(f"The result is: {format_some_text(a)}")
+</OLD VERSION>
+
+<NEW VERSION>
+def printer(a, b):
+    print(f"The result is: {format_some_text(a)}, not {b}")
+</NEW VERSION>
+
+Use the following dependency tree:
+<node>
+<path>/Users/matt/Documents/Github/code-review-gpt/rnd/codebase-mapping/downstream-test/examples/v1/math.py</path>
+<function_name>add</function_name>
+<function_body>c = a + b
+    printer(c)
+    
+    return c</function_body>
+<nested_depth_1>
+<node>
+<path>/Users/matt/Documents/Github/code-review-gpt/rnd/codebase-mapping/downstream-test/examples/v1/main.py</path>
+<function_name>top_level</function_name>
+<function_body>from .math import add
+from .more_utils import concat
+
+x = 5
+y = 3
+result = add(x, y)
+
+result2 = concat(x, y)
+</function_body>
+</node>
+</nested_depth_1>
+</node>
+
+Is this a breaking change? Please explain why or why not, considering the potential impact on the dependent files and functions. Start your answer with either "Yes" or "No".
+
+
+LLM RESPONSE: Yes, this is a breaking change.
+
+The reason is that the `printer` function now expects two arguments instead of one. This means that any code that calls `printer` with only one argument will raise a `TypeError` exception due to the mismatch in the number of arguments.
+
+In the provided dependency tree, the `add` function in `math.py` calls `printer` with only one argument (`c`). Since the new version of `printer` expects two arguments
+
+Dependency Graph for more_utils.py:format_some_text
+==================================================
+util.py:printer     level: 1
+math.py:add     level: 2
+main.py:top_level     level: 3

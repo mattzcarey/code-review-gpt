@@ -5,7 +5,7 @@ inputs:
   MODEL:
     description: 'The GPT model to use'
     required: true
-    default: 'gpt-4o'
+    default: 'gpt-4o-mini'
   OPENAI_API_KEY:
     description: 'OpenAI API Key'
     required: true
