@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } from '../../config';
 import { PlatformOptions } from '../types';
 
-const escapeFileName = (fileName: string) => `"${fileName.replace(/(["$`\\])/g, '\\$1')}"`;
+export const escapeFileName = (fileName: string) => `"${fileName.replace(/(["$`\\])/g, '\\$1')}"`;
 
 export const getChangesFileLinesCommand = (isCi: string | undefined, fileName: string): string => {
   const escapedFileName = escapeFileName(fileName);
