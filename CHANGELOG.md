@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.4.0...v0.5.0) (2025-01-14)
+
+
+### Features
+
+* update review prompt to focus on negative aspects of code ([#371](https://github.com/mattzcarey/code-review-gpt/issues/371)) ([66a6208](https://github.com/mattzcarey/code-review-gpt/commit/66a6208a36367dc1fe3705f12c96e0612a6186b0))
+
+
+### Bug Fixes
+
+* escape file names in git diff commands for better compatibility ([#370](https://github.com/mattzcarey/code-review-gpt/issues/370)) ([c99cd02](https://github.com/mattzcarey/code-review-gpt/commit/c99cd02a70a46abed54b930ce42d5b352781fcde))
+
 ## [0.4.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.3.0...v0.4.0) (2025-01-12)
 
 
