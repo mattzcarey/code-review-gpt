@@ -11,22 +11,40 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release-please.outputs.release_created }}
     steps:
       - uses: googleapis/release-please-action@v4
-        id: release
+        id: release-please
         with:
           release-type: node
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
-      - uses: oven-sh/setup-bun@v2
+
+  publish-package:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created  }}
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-        if: ${{ steps.release.outputs.release_created }}
-      - run: bun i
-        if: ${{ steps.release.outputs.release_created }}
-      - run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          bun publish:build
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        if: ${{ steps.release.outputs.release_created }}
+      
+      - name: Setup Node.js for npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+      
+      - name: 💫 Install dependencies
+        run: bun i
+
+      - name: 🏡 Build package
+        run: bun run build
+
+      - name: 🚀 Publish code-review-gpt
+        run: npm publish --access public
