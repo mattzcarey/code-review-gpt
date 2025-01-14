@@ -1,7 +1,7 @@
-import { build } from 'bun';
 import { readFileSync } from 'fs';
-import { Generator } from 'npm-dts';
 import { join } from 'path';
+import { build } from 'bun';
+import { Generator } from 'npm-dts';
 
 new Generator({
   entry: 'src/index.ts',
@@ -16,14 +16,11 @@ await build({
   minify: true,
   external: Object.keys(pkg.dependencies),
   target: 'node',
-  format: 'cjs'
+  format: 'cjs',
 });
 
 const templates = ['github-pr.yml', 'gitlab-pr.yml', 'azdev-pr.yml'];
 
 for (const template of templates) {
-  await Bun.write(
-    join('./dist', template),
-    await Bun.file(join('./templates', template)).text()
-  );
-} 
+  await Bun.write(join('./dist', template), await Bun.file(join('./templates', template)).text());
+}

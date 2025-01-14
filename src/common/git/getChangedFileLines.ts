@@ -2,24 +2,29 @@ import { exec } from 'child_process';
 
 import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } from '../../config';
 import { PlatformOptions } from '../types';
+
+export const escapeFileName = (fileName: string) => `"${fileName.replace(/(["$`\\])/g, '\\$1')}"`;
+
 export const getChangesFileLinesCommand = (isCi: string | undefined, fileName: string): string => {
+  const escapedFileName = escapeFileName(fileName);
+
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
 
-    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${fileName}`;
+    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${escapedFileName}`;
   }
   if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
 
-    return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${fileName}`;
+    return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${escapedFileName}`;
   }
   if (isCi === PlatformOptions.AZDEV) {
     const { azdevSha, baseSha } = gitAzdevEnvVariables();
 
-    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${azdevSha} ${fileName}`;
+    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${azdevSha} ${escapedFileName}`;
   }
 
-  return `git diff -U0 --diff-filter=AMRT --cached ${fileName}`;
+  return `git diff -U0 --diff-filter=AMRT --cached ${escapedFileName}`;
 };
 
 export const getChangedFileLines = async (
