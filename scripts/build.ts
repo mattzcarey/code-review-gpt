@@ -1,7 +1,7 @@
-import { build } from 'bun';
 import { readFileSync } from 'fs';
-import { Generator } from 'npm-dts';
 import { join } from 'path';
+import { build } from 'bun';
+import { Generator } from 'npm-dts';
 
 new Generator({
   entry: 'src/index.ts',
