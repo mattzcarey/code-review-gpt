@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import c from 'picocolors';
 
 import { testThreshold } from '../constants';
 import type { TestCase } from '../types';
@@ -34,11 +34,11 @@ const determineTestResult = (similarity: number): testResult => {
 const formatTestResult = (result: testResult, message: string): string => {
   switch (result) {
     case testResult.PASS:
-      return chalk.green(`✅ [PASS] - ${message}`);
+      return c.green(`✅ [PASS] - ${message}`);
     case testResult.WARN:
-      return chalk.yellow(`⚠️ [WARN] - ${message}`);
+      return c.yellow(`⚠️ [WARN] - ${message}`);
     case testResult.FAIL:
-      return chalk.red(`❌ [FAIL] - ${message}`);
+      return c.red(`❌ [FAIL] - ${message}`);
   }
 };
 
@@ -102,7 +102,7 @@ export const generateTestResultsSummary = (testResults: {
 }): string => {
   const summary = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
     return `${summary + formatTestResult(result, `Test case: ${testCaseName}`)}\n`;
-  }, chalk.blue('\n### Test results summary:\n'));
+  }, c.blue('\n### Test results summary:\n'));
 
   const counts = Object.values(testResults).reduce(
     (counts, result) => {
@@ -113,7 +113,7 @@ export const generateTestResultsSummary = (testResults: {
     Object.fromEntries(Object.values(testResult).map((result) => [result, 0]))
   );
 
-  return `${summary}\n**SUMMARY: ${chalk.green(`✅ PASS: ${counts.PASS}`)} - ${chalk.yellow(
+  return `${summary}\n**SUMMARY: ${c.green(`✅ PASS: ${counts.PASS}`)} - ${c.yellow(
     `⚠️ WARN: ${counts.WARN}`
-  )} - ${chalk.red(`❌ FAIL: ${counts.FAIL}`)}**\n`;
+  )} - ${c.red(`❌ FAIL: ${counts.FAIL}`)}**\n`;
 };
