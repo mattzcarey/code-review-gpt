@@ -28,11 +28,9 @@ export class AIModel {
         break;
       case "azureai":
         this.model = new AzureChatOpenAI({
-          openAIApiKey: options.apiKey,
-          modelName: options.modelName,
           temperature: options.temperature,
-          configuration: { organization: options.organization },
         });
+        break;
       case 'bedrock':
         throw new Error('Bedrock provider not implemented');
       default:
