@@ -1,0 +1,37 @@
+name: Code Review GPT
+
+on:
+  pull_request:
+    branches: [azure-ai]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun i
+        
+      - name: Run code review script
+        run: bun code-review-gpt review --ci=github --provider azure
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_OPENAI_API_INSTANCE_NAME: "oai-4turbo-exploration"
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: "gpt-4-turbo"
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_API_VERSION: "2024-08-01-preview"
