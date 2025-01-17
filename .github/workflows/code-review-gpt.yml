@@ -25,13 +25,13 @@ jobs:
         run: bun i
         
       - name: Run code review script
-        run: bun code-review-gpt review --ci=github --provider azure
+        run: bun run start review --ci=github --provider=azureai
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_SHA: ${{ github.sha }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          AZURE_OPENAI_API_INSTANCE_NAME: "oai-4turbo-exploration"
-          AZURE_OPENAI_API_DEPLOYMENT_NAME: "gpt-4-turbo"
+          AZURE_OPENAI_API_INSTANCE_NAME: "azo-ai-gpt"
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: "gpt-40"
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_API_VERSION: "2024-08-01-preview"
