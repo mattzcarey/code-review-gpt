@@ -9,11 +9,14 @@ In CI:
 import { logger } from './common/utils/logger';
 
 export const getOpenAIApiKey = (): string => {
-  if (!process.env.OPENAI_API_KEY) {
-    logger.error('OPENAI_API_KEY is not set');
+  const openAiApiKey = process.env.OPENAI_API_KEY;
+  const azureOpenAiApiKey = process.env.AZURE_OPENAI_API_KEY;
+
+  if (!openAiApiKey && !azureOpenAiApiKey) {
+    logger.error('Neither OPENAI_API_KEY nor AZURE_OPENAI_API_KEY is set');
   }
 
-  return process.env.OPENAI_API_KEY ?? '';
+  return openAiApiKey ?? azureOpenAiApiKey ?? '';
 };
 
 export const githubToken = (): string => {
