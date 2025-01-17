@@ -1,4 +1,4 @@
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatOpenAI, AzureChatOpenAI } from '@langchain/openai';
 
 import type { ZodType } from 'zod';
 import type { IFeedback } from '../types';
@@ -26,6 +26,13 @@ export class AIModel {
           modelName: options.modelName,
         });
         break;
+      case "azureai":
+        this.model = new AzureChatOpenAI({
+          openAIApiKey: options.apiKey,
+          modelName: options.modelName,
+          temperature: options.temperature,
+          configuration: { organization: options.organization },
+        });
       case 'bedrock':
         throw new Error('Bedrock provider not implemented');
       default:
