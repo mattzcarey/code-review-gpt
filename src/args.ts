@@ -82,7 +82,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     })
     .option('provider', {
       description: 'Provider to use for AI',
-      choices: ['openai', 'bedrock'],
+      choices: ['openai', 'azureai', 'bedrock'],
       type: 'string',
       default: 'openai',
     })
