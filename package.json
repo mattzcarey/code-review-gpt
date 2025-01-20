@@ -20,7 +20,8 @@
     "build": "bun run ./scripts/build.ts",
     "postbuild": "bun run ./scripts/shebang.ts && chmod +x ./dist/index.js",
     "publish:build": "bun run build && bun publish --access public",
-    "check": "biome check . --fix",
+    "check": "biome check .",
+    "check:fix": "biome check . --fix",
     "format": "biome format --write ."
   },
   "keywords": [
