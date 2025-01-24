@@ -5,6 +5,8 @@ import { logger } from '../../common/utils/logger';
 import { askAI } from '../../review/llm/askAI';
 import { constructPromptsArray } from '../../review/prompt/constructPrompt/constructPrompt';
 import type { TestCase } from '../types';
+import type { AIModelName } from '../../review/constants';
+import type { ReviewType } from '../../common/types';
 import {
   generateTestReport,
   generateTestResultsSummary,
@@ -25,10 +27,10 @@ import {
 const runTest = async (
   openAIApiKey: string,
   testCase: TestCase,
-  modelName: string,
+  modelName: AIModelName,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
+  reviewType: ReviewType,
   reviewLanguage?: string
   // eslint-disable-next-line max-params
 ): Promise<testResult> => {
@@ -88,10 +90,10 @@ const runTest = async (
 export const runTests = async (
   openAIApiKey: string,
   testCases: TestCase[],
-  modelName: string,
+  modelName: AIModelName,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
+  reviewType: ReviewType,
   reviewLanguage?: string
   // eslint-disable-next-line max-params
 ): Promise<string> => {
