@@ -36,7 +36,10 @@
     "huggingface",
     "ai",
     "genai",
-    "llama"
+    "llama",
+    "deepseek",
+    "deepseek-chat",
+    "deepseek-R1"
   ],
   "author": "Matt Carey",
   "license": "MIT",
@@ -55,7 +58,8 @@
     "tinyglobby": "^0.2.10",
     "tslog": "^4.8.2",
     "yargs": "^17.7.2",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "openai": "^4.79.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -66,7 +70,5 @@
     "npm-dts": "^1.3.12",
     "typescript": "^5.1.6"
   },
-  "files": [
-    "dist/*"
-  ]
+  "files": ["dist/*"]
 }
