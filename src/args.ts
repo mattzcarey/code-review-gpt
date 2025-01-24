@@ -2,7 +2,7 @@ import rawlist from '@inquirer/rawlist';
 import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-
+import { modelsNames } from './review/constants';
 import type { ReviewArgs } from './common/types';
 
 dotenv.config();
@@ -22,7 +22,7 @@ const handleNoCommand = async (): Promise<string | number> => {
   return command;
 };
 
-export const getYargs = async (): Promise<ReviewArgs> => {
+export const getYargs = async () => {
   return yargs(hideBin(process.argv))
     .command('configure', 'Configure the tool')
     .command('review', 'Review code changes')
@@ -49,6 +49,7 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     })
     .option('model', {
       description: 'The model to use for generating the review.',
+      choices: modelsNames,
       type: 'string',
       default: 'gpt-4o-mini',
     })
@@ -82,10 +83,10 @@ export const getYargs = async (): Promise<ReviewArgs> => {
     })
     .option('provider', {
       description: 'Provider to use for AI',
-      choices: ['openai', 'azureai', 'bedrock'],
+      choices: ['openai', 'azureai', 'bedrock', 'deepseek'],
       type: 'string',
       default: 'openai',
     })
     .help()
-    .parse();
+    .parse() as ReviewArgs;
 };
