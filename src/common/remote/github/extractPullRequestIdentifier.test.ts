@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'bun:test';
 import { extractPullRequestIdentifier } from './extractPullRequestIdentifier';
 import { PullRequestIdentifier } from './types';
 

@@ -1,5 +1,5 @@
-import chalk from 'chalk';
 import type { MemoryVectorStore } from 'langchain/vectorstores/memory';
+import c from 'picocolors';
 
 import { logger } from '../../common/utils/logger';
 import { askAI } from '../../review/llm/askAI';
@@ -36,7 +36,7 @@ const runTest = async (
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
   }
 
-  logger.info(chalk.blue(`Running test case ${testCase.name}...`));
+  logger.info(c.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
   const prompts = constructPromptsArray(
