@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.5.0...v0.6.0) (2025-01-28)
+
+
+### Features
+
+* **azureai:** Add support for azure open Ai ([#377](https://github.com/mattzcarey/code-review-gpt/issues/377)) ([989c26a](https://github.com/mattzcarey/code-review-gpt/commit/989c26ae511ef35f03545a836f00984979a9a673))
+* use picocolors and tinyglobby and biome check fix  ([#375](https://github.com/mattzcarey/code-review-gpt/issues/375)) ([760e830](https://github.com/mattzcarey/code-review-gpt/commit/760e830e200f7d88687b3b3e79497efe9badc058))
+
+
+### Bug Fixes
+
+* release-package workflow ([e7cb470](https://github.com/mattzcarey/code-review-gpt/commit/e7cb470b72f7023593759a925a652bf50ed165c6))
+
 ## [0.5.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.4.0...v0.5.0) (2025-01-14)
 
 
