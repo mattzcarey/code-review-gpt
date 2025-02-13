@@ -34,6 +34,10 @@ export const modelInfo = [
     model: 'gpt-3.5-turbo-16k',
     maxPromptLength: 45000, //16k tokens
   },
+  {
+    model: 'deepseek-chat',
+    maxPromptLength: 180000, //64k tokens
+  },
 ]; // Response needs about 1k tokens ~= 3k characters
 
 export const languageMap: { [key: string]: string } = {

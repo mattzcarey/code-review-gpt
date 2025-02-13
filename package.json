@@ -36,7 +36,8 @@
     "huggingface",
     "ai",
     "genai",
-    "llama"
+    "llama",
+    "deepseek"
   ],
   "author": "Matt Carey",
   "license": "MIT",
