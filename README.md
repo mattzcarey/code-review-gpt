@@ -53,6 +53,14 @@ See the [action documentation](action.md) for more information.
 
 When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or similar for your operating system) in your terminal to set the API key.
 
+To use an OpenAI compatible API, you can set the `OPENAI_API_KEY` and `OPENAI_BASE_URL` environment variables and specify the model name when running the review command:
+
+```shell
+export OPENAI_API_KEY=<YOUR_API_KEY>
+export OPENAI_BASE_URL=<YOUR_ENDPOINT>
+bun review --model <YOUR_MODEL_NAME>
+```
+
 4. Run the application:
 
    ```shell
