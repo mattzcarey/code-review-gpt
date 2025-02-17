@@ -3,6 +3,10 @@ export const signOff =
 
 export const modelInfo = [
   {
+    model 'o3-mini',
+    maxPromptLength: 300000, //100k tokens
+  },
+  {
     model: 'gpt-4o-mini',
     maxPromptLength: 300000, //128k tokens
   },
