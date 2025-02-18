@@ -48,6 +48,7 @@
     "@langchain/core": "^0.3.29",
     "@langchain/openai": "^0.3.17",
     "azure-devops-node-api": "^12.3.0",
+    "code-review-gpt": "^0.6.0",
     "dotenv": "^16.3.1",
     "langchain": "^0.3.11",
     "octokit": "^3.1.0",
