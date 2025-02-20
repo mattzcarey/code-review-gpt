@@ -3,13 +3,16 @@ import type { AskAIResponse } from '../../common/types';
 import { logger } from '../../common/utils/logger';
 import { processFeedbacks } from './feedbackProcessor';
 import { markdownReport } from './generateMarkdownReport';
+import { AIModelName } from '../constants';
+
+import type { ProviderOptions } from '../../common/types';
 
 export const askAI = async (
   prompts: string[],
-  modelName: string,
+  modelName: AIModelName,
   openAIApiKey: string,
   organization: string | undefined,
-  provider: string
+  provider: ProviderOptions
 ): Promise<AskAIResponse> => {
   logger.info('Asking the experts...');
 
