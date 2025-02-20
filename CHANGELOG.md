@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/mattzcarey/code-review-gpt/compare/v0.7.0...v0.7.1) (2025-02-20)
+
+
+### Bug Fixes
+
+* annoying spelling ([5d0c096](https://github.com/mattzcarey/code-review-gpt/commit/5d0c09690e255d5142784228a1578e239abe0fb3))
+
 ## [0.7.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.6.0...v0.7.0) (2025-02-20)
 
 
