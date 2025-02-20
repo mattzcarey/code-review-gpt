@@ -3,7 +3,7 @@ export const signOff =
 
 export const modelInfo = [
   {
-    model 'o3-mini',
+    model: 'o3-mini',
     maxPromptLength: 300000, //100k tokens
   },
   {
