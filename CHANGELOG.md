@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.6.0...v0.7.0) (2025-02-20)
+
+
+### Features
+
+* add support for arbitrary OpenAI compatible APIs ([#383](https://github.com/mattzcarey/code-review-gpt/issues/383)) ([4bf0bda](https://github.com/mattzcarey/code-review-gpt/commit/4bf0bda142b54bacfe4df8cab1f4bd7ec3f7803c))
+
 ## [0.6.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.5.0...v0.6.0) (2025-01-28)
 
 
