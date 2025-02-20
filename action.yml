@@ -16,6 +16,9 @@ inputs:
   GITHUB_TOKEN:
     description: 'Github token'
     required: true
+  OPENAI_BASE_URL:
+    description: 'OpenAI API Base URL'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -34,6 +37,7 @@ runs:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        OPENAI_BASE_URL: ${{ inputs.OPENAI_BASE_URL }}
 
 branding:
   icon: 'code'
