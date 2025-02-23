@@ -7,6 +7,10 @@ export const modelInfo = [
     maxPromptLength: 300000, //100k tokens
   },
   {
+    model: 'o1',
+    maxPromptLength: 300000, //100k tokens
+  },
+  {
     model: 'gpt-4o-mini',
     maxPromptLength: 300000, //128k tokens
   },
