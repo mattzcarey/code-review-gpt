@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.8.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.7.0...v0.8.0) (2025-02-23)
+
+
+### Features
+
+* Add C lang ([#390](https://github.com/mattzcarey/code-review-gpt/issues/390)) ([7cb838f](https://github.com/mattzcarey/code-review-gpt/commit/7cb838f352dfeea5b32d3280f0837f4b5333dc22))
+
+
+### Bug Fixes
+
+* annoying spelling ([5d0c096](https://github.com/mattzcarey/code-review-gpt/commit/5d0c09690e255d5142784228a1578e239abe0fb3))
+
 ## [0.7.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.6.0...v0.7.0) (2025-02-20)
 
 
