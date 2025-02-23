@@ -1,5 +1,6 @@
 import type { z } from 'zod';
 import type { feedbackSchema, reviewSchema } from '../review/prompt/schemas';
+import type { AIModelName } from '../review/constants';
 
 export type AskAIResponse = {
   markdownReport: string;
@@ -35,17 +36,23 @@ export enum PlatformOptions {
   AZDEV = 'azdev',
 }
 
+export type CIOptions = 'github' | 'gitlab' | 'azdev';
+
+export type ProviderOptions = 'openai' | 'azureai' | 'bedrock' | 'deepseek';
+
+export type ReviewType = 'full' | 'changed' | 'costOptimized';
+
 export type ReviewArgs = {
   [x: string]: unknown;
-  ci: string | undefined;
-  setupTarget: string;
+  ci: CIOptions | undefined;
+  setupTarget: CIOptions;
   commentPerFile: boolean;
-  model: string;
-  reviewType: string;
+  model: AIModelName;
+  reviewType: ReviewType;
   reviewLanguage: string | undefined;
   org: string | undefined;
   remote: string | undefined;
-  provider: string;
+  provider: ProviderOptions;
   _: (string | number)[];
   $0: string;
 };
