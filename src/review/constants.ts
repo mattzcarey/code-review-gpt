@@ -53,6 +53,7 @@ export const languageMap: { [key: string]: string } = {
   '.php': 'PHP',
   '.cpp': 'C++',
   '.h': 'C++',
+  '.c': 'C',
   '.cxx': 'C++',
   '.hpp': 'C++',
   '.hxx': 'C++',
