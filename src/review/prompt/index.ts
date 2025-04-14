@@ -64,7 +64,7 @@ export const constructPromptsArray = (
     return `${preamble}${languageToInstructionPrompt}\n${payloadString}`;
   });
 
-  logger.debug(`Prompts used:\n ${prompts.toString()}`);
+  logger.debug(`Prompts used:\n ${prompts.join('\n')}`);
 
   return prompts;
 };

@@ -47,8 +47,6 @@ export const review = async (
 
   const prompts = constructPromptsArray(filteredFiles, maxPromptLength, reviewType, reviewLanguage);
 
-  logger.debug(`Prompts used:\n ${prompts.toString()}`);
-
   const { markdownReport: response, feedbacks } = await reviewPipeline(
     prompts,
     modelName,
