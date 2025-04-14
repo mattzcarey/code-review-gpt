@@ -100,9 +100,9 @@ ${similarReview}
 export const generateTestResultsSummary = (testResults: {
   [key: string]: testResult;
 }): string => {
-  const summary = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
+  const results = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
     return `${summary + formatTestResult(result, `Test case: ${testCaseName}`)}\n`;
-  }, c.blue('\n### Test results summary:\n'));
+  }, c.blue('\n### Results:\n'));
 
   const counts = Object.values(testResults).reduce(
     (counts, result) => {
@@ -113,7 +113,7 @@ export const generateTestResultsSummary = (testResults: {
     Object.fromEntries(Object.values(testResult).map((result) => [result, 0]))
   );
 
-  return `${summary}\n**SUMMARY: ${c.green(`✅ PASS: ${counts.PASS}`)} - ${c.yellow(
+  return `${results}\n**SUMMARY: ${c.green(`✅ PASS: ${counts.PASS}`)} - ${c.yellow(
     `⚠️ WARN: ${counts.WARN}`
   )} - ${c.red(`❌ FAIL: ${counts.FAIL}`)}**\n`;
 };
