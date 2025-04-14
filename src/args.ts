@@ -70,12 +70,24 @@ export const getYargs = async () => {
         });
     })
     .command('test', 'Run tests', (yargs) => {
-      return yargs.option('ci', {
-        description: 'CI environment type',
-        choices: ['github', 'gitlab', 'azdev'],
-        type: 'string',
-        coerce: (arg) => arg || 'github',
-      });
+      return yargs
+        .option('reviewType', {
+          description: 'Type of review to perform',
+          choices: ['full', 'changed', 'costOptimized'],
+          type: 'string',
+          default: 'changed',
+        })
+        .option('model', {
+          description: 'The model to use for generating the review.',
+          type: 'string',
+          default: 'gpt-4o-mini',
+        })
+        .option('ci', {
+          description: 'CI environment type',
+          choices: ['github', 'gitlab', 'azdev'],
+          type: 'string',
+          default: undefined,
+        });
     })
     .demandCommand(1, 'Please specify a command: configure, review, or test')
     .option('debug', {

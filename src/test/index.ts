@@ -43,8 +43,7 @@ export const test = async (
     model,
     maxPromptLength,
     vectorStore,
-    reviewType,
-    reviewLanguage
+    reviewType
   );
 
   if (ci === PlatformOptions.GITHUB) {

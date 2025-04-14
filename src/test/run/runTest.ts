@@ -28,9 +28,7 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
-  reviewLanguage: string
-  // eslint-disable-next-line max-params
+  reviewType: string
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -39,12 +37,7 @@ const runTest = async (
   logger.info(c.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
-  const prompts = constructPromptsArray(
-    [testCase.snippet],
-    maxPromptLength,
-    reviewType,
-    reviewLanguage
-  );
+  const prompts = constructPromptsArray([testCase.snippet], maxPromptLength, reviewType, 'English');
 
   const { markdownReport: reviewResponse } = await reviewPipeline(
     prompts,
@@ -91,9 +84,7 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
-  reviewLanguage: string
-  // eslint-disable-next-line max-params
+  reviewType: string
 ): Promise<string> => {
   if (testCases.length === 0) {
     return 'No test cases found.';
@@ -112,8 +103,7 @@ export const runTests = async (
         modelName,
         maxPromptLength,
         vectorStore,
-        reviewType,
-        reviewLanguage
+        reviewType
       );
       testResults[testCase.name] = result;
     } catch (error) {

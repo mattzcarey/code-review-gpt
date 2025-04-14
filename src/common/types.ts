@@ -64,13 +64,14 @@ export type ReviewArgs = BaseArgs & {
   remote?: string;
   provider: 'openai' | 'azureai' | 'bedrock';
   mode: 'default' | 'agent';
+  ci?: PlatformOptions | string | undefined;
 };
 
 // Arguments for the test command
 export type TestArgs = BaseArgs & {
   model: string;
   reviewType: 'full' | 'changed' | 'costOptimized';
-  reviewLanguage: string;
+  ci?: PlatformOptions | string | undefined;
 };
 
 export type ParsedArgs = ConfigureArgs | ReviewArgs | TestArgs;

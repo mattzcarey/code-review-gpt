@@ -75,11 +75,11 @@ describe('batchPrompts', () => {
   });
 
   it('should handle files that approach the limit', () => {
-    const file1 = createFile('near1.txt', 'a'.repeat(SAFE_PROMPT_BATCH_SIZE - 100)); // Just under
-    const file2 = createFile('near2.txt', 'b'.repeat(50)); // Small
-    const promptFiles = [file1, file2];
+    const file1 = createFile('near1.txt', 'a'.repeat(SAFE_PROMPT_BATCH_SIZE - 100)); // Just under ~59909
+    const file2 = createFile('near2.txt', 'b'.repeat(50)); // Small ~59
+    const promptFiles = [file1, file2]; // Total ~59968 < 60000
     const expectedResult: BatchPromptsResult = {
-      batches: [[file1], [file2]], // file1 is its own batch, file2 starts a new one
+      batches: [[file1, file2]], // Both should fit in one batch
       skippedFiles: [],
     };
     const result = batchPrompts(promptFiles);

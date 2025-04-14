@@ -1,4 +1,5 @@
 import type { PromptFile, ReviewFile } from '../../common/types';
+import { logger } from '../../common/utils/logger';
 import { MAX_SURROUNDING_LINES } from '../constants';
 import { batchPrompts, createPromptFiles, createReviewPreamble } from './construct';
 import { instructionPrompt } from './prompts';
@@ -41,15 +42,29 @@ export const constructPromptsArray = (
 
   const { batches, skippedFiles } = batchPrompts(allPromptFiles);
 
+  if (skippedFiles.length > 0) {
+    logger.info(`Skipped ${skippedFiles.length} files due to size constraints.`);
+    logger.debug(`Skipped files: ${skippedFiles.map((file) => file.fileName).join(', ')}`);
+  }
+
   const languageToInstructionPrompt = instructionPrompt
     .replace('{ProgrammingLanguage}', getLanguageName(files[0].fileName))
     .replace('{ReviewLanguage}', reviewLanguage);
 
+  const preamble = createReviewPreamble(allPromptFiles);
+
   const prompts = batches.map((batch: PromptFile[]) => {
-    const preamble = createReviewPreamble(batch);
-    const payload = JSON.stringify(batch);
-    return preamble + languageToInstructionPrompt + payload;
+    const payloadString = batch
+      .map((file) => {
+        const languageName = getLanguageName(file.fileName) || '';
+        return `--- File: ${file.fileName} ---\n\`\`\`${languageName}\n${file.promptContent}\n\`\`\`\n`;
+      })
+      .join('\n');
+
+    return `${preamble}${languageToInstructionPrompt}\n${payloadString}`;
   });
+
+  logger.debug(`Prompts used:\n ${prompts.toString()}`);
 
   return prompts;
 };
