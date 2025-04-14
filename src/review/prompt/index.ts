@@ -1,5 +1,6 @@
 import type { PromptFile, ReviewFile } from '../../common/types';
 import { logger } from '../../common/utils/logger';
+import { logger } from '../../common/utils/logger';
 import { MAX_SURROUNDING_LINES } from '../constants';
 import { batchPrompts, createPromptFiles, createReviewPreamble } from './construct';
 import { instructionPrompt } from './prompts';
@@ -9,7 +10,7 @@ export const constructPromptsArray = (
   files: ReviewFile[],
   maxPromptLength: number,
   reviewType: string,
-  reviewLanguage = 'English'
+  reviewLanguage: string
 ): string[] => {
   const maxChunkPayloadLength = maxPromptLength - instructionPrompt.length;
 
@@ -53,7 +54,17 @@ export const constructPromptsArray = (
 
   const preamble = createReviewPreamble(allPromptFiles);
 
+  const preamble = createReviewPreamble(allPromptFiles);
+
   const prompts = batches.map((batch: PromptFile[]) => {
+    const payloadString = batch
+      .map((file) => {
+        const languageName = getLanguageName(file.fileName) || '';
+        return `--- File: ${file.fileName} ---\n\`\`\`${languageName}\n${file.promptContent}\n\`\`\`\n`;
+      })
+      .join('\n');
+
+    return `${preamble}${languageToInstructionPrompt}\n${payloadString}`;
     const payloadString = batch
       .map((file) => {
         const languageName = getLanguageName(file.fileName) || '';
