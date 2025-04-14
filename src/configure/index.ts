@@ -1,7 +1,7 @@
-import { password } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { password } from '@inquirer/prompts';
 
 import { type ConfigureArgs, PlatformOptions } from '../common/types';
 import { logger } from '../common/utils/logger';
