@@ -66,10 +66,13 @@ export const languageMap: { [key: string]: string } = {
   '.kt': 'Kotlin',
   '.kts': 'Kotlin',
   '.java': 'Java',
+  '.groovy': 'Groovy',
   '.vue': 'Vue',
   '.tf': 'Terraform',
   '.hcl': 'Terraform',
   '.swift': 'Swift',
+  '.yaml': 'YAML',
+  '.yml': 'YAML',
 };
 
 export const supportedFiles = new Set(Object.keys(languageMap));
