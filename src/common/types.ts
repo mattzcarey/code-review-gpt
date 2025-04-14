@@ -35,17 +35,42 @@ export enum PlatformOptions {
   AZDEV = 'azdev',
 }
 
-export type ReviewArgs = {
+export enum ReviewModeOptions {
+  DEFAULT = 'default',
+  AGENT = 'agent',
+}
+
+// Base arguments provided by yargs and global options
+type BaseArgs = {
   [x: string]: unknown;
-  ci: string | undefined;
-  setupTarget: string;
-  commentPerFile: boolean;
-  model: string;
-  reviewType: string;
-  reviewLanguage: string | undefined;
-  org: string | undefined;
-  remote: string | undefined;
-  provider: string;
-  _: (string | number)[];
-  $0: string;
+  ci?: PlatformOptions | string | undefined; // Allow string initially, will be validated
+  debug?: boolean;
+  _?: (string | number)[];
+  $0?: string;
 };
+
+// Arguments for the configure command
+export type ConfigureArgs = BaseArgs & {
+  setupTarget?: PlatformOptions | string; // Allow string initially
+};
+
+// Arguments for the review command
+export type ReviewArgs = BaseArgs & {
+  commentPerFile?: boolean;
+  model: string;
+  reviewType: 'full' | 'changed' | 'costOptimized';
+  reviewLanguage: string;
+  org?: string;
+  remote?: string;
+  provider: 'openai' | 'azureai' | 'bedrock';
+  mode: 'default' | 'agent';
+};
+
+// Arguments for the test command
+export type TestArgs = BaseArgs & {
+  model: string;
+  reviewType: 'full' | 'changed' | 'costOptimized';
+  reviewLanguage: string;
+};
+
+export type ParsedArgs = ConfigureArgs | ReviewArgs | TestArgs;

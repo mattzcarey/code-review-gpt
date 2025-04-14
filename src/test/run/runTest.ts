@@ -2,8 +2,8 @@ import type { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import c from 'picocolors';
 
 import { logger } from '../../common/utils/logger';
-import { askAI } from '../../review/llm/askAI';
-import { constructPromptsArray } from '../../review/prompt/constructPrompt/constructPrompt';
+import { reviewPipeline } from '../../review/pipeline';
+import { constructPromptsArray } from '../../review/prompt';
 import type { TestCase } from '../types';
 import {
   generateTestReport,
@@ -29,7 +29,7 @@ const runTest = async (
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  reviewLanguage?: string
+  reviewLanguage: string
   // eslint-disable-next-line max-params
 ): Promise<testResult> => {
   if (!testCase.snippet) {
@@ -46,7 +46,7 @@ const runTest = async (
     reviewLanguage
   );
 
-  const { markdownReport: reviewResponse } = await askAI(
+  const { markdownReport: reviewResponse } = await reviewPipeline(
     prompts,
     modelName,
     openAIApiKey,
@@ -92,7 +92,7 @@ export const runTests = async (
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string,
-  reviewLanguage?: string
+  reviewLanguage: string
   // eslint-disable-next-line max-params
 ): Promise<string> => {
   if (testCases.length === 0) {

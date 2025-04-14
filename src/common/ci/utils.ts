@@ -1,7 +1,7 @@
 import { context, getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
 import { getGitHubEnvVariables } from '../../config';
-import { formatReview } from '../../review/llm/generateMarkdownReport';
+import { formatReview } from '../../review/formatting/markdownReport';
 import type { CreateFileCommentData } from '../types';
 import { logger } from '../utils/logger';
 
