@@ -1,6 +1,7 @@
 import type { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import c from 'picocolors';
 
+import type { ConfiguredModel } from '../../common/llm/models';
 import { logger } from '../../common/utils/logger';
 import { reviewPipeline } from '../../review/pipeline';
 import { constructPromptsArray } from '../../review/prompt';
@@ -24,9 +25,8 @@ import {
  * @returns The test result.
  */
 const runTest = async (
-  openAIApiKey: string,
   testCase: TestCase,
-  modelName: string,
+  model: ConfiguredModel,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string
@@ -40,13 +40,7 @@ const runTest = async (
   // First step: run the review on the code snippet.
   const prompts = constructPromptsArray([testCase.snippet], maxPromptLength, reviewType, 'English');
 
-  const { markdownReport: reviewResponse } = await reviewPipeline(
-    prompts,
-    modelName,
-    openAIApiKey,
-    undefined,
-    'openai'
-  );
+  const { markdownReport: reviewResponse } = await reviewPipeline(prompts, model);
 
   const similarityResponse = await vectorStore.similaritySearchWithScore(reviewResponse, 1);
 
@@ -70,7 +64,6 @@ const runTest = async (
 
 /**
  * Run all the test cases.
- * @param openAIApiKey Open AI API Key.
  * @param testCases The test cases.
  * @param modelName The name of the model.
  * @param maxPromptLength The maximum prompt length.
@@ -80,9 +73,8 @@ const runTest = async (
  * @returns The test results.
  */
 export const runTests = async (
-  openAIApiKey: string,
   testCases: TestCase[],
-  modelName: string,
+  model: ConfiguredModel,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
   reviewType: string
@@ -97,14 +89,7 @@ export const runTests = async (
 
   for (const testCase of testCases) {
     try {
-      const result = await runTest(
-        openAIApiKey,
-        testCase,
-        modelName,
-        maxPromptLength,
-        vectorStore,
-        reviewType
-      );
+      const result = await runTest(testCase, model, maxPromptLength, vectorStore, reviewType);
       testResults[testCase.name] = result;
     } catch (error) {
       logger.error(`Error running test case ${testCase.name}:`, error);

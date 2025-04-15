@@ -1,9 +1,9 @@
 import { readdirSync } from 'fs';
-import path from 'path';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import type { MemoryVectorStore } from 'langchain/vectorstores/memory';
+import path from 'path';
 
-import { CreateMemoryStore } from '../../common/model/createMemoryStore';
+import { CreateMemoryStore } from '../../common/llm/createMemoryStore';
 
 /**
  * Load a snapshot for a test from a file.

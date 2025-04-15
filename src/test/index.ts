@@ -2,20 +2,20 @@ import path from 'path';
 
 import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnPR';
 import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
-import { AIModel } from '../common/model/AIModel';
-import { getMaxPromptLength } from '../common/model/promptLength';
+import { createModel } from '../common/llm/models';
+import { getMaxPromptLength } from '../common/llm/promptLength';
 import { PlatformOptions, type TestArgs } from '../common/types';
 import { signOff } from './constants';
-import { loadSnapshots } from './load/loadSnapshots';
-import { loadTestCases } from './load/loadTestCases';
-import { loadOrGenerateCodeSnippets } from './load/loadTestCodeSnippets';
+import { loadOrGenerateCodeSnippets } from './load/codeSnippets';
+import { loadSnapshots } from './load/snapshots';
+import { loadTestCases } from './load/testCases';
 import { runTests } from './run/runTest';
 
-export const test = async (
-  { ci, model, reviewType, reviewLanguage }: TestArgs,
-  openAIApiKey: string
-): Promise<void> => {
-  const maxPromptLength = getMaxPromptLength(model);
+export const test = async ({ ci, modelString, reviewType }: TestArgs): Promise<void> => {
+  const maxPromptLength = getMaxPromptLength(modelString);
+
+  // Create the model.
+  const model = createModel(modelString);
 
   // Fetch the test cases.
   const testCases = await loadTestCases(path.join(__dirname, 'cases'));
@@ -24,13 +24,7 @@ export const test = async (
   const testCasesWithSnippets = await loadOrGenerateCodeSnippets(
     testCases,
     path.join(__dirname, 'cases/.cache'),
-    new AIModel({
-      modelName: model,
-      temperature: 0.0,
-      apiKey: openAIApiKey,
-      organization: undefined,
-      provider: 'openai',
-    })
+    model
   );
 
   // Load the snapshots in a vector store.
@@ -38,7 +32,6 @@ export const test = async (
 
   // Run the review on the code snippets and compare the results to the expected results.
   const testSummary = await runTests(
-    openAIApiKey,
     testCasesWithSnippets,
     model,
     maxPromptLength,

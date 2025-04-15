@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
-import type AIModel from '../../common/model/AIModel';
+import type { ConfiguredModel } from '../../common/llm';
+import { callModel } from '../../common/llm/models';
 import { logger } from '../../common/utils/logger';
 import { generateCodeSnippetsPrompt } from '../constants';
 import type { TestCase } from '../types';
@@ -13,10 +14,10 @@ import { generateHash } from './hash';
  * @param model The model to use to generate the code snippet.
  * @returns The code snippet.
  */
-const generateCodeSnippet = async (testCase: TestCase, model: AIModel): Promise<string> => {
+const generateCodeSnippet = async (testCase: TestCase, model: ConfiguredModel): Promise<string> => {
   const prompt = generateCodeSnippetsPrompt.replace('{testCase}', JSON.stringify(testCase));
 
-  const modelResponse = await model.callModel(prompt);
+  const modelResponse = await callModel(model, prompt);
 
   return modelResponse.replace('```typescript', '').replace('```', '');
 };
@@ -31,7 +32,7 @@ const generateCodeSnippet = async (testCase: TestCase, model: AIModel): Promise<
 const loadOrGenerateCodeSnippet = async (
   testCase: TestCase,
   snippetCacheDir: string,
-  model: AIModel
+  model: ConfiguredModel
 ): Promise<TestCase> => {
   if (testCase.snippet) {
     return testCase;
@@ -73,7 +74,7 @@ const loadOrGenerateCodeSnippet = async (
 export const loadOrGenerateCodeSnippets = async (
   testCases: TestCase[],
   snippetCacheDir: string,
-  model: AIModel
+  model: ConfiguredModel
 ): Promise<TestCase[]> => {
   return Promise.all(
     testCases.map((testCase) => loadOrGenerateCodeSnippet(testCase, snippetCacheDir, model))

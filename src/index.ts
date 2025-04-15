@@ -23,16 +23,17 @@ const main = async () => {
     case 'review': {
       const { review } = await import('./review');
       const { getReviewFiles } = await import('./common/utils/getReviewFiles');
+      const reviewArgs = argv as ReviewArgs;
       const files = await getReviewFiles(
-        argv.ci as string | undefined,
-        argv.remote as string | undefined
+        reviewArgs.ci as string | undefined,
+        reviewArgs.remote as string | undefined
       );
-      await review(argv as ReviewArgs, files, openAIApiKey);
+      await review(reviewArgs, files);
       break;
     }
     case 'test': {
       const { test } = await import('./test');
-      await test(argv as TestArgs, openAIApiKey);
+      await test(argv as TestArgs);
       break;
     }
     default:
