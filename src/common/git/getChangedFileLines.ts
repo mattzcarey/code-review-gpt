@@ -8,23 +8,22 @@ export const escapeFileName = (fileName: string) => `"${fileName.replace(/(["$`\
 export const getChangesFileLinesCommand = (isCi: string | undefined, fileName: string): string => {
   const escapedFileName = escapeFileName(fileName);
 
+  const diffOptions = '-U3 --diff-filter=AMRT';
+
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
-
-    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${githubSha} ${escapedFileName}`;
+    return `git diff ${diffOptions} ${baseSha} ${githubSha} ${escapedFileName}`;
   }
   if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
-
-    return `git diff -U0 --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha} ${escapedFileName}`;
+    return `git diff ${diffOptions} ${mergeRequestBaseSha} ${gitlabSha} ${escapedFileName}`;
   }
   if (isCi === PlatformOptions.AZDEV) {
     const { azdevSha, baseSha } = gitAzdevEnvVariables();
-
-    return `git diff -U0 --diff-filter=AMRT ${baseSha} ${azdevSha} ${escapedFileName}`;
+    return `git diff ${diffOptions} ${baseSha} ${azdevSha} ${escapedFileName}`;
   }
 
-  return `git diff -U0 --diff-filter=AMRT --cached ${escapedFileName}`;
+  return `git diff ${diffOptions} --cached ${escapedFileName}`;
 };
 
 export const getChangedFileLines = async (
@@ -40,12 +39,7 @@ export const getChangedFileLines = async (
       } else if (stderr) {
         reject(new Error(`Command execution error: ${stderr}`));
       } else {
-        const changedLines = stdout
-          .split('\n')
-          .filter((line) => line.startsWith('+') || line.startsWith('-'))
-          .filter((line) => !(line.startsWith('---') || line.startsWith('+++')))
-          .join('\n');
-        resolve(changedLines);
+        resolve(stdout);
       }
     });
   });

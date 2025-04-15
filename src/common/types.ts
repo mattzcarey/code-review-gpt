@@ -18,7 +18,7 @@ export type CreateFileCommentData = {
 export type ReviewFile = {
   fileName: string;
   fileContent: string;
-  changedLines: string;
+  rawDiff: string;
 };
 
 export type PromptFile = {

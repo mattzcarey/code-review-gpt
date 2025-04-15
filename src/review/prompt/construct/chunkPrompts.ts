@@ -1,169 +1,231 @@
 import type { PromptFile, ReviewFile } from '../../../common/types';
+import { logger } from '../../../common/utils/logger';
 
-const getChangedIndicesAndLength = (contentLines: string[], changedLinesArray: string[]) => {
-  const changedIndices: { [index: number]: string } = {};
-  let totalChangedLinesLength = 0;
-  let minIndex = Number.POSITIVE_INFINITY;
-  let maxIndex = Number.NEGATIVE_INFINITY;
+// --- Types ---
+type DiffLineType = 'add' | 'delete' | 'context';
+type DiffLine = {
+  type: DiffLineType;
+  content: string; // The line content without the +/-/space prefix
+  originalLineNumber?: number; // Line number in the original file (for delete/context)
+  newLineNumber?: number; // Line number in the new file (for add/context)
+};
 
-  // Create a map of trimmed content lines to their indices
-  const trimmedContentLinesMap = new Map<string, number[]>();
-  for (const [index, line] of contentLines.entries()) {
-    const trimmedLine = line.trim();
-    const indices = trimmedContentLinesMap.get(trimmedLine) || [];
-    indices.push(index);
-    trimmedContentLinesMap.set(trimmedLine, indices);
+type DiffHunk = {
+  header: string; // The '@@ ... @@' line
+  lines: DiffLine[];
+  originalStartLine: number;
+  newStartLine: number;
+};
+
+// --- Diff Parsing ---
+const parseDiffHunkHeader = (
+  header: string
+): { originalStartLine: number; newStartLine: number } => {
+  const match = header.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
+  if (match) {
+    return {
+      originalStartLine: Number.parseInt(match[1], 10),
+      newStartLine: Number.parseInt(match[2], 10),
+    };
   }
+  return { originalStartLine: 0, newStartLine: 0 }; // Fallback
+};
 
-  // Process the changed lines
-  for (const changedLine of changedLinesArray) {
-    const lineContent = changedLine.substring(1).trim();
-    const indices = trimmedContentLinesMap.get(lineContent);
-    if (indices?.length) {
-      const firstIndex = indices.shift();
-      if (firstIndex !== undefined) {
-        changedIndices[firstIndex] = changedLine;
-        totalChangedLinesLength += changedLine.length + 1;
-        minIndex = Math.min(minIndex, firstIndex);
-        maxIndex = Math.max(maxIndex, firstIndex);
-      }
+const parseDiff = (rawDiff: string): DiffHunk[] => {
+  const lines = rawDiff.split('\n');
+  const hunks: DiffHunk[] = [];
+  let currentHunk: DiffHunk | null = null;
+  let currentOriginalLine = 0;
+  let currentNewLine = 0;
+
+  for (const line of lines) {
+    if (
+      line.startsWith('diff --git') ||
+      line.startsWith('index ') ||
+      line.startsWith('---') ||
+      line.startsWith('+++')
+    ) {
+      // Skip git headers
+      continue;
     }
-  }
-
-  return { changedIndices, totalChangedLinesLength, minIndex, maxIndex };
-};
-
-const calculateStartAndEnd = (
-  minIndex: number,
-  maxIndex: number,
-  contentLinesLength: number,
-  maxSurroundingLines?: number
-) => {
-  // Calculate the starting and ending indices with surrounding lines considered
-  const start = Math.max(minIndex - (maxSurroundingLines || 0), 0);
-  const end = Math.min(maxIndex + (maxSurroundingLines || 0), contentLinesLength - 1);
-
-  return { start, end };
-};
-
-const expandRange = (
-  initialStart: number,
-  initialEnd: number,
-  contentLines: string[],
-  initialRemainingSpace: number
-) => {
-  let remainingSpace = initialRemainingSpace;
-  let expandStart = true;
-  let expandEnd = true;
-  let start = initialStart;
-  let end = initialEnd;
-
-  while (remainingSpace > 0 && (expandStart || expandEnd)) {
-    if (expandStart && start > 0) {
-      const length = contentLines[start - 1].length + 1;
-      if (length <= remainingSpace) {
-        start--;
-        remainingSpace -= length;
+    if (line.startsWith('@@')) {
+      const headerInfo = parseDiffHunkHeader(line);
+      currentOriginalLine = headerInfo.originalStartLine;
+      currentNewLine = headerInfo.newStartLine;
+      currentHunk = {
+        header: line,
+        lines: [],
+        originalStartLine: headerInfo.originalStartLine,
+        newStartLine: headerInfo.newStartLine,
+      };
+      hunks.push(currentHunk);
+    } else if (
+      currentHunk &&
+      (line.startsWith('+') || line.startsWith('-') || line.startsWith(' '))
+    ) {
+      const content = line.substring(1);
+      if (line.startsWith('+')) {
+        currentHunk.lines.push({ type: 'add', content, newLineNumber: currentNewLine });
+        currentNewLine++;
+      } else if (line.startsWith('-')) {
+        currentHunk.lines.push({
+          type: 'delete',
+          content,
+          originalLineNumber: currentOriginalLine,
+        });
+        currentOriginalLine++;
       } else {
-        expandStart = false;
+        // Starts with ' '
+        currentHunk.lines.push({
+          type: 'context',
+          content,
+          originalLineNumber: currentOriginalLine,
+          newLineNumber: currentNewLine,
+        });
+        currentOriginalLine++;
+        currentNewLine++;
       }
     }
-
-    if (expandEnd && end < contentLines.length - 1) {
-      const length = contentLines[end + 1].length + 1;
-      if (length <= remainingSpace) {
-        end++;
-        remainingSpace -= length;
-      } else {
-        expandEnd = false;
-      }
-    }
-
-    if ((start === 0 || !expandStart) && (end === contentLines.length - 1 || !expandEnd)) {
-      break;
-    }
-
-    if (start === 0) {
-      expandStart = false;
-    }
-    if (end === contentLines.length - 1) {
-      expandEnd = false;
+    // Include other lines like "\\ No newline at end of file"
+    else if (currentHunk && line.startsWith('\\')) {
+      currentHunk.lines.push({ type: 'context', content: line }); // Treat as context for simplicity
     }
   }
-
-  return { start, end };
+  return hunks;
 };
 
-const createPromptContent = (
-  start: number,
-  end: number,
-  changedIndices: { [index: number]: string },
-  contentLines: string[]
-) => {
-  let promptContent = start > 0 ? '...\n' : '';
+// --- Prompt Construction Logic with Chunking ---
 
-  for (let i = start; i <= end; i++) {
-    promptContent += `${changedIndices[i] || contentLines[i]}\n`;
+// Helper to format a DiffLine back to its string representation for prompt content
+const formatDiffLine = (line: DiffLine): string => {
+  switch (line.type) {
+    case 'add':
+      return `+${line.content}`;
+    case 'delete':
+      return `-${line.content}`;
+    case 'context':
+      return ` ${line.content}`;
+    default:
+      // Should not happen with current parsing, but handle defensively
+      return line.content;
   }
-
-  if (end < contentLines.length - 1) {
-    promptContent += '...\n';
-  }
-
-  return promptContent.trim();
 };
+
+// Calculate length, including newline
+const calculateLineLength = (lineContent: string): number => lineContent.length + 1;
 
 export const createPromptFiles = (
   files: ReviewFile[],
   maxPromptPayloadLength: number,
+  // maxSurroundingLines is ignored in this chunking approach
   maxSurroundingLines?: number
 ): PromptFile[] => {
-  return files.reduce((result: PromptFile[], file) => {
-    const contentLines = file.fileContent.split('\n');
-    const changedLinesArray = file.changedLines.split('\n');
+  const promptFiles: PromptFile[] = [];
 
-    // Get the changed indices, total length, and min/max indices
-    const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
-      getChangedIndicesAndLength(contentLines, changedLinesArray);
-
-    // If no changed lines are found, skip this file
-    if (minIndex === Number.POSITIVE_INFINITY) {
-      // Consider logging this case if it's unexpected
-      return result;
+  for (const file of files) {
+    if (!file.rawDiff || file.rawDiff.trim() === '') {
+      continue;
     }
 
-    // Calculate initial start and end based on the changed lines
-    let { start, end } = calculateStartAndEnd(
-      minIndex,
-      maxIndex,
-      contentLines.length,
-      0 // Initially calculate with 0 surrounding lines
+    const hunks = parseDiff(file.rawDiff);
+    // Ensure there are actual changes (+/- lines) within the hunks
+    const hasChanges = hunks.some((hunk) =>
+      hunk.lines.some((line) => line.type === 'add' || line.type === 'delete')
     );
-
-    // Calculate remaining space, accounting for file name length
-    const remainingSpace = maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
-
-    // Adjust start and end based on maxSurroundingLines or expand to fill remaining space
-    if (maxSurroundingLines !== undefined) {
-      // If maxSurroundingLines is provided, calculate the exact start and end
-      ({ start, end } = calculateStartAndEnd(
-        minIndex,
-        maxIndex,
-        contentLines.length,
-        maxSurroundingLines
-      ));
-    } else {
-      // If maxSurroundingLines is not provided, expand the range to use available space
-      ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
+    if (hunks.length === 0 || !hasChanges) {
+      continue;
     }
 
-    const promptContent = createPromptContent(start, end, changedIndices, contentLines);
+    // Reserve space for filename and potential " (part N)" suffix
+    const fileNameReserveLength = calculateLineLength(file.fileName) + 10;
+    const maxChunkContentLength = maxPromptPayloadLength - fileNameReserveLength;
 
-    result.push({
-      fileName: file.fileName,
-      promptContent: promptContent,
-    });
+    const fileChunks: { contentLines: string[] }[] = []; // Store raw lines for each chunk
+    let currentChunkLines: string[] = [];
+    let currentChunkLength = 0;
 
-    return result;
-  }, []);
+    for (const hunk of hunks) {
+      // Format lines for the current hunk and calculate its length
+      const hunkLines = [hunk.header, ...hunk.lines.map(formatDiffLine)];
+      const hunkLength = hunkLines.reduce((sum, line) => sum + calculateLineLength(line), 0);
+
+      // Skip empty hunks (shouldn't happen with parser, but safety)
+      if (hunkLength === 0) continue;
+
+      // Handle oversized hunks: add as separate chunk if too big even on its own
+      if (hunkLength > maxChunkContentLength && currentChunkLines.length === 0) {
+        logger.warn(
+          `Hunk in ${file.fileName} starting at ${hunk.header} exceeds maxPromptPayloadLength. Sending as its own chunk.`
+        );
+        fileChunks.push({ contentLines: hunkLines });
+        currentChunkLines = []; // Reset for next iteration
+        currentChunkLength = 0;
+        continue;
+      }
+
+      // If adding hunk exceeds limit for current chunk, finalize current and start new
+      if (currentChunkLength + hunkLength > maxChunkContentLength && currentChunkLines.length > 0) {
+        fileChunks.push({ contentLines: currentChunkLines });
+        currentChunkLines = hunkLines;
+        currentChunkLength = hunkLength;
+
+        // Check if the new chunk *itself* now violates the limit (can happen if maxChunkContentLength is very small)
+        if (currentChunkLength > maxChunkContentLength) {
+          logger.warn(
+            `Single hunk starting ${hunk.header} in ${file.fileName} still exceeds limit after starting new chunk. Sending oversized.`
+          );
+          // Keep it as is, it will be pushed as its own chunk later.
+        }
+      } else {
+        // Add hunk to current chunk
+        currentChunkLines.push(...hunkLines);
+        currentChunkLength += hunkLength;
+      }
+    }
+
+    // Add the last chunk
+    if (currentChunkLines.length > 0) {
+      fileChunks.push({ contentLines: currentChunkLines });
+    }
+
+    // Assign names and add to final results
+    if (fileChunks.length === 1) {
+      // Only add if the single chunk doesn't exceed the total payload limit
+      if (currentChunkLength + fileNameReserveLength <= maxPromptPayloadLength) {
+        promptFiles.push({
+          fileName: file.fileName,
+          promptContent: fileChunks[0].contentLines.join('\n'),
+        });
+      } else {
+        logger.warn(
+          `Single chunk for ${file.fileName} exceeds maxPromptPayloadLength even alone. Skipping.`
+        );
+        // Or potentially send it anyway if desired?
+        // promptFiles.push({ fileName: file.fileName, promptContent: fileChunks[0].contentLines.join('\n') });
+      }
+    } else {
+      fileChunks.forEach((chunk, index) => {
+        // Double-check length for each part (conservative check)
+        const partName = `${file.fileName} (part ${index + 1})`;
+        const partNameLength = calculateLineLength(partName);
+        const partContentLength = chunk.contentLines.reduce(
+          (sum, line) => sum + calculateLineLength(line),
+          0
+        );
+
+        if (partNameLength + partContentLength <= maxPromptPayloadLength) {
+          promptFiles.push({
+            fileName: partName,
+            promptContent: chunk.contentLines.join('\n'),
+          });
+        } else {
+          logger.warn(
+            `Chunk part ${index + 1} for ${file.fileName} exceeds maxPromptPayloadLength. Skipping this part.`
+          );
+        }
+      });
+    }
+  }
+
+  return promptFiles;
 };
