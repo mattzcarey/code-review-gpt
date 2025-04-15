@@ -60,7 +60,7 @@ export const review = async (
 
   logger.debug(`Markdown report:\n${response}`);
 
-  // Сохраняем результат в GitHub Actions output
+  // Save review_result in GitHub Actions output
   if (process.env.GITHUB_OUTPUT) {
     logger.debug(`Save to review_result in GITHUB_OUTPUT`);
     try {

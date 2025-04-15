@@ -124,3 +124,17 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 ### Environment Variables
 
 - `CUSTOM_LANGUAGE_MAP` - JSON string containing custom file extension to language mappings. Example: `{".mjs": "JavaScript", ".tsx": "TypeScript React"}`. These mappings will be merged with the default language map.
+
+### Getting Review Results in GitHub Actions
+
+When used in GitHub Actions, the review result is automatically saved to the `review_result` output variable. You can access this result in several ways:
+
+1. In the same job:
+```yaml
+steps:
+  - name: Install and Run Code Review GPT
+    id: code_review
+    run: bun run review --ci=github
+  - name: Use Review Result
+    run: echo "${{ steps.code_review.outputs.review_result }}"
+```
