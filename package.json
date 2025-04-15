@@ -41,7 +41,7 @@
   "author": "Matt Carey",
   "license": "MIT",
   "dependencies": {
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "@ai-sdk/anthropic": "^1.2.10",
     "@ai-sdk/google": "^1.2.11",
     "@ai-sdk/openai": "^1.3.12",
