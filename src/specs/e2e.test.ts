@@ -96,7 +96,7 @@ const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise
     [reviewFile], // Pass as an array
     maxPromptLength,
     reviewType,
-    reviewLanguage
+    reviewLanguage,
   );
 
   if (prompts.length === 0) {

@@ -1,6 +1,5 @@
 import type { PromptFile, ReviewFile } from '../../common/types';
 import { logger } from '../../common/utils/logger';
-import { MAX_SURROUNDING_LINES } from '../constants';
 import { batchPrompts, createPromptFiles, createReviewPreamble } from './construct';
 import { instructionPrompt } from './prompts';
 import { getLanguageName } from './utils/fileLanguage';
@@ -30,13 +29,9 @@ export const constructPromptsArray = (
       allPromptFiles = createPromptFiles(files, maxChunkPayloadLength);
       break;
     }
-    case 'costOptimized': {
-      allPromptFiles = createPromptFiles(files, maxChunkPayloadLength, MAX_SURROUNDING_LINES);
-      break;
-    }
     default:
       throw new Error(
-        `Review type ${reviewType} is not supported. Please use one of the following: full, changed, costOptimized.`
+        `Review type ${reviewType} is not supported. Please use one of the following: full, changed.`
       );
   }
 

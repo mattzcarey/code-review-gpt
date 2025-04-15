@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { findTemplateFile } from './findTemplateFile';
+import { findTemplateFile } from '../findTemplateFile';
 
 const testDir = join(import.meta.dir, 'test-glob');
 
@@ -19,7 +19,7 @@ describe('findTemplateFile', () => {
   it('should find a template file matching the pattern', async () => {
     const pattern = join(testDir, '*.txt');
     const file = await findTemplateFile(pattern);
-    expect(file).toMatchInlineSnapshot(`"src/configure/test-glob/template1.txt"`);
+    expect(file).toMatchInlineSnapshot(`"src/configure/specs/test-glob/template1.txt"`);
   });
 
   it('should throw an error when no files match the pattern', async () => {

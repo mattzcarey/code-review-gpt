@@ -20,14 +20,7 @@ const main = async () => {
     }
     case 'review': {
       const { review } = await import('./review');
-      const { getReviewFiles } = await import('./common/utils/getReviewFiles');
-      const reviewArgs = argv as ReviewArgs;
-      const files = await getReviewFiles(
-        reviewArgs.ci as string | undefined,
-        reviewArgs.remote as string | undefined,
-        reviewArgs.diffContext
-      );
-      await review(reviewArgs, files);
+      await review(argv as ReviewArgs);
       break;
     }
     default:

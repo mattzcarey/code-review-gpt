@@ -3,19 +3,21 @@ import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnP
 import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
 import { createModel } from '../common/llm/models';
 import { getMaxPromptLength } from '../common/llm/promptLength';
-import { PlatformOptions, type ReviewArgs, type ReviewFile } from '../common/types';
+import { PlatformOptions, type ReviewArgs } from '../common/types';
+import { getReviewFiles } from '../common/utils/getReviewFiles';
 import { logger } from '../common/utils/logger';
 import { signOff } from './constants';
 import { reviewPipeline } from './pipeline';
 import { constructPromptsArray } from './prompt';
 import { filterFiles } from './utils/filterFiles';
 
-export const review = async (yargs: ReviewArgs, files: ReviewFile[]): Promise<void> => {
+export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug('Review started.');
   logger.debug(`Model used: ${yargs.modelString}`);
   logger.debug(`Ci enabled: ${yargs.ci ?? 'ci is undefined'}`);
   logger.debug(`Review type: ${yargs.reviewType}`);
   logger.debug(`Review language: ${yargs.reviewLanguage}`);
+  logger.debug(`Diff context: ${yargs.diffContext}`);
   logger.debug(`Review mode: ${yargs.reviewMode}`);
   logger.debug(`Remote Pull Request: ${yargs.remote ?? 'remote pull request is undefined'}`);
 
@@ -23,8 +25,13 @@ export const review = async (yargs: ReviewArgs, files: ReviewFile[]): Promise<vo
   const reviewType = yargs.reviewType;
   const reviewLanguage = yargs.reviewLanguage;
   const modelString = yargs.modelString;
+  const diffContext = yargs.diffContext;
+  const remote = yargs.remote;
 
+  const files = await getReviewFiles(isCi, remote, diffContext);
+  logger.debug(`Found ${files.length} files to review.`);
   const filteredFiles = filterFiles(files);
+  logger.debug(`Filtered ${filteredFiles.length} files to review.`);
 
   if (filteredFiles.length === 0) {
     logger.info('No file to review, finishing review now.');

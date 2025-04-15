@@ -73,7 +73,6 @@ const calculateLineLength = (lineContent: string): number => lineContent.length 
 export const createPromptFiles = (
   files: ReviewFile[],
   maxPromptPayloadLength: number
-  // maxSurroundingLines is ignored
 ): PromptFile[] => {
   const promptFiles: PromptFile[] = [];
 
