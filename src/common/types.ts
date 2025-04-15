@@ -1,24 +1,19 @@
-import type { z } from 'zod';
-import type { feedbackSchema, reviewSchema } from '../review/prompt/schemas';
+import type { ReviewComment } from './platform/provider'; // Import ReviewComment
 
-export type AskAIResponse = {
-  markdownReport: string;
-  feedbacks: IFeedback[];
+export type LineRange = {
+  start: number;
+  end: number;
 };
 
-export type CreateFileCommentData = {
-  feedback: IFeedback;
-  signOff: string;
-  owner: string;
-  repo: string;
-  pull_number: number;
-  commit_id: string;
+export type ReviewResponse = {
+  report: string;
+  suggestions?: ReviewComment[]; // Add optional suggestions array
 };
 
 export type ReviewFile = {
   fileName: string;
   fileContent: string;
-  rawDiff: string;
+  changedLines: LineRange[];
 };
 
 export type PromptFile = {
@@ -26,18 +21,11 @@ export type PromptFile = {
   promptContent: string;
 };
 
-export type IFeedback = z.infer<typeof feedbackSchema>;
-export type IReviews = z.infer<typeof reviewSchema>;
-
 export enum PlatformOptions {
   GITHUB = 'github',
   GITLAB = 'gitlab',
   AZDEV = 'azdev',
-}
-
-export enum ReviewModeOptions {
-  DEFAULT = 'default',
-  AGENT = 'agent',
+  LOCAL = 'local',
 }
 
 // Base arguments provided by yargs and global options
@@ -56,12 +44,8 @@ export type ConfigureArgs = BaseArgs & {
 // Arguments for the review command
 export type ReviewArgs = BaseArgs & {
   modelString: string;
-  reviewType: 'full' | 'changed' | 'costOptimized';
   reviewLanguage: string;
-  reviewMode: 'default' | 'agent';
-  diffContext: number;
-  remote?: string;
-  ci?: PlatformOptions | string | undefined;
+  platform: PlatformOptions | string;
 };
 
 export type ParsedArgs = ConfigureArgs | ReviewArgs;

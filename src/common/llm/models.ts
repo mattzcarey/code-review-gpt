@@ -1,7 +1,7 @@
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
-import type { LanguageModel } from 'ai';
+import type { LanguageModel, LanguageModelV1 } from 'ai';
 import { generateObject, generateText } from 'ai';
 import type { ZodSchema } from 'zod';
 
@@ -38,17 +38,10 @@ const createModelProvider = (
   return creator();
 };
 
-// Interface for the combined model configuration
-export interface ConfiguredModel {
-  providerInstance: ProviderInstance;
-  modelName: string;
-}
-
-// New function to create the configured model object
 export const createModel = (
   modelString: string,
   options?: ModelCreationOptions
-): ConfiguredModel => {
+): LanguageModelV1 => {
   const parts = modelString.split(':');
   if (parts.length !== 2) {
     throw new Error(
@@ -57,34 +50,6 @@ export const createModel = (
   }
   const [providerKey, modelName] = parts;
   const providerInstance = createModelProvider(providerKey, options);
-  return {
-    providerInstance,
-    modelName,
-  };
-};
 
-export const callModel = async (
-  configuredModel: ConfiguredModel,
-  prompt: string
-): Promise<string> => {
-  const llm = configuredModel.providerInstance(configuredModel.modelName);
-  const { text } = await generateText({
-    model: llm,
-    prompt: prompt,
-  });
-  return text;
-};
-
-export const callStructuredModel = async <T>(
-  configuredModel: ConfiguredModel,
-  prompt: string,
-  schema: ZodSchema<T>
-): Promise<T> => {
-  const llm = configuredModel.providerInstance(configuredModel.modelName);
-  const { object } = await generateObject({
-    model: llm,
-    schema: schema,
-    prompt: prompt,
-  });
-  return object;
+  return providerInstance(modelName);
 };

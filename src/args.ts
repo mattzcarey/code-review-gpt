@@ -21,41 +21,18 @@ export const getYargs = async () => {
           description:
             'The model to use for generating the review. Defaults to "openai:gpt-4o-mini".',
           type: 'string',
-          default: 'openai:gpt-4o-mini',
-        })
-        .option('reviewType', {
-          description:
-            "Type of review to perform. 'full' will review the entire file, 'changed' will review the changed lines only but provide the full file as context if possible. 'costOptimized' will review only the changed lines using the least tokens possible to keep api costs low. Defaults to 'changed'.",
-          choices: ['full', 'changed', 'costOptimized'],
-          type: 'string',
-          default: 'changed',
+          default: 'openai:gpt-4.1-mini',
         })
         .option('reviewLanguage', {
           description: 'Specifies the target natural language for translation',
           type: 'string',
           default: 'English',
         })
-        .option('reviewMode', {
-          description: 'Mode to use for the review',
-          choices: ['default', 'agent'],
+        .option('platform', {
+          description: 'Platform type',
+          choices: ['github', 'gitlab', 'azdev', 'local'],
           type: 'string',
-          default: 'default',
-        })
-        .option('remote', {
-          description: 'The identifier of a remote Pull Request to review',
-          type: 'string',
-          default: undefined,
-        })
-        .option('diffContext', {
-          description: 'Number of context lines for git diff.',
-          type: 'number',
-          default: 20,
-        })
-        .option('ci', {
-          description: 'CI environment type',
-          choices: ['github', 'gitlab', 'azdev'],
-          type: 'string',
-          coerce: (arg) => arg || 'github',
+          default: 'local',
         });
     })
     .demandCommand(1, 'Please specify a command: configure or review')

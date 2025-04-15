@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import path from 'path';
+import type { LanguageModelV1 } from 'ai';
+import { generateText } from 'ai';
 import { readFile, writeFile } from 'fs/promises';
-
-import { type ConfiguredModel, callModel } from '../../../common/llm'; // Restore imports
 import { logger } from '../../../common/utils/logger';
 import type { TestCaseMetadata } from './metadata';
 
@@ -30,7 +30,7 @@ const generateHash = (data: string): string => {
  */
 export const loadOrGenerateCodeSnippet = async (
   testCaseMeta: TestCaseMetadata,
-  model: ConfiguredModel,
+  model: LanguageModelV1,
   dirMap: {
     testCaseDir: string;
     snapshotDir: string;
@@ -61,7 +61,11 @@ export const loadOrGenerateCodeSnippet = async (
     try {
       const prompt = generateCodeSnippetsPrompt.replace('{testCase}', JSON.stringify(testCaseMeta));
       // Remove markdown code fences if present in the model response
-      const snippet = (await callModel(model, prompt))
+      const { text } = await generateText({
+        model,
+        prompt,
+      });
+      const snippet = text
         .replace(/^\s*```typescript\s*\n?/gm, '')
         .replace(/\n?```\s*$/gm, '')
         .trim();
