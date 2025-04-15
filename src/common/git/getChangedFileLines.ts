@@ -5,10 +5,14 @@ import { PlatformOptions } from '../types';
 
 export const escapeFileName = (fileName: string) => `"${fileName.replace(/(["$`\\])/g, '\\$1')}"`;
 
-export const getChangesFileLinesCommand = (isCi: string | undefined, fileName: string): string => {
+export const getChangesFileLinesCommand = (
+  isCi: string | undefined,
+  fileName: string,
+  diffContext: number
+): string => {
   const escapedFileName = escapeFileName(fileName);
 
-  const diffOptions = '-U3 --diff-filter=AMRT';
+  const diffOptions = `-U${diffContext} --diff-filter=AMRT`;
 
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
@@ -28,9 +32,10 @@ export const getChangesFileLinesCommand = (isCi: string | undefined, fileName: s
 
 export const getChangedFileLines = async (
   isCi: string | undefined,
-  fileName: string
+  fileName: string,
+  diffContext: number
 ): Promise<string> => {
-  const commandString = getChangesFileLinesCommand(isCi, fileName);
+  const commandString = getChangesFileLinesCommand(isCi, fileName, diffContext);
 
   return new Promise((resolve, reject) => {
     exec(commandString, (error, stdout, stderr) => {

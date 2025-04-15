@@ -59,6 +59,7 @@ export type ReviewArgs = BaseArgs & {
   reviewType: 'full' | 'changed' | 'costOptimized';
   reviewLanguage: string;
   reviewMode: 'default' | 'agent';
+  diffContext: number;
   remote?: string;
   ci?: PlatformOptions | string | undefined;
 };

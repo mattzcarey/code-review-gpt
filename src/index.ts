@@ -24,7 +24,8 @@ const main = async () => {
       const reviewArgs = argv as ReviewArgs;
       const files = await getReviewFiles(
         reviewArgs.ci as string | undefined,
-        reviewArgs.remote as string | undefined
+        reviewArgs.remote as string | undefined,
+        reviewArgs.diffContext
       );
       await review(reviewArgs, files);
       break;

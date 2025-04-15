@@ -26,7 +26,6 @@ const dirMap = {
   snippetCacheDir,
 };
 
-
 // Ensure cache directory exists
 await mkdir(snippetCacheDir, { recursive: true });
 
@@ -89,7 +88,7 @@ const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise
   const reviewFile: ReviewFile = {
     fileName,
     fileContent: inputSnippet,
-    changedLines: inputSnippet,
+    rawDiff: inputSnippet,
   };
 
   // Use the centralized prompt construction logic

@@ -46,6 +46,11 @@ export const getYargs = async () => {
           type: 'string',
           default: undefined,
         })
+        .option('diffContext', {
+          description: 'Number of context lines for git diff.',
+          type: 'number',
+          default: 20,
+        })
         .option('ci', {
           description: 'CI environment type',
           choices: ['github', 'gitlab', 'azdev'],
