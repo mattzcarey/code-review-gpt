@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, jest, test } from 'bun:test';
-import { readFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import { readFile, readdir } from 'fs/promises';
 
 import type { ReviewFile } from '../../../common/types';
 import { filterFiles } from '../filterFiles';

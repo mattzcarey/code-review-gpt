@@ -1,5 +1,5 @@
-import { mkdir, readFile, readdir } from 'fs/promises';
 import path from 'path';
+import { mkdir, readFile, readdir } from 'fs/promises';
 
 import { Faithfulness } from 'autoevals'; // Import Factuality scorer
 import { createModel } from '../common/llm'; // Restore imports
@@ -96,7 +96,7 @@ const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise
     [reviewFile], // Pass as an array
     maxPromptLength,
     reviewType,
-    reviewLanguage,
+    reviewLanguage
   );
 
   if (prompts.length === 0) {
