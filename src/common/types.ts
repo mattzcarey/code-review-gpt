@@ -63,11 +63,4 @@ export type ReviewArgs = BaseArgs & {
   ci?: PlatformOptions | string | undefined;
 };
 
-// Arguments for the test command
-export type TestArgs = BaseArgs & {
-  modelString: string;
-  reviewType: 'full' | 'changed' | 'costOptimized';
-  ci?: PlatformOptions | string | undefined;
-};
-
-export type ParsedArgs = ConfigureArgs | ReviewArgs | TestArgs;
+export type ParsedArgs = ConfigureArgs | ReviewArgs;

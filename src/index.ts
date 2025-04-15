@@ -1,15 +1,13 @@
 import dotenv from 'dotenv';
 
 import { getYargs } from './args';
-import type { ConfigureArgs, ParsedArgs, ReviewArgs, TestArgs } from './common/types';
+import type { ConfigureArgs, ParsedArgs, ReviewArgs } from './common/types';
 import { logger } from './common/utils/logger';
-import { getOpenAIApiKey } from './config';
 
 dotenv.config();
 
 const main = async () => {
   const argv = (await getYargs()) as ParsedArgs;
-  const openAIApiKey = getOpenAIApiKey();
   logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3;
 
   logger.debug(`Args: ${JSON.stringify(argv)}`);
@@ -29,11 +27,6 @@ const main = async () => {
         reviewArgs.remote as string | undefined
       );
       await review(reviewArgs, files);
-      break;
-    }
-    case 'test': {
-      const { test } = await import('./test');
-      await test(argv as TestArgs);
       break;
     }
     default:

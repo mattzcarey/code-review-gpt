@@ -10,10 +10,7 @@ import { reviewPipeline } from './pipeline';
 import { constructPromptsArray } from './prompt';
 import { filterFiles } from './utils/filterFiles';
 
-export const review = async (
-  yargs: ReviewArgs,
-  files: ReviewFile[]
-): Promise<string | undefined> => {
+export const review = async (yargs: ReviewArgs, files: ReviewFile[]): Promise<void> => {
   logger.debug('Review started.');
   logger.debug(`Model used: ${yargs.modelString}`);
   logger.debug(`Ci enabled: ${yargs.ci ?? 'ci is undefined'}`);
@@ -46,18 +43,15 @@ export const review = async (
 
   const { markdownReport: response, feedbacks } = await reviewPipeline(prompts, model);
 
-  logger.debug(`Markdown report:\n${response}`);
-
   if (isCi === PlatformOptions.GITHUB) {
     await commentOnPRGitHub(response, signOff);
   }
   if (isCi === PlatformOptions.GITLAB) {
     await commentOnPRGitLab(response, signOff);
   }
-
   if (isCi === PlatformOptions.AZDEV) {
     await commentOnPRAzdev(response, signOff);
   }
 
-  return response;
+  logger.info(`Markdown report:\n${response}`);
 };

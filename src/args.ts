@@ -17,22 +17,11 @@ export const getYargs = async () => {
     })
     .command('review', 'Review code changes', (yargs) => {
       return yargs
-        .option('ci', {
-          description: 'CI environment type',
-          choices: ['github', 'gitlab', 'azdev'],
-          type: 'string',
-          coerce: (arg) => arg || 'github',
-        })
-        .option('commentPerFile', {
+        .option('modelString', {
           description:
-            'Enables feedback to be made on a file-by-file basis. Only work when the script is running on GitHub.',
-          type: 'boolean',
-          default: false,
-        })
-        .option('model', {
-          description: 'The model to use for generating the review.',
+            'The model to use for generating the review. Defaults to "openai:gpt-4o-mini".',
           type: 'string',
-          default: 'gpt-4o-mini',
+          default: 'openai:gpt-4o-mini',
         })
         .option('reviewType', {
           description:
@@ -46,50 +35,25 @@ export const getYargs = async () => {
           type: 'string',
           default: 'English',
         })
+        .option('reviewMode', {
+          description: 'Mode to use for the review',
+          choices: ['default', 'agent'],
+          type: 'string',
+          default: 'default',
+        })
         .option('remote', {
           description: 'The identifier of a remote Pull Request to review',
           type: 'string',
           default: undefined,
         })
-        .option('org', {
-          description: 'Organization id to use for openAI',
-          type: 'string',
-          default: undefined,
-        })
-        .option('provider', {
-          description: 'Provider to use for AI',
-          choices: ['openai', 'azureai', 'bedrock'],
-          type: 'string',
-          default: 'openai',
-        })
-        .option('mode', {
-          description: 'Mode to use for the review',
-          choices: ['default', 'agent'],
-          type: 'string',
-          default: 'default',
-        });
-    })
-    .command('test', 'Run tests', (yargs) => {
-      return yargs
-        .option('reviewType', {
-          description: 'Type of review to perform',
-          choices: ['full', 'changed', 'costOptimized'],
-          type: 'string',
-          default: 'changed',
-        })
-        .option('model', {
-          description: 'The model to use for generating the review.',
-          type: 'string',
-          default: 'gpt-4o-mini',
-        })
         .option('ci', {
           description: 'CI environment type',
           choices: ['github', 'gitlab', 'azdev'],
           type: 'string',
-          default: undefined,
+          coerce: (arg) => arg || 'github',
         });
     })
-    .demandCommand(1, 'Please specify a command: configure, review, or test')
+    .demandCommand(1, 'Please specify a command: configure or review')
     .option('debug', {
       description: 'Enables debug logging.',
       type: 'boolean',
