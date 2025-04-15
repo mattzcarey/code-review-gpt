@@ -6,8 +6,9 @@ import { reviewPipeline } from '../../review/pipeline';
 import { constructPromptsArray } from '../../review/prompt';
 import type { TestCase } from '../types';
 import {
+  generatePlainTextTestResults,
   generateTestReport,
-  generateTestResultsSummary,
+  generateTestResults,
   type testResult,
 } from './generateTestReport';
 
@@ -92,7 +93,6 @@ export const runTests = async (
 
   logger.info(`Running ${testCases.length} test cases...\n`);
 
-  // Keep track of all test results.
   const testResults: { [key: string]: testResult } = {};
 
   for (const testCase of testCases) {
@@ -110,9 +110,10 @@ export const runTests = async (
       logger.error(`Error running test case ${testCase.name}:`, error);
     }
   }
-  const testSummary = generateTestResultsSummary(testResults);
 
-  logger.info(testSummary);
+  const coloredTestSummary = generateTestResults(testResults);
+  logger.info(coloredTestSummary);
 
-  return testSummary;
+  const plainTextTestSummary = generatePlainTextTestResults(testResults);
+  return plainTextTestSummary;
 };

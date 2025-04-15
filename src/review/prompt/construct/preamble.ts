@@ -68,11 +68,11 @@ const formatTreeToString = (node: TreeNode, prefix = '', isLast = true): string 
  * @param allChangedFiles - An array of PromptFile objects representing all files changed in the review.
  * @returns A markdown formatted string to be prepended to the AI prompt.
  */
-export const createReviewPreamble = (allChangedFiles: PromptFile[]): string => {
-  // const fileList = allChangedFiles.map((file) => `- ${file.fileName}`).join('\n');
+export const createReviewPreamble = (allChangedFiles: PromptFile[], goal?: string): string => {
   const fileTree = buildFileTree(allChangedFiles);
-  // Start formatting from the root, assuming root itself isn't displayed
-  const fileTreeString = formatTreeToString(fileTree, '', true).trim(); // Trim trailing newline
+  const fileTreeString = formatTreeToString(fileTree, '', true).trim();
 
-  return `Review Goal: [Goal placeholder - to be implemented]\n\nFiles changed for this review:\n${fileTreeString}\n---\n`;
+  const reviewGoal = goal ? `Review Goal: ${goal}\n\n` : '';
+
+  return `${reviewGoal}Files changed for this review:\n${fileTreeString}\n---\n`;
 };
