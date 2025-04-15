@@ -9,6 +9,7 @@ import { signOff } from './constants';
 import { askAI } from './llm/askAI';
 import { constructPromptsArray } from './prompt/constructPrompt/constructPrompt';
 import { filterFiles } from './prompt/filterFiles';
+import * as fs from 'fs';
 
 export const review = async (
   yargs: ReviewArgs,
@@ -58,6 +59,16 @@ export const review = async (
   );
 
   logger.debug(`Markdown report:\n${response}`);
+
+  // Сохраняем результат в GitHub Actions output
+  if (process.env.GITHUB_OUTPUT) {
+    try {
+      fs.appendFileSync(process.env.GITHUB_OUTPUT, `review_result<<EOF\n${response}\nEOF\n`);
+      logger.debug('Review result saved to GitHub Actions output');
+    } catch (error) {
+      logger.error('Failed to save review result to GitHub Actions output:', error);
+    }
+  }
 
   if (isCi === PlatformOptions.GITHUB) {
     if (!shouldCommentPerFile) {
