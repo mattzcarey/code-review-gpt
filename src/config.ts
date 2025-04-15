@@ -12,7 +12,7 @@ export const getOpenAIApiKey = (): string => {
   const openAiApiKey = process.env.OPENAI_API_KEY;
   const azureOpenAiApiKey = process.env.AZURE_OPENAI_API_KEY;
 
-  if (!openAiApiKey && !azureOpenAiApiKey) {
+  if (!(openAiApiKey || azureOpenAiApiKey)) {
     logger.error('Neither OPENAI_API_KEY nor AZURE_OPENAI_API_KEY is set');
   }
 

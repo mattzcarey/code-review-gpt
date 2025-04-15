@@ -2,12 +2,13 @@ import type { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import c from 'picocolors';
 
 import { logger } from '../../common/utils/logger';
-import { askAI } from '../../review/llm/askAI';
-import { constructPromptsArray } from '../../review/prompt/constructPrompt/constructPrompt';
+import { reviewPipeline } from '../../review/pipeline';
+import { constructPromptsArray } from '../../review/prompt';
 import type { TestCase } from '../types';
 import {
+  generatePlainTextTestResults,
   generateTestReport,
-  generateTestResultsSummary,
+  generateTestResults,
   type testResult,
 } from './generateTestReport';
 
@@ -28,9 +29,7 @@ const runTest = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
-  reviewLanguage?: string
-  // eslint-disable-next-line max-params
+  reviewType: string
 ): Promise<testResult> => {
   if (!testCase.snippet) {
     throw new Error(`Test case ${testCase.name} does not have a snippet.`);
@@ -39,14 +38,9 @@ const runTest = async (
   logger.info(c.blue(`Running test case ${testCase.name}...`));
 
   // First step: run the review on the code snippet.
-  const prompts = constructPromptsArray(
-    [testCase.snippet],
-    maxPromptLength,
-    reviewType,
-    reviewLanguage
-  );
+  const prompts = constructPromptsArray([testCase.snippet], maxPromptLength, reviewType, 'English');
 
-  const { markdownReport: reviewResponse } = await askAI(
+  const { markdownReport: reviewResponse } = await reviewPipeline(
     prompts,
     modelName,
     openAIApiKey,
@@ -91,9 +85,7 @@ export const runTests = async (
   modelName: string,
   maxPromptLength: number,
   vectorStore: MemoryVectorStore,
-  reviewType: string,
-  reviewLanguage?: string
-  // eslint-disable-next-line max-params
+  reviewType: string
 ): Promise<string> => {
   if (testCases.length === 0) {
     return 'No test cases found.';
@@ -101,7 +93,6 @@ export const runTests = async (
 
   logger.info(`Running ${testCases.length} test cases...\n`);
 
-  // Keep track of all test results.
   const testResults: { [key: string]: testResult } = {};
 
   for (const testCase of testCases) {
@@ -112,17 +103,17 @@ export const runTests = async (
         modelName,
         maxPromptLength,
         vectorStore,
-        reviewType,
-        reviewLanguage
+        reviewType
       );
       testResults[testCase.name] = result;
     } catch (error) {
       logger.error(`Error running test case ${testCase.name}:`, error);
     }
   }
-  const testSummary = generateTestResultsSummary(testResults);
 
-  logger.info(testSummary);
+  const coloredTestSummary = generateTestResults(testResults);
+  logger.info(coloredTestSummary);
 
-  return testSummary;
+  const plainTextTestSummary = generatePlainTextTestResults(testResults);
+  return plainTextTestSummary;
 };

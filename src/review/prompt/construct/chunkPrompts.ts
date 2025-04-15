@@ -1,4 +1,4 @@
-import type { PromptFile, ReviewFile } from '../../../../../common/types';
+import type { PromptFile, ReviewFile } from '../../../common/types';
 
 const getChangedIndicesAndLength = (contentLines: string[], changedLinesArray: string[]) => {
   const changedIndices: { [index: number]: string } = {};
@@ -46,7 +46,6 @@ const calculateStartAndEnd = (
   return { start, end };
 };
 
-// eslint-disable-next-line complexity
 const expandRange = (
   initialStart: number,
   initialEnd: number,
@@ -127,23 +126,37 @@ export const createPromptFiles = (
     const { changedIndices, totalChangedLinesLength, minIndex, maxIndex } =
       getChangedIndicesAndLength(contentLines, changedLinesArray);
 
-    if (totalChangedLinesLength === 0) {
+    // If no changed lines are found, skip this file
+    if (minIndex === Number.POSITIVE_INFINITY) {
+      // Consider logging this case if it's unexpected
       return result;
     }
 
-    // Calculate remaining space and start/end positions
-    const remainingSpace = maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
+    // Calculate initial start and end based on the changed lines
     let { start, end } = calculateStartAndEnd(
       minIndex,
       maxIndex,
       contentLines.length,
-      maxSurroundingLines
+      0 // Initially calculate with 0 surrounding lines
     );
 
-    // Expand the range and create the prompt content, only if maxSurroundingLines is defined
-    if (!maxSurroundingLines) {
+    // Calculate remaining space, accounting for file name length
+    const remainingSpace = maxPromptPayloadLength - totalChangedLinesLength - file.fileName.length;
+
+    // Adjust start and end based on maxSurroundingLines or expand to fill remaining space
+    if (maxSurroundingLines !== undefined) {
+      // If maxSurroundingLines is provided, calculate the exact start and end
+      ({ start, end } = calculateStartAndEnd(
+        minIndex,
+        maxIndex,
+        contentLines.length,
+        maxSurroundingLines
+      ));
+    } else {
+      // If maxSurroundingLines is not provided, expand the range to use available space
       ({ start, end } = expandRange(start, end, contentLines, remainingSpace));
     }
+
     const promptContent = createPromptContent(start, end, changedIndices, contentLines);
 
     result.push({

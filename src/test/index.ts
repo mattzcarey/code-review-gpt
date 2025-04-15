@@ -3,8 +3,8 @@ import path from 'path';
 import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnPR';
 import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
 import { AIModel } from '../common/model/AIModel';
-import { getMaxPromptLength } from '../common/model/getMaxPromptLength';
-import { PlatformOptions, type ReviewArgs } from '../common/types';
+import { getMaxPromptLength } from '../common/model/promptLength';
+import { PlatformOptions, type TestArgs } from '../common/types';
 import { signOff } from './constants';
 import { loadSnapshots } from './load/loadSnapshots';
 import { loadTestCases } from './load/loadTestCases';
@@ -12,7 +12,7 @@ import { loadOrGenerateCodeSnippets } from './load/loadTestCodeSnippets';
 import { runTests } from './run/runTest';
 
 export const test = async (
-  { ci, model, reviewType, reviewLanguage }: ReviewArgs,
+  { ci, model, reviewType, reviewLanguage }: TestArgs,
   openAIApiKey: string
 ): Promise<void> => {
   const maxPromptLength = getMaxPromptLength(model);
@@ -43,8 +43,7 @@ export const test = async (
     model,
     maxPromptLength,
     vectorStore,
-    reviewType,
-    reviewLanguage
+    reviewType
   );
 
   if (ci === PlatformOptions.GITHUB) {

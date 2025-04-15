@@ -42,6 +42,17 @@ const formatTestResult = (result: testResult, message: string): string => {
   }
 };
 
+const formatPlainTextTestResult = (result: testResult, message: string): string => {
+  switch (result) {
+    case testResult.PASS:
+      return `✅ [PASS] - ${message}`;
+    case testResult.WARN:
+      return `⚠️ [WARN] - ${message}`;
+    case testResult.FAIL:
+      return `❌ [FAIL] - ${message}`;
+  }
+};
+
 /**
  * Generate a test report for a test case.
  * @param testCase The test case.
@@ -97,12 +108,12 @@ ${similarReview}
  * @param testResults The test results.
  * @returns The summary.
  */
-export const generateTestResultsSummary = (testResults: {
+export const generateTestResults = (testResults: {
   [key: string]: testResult;
 }): string => {
-  const summary = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
+  const results = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
     return `${summary + formatTestResult(result, `Test case: ${testCaseName}`)}\n`;
-  }, c.blue('\n### Test results summary:\n'));
+  }, c.blue('\n### Results:\n'));
 
   const counts = Object.values(testResults).reduce(
     (counts, result) => {
@@ -113,7 +124,31 @@ export const generateTestResultsSummary = (testResults: {
     Object.fromEntries(Object.values(testResult).map((result) => [result, 0]))
   );
 
-  return `${summary}\n**SUMMARY: ${c.green(`✅ PASS: ${counts.PASS}`)} - ${c.yellow(
+  return `${results}\n**SUMMARY: ${c.green(`✅ PASS: ${counts.PASS}`)} - ${c.yellow(
     `⚠️ WARN: ${counts.WARN}`
   )} - ${c.red(`❌ FAIL: ${counts.FAIL}`)}**\n`;
+};
+
+/**
+ * Generate a plain text summary of the test results (without colors).
+ * @param testResults The test results.
+ * @returns The plain text summary.
+ */
+export const generatePlainTextTestResults = (testResults: {
+  [key: string]: testResult;
+}): string => {
+  const results = Object.entries(testResults).reduce((summary, [testCaseName, result]) => {
+    return `${summary + formatPlainTextTestResult(result, `Test case: ${testCaseName}`)}\n`;
+  }, '\n### Results:\n'); // No color for the header
+
+  const counts = Object.values(testResults).reduce(
+    (counts, result) => {
+      counts[result]++;
+      return counts;
+    },
+    Object.fromEntries(Object.values(testResult).map((result) => [result, 0]))
+  );
+
+  // Return summary without colors
+  return `${results}\n**SUMMARY: ✅ PASS: ${counts.PASS} - ⚠️ WARN: ${counts.WARN} - ❌ FAIL: ${counts.FAIL}**\n`;
 };
