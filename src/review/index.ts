@@ -1,14 +1,14 @@
 import { commentOnPR as commentOnPRAzdev } from '../common/ci/azdev/commentOnPR';
-import { commentOnPR as commentOnPRGithub } from '../common/ci/github/commentOnPR';
+import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnPR';
 import { commentPerFile } from '../common/ci/github/commentPerFile';
-import { commentOnPR as commentOnPRGitlab } from '../common/ci/gitlab/commentOnPR';
-import { getMaxPromptLength } from '../common/model/getMaxPromptLength';
+import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
+import { getMaxPromptLength } from '../common/model/promptLength';
 import { PlatformOptions, type ReviewArgs, type ReviewFile } from '../common/types';
 import { logger } from '../common/utils/logger';
 import { signOff } from './constants';
-import { askAI } from './llm/askAI';
-import { constructPromptsArray } from './prompt/constructPrompt/constructPrompt';
-import { filterFiles } from './prompt/filterFiles';
+import { reviewPipeline } from './pipeline';
+import { constructPromptsArray } from './prompt';
+import { filterFiles } from './utils/filterFiles';
 
 export const review = async (
   yargs: ReviewArgs,
@@ -47,9 +47,7 @@ export const review = async (
 
   const prompts = constructPromptsArray(filteredFiles, maxPromptLength, reviewType, reviewLanguage);
 
-  logger.debug(`Prompts used:\n ${prompts.toString()}`);
-
-  const { markdownReport: response, feedbacks } = await askAI(
+  const { markdownReport: response, feedbacks } = await reviewPipeline(
     prompts,
     modelName,
     openAIApiKey,
@@ -61,14 +59,14 @@ export const review = async (
 
   if (isCi === PlatformOptions.GITHUB) {
     if (!shouldCommentPerFile) {
-      await commentOnPRGithub(response, signOff);
+      await commentOnPRGitHub(response, signOff);
     }
     if (shouldCommentPerFile) {
       await commentPerFile(feedbacks, signOff);
     }
   }
   if (isCi === PlatformOptions.GITLAB) {
-    await commentOnPRGitlab(response, signOff);
+    await commentOnPRGitLab(response, signOff);
   }
 
   if (isCi === PlatformOptions.AZDEV) {

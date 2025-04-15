@@ -24,4 +24,5 @@ Respond in valid json making sure that all special characters are escaped proper
 - Newlines should be escaped as \\n
 - Double quotes should be escaped as \\"
 
-Make sure your response can be parsed by JSON.parse().`;
+Make sure your response can be parsed by JSON.parse().
+`;

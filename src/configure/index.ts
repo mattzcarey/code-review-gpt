@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { password } from '@inquirer/prompts';
 
-import { PlatformOptions, type ReviewArgs } from '../common/types';
+import { type ConfigureArgs, PlatformOptions } from '../common/types';
 import { logger } from '../common/utils/logger';
 import { findTemplateFile } from './findTemplateFile';
 
-export const configure = async (yargs: ReviewArgs): Promise<void> => {
+export const configure = async (yargs: ConfigureArgs): Promise<void> => {
   if (yargs.setupTarget === PlatformOptions.GITHUB) {
     await configureGitHub();
   }

@@ -1,4 +1,4 @@
-import { ChatOpenAI, AzureChatOpenAI } from '@langchain/openai';
+import { AzureChatOpenAI, ChatOpenAI } from '@langchain/openai';
 
 import type { ZodType } from 'zod';
 import type { IFeedback } from '../types';
@@ -26,7 +26,7 @@ export class AIModel {
           modelName: options.modelName,
         });
         break;
-      case "azureai":
+      case 'azureai':
         this.model = new AzureChatOpenAI({
           temperature: options.temperature,
         });

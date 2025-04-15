@@ -1,5 +1,5 @@
-import { modelInfo } from '../../review/constants';
 import { logger } from '../utils/logger';
+import { modelInfo } from './constants';
 
 const DEFAULT_MAX_PROMPT_LENGTH = 65536;
 

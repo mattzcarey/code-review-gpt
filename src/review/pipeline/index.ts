@@ -1,10 +1,10 @@
 import { AIModel } from '../../common/model/AIModel';
 import type { AskAIResponse } from '../../common/types';
 import { logger } from '../../common/utils/logger';
-import { processFeedbacks } from './feedbackProcessor';
-import { markdownReport } from './generateMarkdownReport';
+import { markdownReport } from '../formatting/markdownReport';
+import { fetchAndProcessFeedback } from './feedbackProcessor';
 
-export const askAI = async (
+export const reviewPipeline = async (
   prompts: string[],
   modelName: string,
   openAIApiKey: string,
@@ -21,7 +21,7 @@ export const askAI = async (
     provider,
   });
 
-  const feedbacks = await processFeedbacks(model, prompts);
+  const feedbacks = await fetchAndProcessFeedback(model, prompts);
 
   if (feedbacks.length === 0) {
     return {
