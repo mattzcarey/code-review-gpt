@@ -1,4 +1,4 @@
-import type { AIModel } from '../../common/model/AIModel';
+import { type ConfiguredModel, callStructuredModel } from '../../common/llm';
 import type { IFeedback } from '../../common/types';
 import { logger } from '../../common/utils/logger';
 import { feedbackSchema } from '../prompt/schemas';
@@ -6,16 +6,14 @@ import PriorityQueue from './PriorityQueue';
 
 // Helper to wrap individual AI calls and log errors
 const collectAndLogFeedback = async (
-  feedbackPromise: Promise<IFeedback[]>,
-  promptIndex: number // Add index for better logging
-): Promise<IFeedback[]> => {
+  feedbackPromise: Promise<IFeedback>,
+  promptIndex: number
+): Promise<IFeedback> => {
   try {
-    const feedbacks = await feedbackPromise;
-    return feedbacks;
+    const feedback = await feedbackPromise;
+    return feedback;
   } catch (error) {
-    // Log which specific prompt failed
     logger.error(`Error processing prompt index ${promptIndex}:`, error);
-    // Re-throw to allow Promise.allSettled to catch it as rejected
     throw error;
   }
 };
@@ -37,15 +35,14 @@ const prioritizeFeedback = (feedbacks: IFeedback[]): IFeedback[] => {
 
 // Helper to extract fulfilled feedbacks from settled promises
 const extractFulfilledFeedbacks = (
-  feedbackResults: PromiseSettledResult<IFeedback[]>[]
+  feedbackResults: PromiseSettledResult<IFeedback>[]
 ): { fulfilled: IFeedback[]; rejectedCount: number } => {
   let rejectedCount = 0;
   const fulfilled = feedbackResults.reduce<IFeedback[]>((accumulatedFeedbacks, feedbackResult) => {
     if (feedbackResult.status === 'fulfilled') {
-      return accumulatedFeedbacks.concat(feedbackResult.value);
+      accumulatedFeedbacks.push(feedbackResult.value);
+      return accumulatedFeedbacks;
     }
-    // Log reason for rejection if needed (already logged in collectAndLogFeedback)
-    // logger.warn(`Prompt failed: ${feedbackResult.reason}`);
     rejectedCount++;
     return accumulatedFeedbacks;
   }, []);
@@ -54,12 +51,12 @@ const extractFulfilledFeedbacks = (
 
 // Renamed function: Fetches feedback from AI and processes it
 export const fetchAndProcessFeedback = async (
-  model: AIModel,
+  model: ConfiguredModel,
   prompts: string[]
 ): Promise<IFeedback[]> => {
   // Map prompts to AI calls, passing index for logging
-  const feedbackPromises = prompts.map((prompt, index) =>
-    collectAndLogFeedback(model.callStructuredModel(prompt, feedbackSchema), index)
+  const feedbackPromises = prompts.map(async (prompt, index) =>
+    collectAndLogFeedback(callStructuredModel(model, prompt, feedbackSchema), index)
   );
 
   // Run all calls concurrently and wait for settlement

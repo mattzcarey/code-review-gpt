@@ -18,7 +18,7 @@ export type CreateFileCommentData = {
 export type ReviewFile = {
   fileName: string;
   fileContent: string;
-  changedLines: string;
+  rawDiff: string;
 };
 
 export type PromptFile = {
@@ -42,7 +42,6 @@ export enum ReviewModeOptions {
 
 // Base arguments provided by yargs and global options
 type BaseArgs = {
-  [x: string]: unknown;
   ci?: PlatformOptions | string | undefined; // Allow string initially, will be validated
   debug?: boolean;
   _?: (string | number)[];
@@ -56,22 +55,13 @@ export type ConfigureArgs = BaseArgs & {
 
 // Arguments for the review command
 export type ReviewArgs = BaseArgs & {
-  commentPerFile?: boolean;
-  model: string;
+  modelString: string;
   reviewType: 'full' | 'changed' | 'costOptimized';
   reviewLanguage: string;
-  org?: string;
+  reviewMode: 'default' | 'agent';
+  diffContext: number;
   remote?: string;
-  provider: 'openai' | 'azureai' | 'bedrock';
-  mode: 'default' | 'agent';
   ci?: PlatformOptions | string | undefined;
 };
 
-// Arguments for the test command
-export type TestArgs = BaseArgs & {
-  model: string;
-  reviewType: 'full' | 'changed' | 'costOptimized';
-  ci?: PlatformOptions | string | undefined;
-};
-
-export type ParsedArgs = ConfigureArgs | ReviewArgs | TestArgs;
+export type ParsedArgs = ConfigureArgs | ReviewArgs;

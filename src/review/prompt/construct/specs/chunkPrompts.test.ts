@@ -3,141 +3,133 @@ import type { PromptFile, ReviewFile } from '../../../../common/types';
 import { createPromptFiles } from '../chunkPrompts';
 
 describe('createPromptFiles', () => {
-  const baseFileContentLines = [
-    'Line 1',
-    'Line 2',
-    'Line 3',
-    'Line 4',
-    'Line 5',
-    'Line 6',
-    'Line 7',
-    'Line 8',
-    'Line 9',
-    'Line 10',
-  ];
-
-  const createTestFile = (
-    fileName: string,
-    contentLines: string[],
-    changedLines: string[]
-  ): ReviewFile => ({
+  // Helper to create a ReviewFile with rawDiff
+  const createTestFile = (fileName: string, rawDiff: string): ReviewFile => ({
     fileName,
-    fileContent: contentLines.join('\n'),
-    changedLines: changedLines.join('\n'),
+    fileContent: '', // No longer directly used by createPromptFiles
+    rawDiff: rawDiff,
   });
 
-  it('should create a prompt with changes in the middle, expanding context', () => {
-    const changedLine = '+Line 5 changed';
-    const fileContentWithChange = [
-      ...baseFileContentLines.slice(0, 4),
-      changedLine.substring(1),
-      ...baseFileContentLines.slice(5),
+  // Helper function to join lines for expectation clarity
+  const expectContent = (lines: string[]): string => lines.join('\n');
+
+  it('should create a single prompt if diff fits within limit', () => {
+    const hunk1 = [
+      '@@ -2,7 +2,7 @@',
+      ' Line 2',
+      ' Line 3',
+      ' Line 4',
+      '-Line 5',
+      '+Line 5 changed',
+      ' Line 6',
+      ' Line 7',
+      ' Line 8',
     ];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine]);
+    const rawDiff = expectContent(hunk1);
+    const file = createTestFile('test.txt', rawDiff);
+    const maxPromptPayloadLength = 200; // Plenty of space
+
+    const expectedPrompt: PromptFile = {
+      fileName: 'test.txt',
+      promptContent: expectContent(hunk1), // Expect the full hunk
+    };
+    const result = createPromptFiles([file], maxPromptPayloadLength);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual(expectedPrompt);
+  });
+
+  it('should include full hunks regardless of maxSurroundingLines (which is ignored)', () => {
+    const hunk1 = [
+      '@@ -2,7 +2,7 @@',
+      ' Line 2',
+      ' Line 3',
+      ' Line 4',
+      '-Line 5',
+      '+Line 5 changed',
+      ' Line 6',
+      ' Line 7',
+      ' Line 8',
+    ];
+    const rawDiff = expectContent(hunk1);
+    const file = createTestFile('test.txt', rawDiff);
+    const maxPromptPayloadLength = 500; // Plenty of space
+    const maxSurroundingLines = 1; // Should be ignored
+
+    const expectedPrompt: PromptFile = {
+      fileName: 'test.txt',
+      promptContent: expectContent(hunk1), // Expect the full hunk
+    };
+    const result = createPromptFiles([file], maxPromptPayloadLength);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual(expectedPrompt);
+  });
+
+  it('should split into two parts if accumulated hunks exceed limit', () => {
+    const hunk1 = ['@@ -1,4 +1,4 @@', '-Line 1', '+Line 1 changed', ' Line 2', ' Line 3'];
+    const hunk2 = [
+      '@@ -7,3 +7,4 @@',
+      ' Line 7',
+      ' Line 8',
+      '-Line 9',
+      '+Line 9 new',
+      '+Line 9 changed',
+    ];
+    const rawDiff = expectContent([...hunk1, ...hunk2]);
+    const file = createTestFile('long_file_name.txt', rawDiff);
+
     const maxPromptPayloadLength = 100;
-
-    const expectedPrompt: PromptFile = {
-      fileName: 'test.txt',
-      promptContent: [
-        'Line 1',
-        'Line 2',
-        'Line 3',
-        'Line 4',
-        changedLine,
-        'Line 6',
-        'Line 7',
-        'Line 8',
-        'Line 9',
-        'Line 10',
-      ].join('\n'),
-    };
     const result = createPromptFiles([file], maxPromptPayloadLength);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
+    expect(result).toHaveLength(2);
+    expect(result).toEqual([
+      {
+        fileName: 'long_file_name.txt (part 1)',
+        promptContent: expectContent(hunk1),
+      },
+      {
+        fileName: 'long_file_name.txt (part 2)',
+        promptContent: expectContent(hunk2),
+      },
+    ]);
   });
 
-  it('should create a prompt with changes at the beginning, limited expansion', () => {
-    const changedLine = '+Line 1 changed';
-    const fileContentWithChange = [changedLine.substring(1), ...baseFileContentLines.slice(1)];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine]);
-    const maxPromptPayloadLength = 50;
+  it('should skip a hunk that individually exceeds maxChunkContentLength', () => {
+    const hunk1 = ['@@ -1,1 +1,1 @@', '-Small', '+Smaller'];
+    const largeLine = 'A'.repeat(80);
+    const hunk2 = ['@@ -10,1 +10,1 @@', `-${largeLine}`, `+${largeLine} changed`];
 
-    const expectedPrompt: PromptFile = {
-      fileName: 'test.txt',
-      promptContent: [changedLine, 'Line 2', 'Line 3', 'Line 4', '...'].join('\n'),
-    };
+    const rawDiff = expectContent([...hunk1, ...hunk2]);
+    const file = createTestFile('skip_large.txt', rawDiff);
+
+    const maxPromptPayloadLength = 100;
     const result = createPromptFiles([file], maxPromptPayloadLength);
     expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
+    expect(result[0]).toEqual({
+      fileName: 'skip_large.txt',
+      promptContent: expectContent(hunk1),
+    });
   });
 
-  it('should create a prompt with changes at the end, limited expansion', () => {
-    const changedLine = '+Line 10 changed';
-    const fileContentWithChange = [...baseFileContentLines.slice(0, 9), changedLine.substring(1)];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine]);
-    const maxPromptPayloadLength = 60;
-
-    const expectedPrompt: PromptFile = {
-      fileName: 'test.txt',
-      promptContent: ['...', 'Line 5', 'Line 6', 'Line 7', 'Line 8', 'Line 9', changedLine].join(
-        '\n'
-      ),
-    };
-    const result = createPromptFiles([file], maxPromptPayloadLength);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
-  });
-
-  it('should use maxSurroundingLines when provided', () => {
-    const changedLine = '+Line 5 changed';
-    const fileContentWithChange = [
-      ...baseFileContentLines.slice(0, 4),
-      changedLine.substring(1),
-      ...baseFileContentLines.slice(5),
+  it('should create a prompt with only a deleted line in the middle', () => {
+    const hunk1 = [
+      '@@ -2,7 +2,6 @@',
+      ' Line 2',
+      ' Line 3',
+      ' Line 4',
+      '-Line 5',
+      ' Line 6',
+      ' Line 7',
+      ' Line 8',
     ];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine]);
-    const maxPromptPayloadLength = 500;
-    const maxSurroundingLines = 2;
+    const rawDiff = expectContent(hunk1);
+    const file = createTestFile('test.txt', rawDiff);
+    const maxPromptPayloadLength = 100; // Sufficient length
 
     const expectedPrompt: PromptFile = {
       fileName: 'test.txt',
-      promptContent: ['...', 'Line 3', 'Line 4', changedLine, 'Line 6', 'Line 7', '...'].join('\n'),
+      promptContent: expectContent(hunk1),
     };
-    const result = createPromptFiles([file], maxPromptPayloadLength, maxSurroundingLines);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
-  });
 
-  it('should handle maxSurroundingLines near file boundaries', () => {
-    const changedLine1 = '+Line 2 changed';
-    const changedLine2 = '+Line 9 changed';
-    const fileContentWithChange = [
-      baseFileContentLines[0],
-      changedLine1.substring(1),
-      ...baseFileContentLines.slice(2, 8),
-      changedLine2.substring(1),
-      baseFileContentLines[9],
-    ];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine1, changedLine2]);
-    const maxPromptPayloadLength = 500;
-    const maxSurroundingLines = 3;
-
-    const expectedPrompt: PromptFile = {
-      fileName: 'test.txt',
-      promptContent: [
-        'Line 1',
-        changedLine1,
-        'Line 3',
-        'Line 4',
-        'Line 5',
-        'Line 6',
-        'Line 7',
-        'Line 8',
-        changedLine2,
-        'Line 10',
-      ].join('\n'),
-    };
-    const result = createPromptFiles([file], maxPromptPayloadLength, maxSurroundingLines);
+    const result = createPromptFiles([file], maxPromptPayloadLength);
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual(expectedPrompt);
   });
@@ -147,62 +139,81 @@ describe('createPromptFiles', () => {
     expect(result).toEqual([]);
   });
 
-  it('should return an empty array if file has no changed lines identified', () => {
-    const file = createTestFile('test.txt', ['Line A', 'Line B'], ['+Line C']);
+  it('should return an empty array if file has no changed lines in any hunk', () => {
+    const rawDiff = expectContent(['@@ -1,3 +1,3 @@', ' Line A', ' Line B', ' Line C']);
+    const file = createTestFile('test.txt', rawDiff);
     const result = createPromptFiles([file], 100);
     expect(result).toEqual([]);
   });
 
-  it('should handle multiple files', () => {
-    const changed1 = '+B changed';
-    const file1 = createTestFile('file1.txt', ['A', changed1.substring(1), 'C'], [changed1]);
-    const changed2 = '+Y changed';
-    const file2 = createTestFile('file2.txt', ['X', changed2.substring(1), 'Z'], [changed2]);
+  it('should return an empty array if rawDiff contains only git headers', () => {
+    const rawDiff = expectContent([
+      'diff --git a/test.txt b/test.txt',
+      'index 123..456 100644',
+      '--- a/test.txt',
+      '+++ b/test.txt',
+    ]);
+    const file = createTestFile('test.txt', rawDiff);
+    const result = createPromptFiles([file], 100);
+    expect(result).toEqual([]);
+  });
 
-    const maxPromptPayloadLength = 30;
+  it('should return an empty array if rawDiff is empty', () => {
+    const file = createTestFile('test.txt', '');
+    const result = createPromptFiles([file], 100);
+    expect(result).toEqual([]);
+  });
 
-    const expectedPrompt1: PromptFile = {
-      fileName: 'file1.txt',
-      promptContent: ['A', changed1, 'C'].join('\n'),
-    };
+  it('should handle multiple files, potentially chunking them', () => {
+    const hunk1_f1 = ['@@ -1,3 +1,3 @@', ' A', '-B', '+B changed', ' C'];
+    const hunk1_f2 = ['@@ -1,3 +1,3 @@', ' X', '-Y', '+Y changed', ' Z'];
+    const rawDiff1 = expectContent(hunk1_f1);
+    const rawDiff2 = expectContent(hunk1_f2);
+    const file1 = createTestFile('file1.txt', rawDiff1);
+    const file2 = createTestFile('file2.txt', rawDiff2);
 
-    const expectedPrompt2: PromptFile = {
-      fileName: 'file2.txt',
-      promptContent: ['X', changed2, 'Z'].join('\n'),
-    };
+    const maxPromptPayloadLength = 70;
     const result = createPromptFiles([file1, file2], maxPromptPayloadLength);
     expect(result).toHaveLength(2);
-    expect(result).toEqual([expectedPrompt1, expectedPrompt2]);
+    expect(result).toEqual([
+      {
+        fileName: 'file1.txt',
+        promptContent: expectContent(hunk1_f1),
+      },
+      {
+        fileName: 'file2.txt',
+        promptContent: expectContent(hunk1_f2),
+      },
+    ]);
   });
 
-  it('should handle prompt exactly fitting the payload limit without expansion', () => {
-    const changedLine = '+Line 2 changed';
-    const fileContentWithChange = ['Line 1', changedLine.substring(1), 'Line 3'];
-    const file = createTestFile('test.txt', fileContentWithChange, [changedLine]);
-    const maxPromptPayloadLength = 24;
+  it('should handle multiple files requiring chunking', () => {
+    const hunk1_f1 = ['@@ -1,4 +1,4 @@', '-Line 1', '+Line 1 changed', ' Line 2', ' Line 3'];
+    const hunk2_f1 = ['@@ -7,4 +7,4 @@', ' Line 7', ' Line 8', '-Line 9', '+Line 9 changed'];
+    const rawDiff1 = expectContent([...hunk1_f1, ...hunk2_f1]);
 
-    const expectedPrompt: PromptFile = {
-      fileName: 'test.txt',
-      promptContent: ['...', changedLine, '...'].join('\n'),
-    };
-    const result = createPromptFiles([file], maxPromptPayloadLength);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
-  });
+    const hunk1_f2 = ['@@ -1,3 +1,3 @@', ' X', '-Y', '+Y changed', ' Z'];
+    const rawDiff2 = expectContent(hunk1_f2);
 
-  it('should add ellipsis correctly when change is at the very beginning or end', () => {
-    const changed1 = '+L1 changed';
-    const changed2 = '+L5 changed';
-    const fileContentWithChange = [changed1.substring(1), 'L2', 'L3', 'L4', changed2.substring(1)];
-    const file = createTestFile('edge.txt', fileContentWithChange, [changed1, changed2]);
-    const maxPromptPayloadLength = 40;
+    const file1 = createTestFile('needs_chunk.txt', rawDiff1);
+    const file2 = createTestFile('no_chunk.txt', rawDiff2);
 
-    const expectedPrompt: PromptFile = {
-      fileName: 'edge.txt',
-      promptContent: [changed1, 'L2', 'L3', 'L4', changed2].join('\n'),
-    };
-    const result = createPromptFiles([file], maxPromptPayloadLength);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(expectedPrompt);
+    const maxPromptPayloadLength = 100;
+    const result = createPromptFiles([file1, file2], maxPromptPayloadLength);
+    expect(result).toHaveLength(3);
+    expect(result).toEqual([
+      {
+        fileName: 'needs_chunk.txt (part 1)',
+        promptContent: expectContent(hunk1_f1),
+      },
+      {
+        fileName: 'needs_chunk.txt (part 2)',
+        promptContent: expectContent(hunk2_f1),
+      },
+      {
+        fileName: 'no_chunk.txt',
+        promptContent: expectContent(hunk1_f2),
+      },
+    ]);
   });
 });

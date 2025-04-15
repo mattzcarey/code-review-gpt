@@ -10,7 +10,7 @@ export const filterFiles = (files: ReviewFile[]): ReviewFile[] => {
     return (
       supportedFiles.has(ext) &&
       ![...excludedKeywords].some((keyword) => file.fileName.includes(keyword)) &&
-      file.changedLines.trim() !== ''
+      file.rawDiff.trim() !== ''
     );
   });
 
