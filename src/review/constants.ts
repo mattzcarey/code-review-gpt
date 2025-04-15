@@ -1,3 +1,5 @@
+import { getCustomLanguageMap } from '../config';
+
 export const signOff =
   '#### Powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)';
 
@@ -44,7 +46,7 @@ export const modelInfo = [
   },
 ]; // Response needs about 1k tokens ~= 3k characters
 
-export const languageMap: { [key: string]: string } = {
+const defaultLanguageMap: { [key: string]: string } = {
   '.js': 'JavaScript',
   '.ts': 'TypeScript',
   '.py': 'Python',
@@ -71,8 +73,11 @@ export const languageMap: { [key: string]: string } = {
   '.tf': 'Terraform',
   '.hcl': 'Terraform',
   '.swift': 'Swift',
-  '.yaml': 'YAML',
-  '.yml': 'YAML',
+};
+
+export const languageMap: { [key: string]: string } = {
+  ...defaultLanguageMap,
+  ...getCustomLanguageMap(),
 };
 
 export const supportedFiles = new Set(Object.keys(languageMap));

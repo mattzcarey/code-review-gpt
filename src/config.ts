@@ -96,3 +96,23 @@ export const gitAzdevEnvVariables = (): Record<string, string> => {
     azdevToken: process.env.API_TOKEN ?? '',
   };
 };
+
+export const getCustomLanguageMap = (): { [key: string]: string } => {
+  const customLanguageMapStr = process.env.CUSTOM_LANGUAGE_MAP;
+  
+  if (!customLanguageMapStr) {
+    return {};
+  }
+
+  try {
+    const customMap = JSON.parse(customLanguageMapStr);
+    if (typeof customMap !== 'object' || customMap === null) {
+      logger.error('CUSTOM_LANGUAGE_MAP must be a valid JSON object');
+      return {};
+    }
+    return customMap;
+  } catch (error) {
+    logger.error('Failed to parse CUSTOM_LANGUAGE_MAP:', error);
+    return {};
+  }
+};

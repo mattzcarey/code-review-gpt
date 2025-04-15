@@ -120,3 +120,7 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 - `--debug` - Runs the application in debug mode. This will enable debug logging.
 
 - `--org` - The organization id to be used for OpenAI. This should only be used if you are member of multiple organisations and want to use your non default org.
+
+### Environment Variables
+
+- `CUSTOM_LANGUAGE_MAP` - JSON string containing custom file extension to language mappings. Example: `{".mjs": "JavaScript", ".tsx": "TypeScript React"}`. These mappings will be merged with the default language map.
