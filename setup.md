@@ -99,24 +99,8 @@ You can now run `code-review-gpt review` in the root directory of any git-enable
 - `code-review-gpt review` - Runs the code review on the staged files.
 - `code-review-gpt configure` - Runs a setup tool to configure the application.
 
-- `code-review-gpt test` - Runs the e2e testing suite used internally in the CI in the tool repo.
-
 ### Options
 
-- `--ci` - Used with the `review` command. Options are --ci=("github" | "gitlab"). Defaults to "github" if no option is specified. Runs the application in CI mode. This will use the BASE_SHA and GITHUB_SHA environment variables to determine which files to review. It will also use the GITHUB_TOKEN environment variable to create a comment on the pull request with the review results.
+Run `code-review-gpt --help` to see all the options available.
 
-- `--reviewType` - Used with the 'review' command. The options are --reviewType=("changed" | "full" | "costOptimized). Defaults to "changed" if no option is specified. Specifies whether the review is for the full file or just the changed lines. costOptimized limits the context surrounding the changed lines to 5 lines.
-
-- `--reviewLanguage` - Specifies the target natural language for translation, such as "German", "Spanish", or "French". Use this parameter to set the language in which the utility will provide output.
-
-- `--remote` - Used with the 'review' command. Usage `--remote=mattzcarey/code-review-gpt#96`. Review a remote GitHub Pull Request.
-
-- `--commentPerFile` - Used when the `--ci` flag is set. Defaults to false. It enables the bot to comment the feedback on a file-by-file basis.
-
-- `--setupTarget` - Used with the `configure` command. Options are --setupTarget=("github" | "gitlab"). Defaults to "github" if no option is specified. Specifies for which platform ('github' or 'gitlab') the project should be configured for.
-
-- `--model` - The model to use for the review. Defaults to `gpt-4o-mini`. You can use any OpenAI model you have access to.
-
-- `--debug` - Runs the application in debug mode. This will enable debug logging.
-
-- `--org` - The organization id to be used for OpenAI. This should only be used if you are member of multiple organisations and want to use your non default org.
+or check out the code [here](https://github.com/mattzcarey/code-review-gpt/blob/main/src/args.ts)
