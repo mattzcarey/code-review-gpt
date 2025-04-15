@@ -33,11 +33,11 @@ jobs:
       - name: Lint check
         run: bun check
 
-      - name: Run tests
-        run: bun test
+      - name: Run unit tests
+        run: bun test:unit
 
       - name: Run code review script
         run: bun review --ci=github --debug
 
-      - name: Run prompt tests
-        run: bun test:llm --ci=github --debug
+      - name: Run e2e tests
+        run: bun test:e2e

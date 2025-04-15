@@ -24,7 +24,7 @@ describe('filterFiles unit test', () => {
         testFiles.push({
           fileName: fileName,
           fileContent: fileContent,
-          changedLines: fileContent,
+          rawDiff: fileContent,
         });
       })
     );
