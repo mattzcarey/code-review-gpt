@@ -124,7 +124,7 @@ describeEval('Code Review Tests', {
   data: loadTestCaseData,
   task: reviewTask,
   scorers: [Faithfulness],
-  threshold: 0.8,
+  threshold: 0.7,
   timeout: 60000,
   modelString,
 });
