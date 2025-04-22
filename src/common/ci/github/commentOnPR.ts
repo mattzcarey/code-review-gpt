@@ -13,7 +13,7 @@ import { getToken } from '../utils';
 export const commentOnPR = async (comment: string, signOff: string): Promise<void> => {
   try {
     const githubToken = getToken();
-    logger.warn('context commentOnPR', context);
+    // logger.warn('context commentOnPR', context);
     const { payload, issue } = context;
     
     // Если есть pull_request, комментируем к PR
