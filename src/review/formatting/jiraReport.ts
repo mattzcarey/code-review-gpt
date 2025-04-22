@@ -4,16 +4,14 @@ import type { IFeedback, IReviews } from '../../common/types';
 export const formatReviewForJira = (reviews: IReviews): string => {
   return reviews
     .map((review) => `${review.reasoning}`)
-    .join('\\n');
+    .join(' \\n');
 };
 
 // Format feedback for Jira
-const formatFeedbackForJira = (feedback: IFeedback): string => `
-*Risk Level ${feedback.riskScore} - ${feedback.fileName}*
+const formatFeedbackForJira = (feedback: IFeedback): string => `*Risk Level ${feedback.riskScore} - ${feedback.fileName}*
 \\n\\n
 ${formatReviewForJira(feedback.review)}
-\\n\\n
-`;
+\\n\\n`;
 
 // Generate Jira report
 export const jiraReport = (feedbacks: IFeedback[]): string => `${feedbacks.map(formatFeedbackForJira).join('\n----\n')}`; 
