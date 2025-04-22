@@ -9,10 +9,9 @@ export const formatReviewForJira = (reviews: IReviews): string => {
 
 // Format feedback for Jira
 const formatFeedbackForJira = (feedback: IFeedback): string => `
-{panel:title=Risk Level ${feedback.riskScore} - ${feedback.fileName}|borderStyle=dashed|borderColor=#ccc|titleBGColor=#f7f7f7|bgColor=#fff}
+{panel:title=Risk Level ${feedback.riskScore} - ${feedback.fileName}|borderStyle=dashed|borderColor=#ccc|titleBGColor=#f7f7f7|bgColor=#ffebe6}
 ${formatReviewForJira(feedback.review)}
-{panel}
-`;
+{panel}`;
 
 // Generate Jira report
 export const jiraReport = (feedbacks: IFeedback[]): string => `${feedbacks.map(formatFeedbackForJira).join('\n----\n')}`; 
