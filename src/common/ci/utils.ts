@@ -33,6 +33,7 @@ type OctokitType = {
 
 export const getOctokitRepoDetails = (): OctokitType | undefined => {
   const githubToken = getToken();
+  logger.warn('context getOctokitRepoDetails', context);
   const { payload, issue } = context;
 
   if (!payload.pull_request) {
