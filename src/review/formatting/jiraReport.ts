@@ -15,5 +15,6 @@ ${formatReviewForJira(feedback.review)}
 \n\n
 `;
 
+
 // Generate Jira report
 export const jiraReport = (feedbacks: IFeedback[]): string => `${feedbacks.map(formatFeedbackForJira).join('\n----\n')}`; 
