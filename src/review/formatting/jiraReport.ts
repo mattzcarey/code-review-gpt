@@ -4,15 +4,15 @@ import type { IFeedback, IReviews } from '../../common/types';
 export const formatReviewForJira = (reviews: IReviews): string => {
   return reviews
     .map((review) => `${review.reasoning}`)
-    .join(' \\n\\n');
+    .join('\\n');
 };
 
 // Format feedback for Jira
 const formatFeedbackForJira = (feedback: IFeedback): string => `
-{panel:title=Risk Level ${feedback.riskScore} - ${feedback.fileName}|borderStyle=dashed|borderColor=#ccc|titleBGColor=#f7f7f7|bgColor=#fff}
-
+*Risk Level ${feedback.riskScore} - ${feedback.fileName}*
+\\n\\n
 ${formatReviewForJira(feedback.review)}
-{panel}
+\\n\\n
 `;
 
 // Generate Jira report
