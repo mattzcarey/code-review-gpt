@@ -2,6 +2,7 @@ import type { ConfiguredModel } from '../../common/llm/models';
 import type { AskAIResponse } from '../../common/types';
 import { logger } from '../../common/utils/logger';
 import { markdownReport } from '../formatting/markdownReport';
+import { jiraReport } from '../formatting/jiraReport';
 import { fetchAndProcessFeedback } from './feedbackProcessor';
 
 export const reviewPipeline = async (
@@ -15,14 +16,16 @@ export const reviewPipeline = async (
   if (feedbacks.length === 0) {
     return {
       markdownReport: 'No issues found in PR 🎉',
-      feedbacks: [],
+      jiraReport: 'No issues found in PR 🎉',
+      feedbacks: []
     };
   }
 
   const report = markdownReport(feedbacks);
-
+  const jira = jiraReport(feedbacks);
   return {
     markdownReport: report,
-    feedbacks,
+    jiraReport: jira,
+    feedbacks
   };
 };

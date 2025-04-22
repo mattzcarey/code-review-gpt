@@ -49,13 +49,14 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
 
   const prompts = constructPromptsArray(filteredFiles, maxPromptLength, reviewType, reviewLanguage);
 
-  const { markdownReport: response, feedbacks } = await reviewPipeline(prompts, model);
+  const { markdownReport: response, jiraReport: jiraResponse, feedbacks } = await reviewPipeline(prompts, model);
 
   // Save review_result in GitHub Actions output
   if (process.env.GITHUB_OUTPUT) {
     logger.debug(`Save to review_result in GITHUB_OUTPUT`);
     try {
       fs.appendFileSync(process.env.GITHUB_OUTPUT, `review_result<<EOF\n${response}\nEOF\n`);
+      fs.appendFileSync(process.env.GITHUB_OUTPUT, `jira_result<<EOF\n${jiraResponse}\nEOF\n`);
       logger.debug('Review result saved to GitHub Actions output');
     } catch (error) {
       logger.error('Failed to save review result to GitHub Actions output:', error);
@@ -73,4 +74,5 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   }
 
   logger.info(`Markdown report:\n${response}`);
+  logger.info(`Jira report:\n${jiraResponse}`);
 };

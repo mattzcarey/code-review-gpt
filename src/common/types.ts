@@ -3,6 +3,7 @@ import type { feedbackSchema, reviewSchema } from '../review/prompt/schemas';
 
 export type AskAIResponse = {
   markdownReport: string;
+  jiraReport: string;
   feedbacks: IFeedback[];
 };
 
