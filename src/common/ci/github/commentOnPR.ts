@@ -15,11 +15,13 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
     const githubToken = getToken();
     // logger.warn('context commentOnPR', context);
     const { payload, issue } = context;
+    const octokit = getOctokit(githubToken);
+    const { owner, repo } = context.repo;
+    const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
     
-    // Если есть pull_request, комментируем к PR
+    // If there is a pull_request, comment on the PR
     if (payload.pull_request) {
-      const octokit = getOctokit(githubToken);
-      const { owner, repo, number: pull_number } = issue;
+      const { number: pull_number } = issue;
 
       const { data: comments } = await octokit.rest.issues.listComments({
         owner,
@@ -28,8 +30,6 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       });
 
       const botComment = comments.find((comment) => comment.body?.includes(signOff));
-
-      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
 
       if (botComment) {
         await octokit.rest.issues.updateComment({
@@ -48,9 +48,9 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
         });
       }
     } 
-    // Если нет pull_request, но есть commit, комментируем к коммиту
+    // If there is no pull_request, but there is a commit, comment on the commit
     else {
-      // Определяем SHA коммита
+      // Determine the commit SHA
       let commitSha: string | undefined;
       
       if (payload.head_commit && payload.head_commit.sha) {
@@ -63,10 +63,6 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       
       if (commitSha) {
         logger.info('Commenting on commit...');
-        const octokit = getOctokit(githubToken);
-        const { owner, repo } = context.repo;
-        
-        const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
         
         await octokit.rest.repos.createCommitComment({
           owner,
