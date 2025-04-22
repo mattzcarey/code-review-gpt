@@ -15,43 +15,60 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
     const githubToken = getToken();
     logger.warn('context commentOnPR', context);
     const { payload, issue } = context;
-    if (!payload.pull_request) {
-      logger.warn('Not a pull request. Skipping commenting on PR...');
+    
+    // Если есть pull_request, комментируем к PR
+    if (payload.pull_request) {
+      const octokit = getOctokit(githubToken);
+      const { owner, repo, number: pull_number } = issue;
 
-      return;
-    }
-
-    const octokit = getOctokit(githubToken);
-    const { owner, repo, number: pull_number } = issue;
-
-    const { data: comments } = await octokit.rest.issues.listComments({
-      owner,
-      repo,
-      issue_number: pull_number,
-    });
-
-    const botComment = comments.find((comment) => comment.body?.includes(signOff));
-
-    const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
-
-    if (botComment) {
-      await octokit.rest.issues.updateComment({
-        owner,
-        repo,
-        comment_id: botComment.id,
-        body: botCommentBody,
-      });
-    } else {
-      // If the bot has not commented yet, create a new comment
-      await octokit.rest.issues.createComment({
+      const { data: comments } = await octokit.rest.issues.listComments({
         owner,
         repo,
         issue_number: pull_number,
+      });
+
+      const botComment = comments.find((comment) => comment.body?.includes(signOff));
+
+      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+
+      if (botComment) {
+        await octokit.rest.issues.updateComment({
+          owner,
+          repo,
+          comment_id: botComment.id,
+          body: botCommentBody,
+        });
+      } else {
+        // If the bot has not commented yet, create a new comment
+        await octokit.rest.issues.createComment({
+          owner,
+          repo,
+          issue_number: pull_number,
+          body: botCommentBody,
+        });
+      }
+    }
+    // Если нет pull_request, но есть commit, комментируем к коммиту
+    else if (payload.head_commit) {
+      logger.info('Not a pull request, but a commit. Commenting on commit...');
+      const octokit = getOctokit(githubToken);
+      const { owner, repo } = context.repo;
+      const { sha } = context.payload.head_commit;
+      
+      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+      
+      await octokit.rest.repos.createCommitComment({
+        owner,
+        repo,
+        commit_sha: sha,
         body: botCommentBody,
       });
+    } 
+    else {
+      logger.warn('Not a pull request or commit. Skipping commenting...');
     }
   } catch (error) {
-    logger.error(`Failed to comment on PR: ${JSON.stringify(error)}`);
+    logger.error(`Failed to comment: ${JSON.stringify(error)}`);
     throw error;
   }
 };
