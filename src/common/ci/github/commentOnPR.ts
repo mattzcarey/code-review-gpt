@@ -47,25 +47,36 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
           body: botCommentBody,
         });
       }
-    }
-    // Если нет pull_request, но есть commit, комментируем к коммиту
-    else if (payload.head_commit) {
-      logger.info('Not a pull request, but a commit. Commenting on commit...');
-      const octokit = getOctokit(githubToken);
-      const { owner, repo } = context.repo;
-      const { sha } = context.payload.head_commit;
-      
-      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
-      
-      await octokit.rest.repos.createCommitComment({
-        owner,
-        repo,
-        commit_sha: sha,
-        body: botCommentBody,
-      });
     } 
+    // Если нет pull_request, но есть commit, комментируем к коммиту
     else {
-      logger.warn('Not a pull request or commit. Skipping commenting...');
+      // Определяем SHA коммита
+      let commitSha: string | undefined;
+      
+      if (payload.head_commit && payload.head_commit.sha) {
+        commitSha = payload.head_commit.sha;
+        logger.info('Using commit SHA from payload.head_commit');
+      } else if (process.env.GITHUB_SHA) {
+        commitSha = process.env.GITHUB_SHA;
+        logger.info('Using commit SHA from GITHUB_SHA environment variable');
+      }
+      
+      if (commitSha) {
+        logger.info('Commenting on commit...');
+        const octokit = getOctokit(githubToken);
+        const { owner, repo } = context.repo;
+        
+        const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+        
+        await octokit.rest.repos.createCommitComment({
+          owner,
+          repo,
+          commit_sha: commitSha,
+          body: botCommentBody,
+        });
+      } else {
+        logger.warn('No commit SHA found. Skipping commenting...');
+      }
     }
   } catch (error) {
     logger.error(`Failed to comment: ${JSON.stringify(error)}`);
