@@ -1,7 +1,19 @@
 import { context, getOctokit } from '@actions/github';
+import fs from 'fs';
 
 import { logger } from '../../utils/logger';
 import { getToken } from '../utils';
+
+/**
+ * Save comment URL to GitHub Actions output
+ * @param commentUrl URL of the comment to save
+ */
+const saveCommentUrl = (commentUrl: string): void => {
+  if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `comment_url<<EOF\n${commentUrl}\nEOF\n`);
+    logger.info(`Comment URL saved to GitHub Actions output: ${commentUrl}`);
+  }
+};
 
 /**
  * Publish a comment on the pull request. If the bot has already commented (i.e. a comment with the same sign off exists), update the comment instead of creating a new one.
@@ -31,22 +43,28 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
 
       const botComment = comments.find((comment) => comment.body?.includes(signOff));
 
+      let commentUrl: string;
+
       if (botComment) {
-        await octokit.rest.issues.updateComment({
+        const { data: updatedComment } = await octokit.rest.issues.updateComment({
           owner,
           repo,
           comment_id: botComment.id,
           body: botCommentBody,
         });
+        commentUrl = updatedComment.html_url;
       } else {
         // If the bot has not commented yet, create a new comment
-        await octokit.rest.issues.createComment({
+        const { data: newComment } = await octokit.rest.issues.createComment({
           owner,
           repo,
           issue_number: pull_number,
           body: botCommentBody,
         });
+        commentUrl = newComment.html_url;
       }
+
+      saveCommentUrl(commentUrl);
     } 
     // If there is no pull_request, but there is a commit, comment on the commit
     else {
@@ -64,12 +82,14 @@ export const commentOnPR = async (comment: string, signOff: string): Promise<voi
       if (commitSha) {
         logger.info('Commenting on commit...');
         
-        await octokit.rest.repos.createCommitComment({
+        const { data: commitComment } = await octokit.rest.repos.createCommitComment({
           owner,
           repo,
           commit_sha: commitSha,
           body: botCommentBody,
         });
+
+        saveCommentUrl(commitComment.html_url);
       } else {
         logger.warn('No commit SHA found. Skipping commenting...');
       }
