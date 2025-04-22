@@ -13,8 +13,8 @@ import { getToken } from '../utils';
 export const commentOnPR = async (comment: string, signOff: string): Promise<void> => {
   try {
     const githubToken = getToken();
+    logger.info('context', context);
     const { payload, issue } = context;
-
     if (!payload.pull_request) {
       logger.warn('Not a pull request. Skipping commenting on PR...');
 
