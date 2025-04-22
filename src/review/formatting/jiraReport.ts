@@ -4,7 +4,7 @@ import type { IFeedback, IReviews } from '../../common/types';
 export const formatReviewForJira = (reviews: IReviews): string => {
   return reviews
     .map((review) => `${review.reasoning}`)
-    .join('\n\n');
+    .join(' \\n\\n');
 };
 
 // Format feedback for Jira
