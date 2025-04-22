@@ -5,26 +5,22 @@ export const formatReviewForJira = (reviews: IReviews): string => {
   return reviews
     .map(
       (review) => `
-{panel:title=Review}
-{panel}
-
 ${review.reasoning}
 
 ${
   review.suggestedChanges
     ? `*Suggested changes:*
-{code:language=java}
+{code}
 ${review.suggestedChanges}
 {code}
 `
     : ''
 }
 
-{panel:title=Original Code}
-{code:language=java}
+*Original Code:*
+{code}
 ${review.targetCodeBlock}
 {code}
-{panel}
 `
     )
     .join('\n');
@@ -34,12 +30,12 @@ ${review.targetCodeBlock}
 const formatFeedbackForJira = (feedback: IFeedback): string => `
 h3. Risk Level ${feedback.riskScore} - ${feedback.fileName}
 
+{panel:title=Details|borderStyle=dashed}
 ${formatReviewForJira(feedback.review)}
+{panel}
 `;
 
 // Generate Jira report
 export const jiraReport = (feedbacks: IFeedback[]): string => `
-h2. Code Review Report
-
 ${feedbacks.map(formatFeedbackForJira).join('\n----\n')}
 `; 
