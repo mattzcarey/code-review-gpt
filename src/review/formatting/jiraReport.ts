@@ -9,9 +9,9 @@ export const formatReviewForJira = (reviews: IReviews): string => {
 
 // Format feedback for Jira
 const formatFeedbackForJira = (feedback: IFeedback): string => `
-h3. Risk Level ${feedback.riskScore} - ${feedback.fileName}
+h1. Risk Level ${feedback.riskScore} - ${feedback.fileName}
 
-{panel:title=Details|borderStyle=dashed}
+{panel:title=✨AI Code review|borderStyle=dashed}
 ${formatReviewForJira(feedback.review)}
 {panel}
 `;
