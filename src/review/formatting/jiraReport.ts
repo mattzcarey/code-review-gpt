@@ -11,9 +11,9 @@ export const formatReviewForJira = (reviews: IReviews): string => {
 const formatFeedbackForJira = (feedback: IFeedback): string => `
 h3. Risk Level ${feedback.riskScore} - ${feedback.fileName}
 
-{panel:title=Details|borderStyle=dashed}
+{noformat}
 ${formatReviewForJira(feedback.review)}
-{panel}
+{noformat}
 `;
 
 // Generate Jira report
