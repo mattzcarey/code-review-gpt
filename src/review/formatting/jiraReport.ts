@@ -7,9 +7,16 @@ export const formatReviewForJira = (reviews: IReviews): string => {
     .join('\\n\\n');
 };
 
+// Get background color based on risk score
+const getBackgroundColor = (riskScore: number): string => {
+  if (riskScore >= 4) return '#ffebe6'; // Red for high risk
+  if (riskScore >= 2) return '#fff';    // Yellow for medium risk
+  return '#deebff';                     // Blue for low risk
+};
+
 // Format feedback for Jira
 const formatFeedbackForJira = (feedback: IFeedback): string => `
-{panel:title=Risk Level ${feedback.riskScore} - ${feedback.fileName}|borderStyle=dashed|borderColor=#ccc|titleBGColor=#f7f7f7|bgColor=#ffebe6}
+{panel:title=Risk Level ${feedback.riskScore} - ${feedback.fileName}|bgColor=${getBackgroundColor(feedback.riskScore)}}
 ${formatReviewForJira(feedback.review)}
 {panel}`;
 
