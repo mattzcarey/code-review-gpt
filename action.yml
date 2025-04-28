@@ -2,10 +2,10 @@ name: 'Code Review GPT'
 description: 'Reviews PR changes with a GPT model from OpenAI'
 author: 'Orion Tools'
 inputs:
-  MODEL:
+  MODEL_STRING:
     description: 'Model name to use for review'
     required: true
-    default: 'gpt-4o'
+    default: 'openai:gpt-4.1-mini'
   REVIEW_LANGUAGE:
     description: 'Target natural language for translation'
     required: false
@@ -19,6 +19,14 @@ inputs:
   OPENAI_BASE_URL:
     description: 'OpenAI API Base URL'
     required: false
+  MAX_STEPS:
+    description: 'Maximum number of agentic steps to take'
+    required: false
+    default: '25'
+  DEBUG:
+    description: 'Enables debug logging'
+    required: false
+    default: 'false'
 runs:
   using: 'composite'
   steps:
@@ -30,14 +38,16 @@ runs:
       shell: bash
       run: |
         bun add code-review-gpt@latest
-        bun code-review-gpt review --ci=github --model=$MODEL --reviewLanguage=$REVIEW_LANGUAGE
+        bun code-review-gpt review --ci=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS
       env:
-        MODEL: ${{ inputs.MODEL }}
+        MODEL_STRING: ${{ inputs.MODEL_STRING }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         OPENAI_BASE_URL: ${{ inputs.OPENAI_BASE_URL }}
+        MAX_STEPS: ${{ inputs.MAX_STEPS }}
+        DEBUG: ${{ inputs.DEBUG }}
 
 branding:
   icon: 'code'

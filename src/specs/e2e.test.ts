@@ -1,9 +1,8 @@
-import path from 'path';
 import { mkdir, readFile, readdir } from 'fs/promises';
+import path from 'path';
 
 import { Faithfulness } from 'autoevals'; // Import Factuality scorer
 import { createModel } from '../common/llm'; // Restore imports
-import { getMaxPromptLength } from '../common/llm/promptLength'; // Import prompt length calculator
 import { getPlatformProvider } from '../common/platform/factory';
 import type { ReviewFile } from '../common/types'; // Type for pipeline input shaping
 import { logger } from '../common/utils/logger';
@@ -81,8 +80,6 @@ const loadTestCaseData = async (): Promise<TestCase<string, string>[]> => {
 const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise<string> => {
   const model = createModel(modelString);
   const reviewLanguage = 'English';
-  const reviewType = 'full';
-  const maxPromptLength = getMaxPromptLength(modelString); // Get max length for the model
 
   // Create a mock ReviewFile
   const fileName = 'test.ts';
@@ -102,7 +99,11 @@ const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise
 
   try {
     // Call the actual review pipeline with the generated prompts
-    const { success, message } = await runAgenticReview(prompt, model, platformProvider);
+    const { success, message } = await runAgenticReview(prompt, model, platformProvider, 25);
+
+    if (!success) {
+      throw new Error('Review pipeline failed');
+    }
 
     // TODO: combine it into an actual report
     return message;
