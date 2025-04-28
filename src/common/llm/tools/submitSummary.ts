@@ -12,7 +12,13 @@ export const createSubmitSummaryTool = (platformProvider: PlatformProvider) =>
   tool({
     description:
       'Posts the final review report as a general comment on the PR. Call this tool when the review is complete.',
-    parameters: z.object({ report: z.string() }),
+    parameters: z.object({
+      report: z
+        .string()
+        .describe(
+          'The final review report formatted in markdown. It should contain a brief but specific overview of the changes, and potential edge cases or issues that the reviewer should be aware of.'
+        ),
+    }),
     execute: async ({ report }): Promise<string> => {
       try {
         const commentDetails: ThreadComment = { comment: report };
