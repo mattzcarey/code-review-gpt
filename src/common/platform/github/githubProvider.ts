@@ -72,6 +72,21 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
         });
         const commit_id = pullRequest.data.head.sha;
 
+        // For single line comments
+        if (startLine === endLine || !startLine) {
+          const { data: reviewComment } = await octokit.rest.pulls.createReviewComment({
+            owner,
+            repo,
+            pull_number,
+            commit_id,
+            body: comment,
+            path: filePath,
+            line: endLine,
+          });
+          return reviewComment.html_url;
+        }
+
+        // For multi-line comments
         const { data: reviewComment } = await octokit.rest.pulls.createReviewComment({
           owner,
           repo,
@@ -79,8 +94,10 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
           commit_id,
           body: comment,
           path: filePath,
-          line: endLine, // GitHub uses the end line for multi-line comments
+          line: endLine,
           start_line: startLine,
+          start_side: 'RIGHT',
+          side: 'RIGHT',
         });
         return reviewComment.html_url;
       } catch (error) {
