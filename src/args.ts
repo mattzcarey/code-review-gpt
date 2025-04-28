@@ -33,6 +33,11 @@ export const getYargs = async () => {
           choices: ['github', 'gitlab', 'azdev', 'local'],
           type: 'string',
           default: 'local',
+        })
+        .option('maxSteps', {
+          description: 'Maximum number of agentic steps to take',
+          type: 'number',
+          default: 25,
         });
     })
     .demandCommand(1, 'Please specify a command: configure or review')

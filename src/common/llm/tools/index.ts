@@ -1,3 +1,8 @@
+export { bashTool } from './bash';
+export { fetchTool } from './fetch';
+export { globTool } from './glob';
+export { grepTool } from './grep';
+export { lsTool } from './ls';
 export { readFileTool } from './readFile';
 export { createSubmitSummaryTool } from './submitSummary';
 export { createSuggestChangesTool } from './suggestChanges';

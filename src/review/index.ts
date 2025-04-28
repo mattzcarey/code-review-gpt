@@ -12,6 +12,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Model used: ${yargs.modelString}`);
   logger.debug(`Review language: ${yargs.reviewLanguage}`);
   logger.debug(`Platform: ${yargs.platform}`);
+  logger.debug(`Max steps: ${yargs.maxSteps}`);
 
   const files: ReviewFile[] = await getFilesWithChanges(yargs.platform);
   logger.debug(`Found ${files.length} changed files.`);
@@ -38,7 +39,12 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
     const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage);
     logger.debug('Prompt:', prompt);
 
-    const { success, message } = await runAgenticReview(prompt, model, platformProvider);
+    const { success, message } = await runAgenticReview(
+      prompt,
+      model,
+      platformProvider,
+      yargs.maxSteps
+    );
     if (success) {
       logger.info('Review completed successfully.');
     } else {

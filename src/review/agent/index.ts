@@ -1,7 +1,12 @@
 import { type GenerateTextResult, type LanguageModelV1, generateText } from 'ai';
 import {
+  bashTool,
   createSubmitSummaryTool,
   createSuggestChangesTool,
+  fetchTool,
+  globTool,
+  grepTool,
+  lsTool,
   readFileTool,
 } from '../../common/llm/tools';
 import type { PlatformProvider } from '../../common/platform/provider';
@@ -11,6 +16,7 @@ export const reviewAgent = async (
   prompt: string,
   model: LanguageModelV1,
   platformProvider: PlatformProvider,
+  maxSteps: number,
   onSummarySubmit?: () => void
   // biome-ignore lint/suspicious/noExplicitAny: fine
 ): Promise<GenerateTextResult<Record<string, any>, string>> => {
@@ -24,8 +30,13 @@ export const reviewAgent = async (
       read_file: readFileTool,
       suggest_change: suggestChangesTool,
       submit_summary: submitSummaryTool,
+      fetch: fetchTool,
+      glob: globTool,
+      grep: grepTool,
+      ls: lsTool,
+      bash: bashTool,
     },
-    maxSteps: 25,
+    maxSteps,
     onStepFinish: (step) => {
       logger.debug('Step finished:', step);
       const called = step.toolCalls?.some((tc) => tc.toolName === 'submit_summary');
@@ -44,6 +55,7 @@ export const runAgenticReview = async (
   initialPrompt: string,
   model: LanguageModelV1,
   platformProvider: PlatformProvider,
+  maxSteps: number,
   maxRetries = 3
 ): Promise<{ success: boolean; message: string }> => {
   logger.info(`Running agentic review (max retries: ${maxRetries})...`);
@@ -58,7 +70,7 @@ export const runAgenticReview = async (
     logger.info(`Attempt ${attempt}/${maxRetries}...`);
     summaryToolCalled = false;
 
-    latestResult = await reviewAgent(currentPrompt, model, platformProvider, () => {
+    latestResult = await reviewAgent(currentPrompt, model, platformProvider, maxSteps, () => {
       summaryToolCalled = true;
     });
 
