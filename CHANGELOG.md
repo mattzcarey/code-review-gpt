@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/mattzcarey/shippie/compare/v0.9.0...v0.10.0) (2025-04-28)
+
+
+### Features
+
+* rename to shippie ([#405](https://github.com/mattzcarey/shippie/issues/405)) ([5abf3f2](https://github.com/mattzcarey/shippie/commit/5abf3f234319fdb7edfabacd1166bd8bd1ae2b09))
+
 ## [0.9.0](https://github.com/mattzcarey/code-review-gpt/compare/v0.8.0...v0.9.0) (2025-04-28)
 
 
