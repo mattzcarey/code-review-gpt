@@ -1,5 +1,5 @@
-import { tool } from 'ai';
 import { exec } from 'child_process';
+import { tool } from 'ai';
 import { z } from 'zod';
 import { getDiffCommand } from '../../git/getChangedFilesNames';
 import type { PlatformProvider } from '../../platform/provider';
