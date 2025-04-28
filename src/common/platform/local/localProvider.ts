@@ -1,6 +1,6 @@
+import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
-import * as fs from 'fs/promises';
 import { getGitRoot } from '../../git/getChangedFilesNames';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
@@ -25,7 +25,7 @@ const formatReviewComment = (commentDetails: ReviewComment): string => {
   const { filePath, comment, startLine, endLine } = commentDetails;
   let header = `### Suggestion for \`${filePath}\``;
   if (startLine !== undefined) {
-    header += ` (Line${startLine}${endLine && endLine !== startLine ? `-${endLine}` : ''})`;
+    header += ` (Line ${startLine}${endLine && endLine !== startLine ? `-${endLine}` : ''})`;
   }
   return `\n${header}\n\n\`\`\`suggestion\n${comment}\n\`\`\`\n---\n`;
 };

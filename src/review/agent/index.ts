@@ -27,6 +27,7 @@ export const reviewAgent = async (
     },
     maxSteps: 25,
     onStepFinish: (step) => {
+      logger.debug('Step finished:', step);
       const called = step.toolCalls?.some((tc) => tc.toolName === 'submit_summary');
       const executed = step.toolResults?.some((tr) => tr.toolName === 'submit_summary');
       if ((called || executed) && onSummarySubmit) {

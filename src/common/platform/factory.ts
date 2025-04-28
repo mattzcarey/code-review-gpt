@@ -6,7 +6,7 @@ import type { PlatformProvider } from './provider';
 
 export const getPlatformProvider = async (
   providerName: PlatformOptions | string
-): Promise<PlatformProvider | undefined> => {
+): Promise<PlatformProvider> => {
   switch (providerName) {
     case PlatformOptions.GITHUB:
       logger.info('Using GitHub platform provider.');
