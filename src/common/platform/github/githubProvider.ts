@@ -2,6 +2,7 @@ import { context, getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
 import { getGitHubEnvVariables } from '../../../config';
 import { signOff } from '../../../review/constants';
+import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
 
@@ -157,6 +158,10 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
         logger.error(`Failed to post thread comment on GitHub: ${JSON.stringify(error)}`);
         return undefined;
       }
+    },
+
+    getPlatformOption: (): PlatformOptions => {
+      return PlatformOptions.GITHUB;
     },
   };
 
