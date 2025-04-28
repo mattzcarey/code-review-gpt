@@ -42,6 +42,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules/**", "dist/**", "examples/**"]
+    "ignore": ["node_modules/**", "dist/**", "examples/**", "specs/cases/.cache/**"]
   }
 }

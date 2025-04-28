@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, jest, test } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { join } from 'path';
 import { readFile, readdir } from 'fs/promises';
 
@@ -6,10 +6,6 @@ import type { ReviewFile } from '../../../common/types';
 import { filterFiles } from '../filterFiles';
 
 describe('filterFiles unit test', () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
   test('returns only supported files', async () => {
     const testDir = join(__dirname, 'examples');
 
@@ -24,7 +20,7 @@ describe('filterFiles unit test', () => {
         testFiles.push({
           fileName: fileName,
           fileContent: fileContent,
-          rawDiff: fileContent,
+          changedLines: [],
         });
       })
     );

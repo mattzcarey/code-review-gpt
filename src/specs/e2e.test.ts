@@ -4,10 +4,11 @@ import { mkdir, readFile, readdir } from 'fs/promises';
 import { Faithfulness } from 'autoevals'; // Import Factuality scorer
 import { createModel } from '../common/llm'; // Restore imports
 import { getMaxPromptLength } from '../common/llm/promptLength'; // Import prompt length calculator
+import { getPlatformProvider } from '../common/platform/factory';
 import type { ReviewFile } from '../common/types'; // Type for pipeline input shaping
 import { logger } from '../common/utils/logger';
-import { reviewPipeline } from '../review/pipeline'; // Actual pipeline
-import { constructPromptsArray } from '../review/prompt'; // Import the prompt constructor
+import { runAgenticReview } from '../review/agent';
+import { constructPrompt } from '../review/prompt';
 import { describeEval } from './framework';
 import type { TaskFn, TestCase } from './framework/types';
 import { isTestCaseMetadata } from './framework/utils/metadata';
@@ -88,29 +89,23 @@ const reviewTask: TaskFn<string, string> = async (inputSnippet: string): Promise
   const reviewFile: ReviewFile = {
     fileName,
     fileContent: inputSnippet,
-    rawDiff: inputSnippet,
+    changedLines: [],
   };
 
   // Use the centralized prompt construction logic
-  const prompts = constructPromptsArray(
+  const prompt = await constructPrompt(
     [reviewFile], // Pass as an array
-    maxPromptLength,
-    reviewType,
     reviewLanguage
   );
 
-  if (prompts.length === 0) {
-    logger.warn('constructPromptsArray returned no prompts for the snippet.');
-    return 'Error: Could not construct prompt for review.'; // Return error or empty string
-  }
-
-  logger.debug(`Constructed ${prompts.length} prompt(s) via constructPromptsArray...`);
+  const platformProvider = await getPlatformProvider('local');
 
   try {
     // Call the actual review pipeline with the generated prompts
-    const { markdownReport } = await reviewPipeline(prompts, model);
-    logger.debug(`Review pipeline returned report:\n${markdownReport.substring(0, 300)}...`);
-    return markdownReport;
+    const { success, message } = await runAgenticReview(prompt, model, platformProvider);
+
+    // TODO: combine it into an actual report
+    return message;
   } catch (error) {
     logger.error('Error during reviewPipeline execution in reviewTask:', error);
     throw new Error(

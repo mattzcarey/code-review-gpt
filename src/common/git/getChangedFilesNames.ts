@@ -5,27 +5,26 @@ import { getGitHubEnvVariables, getGitLabEnvVariables, gitAzdevEnvVariables } fr
 import { PlatformOptions } from '../types';
 import { logger } from '../utils/logger';
 
-export const getChangedFilesNamesCommand = (isCi: string | undefined): string => {
+export const getDiffCommand = (isCi: string | undefined): string => {
+  const diffOptions = '--diff-filter=AMRT -U0';
+
   if (isCi === PlatformOptions.GITHUB) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
-
-    return `git diff --name-only --diff-filter=AMRT ${baseSha} ${githubSha}`;
+    return `git diff ${diffOptions} ${baseSha} ${githubSha}`;
   }
 
   if (isCi === PlatformOptions.GITLAB) {
     const { gitlabSha, mergeRequestBaseSha } = getGitLabEnvVariables();
-
-    return `git diff --name-only --diff-filter=AMRT ${mergeRequestBaseSha} ${gitlabSha}`;
+    return `git diff ${diffOptions} ${mergeRequestBaseSha} ${gitlabSha}`;
   }
 
   if (isCi === PlatformOptions.AZDEV) {
     const { azdevSha, baseSha } = gitAzdevEnvVariables();
-
-    return `git diff --name-only --diff-filter=AMRT ${baseSha} ${azdevSha}`;
+    return `git diff ${diffOptions} ${baseSha} ${azdevSha}`;
   }
 
-  if (isCi === undefined) {
-    return 'git diff --name-only --diff-filter=AMRT --cached';
+  if (isCi === PlatformOptions.LOCAL) {
+    return `git diff ${diffOptions} --cached`;
   }
 
   throw new Error('Invalid CI platform');
@@ -46,10 +45,10 @@ export const getGitRoot = (): Promise<string> => {
 export const getChangedFilesNames = async (isCi: string | undefined): Promise<string[]> => {
   const gitRoot = await getGitRoot();
   logger.debug('gitRoot', gitRoot);
-  const commandString = getChangedFilesNamesCommand(isCi);
-  logger.debug('commandString', commandString);
+  const nameOnlyCommand = getDiffCommand(isCi).replace('-U0', '--name-only');
+  logger.debug('nameOnlyCommand', nameOnlyCommand);
   return new Promise((resolve, reject) => {
-    exec(commandString, { cwd: gitRoot }, (error, stdout, stderr) => {
+    exec(nameOnlyCommand, { cwd: gitRoot }, (error, stdout, stderr) => {
       if (error) {
         reject(new Error(`Failed to execute command. Error: ${error.message}`));
       } else if (stderr) {

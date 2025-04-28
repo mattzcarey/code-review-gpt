@@ -1,4 +1,4 @@
-/* eslint-disable */
+// @ts-nocheck
 // Import necessary modules
 import { useState } from 'react';
 

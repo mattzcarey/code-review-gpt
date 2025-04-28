@@ -31,4 +31,10 @@ export const languageMap: { [key: string]: string } = {
 
 export const supportedFiles = new Set(Object.keys(languageMap));
 
-export const excludedKeywords = new Set(['types']);
+export const excludedKeywords = new Set([
+  '.d.ts',
+  'dist',
+  'node_modules',
+  'package-lock.json',
+  '.lock',
+]);

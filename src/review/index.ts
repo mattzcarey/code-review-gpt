@@ -1,64 +1,57 @@
-import { commentOnPR as commentOnPRAzdev } from '../common/ci/azdev/commentOnPR';
-import { commentOnPR as commentOnPRGitHub } from '../common/ci/github/commentOnPR';
-import { commentOnPR as commentOnPRGitLab } from '../common/ci/gitlab/commentOnPR';
+import { getFilesWithChanges } from '../common/git/getFilesWithChanges';
 import { createModel } from '../common/llm/models';
-import { getMaxPromptLength } from '../common/llm/promptLength';
-import { PlatformOptions, type ReviewArgs } from '../common/types';
-import { getReviewFiles } from '../common/utils/getReviewFiles';
+import { getPlatformProvider } from '../common/platform/factory';
+import type { ReviewArgs, ReviewFile } from '../common/types';
 import { logger } from '../common/utils/logger';
-import { signOff } from './constants';
-import { reviewPipeline } from './pipeline';
-import { constructPromptsArray } from './prompt';
+import { runAgenticReview } from './agent';
+import { constructPrompt } from './prompt';
 import { filterFiles } from './utils/filterFiles';
 
 export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug('Review started.');
   logger.debug(`Model used: ${yargs.modelString}`);
-  logger.debug(`Ci enabled: ${yargs.ci ?? 'ci is undefined'}`);
-  logger.debug(`Review type: ${yargs.reviewType}`);
   logger.debug(`Review language: ${yargs.reviewLanguage}`);
-  logger.debug(`Diff context: ${yargs.diffContext}`);
-  logger.debug(`Review mode: ${yargs.reviewMode}`);
-  logger.debug(`Remote Pull Request: ${yargs.remote ?? 'remote pull request is undefined'}`);
+  logger.debug(`Platform: ${yargs.platform}`);
+  logger.debug(`Max steps: ${yargs.maxSteps}`);
 
-  const isCi = yargs.ci;
-  const reviewType = yargs.reviewType;
-  const reviewLanguage = yargs.reviewLanguage;
-  const modelString = yargs.modelString;
-  const diffContext = yargs.diffContext;
-  const remote = yargs.remote;
-
-  const files = await getReviewFiles(isCi, remote, diffContext);
-  logger.debug(`Found ${files.length} files to review.`);
+  const files: ReviewFile[] = await getFilesWithChanges(yargs.platform);
+  logger.debug(`Found ${files.length} changed files.`);
   const filteredFiles = filterFiles(files);
   logger.debug(`Filtered ${filteredFiles.length} files to review.`);
 
   if (filteredFiles.length === 0) {
     logger.info('No file to review, finishing review now.');
-
-    return undefined;
+    return;
   }
+  logger.debug(`Files to review after filtering: ${filteredFiles.map((file) => file.fileName)}`);
 
-  logger.debug(
-    `Files to review after filtering: ${filteredFiles.map((file) => file.fileName).toString()}`
-  );
+  const platformProvider = await getPlatformProvider(yargs.platform);
+  logger.debug('Platform provider:', platformProvider);
 
-  const maxPromptLength = getMaxPromptLength(modelString);
-  const model = createModel(modelString);
+  try {
+    const model = createModel(yargs.modelString);
+    const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage);
+    logger.debug('Prompt:', prompt);
 
-  const prompts = constructPromptsArray(filteredFiles, maxPromptLength, reviewType, reviewLanguage);
-
-  const { markdownReport: response, feedbacks } = await reviewPipeline(prompts, model);
-
-  if (isCi === PlatformOptions.GITHUB) {
-    await commentOnPRGitHub(response, signOff);
+    const { success, message } = await runAgenticReview(
+      prompt,
+      model,
+      platformProvider,
+      yargs.maxSteps
+    );
+    if (success) {
+      logger.info('Review completed successfully.');
+    } else {
+      logger.error('Review failed with message:', message);
+      process.exit(1);
+    }
+  } catch (error: unknown) {
+    logger.error('An error occurred during the review process:', JSON.stringify(error, null, 6));
+    if (error instanceof Error && error.stack) {
+      logger.debug(`Stack trace: ${error.stack}`);
+    } else {
+      logger.debug('No stack trace available for the error.');
+    }
+    process.exit(1);
   }
-  if (isCi === PlatformOptions.GITLAB) {
-    await commentOnPRGitLab(response, signOff);
-  }
-  if (isCi === PlatformOptions.AZDEV) {
-    await commentOnPRAzdev(response, signOff);
-  }
-
-  logger.info(`Markdown report:\n${response}`);
 };
