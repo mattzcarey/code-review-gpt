@@ -22,7 +22,7 @@
     "publish:build": "bun run build && bun publish --access public",
     "check": "biome check .",
     "check:fix": "biome check . --fix",
-    "format": "biome format --write ."
+    "check:fix:unsafe": "biome check . --unsafe --fix"
   },
   "keywords": [
     "code-review",

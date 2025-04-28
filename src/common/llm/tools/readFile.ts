@@ -7,14 +7,8 @@ export const readFileTool = tool({
     'Read a file or part of a file. You should use this to gather context about the changes in the PR. You should read several lines before and after the changes. You may need to go back and read more lines.',
   parameters: z.object({
     path: z.string().describe('The absolute path to the file to read'),
-    startLine: z
-      .number()
-      .optional()
-      .describe('The line number to start reading from.'),
-    endLine: z
-      .number()
-      .optional()
-      .describe('The line number to end reading at.'),
+    startLine: z.number().optional().describe('The line number to start reading from.'),
+    endLine: z.number().optional().describe('The line number to end reading at.'),
   }),
   execute: async ({ path, startLine, endLine }) => {
     const file = await Bun.file(path).text();
