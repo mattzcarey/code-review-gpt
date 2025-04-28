@@ -1,4 +1,4 @@
-name: Code Review GPT CI
+name: Shippie 🚢 CI
 
 on:
   pull_request:

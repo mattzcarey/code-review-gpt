@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { PlatformOptions } from '../types';
 
 export const reviewCommentSchema = z.object({
   filePath: z.string(),
@@ -29,4 +30,10 @@ export interface PlatformProvider {
    * @returns A promise that resolves when the comment is posted, potentially with the comment ID or URL.
    */
   postThreadComment: (commentDetails: ThreadComment) => Promise<string | undefined>;
+
+  /**
+   * Gets the platform option (e.g., GITHUB, GITLAB, etc.) for this provider.
+   * @returns The platform option enum value.
+   */
+  getPlatformOption: () => PlatformOptions;
 }

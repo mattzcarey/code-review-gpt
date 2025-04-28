@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "code-review-gpt",
+      "name": "shippie",
       "dependencies": {
         "@actions/github": "^5.1.1",
         "@ai-sdk/anthropic": "^1.2.10",

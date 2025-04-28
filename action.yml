@@ -1,6 +1,6 @@
-name: 'Code Review GPT'
-description: 'Reviews PR changes with a GPT model from OpenAI'
-author: 'Orion Tools'
+name: 'Shippie 🚢'
+description: 'an extensible code review agent'
+author: 'Matt Carey'
 inputs:
   MODEL_STRING:
     description: 'Model name to use for review'
@@ -34,11 +34,11 @@ runs:
       with:
         bun-version: latest
     
-    - name: Install and Run Code Review GPT
+    - name: Install and Run Shippie 🚢
       shell: bash
       run: |
-        bun add code-review-gpt@latest
-        bun code-review-gpt review --ci=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS
+        bun add shippie@latest
+        bun shippie review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS
       env:
         MODEL_STRING: ${{ inputs.MODEL_STRING }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}

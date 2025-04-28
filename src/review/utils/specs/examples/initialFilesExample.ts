@@ -21,7 +21,7 @@ export const initialFiles = [
       '🔑❌🔒\n',
     metadata: {
       source:
-        '/Users/sebo/Desktop/aleios/code-review-gpt/src/test/cases/snapshots/exposed-secret.md',
+        '/Users/sebo/Desktop/aleios/shippie/src/test/cases/snapshots/exposed-secret.md',
     },
   },
   {
@@ -49,7 +49,7 @@ export const initialFiles = [
       '🔄🐌🔧\n',
     metadata: {
       source:
-        '/Users/sebo/Desktop/aleios/code-review-gpt/src/test/cases/snapshots/too-many-nested-loops.md',
+        '/Users/sebo/Desktop/aleios/shippie/src/test/cases/snapshots/too-many-nested-loops.md',
     },
   },
 ];

@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { getGitRoot } from '../../git/getChangedFilesNames';
+import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
 
@@ -99,10 +100,14 @@ export const localProvider = async (): Promise<PlatformProvider> => {
     },
 
     postThreadComment: async (commentDetails: ThreadComment): Promise<string> => {
-      logger.info(`LocalProvider: Adding general thread comment to ${reviewFilePath}.`);
+      logger.info(`Local Provider: Adding general thread comment to ${reviewFilePath}.`);
       const formattedComment = formatThreadComment(commentDetails);
       await appendToFile(formattedComment);
       return `General comment added to local review file: ${reviewFilePath}`;
+    },
+
+    getPlatformOption: (): PlatformOptions => {
+      return PlatformOptions.LOCAL;
     },
   };
 };

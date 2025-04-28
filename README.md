@@ -1,4 +1,4 @@
-# Code Review GPT
+# Shippie 🚢 (formerly Code Review GPT)
 
 [![NPM][npm_badge]][npm]
 [![Contributors][contributors_badge]][contributors]
@@ -6,39 +6,42 @@
 [![License][license_badge]][license]
 [![Twitter][twitter_badge]][twitter]
 
-## We give engineers their weekends back
+## Helps you ship faster
 
-Code Review GPT uses Large Language Models to review code in your CI/CD pipeline. It helps streamline the code review process by providing feedback on code that may have issues or areas for improvement.
-
-It should pick up on common issues such as:
+Shippie uses Large Language Models to review code in your CI/CD pipeline. It should pick up on common issues such as:
 
 - Exposed secrets
 - Slow or inefficient code
-- Unreadable code
+- Potential bugs or unhandled edge cases
 
 It can also be run locally in your command line to review staged files.
 
-Code Review GPT is in alpha and should be used for fun only. It may provide useful feedback but please check any suggestions thoroughly.
-
 ## Demo
 
-https://github.com/mattzcarey/code-review-gpt/assets/77928207/92029baf-f691-465f-8d15-e1363fcb808e
+https://github.com/mattzcarey/shippie/assets/77928207/92029baf-f691-465f-8d15-e1363fcb808e
 
-## Setup Instructions
+## Ethos 💭
+
+- Beautiful CLI tool written in typescript and bun
+- Vertically integrated into your CI/CD pipeline
+- Functions as a human code reviewer, using a small set of optimised tools
+- Acts as a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) client for integration with external tools such as browser use, infrastructure deployments, observability monitoring.
+
+## Setup Instructions 💫
 
 See the [setup instructions](setup.md) for more information.
 
-## Action Usage
+## Action Usage 🚀
 
 See the [action documentation](action.md) for more information.
 
-## Getting Started 💫
+## Development 🔧
 
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/mattzcarey/code-review-gpt.git
-   cd code-review-gpt
+   git clone https://github.com/mattzcarey/shippie.git
+   cd shippie
    ```
 
 2. Install dependencies (we use bun but you can use npm or pnpm if you prefer):
@@ -81,39 +84,37 @@ We use [release-please](https://github.com/googleapis/release-please) on this pr
 
 Thanks to our wonderful contributors!
 
-<a href="https://github.com/mattzcarey/code-review-gpt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=mattzcarey/code-review-gpt" />
+<a href="https://github.com/mattzcarey/shippie/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mattzcarey/shippie" />
 </a>
 
-## Roadmap (see projects tab) 🌏
+## Roadmap 🌏
 
-The roadmap shifts the focus to a Github app which can be installed on any repo. This will allow for a more seamless UX and better features including a chatbot to discuss the PR and make suggestions.
-
-The code-review-gpt package will continue to be maintained and improved based on the feedback from the Github app.
+Have a look at the [discussion tab](https://github.com/mattzcarey/shippie/discussions) for the latest chat and ideas. I am actively working on the items in [todo.md](todo.md).
 
 ## Sponsors ❤️
 
 <a href="https://www.quivr.app/">
-    <img src="https://github.com/mattzcarey/code-review-gpt/assets/77928207/30361248-3159-4535-8efb-b114989ae886" alt="quivr logo" width="150" height="150">
+    <img src="https://github.com/mattzcarey/shippie/assets/77928207/30361248-3159-4535-8efb-b114989ae886" alt="quivr logo" width="150" height="150">
 </a>
 
 <a href="https://www.aleios.com/">
-    <img src="https://github.com/mattzcarey/code-review-gpt/assets/77928207/a47c2460-b866-433f-a4c9-efb5737d4fed" alt="aleios logo" width="150" height="150">
+    <img src="https://github.com/mattzcarey/shippie/assets/77928207/a47c2460-b866-433f-a4c9-efb5737d4fed" alt="aleios logo" width="150" height="150">
 </a>
 
 ## Star History ⭐️
 
-[![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/code-review-gpt&type=Date)](https://star-history.com/#mattzcarey/code-review-gpt&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=mattzcarey/shippie&type=Date)](https://star-history.com/#mattzcarey/shippie&Date)
 
 <!-- Badges -->
 
-[npm]: https://www.npmjs.com/package/code-review-gpt
-[npm_badge]: https://img.shields.io/npm/dm/code-review-gpt.svg
+[npm]: https://www.npmjs.com/package/shippie
+[npm_badge]: https://img.shields.io/npm/dm/shippie.svg
 [license]: https://opensource.org/licenses/MIT
-[license_badge]: https://img.shields.io/github/license/mattzcarey/code-review-gpt.svg?color=blue&style=flat-square&ghcache=unused
-[contributors]: https://github.com/mattzcarey/code-review-gpt/graphs/contributors
-[contributors_badge]: https://img.shields.io/github/contributors/mattzcarey/code-review-gpt
-[pulse]: https://github.com/mattzcarey/code-review-gpt/pulse
-[pulse_badge]: https://img.shields.io/github/commit-activity/m/mattzcarey/code-review-gpt
+[license_badge]: https://img.shields.io/github/license/mattzcarey/shippie.svg?color=blue&style=flat-square&ghcache=unused
+[contributors]: https://github.com/mattzcarey/shippie/graphs/contributors
+[contributors_badge]: https://img.shields.io/github/contributors/mattzcarey/shippie
+[pulse]: https://github.com/mattzcarey/shippie/pulse
+[pulse_badge]: https://img.shields.io/github/commit-activity/m/mattzcarey/shippie
 [twitter]: https://twitter.com/intent/follow?screen_name=mattzcarey
 [twitter_badge]: https://img.shields.io/twitter/follow/mattzcarey?style=social&logo=twitter

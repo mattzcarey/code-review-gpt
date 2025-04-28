@@ -46,5 +46,5 @@ jobs:
       - name: 🏡 Build package
         run: bun run build
 
-      - name: 🚀 Publish code-review-gpt
+      - name: 🚀 Publish shippie
         run: npm publish --access public

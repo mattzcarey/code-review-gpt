@@ -4,7 +4,7 @@ import { getLanguageName } from '../../../review/prompt/utils/fileLanguage';
 
 export const readFileTool = tool({
   description:
-    'Read a file or part of a file. You should use this to gather context about the changes in the PR. You should read several lines before and after the changes. You may need to go back and read more lines.',
+    'Read the current state of a file or part of a file. You should use this tool to gather specific context. You should use this in conjunction with the read_diff tool to get the full picture of the changes. You should read several lines before and after the changes. You may need to go back and read more lines.',
   parameters: z.object({
     path: z.string().describe('The absolute path to the file to read'),
     startLine: z.number().optional().describe('The line number to start reading from.'),

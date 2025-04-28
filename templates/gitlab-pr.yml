@@ -5,8 +5,8 @@ gpt-review:
   stage: review
   image: "node:18.17"
   before_script:
-    - npm install -g code-review-gpt
+    - npm install -g shippie
   script:
-    - code-review-gpt review --ci=gitlab
+    - shippie review --ci=gitlab
   only:
     - merge_requests

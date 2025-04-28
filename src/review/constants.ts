@@ -1,5 +1,4 @@
-export const signOff =
-  '#### Powered by [Code Review GPT](https://github.com/mattzcarey/code-review-gpt)';
+export const signOff = '#### Powered by [Shippie 🚢](https://github.com/mattzcarey/shippie)';
 
 export const languageMap: { [key: string]: string } = {
   '.js': 'JavaScript',
