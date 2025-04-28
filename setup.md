@@ -1,6 +1,6 @@
-# Code Review GPT Setup Instructions 🤖
+# Shippie 🚢 Setup Instructions 🤖
 
-Code Review GPT is a NodeJS package that uses LLMs to provide feedback on code. It is designed to be used in a CI environment to provide feedback on pull requests.
+Shippie 🚢 is a NodeJS package that uses LLMs to provide feedback on code. It is designed to be used in a CI environment to provide feedback on pull requests.
 
 ## Prerequisites
 
@@ -15,8 +15,8 @@ In the root of your git repository run:
 ### Github Actions
 
 ```shell
-bun install code-review-gpt
-bun code-review-gpt configure
+bun install shippie
+bun shippie configure
 ```
 
 ### Gitlab CI
@@ -44,8 +44,8 @@ If you are running this tool in Gitlab, you will need to do some additional setu
 6. Save you changes. Now you can go ahead and run the following commands in you project directory.
 
 ```shell
-bun install code-review-gpt
-bun code-review-gpt configure --setupTarget=gitlab
+bun install shippie
+bun shippie configure --setupTarget=gitlab
 ```
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
@@ -74,33 +74,33 @@ You will need to create a **personal access token** in Azure DevOps and store it
 12. **Use Variable in Pipeline:** Modify your YAML pipeline code to reference the variable where needed, replacing hard-coded values with the variable (e.g., `$(API_TOKEN)`).
 
 ```shell
-npm install code-review-gpt
-npx code-review-gpt configure --setupTarget=azdev
+npm install shippie
+npx shippie configure --setupTarget=azdev
 ```
 
 See templates for example yaml files. Copy and paste them to perform a manual setup.
 
 ## Local Usage 🌈
 
-Code Review GPT works locally to review files staged for commit:
+Shippie 🚢 works locally to review files staged for commit:
 
 ### Scoped Install
 
-Run `npm i code-review-gpt && npx code-review-gpt review` in the root directory of a git repository.
+Run `npm i shippie && npx shippie review` in the root directory of a git repository.
 
 ### Global Install
 
-Run `npm i -g code-review-gpt` to install the tool globally.
+Run `npm i -g shippie` to install the tool globally.
 
-You can now run `code-review-gpt review` in the root directory of any git-enabled repository on your machine.
+You can now run `shippie review` in the root directory of any git-enabled repository on your machine.
 
 ### Commands
 
-- `code-review-gpt review` - Runs the code review on the staged files.
-- `code-review-gpt configure` - Runs a setup tool to configure the application.
+- `shippie review` - Runs the code review on the staged files.
+- `shippie configure` - Runs a setup tool to configure the application.
 
 ### Options
 
-Run `code-review-gpt --help` to see all the options available.
+Run `shippie --help` to see all the options available.
 
-or check out the code [here](https://github.com/mattzcarey/code-review-gpt/blob/main/src/args.ts)
+or check out the code [here](https://github.com/mattzcarey/shippie/blob/main/src/args.ts)

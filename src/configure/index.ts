@@ -33,7 +33,7 @@ const configureGitHub = async () => {
   const workflowsDir = path.join(process.cwd(), '.github', 'workflows');
   fs.mkdirSync(workflowsDir, { recursive: true });
 
-  const workflowFile = path.join(workflowsDir, 'code-review-gpt.yml');
+  const workflowFile = path.join(workflowsDir, 'shippie.yml');
   fs.writeFileSync(workflowFile, fs.readFileSync(githubWorkflowTemplate, 'utf8'), 'utf8');
 
   logger.info(`Created GitHub Actions workflow at: ${workflowFile}`);
@@ -96,7 +96,7 @@ const configureAzureDevOps = async () => {
   const azdevPipelineTemplate = await findTemplateFile('**/templates/azdev-pr.yml');
 
   const pipelineDir = process.cwd();
-  const pipelineFile = path.join(pipelineDir, 'code-review-gpt.yaml');
+  const pipelineFile = path.join(pipelineDir, 'shippie.yaml');
 
   fs.writeFileSync(pipelineFile, fs.readFileSync(azdevPipelineTemplate, 'utf8'), 'utf8');
 

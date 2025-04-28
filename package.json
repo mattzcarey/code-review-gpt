@@ -1,15 +1,15 @@
 {
-  "name": "code-review-gpt",
+  "name": "shippie",
   "version": "0.9.0",
   "description": "an extensible code review agent",
   "bin": {
-    "code-review-gpt": "./dist/index.js"
+    "shippie": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mattzcarey/code-review-gpt"
+    "url": "https://github.com/mattzcarey/shippie"
   },
   "scripts": {
     "start": "bun run ./src/index.ts",
@@ -26,7 +26,10 @@
   },
   "keywords": [
     "code-review",
+    "shippie",
     "review",
+    "model-context-protocol",
+    "mcp",
     "chatgpt",
     "gpt",
     "openai",
@@ -34,7 +37,6 @@
     "grok",
     "perplexity",
     "gpt-4.1",
-    "vertexai",
     "huggingface",
     "ai",
     "genai",

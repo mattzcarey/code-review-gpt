@@ -1,10 +1,10 @@
-name: Code Review GPT
+name: Shippie 🚢
 trigger:
   - main
 pr:
   - main
 
-# Important: code-reivew-gpt needs additional Git history available for affected to function correctly. 
+# Important: shippie needs additional Git history available for affected to function correctly. 
 # Make sure Shallow fetching is disabled in your pipeline settings UI. 
 # For more info, check out this article from Microsoft https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch.
 variables:
@@ -15,22 +15,22 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: GTP_Review
+  - stage: Shippie
     jobs:
-      - job: gpt_review
-        displayName: Code Review GPT
+      - job: shippie_review
+        displayName: Shippie
         workspace:
           clean: all
         steps:
           - script: |
-              npm install code-review-gpt
-            displayName: "Install code-review-gpt"  
+              npm install shippie
+            displayName: "Install shippie"  
           
           - script: |
-              npx code-review-gpt review --ci=azdev --model=gpt-4o-mini
+              npx shippie review --platform=azdev
             env:
               API_TOKEN: $(API_TOKEN)
               OPENAI_API_KEY: $(OPENAI_API_KEY)
               BASE_SHA: $(BASE_SHA)
             workingDirectory: $(Build.SourcesDirectory)
-            displayName: "Run code review script"
+            displayName: "Run shippie review"

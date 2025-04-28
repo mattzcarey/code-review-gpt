@@ -1,6 +1,7 @@
 import { type GenerateTextResult, type LanguageModelV1, generateText } from 'ai';
 import {
   bashTool,
+  createReadDiffTool,
   createSubmitSummaryTool,
   createSuggestChangesTool,
   fetchTool,
@@ -22,12 +23,14 @@ export const reviewAgent = async (
 ): Promise<GenerateTextResult<Record<string, any>, string>> => {
   const submitSummaryTool = createSubmitSummaryTool(platformProvider);
   const suggestChangesTool = createSuggestChangesTool(platformProvider);
+  const readDiffTool = createReadDiffTool(platformProvider);
 
   const result = await generateText({
     model,
     prompt,
     tools: {
       read_file: readFileTool,
+      read_diff: readDiffTool,
       suggest_change: suggestChangesTool,
       submit_summary: submitSummaryTool,
       fetch: fetchTool,
