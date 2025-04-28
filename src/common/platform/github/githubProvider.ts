@@ -1,6 +1,7 @@
 import { context, getOctokit } from '@actions/github';
-import type { GitHub } from '@actions/github/lib/utils'; // Import GitHub type
-import { getGitHubEnvVariables } from '../../../config'; // Assume this path is correct
+import type { GitHub } from '@actions/github/lib/utils';
+import { getGitHubEnvVariables } from '../../../config';
+import { signOff } from '../../../review/constants';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
 
@@ -120,15 +121,36 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
 
       const { owner, repo, number: issue_number } = issue;
 
-      // Note: This simple implementation doesn't handle updating existing comments.
-      // It might be desirable to add logic similar to the original commentOnPR
-      // if we need to update a 'summary' comment.
+      // Add the sign-off to the comment
+      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+
       try {
+        // Check if we already have a comment with our sign-off
+        const { data: existingComments } = await octokit.rest.issues.listComments({
+          owner,
+          repo,
+          issue_number,
+        });
+
+        // Look for a comment that contains our sign-off
+        const existingComment = existingComments.find((comment) => comment.body?.includes(signOff));
+
+        if (existingComment) {
+          // Update the existing comment
+          const { data: updatedComment } = await octokit.rest.issues.updateComment({
+            owner,
+            repo,
+            comment_id: existingComment.id,
+            body: botCommentBody,
+          });
+          return updatedComment.html_url;
+        }
+        // Create a new comment
         const { data: issueComment } = await octokit.rest.issues.createComment({
           owner,
           repo,
           issue_number,
-          body: comment,
+          body: botCommentBody,
         });
         return issueComment.html_url;
       } catch (error) {

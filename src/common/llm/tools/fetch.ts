@@ -1,5 +1,4 @@
 import { tool } from 'ai';
-import fetch, { type RequestInit } from 'node-fetch';
 import { z } from 'zod';
 
 const DEFAULT_TIMEOUT = 10000; // 10 seconds

@@ -113,12 +113,6 @@ export const createFileInfo = (
   workspaceRoot: string,
   goal?: string
 ): string => {
-  // Ensure workspaceRoot is provided for reliable relative path calculation
-  if (!workspaceRoot) {
-    console.warn('Workspace root not provided to createFileInfo, file paths might be absolute.');
-    // Fallback or throw error depending on requirements
-  }
-
   const fileTree = buildFileTree(files, workspaceRoot || ''); // Pass workspace root
   const fileTreeString = formatTreeToString(fileTree, '', true).trim();
 
