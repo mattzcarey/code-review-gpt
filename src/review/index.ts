@@ -23,15 +23,9 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
     logger.info('No file to review, finishing review now.');
     return;
   }
-
   logger.debug(`Files to review after filtering: ${filteredFiles.map((file) => file.fileName)}`);
 
   const platformProvider = await getPlatformProvider(yargs.platform);
-  if (!platformProvider) {
-    logger.error('Platform provider not found.');
-    process.exit(1);
-  }
-
   logger.debug('Platform provider:', platformProvider);
 
   try {
@@ -52,7 +46,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
       process.exit(1);
     }
   } catch (error: unknown) {
-    logger.error('An error occurred during the review process:', error);
+    logger.error('An error occurred during the review process:', JSON.stringify(error, null, 6));
     if (error instanceof Error && error.stack) {
       logger.debug(`Stack trace: ${error.stack}`);
     } else {
