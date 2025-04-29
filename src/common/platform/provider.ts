@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { TokenUsage, ToolCall } from '../../review/types';
 import type { PlatformOptions } from '../types';
 
 export const reviewCommentSchema = z.object({
@@ -30,6 +31,13 @@ export interface PlatformProvider {
    * @returns A promise that resolves when the comment is posted, potentially with the comment ID or URL.
    */
   postThreadComment: (commentDetails: ThreadComment) => Promise<string | undefined>;
+
+  /**
+   * Submits usage data to be added to the thread comment.
+   * @param usage - The usage information to append to the thread comment.
+   * @returns A promise that resolves when the usage is submitted.
+   */
+  submitUsage: (tokenUsage: TokenUsage, toolUsage: ToolCall[]) => Promise<void>;
 
   /**
    * Gets the platform option (e.g., GITHUB, GITLAB, etc.) for this provider.

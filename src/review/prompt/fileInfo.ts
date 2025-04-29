@@ -47,6 +47,7 @@ const buildFileTree = (files: ReviewFile[], workspaceRoot: string): TreeNode => 
 /**
  * Formats line ranges into a compact string.
  * E.g., [{start: 1, end: 1}, {start: 5, end: 7}] -> "1, 5-7"
+ * E.g., [{start: 10, end: 10, isPureDeletion: true}] -> "10 (deletion)"
  * @param ranges - Array of LineRange objects.
  * @returns A formatted string representation of the line ranges.
  */
@@ -57,7 +58,12 @@ const formatLineRanges = (ranges?: LineRange[]): string => {
   // Sort ranges just in case they aren't
   ranges.sort((a, b) => a.start - b.start);
   return ranges
-    .map((range) => (range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`))
+    .map((range) => {
+      if (range.isPureDeletion) {
+        return `${range.start} (deletion)`;
+      }
+      return range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`;
+    })
     .join(', ');
 };
 
@@ -108,15 +114,9 @@ const formatTreeToString = (node: TreeNode, prefix = '', isLast = true): string 
  * @param goal - Optional review goal string.
  * @returns A markdown formatted string to be prepended to the AI prompt.
  */
-export const createFileInfo = (
-  files: ReviewFile[],
-  workspaceRoot: string,
-  goal?: string
-): string => {
-  const fileTree = buildFileTree(files, workspaceRoot || ''); // Pass workspace root
+export const createFileInfo = (files: ReviewFile[], workspaceRoot: string): string => {
+  const fileTree = buildFileTree(files, workspaceRoot || '');
   const fileTreeString = formatTreeToString(fileTree, '', true).trim();
 
-  const reviewGoal = goal ? `Review Goal: ${goal}\n\n` : '';
-
-  return `${reviewGoal}Files changed for this review (paths relative to root, includes line ranges):\n${fileTreeString}\n---\n`;
+  return `Files changed for this review (paths relative to root, includes line ranges):\n${fileTreeString}\n---\n`;
 };

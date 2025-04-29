@@ -32,11 +32,11 @@ jobs:
           fetch-depth: 0
 
       - name: Shippie 🚢
-        uses: mattzcarey/shippie@v0.1.11
+        uses: mattzcarey/shippie@v0.10.0
         with:
           GITHUB_TOKEN: ${{ github.token }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL: "gpt-4o"
+          MODEL_STRING: "openai:gpt-4o"
           REVIEW_LANGUAGE: "English"
 ```
 

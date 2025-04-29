@@ -1,24 +1,14 @@
-import type { ReviewComment } from './platform/provider'; // Import ReviewComment
-
 export type LineRange = {
   start: number;
   end: number;
-};
-
-export type ReviewResponse = {
-  report: string;
-  suggestions?: ReviewComment[]; // Add optional suggestions array
+  // When true, this range represents pure deletions (content was removed)
+  isPureDeletion?: boolean;
 };
 
 export type ReviewFile = {
   fileName: string;
   fileContent: string;
   changedLines: LineRange[];
-};
-
-export type PromptFile = {
-  fileName: string;
-  promptContent: string;
 };
 
 export enum PlatformOptions {

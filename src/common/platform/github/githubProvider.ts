@@ -1,7 +1,9 @@
 import { context, getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
 import { getGitHubEnvVariables } from '../../../config';
-import { signOff } from '../../../review/constants';
+import type { TokenUsage, ToolCall } from '../../../review/types';
+import { FORMATTING, formatSummary } from '../../formatting/summary';
+import { formatUsage } from '../../formatting/usage';
 import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
@@ -122,8 +124,8 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
 
       const { owner, repo, number: issue_number } = issue;
 
-      // Add the sign-off to the comment
-      const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+      // Format the comment using the centralized function
+      const botCommentBody = formatSummary(comment);
 
       try {
         // Check if we already have a comment with our sign-off
@@ -134,7 +136,9 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
         });
 
         // Look for a comment that contains our sign-off
-        const existingComment = existingComments.find((comment) => comment.body?.includes(signOff));
+        const existingComment = existingComments.find((comment) =>
+          comment.body?.includes(FORMATTING.SIGN_OFF)
+        );
 
         if (existingComment) {
           // Update the existing comment
@@ -162,6 +166,75 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
 
     getPlatformOption: (): PlatformOptions => {
       return PlatformOptions.GITHUB;
+    },
+
+    submitUsage: async (tokenUsage: TokenUsage, toolUsage: ToolCall[]): Promise<void> => {
+      const octokit = getOctokitInstance();
+      if (!octokit) return;
+
+      const { payload, issue } = context;
+
+      if (!payload.pull_request) {
+        logger.warn('Not a pull request. Skipping usage data submission...');
+        return;
+      }
+
+      const { owner, repo, number: issue_number } = issue;
+
+      try {
+        // Check if we already have a comment with our sign-off
+        const { data: existingComments } = await octokit.rest.issues.listComments({
+          owner,
+          repo,
+          issue_number,
+        });
+
+        // Look for a comment that contains our sign-off
+        const existingComment = existingComments.find((comment) =>
+          comment.body?.includes(FORMATTING.SIGN_OFF)
+        );
+
+        if (existingComment) {
+          // Get the current body
+          const currentBody = existingComment.body || '';
+
+          // Format the usage data with both current and accumulated stats
+          const usageSection = formatUsage(tokenUsage, toolUsage, currentBody);
+
+          // Check if there's already a usage section
+          let newBody = currentBody;
+          if (newBody.includes('<summary>📊 Usage Stats</summary>')) {
+            // Replace the existing usage section
+            newBody = newBody.replace(
+              /<details>\s*<summary>📊 Usage Stats<\/summary>[\s\S]*?<\/details>/,
+              usageSection
+            );
+          } else {
+            // Add the usage section before the sign-off
+            const signOffIndex = newBody.lastIndexOf(FORMATTING.SEPARATOR + FORMATTING.SIGN_OFF);
+            if (signOffIndex !== -1) {
+              newBody = `${newBody.substring(0, signOffIndex)}\n${usageSection}${newBody.substring(signOffIndex)}`;
+            } else {
+              // Just append to the end if we can't find the sign-off
+              newBody = `${newBody}\n${usageSection}`;
+            }
+          }
+
+          // Update the comment
+          await octokit.rest.issues.updateComment({
+            owner,
+            repo,
+            comment_id: existingComment.id,
+            body: newBody,
+          });
+
+          logger.info('Usage data added to thread comment.');
+        } else {
+          logger.warn('No existing thread comment found to append usage data to.');
+        }
+      } catch (error) {
+        logger.error(`Failed to update thread comment with usage data: ${JSON.stringify(error)}`);
+      }
     },
   };
 

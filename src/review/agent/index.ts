@@ -1,58 +1,9 @@
-import { type GenerateTextResult, type LanguageModelV1, generateText } from 'ai';
-import {
-  bashTool,
-  createReadDiffTool,
-  createSubmitSummaryTool,
-  createSuggestChangesTool,
-  fetchTool,
-  globTool,
-  grepTool,
-  lsTool,
-  readFileTool,
-} from '../../common/llm/tools';
+import type { GenerateTextResult, LanguageModelV1 } from 'ai';
+import { accumulateTokenUsage, formatToolUsage } from '../../common/formatting/usage';
 import type { PlatformProvider } from '../../common/platform/provider';
 import { logger } from '../../common/utils/logger';
-
-export const reviewAgent = async (
-  prompt: string,
-  model: LanguageModelV1,
-  platformProvider: PlatformProvider,
-  maxSteps: number,
-  onSummarySubmit?: () => void
-  // biome-ignore lint/suspicious/noExplicitAny: fine
-): Promise<GenerateTextResult<Record<string, any>, string>> => {
-  const submitSummaryTool = createSubmitSummaryTool(platformProvider);
-  const suggestChangesTool = createSuggestChangesTool(platformProvider);
-  const readDiffTool = createReadDiffTool(platformProvider);
-
-  const result = await generateText({
-    model,
-    prompt,
-    tools: {
-      read_file: readFileTool,
-      read_diff: readDiffTool,
-      suggest_change: suggestChangesTool,
-      submit_summary: submitSummaryTool,
-      fetch: fetchTool,
-      glob: globTool,
-      grep: grepTool,
-      ls: lsTool,
-      bash: bashTool,
-    },
-    maxSteps,
-    onStepFinish: (step) => {
-      logger.debug('Step finished:', step);
-      const called = step.toolCalls?.some((tc) => tc.toolName === 'submit_summary');
-      const executed = step.toolResults?.some((tr) => tr.toolName === 'submit_summary');
-      if ((called || executed) && onSummarySubmit) {
-        logger.debug('Detected submit_summary tool usage in step, triggering callback.');
-        onSummarySubmit();
-      }
-    },
-  });
-
-  return result;
-};
+import type { TokenUsage, ToolCall } from '../types';
+import { reviewAgent } from './generate';
 
 export const runAgenticReview = async (
   initialPrompt: string,
@@ -60,7 +11,7 @@ export const runAgenticReview = async (
   platformProvider: PlatformProvider,
   maxSteps: number,
   maxRetries = 3
-): Promise<{ success: boolean; message: string }> => {
+): Promise<string> => {
   logger.info(`Running agentic review (max retries: ${maxRetries})...`);
 
   // biome-ignore lint/suspicious/noExplicitAny: fine for GenerateTextResult generics
@@ -69,6 +20,13 @@ export const runAgenticReview = async (
   let accumulatedContext = '';
   let summaryToolCalled = false;
 
+  let tokenUsage: TokenUsage = {
+    promptTokens: 0,
+    completionTokens: 0,
+    totalTokens: 0,
+  };
+  let toolUsage: ToolCall[] = [];
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     logger.info(`Attempt ${attempt}/${maxRetries}...`);
     summaryToolCalled = false;
@@ -76,6 +34,9 @@ export const runAgenticReview = async (
     latestResult = await reviewAgent(currentPrompt, model, platformProvider, maxSteps, () => {
       summaryToolCalled = true;
     });
+
+    tokenUsage = accumulateTokenUsage(tokenUsage, latestResult.steps);
+    toolUsage = formatToolUsage(toolUsage, latestResult.steps, attempt);
 
     if (summaryToolCalled) {
       logger.info(`Agent submitted summary on attempt ${attempt} (detected via callback).`);
@@ -99,32 +60,11 @@ export const runAgenticReview = async (
     throw new Error('Agent did not produce any result.');
   }
 
-  const finalSummarySubmitted = summaryToolCalled;
-
-  if (!finalSummarySubmitted) {
-    logger.error(
-      `Agent failed to submit summary after ${maxRetries} attempts. Proceeding to parse final text anyway.`
-    );
+  if (!summaryToolCalled) {
+    logger.error(`Agent failed to submit summary after ${maxRetries} attempts. Proceeding anyway.`);
+  } else {
+    await platformProvider.submitUsage(tokenUsage, toolUsage);
   }
 
-  try {
-    const finalObject = JSON.parse(latestResult.text);
-    if (typeof finalObject.success === 'boolean' && typeof finalObject.message === 'string') {
-      logger.info(
-        `Agent returned valid JSON. Success flag: ${finalObject.success}. Summary submitted (detected via callback): ${finalSummarySubmitted}`
-      );
-      return finalObject;
-    }
-    logger.error('Parsed final text but structure is invalid.');
-    return {
-      success: finalSummarySubmitted,
-      message: `Agent returned unexpected final text structure: ${latestResult.text}`,
-    };
-  } catch (error) {
-    logger.error('Failed to parse final agent text:', error);
-    return {
-      success: finalSummarySubmitted,
-      message: `Agent finished with non-JSON text: ${latestResult.text}`,
-    };
-  }
+  return latestResult.text;
 };

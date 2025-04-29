@@ -1,5 +1,3 @@
-export const signOff = '#### Powered by [Shippie 🚢](https://github.com/mattzcarey/shippie)';
-
 export const languageMap: { [key: string]: string } = {
   '.js': 'JavaScript',
   '.ts': 'TypeScript',
