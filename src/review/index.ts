@@ -28,30 +28,17 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   const platformProvider = await getPlatformProvider(yargs.platform);
   logger.debug('Platform provider:', platformProvider);
 
-  try {
-    const model = createModel(yargs.modelString);
-    const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage);
-    logger.debug('Prompt:', prompt);
+  const model = createModel(yargs.modelString);
+  const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage);
+  logger.debug('Prompt:', prompt);
 
-    const { success, message } = await runAgenticReview(
-      prompt,
-      model,
-      platformProvider,
-      yargs.maxSteps
-    );
-    if (success) {
-      logger.info('Review completed successfully.');
-    } else {
-      logger.error('Review failed with message:', message);
-      process.exit(1);
-    }
+  try {
+    const message = await runAgenticReview(prompt, model, platformProvider, yargs.maxSteps);
+
+    logger.debug('Review response:', message);
+    logger.info('Review completed successfully.');
   } catch (error: unknown) {
-    logger.error('An error occurred during the review process:', JSON.stringify(error, null, 6));
-    if (error instanceof Error && error.stack) {
-      logger.debug(`Stack trace: ${error.stack}`);
-    } else {
-      logger.debug('No stack trace available for the error.');
-    }
+    logger.error('Review failed with error:', error);
     process.exit(1);
   }
 };

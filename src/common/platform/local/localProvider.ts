@@ -1,6 +1,9 @@
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import type { AIUsage } from '../../../review/types';
+import { formatSummary } from '../../formatting/summary';
+import { formatUsageStats } from '../../formatting/usageStats';
 import { getGitRoot } from '../../git/getChangedFilesNames';
 import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
@@ -18,23 +21,6 @@ const getTimestamp = (): string => {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
   return `${year}${month}${day}_${hours}${minutes}${seconds}`;
-};
-
-// Formatting functions remain the same as they don't depend on the file path
-const formatReviewComment = (commentDetails: ReviewComment): string => {
-  logger.debug('reviewcommentDetails', commentDetails);
-  const { filePath, comment, startLine, endLine } = commentDetails;
-  let header = `### Suggestion for \`${filePath}\``;
-  if (startLine !== undefined) {
-    header += ` (Line ${startLine}${endLine && endLine !== startLine ? `-${endLine}` : ''})`;
-  }
-  return `\n${header}\n\n\`\`\`suggestion\n${comment}\n\`\`\`\n---\n`;
-};
-
-const formatThreadComment = (commentDetails: ThreadComment): string => {
-  logger.debug('thread commentDetails', commentDetails);
-  const { comment } = commentDetails;
-  return `\n### General Comment / Summary\n\n${comment}\n\n---\n`;
 };
 
 export const localProvider = async (): Promise<PlatformProvider> => {
@@ -89,25 +75,40 @@ export const localProvider = async (): Promise<PlatformProvider> => {
   };
 
   // Return the provider object
-  return {
+  const provider = {
     postReviewComment: async (commentDetails: ReviewComment): Promise<string> => {
       logger.info(
         `LocalProvider: Adding review comment for ${commentDetails.filePath} to ${reviewFilePath}`
       );
-      const formattedComment = formatReviewComment(commentDetails);
-      await appendToFile(formattedComment);
+      await appendToFile(`${commentDetails.comment}\n`);
       return `Suggestion added to local review file: ${reviewFilePath}`;
     },
 
     postThreadComment: async (commentDetails: ThreadComment): Promise<string> => {
       logger.info(`Local Provider: Adding general thread comment to ${reviewFilePath}.`);
-      const formattedComment = formatThreadComment(commentDetails);
-      await appendToFile(formattedComment);
+      const formattedComment = formatSummary(commentDetails.comment);
+      await appendToFile(`${formattedComment}\n`);
       return `General comment added to local review file: ${reviewFilePath}`;
     },
 
     getPlatformOption: (): PlatformOptions => {
       return PlatformOptions.LOCAL;
     },
+
+    submitUsage: async (usage: AIUsage): Promise<void> => {
+      logger.info('Local Provider: Adding usage information to review file.');
+
+      try {
+        // Format the usage data with just the current run stats
+        const usageSection = `${formatUsageStats(usage)}\n`;
+        await appendToFile(usageSection);
+
+        logger.info(`Usage data added to local review file: ${reviewFilePath}`);
+      } catch (error) {
+        logger.error(`Failed to add usage data to local review file: ${error}`);
+      }
+    },
   };
+
+  return provider;
 };
