@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
-import { join } from 'path';
 import { readFile } from 'fs/promises';
+import { join } from 'path';
 import { exit } from 'process';
 
 import type { LineRange, ReviewFile } from '../types';
@@ -11,14 +11,15 @@ import { getDiffCommand, getGitRoot } from './getChangedFilesNames';
  * Parses the combined output of `git diff -U0` to extract changed line ranges for each file.
  * @param rawDiff - The raw string output from the git diff command.
  * @param gitRoot - The absolute path to the root of the git repository.
- * @returns A Map where keys are full file paths and values are arrays of LineRange objects.
+ * @returns A Map where keys are full file paths and values are arrays of LineRange objects
+ *          containing line numbers from the current/new version of each file.
  */
 const parseCombinedDiff = (rawDiff: string, gitRoot: string): Map<string, LineRange[]> => {
   const lines = rawDiff.split('\n');
   const fileMap = new Map<string, LineRange[]>();
   let currentFileName: string | null = null;
   const diffHeaderRegex = /^diff --git a\/(.+) b\/(.+)$/;
-  const hunkHeaderRegex = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/;
+  const hunkHeaderRegex = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
 
   for (const line of lines) {
     const diffHeaderMatch = line.match(diffHeaderRegex);
@@ -37,19 +38,32 @@ const parseCombinedDiff = (rawDiff: string, gitRoot: string): Map<string, LineRa
 
     const hunkMatch = line.match(hunkHeaderRegex);
     if (hunkMatch) {
-      const startLine = Number.parseInt(hunkMatch[1], 10);
-      // With -U0, the line count corresponds to the number of added/modified lines in the new file
-      const lineCount = hunkMatch[2] ? Number.parseInt(hunkMatch[2], 10) : 1;
+      const oldStartLine = Number.parseInt(hunkMatch[1], 10);
+      const oldLineCount = hunkMatch[2] ? Number.parseInt(hunkMatch[2], 10) : 1;
+      const newStartLine = Number.parseInt(hunkMatch[3], 10);
+      const newLineCount = hunkMatch[4] ? Number.parseInt(hunkMatch[4], 10) : 1;
 
-      // A line count of 0 in the new file part (+) means only deletions, which we might ignore
-      // depending on whether we want to track lines *in the new file* that changed.
-      // If lineCount is 0, it means the hunk represents purely deleted lines.
-      // Let's stick to tracking ranges in the *new* file version.
-      if (lineCount > 0) {
-        const endLine = startLine + lineCount - 1;
+      // Handle regular changes (additions and modifications)
+      if (newLineCount > 0) {
+        const endLine = newStartLine + newLineCount - 1;
         const ranges = fileMap.get(currentFileName);
         if (ranges) {
-          ranges.push({ start: startLine, end: endLine });
+          ranges.push({ start: newStartLine, end: endLine, fileVersion: 'current' });
+        }
+      }
+
+      // Handle pure deletions (content was removed but nothing was added)
+      if (newLineCount === 0 && oldLineCount > 0) {
+        const ranges = fileMap.get(currentFileName);
+        if (ranges) {
+          // For pure deletions, we create a special range with isPureDeletion flag
+          // We'll set both start and end to the line number where content was removed (after this line)
+          // This allows the deletion to be represented at a specific position in the new file
+          ranges.push({
+            start: newStartLine,
+            end: newStartLine,
+            isPureDeletion: true,
+          });
         }
       }
     }

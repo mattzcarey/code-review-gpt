@@ -10,14 +10,12 @@ export const constructPrompt = async (
 ): Promise<string> => {
   const workspaceRoot = await getGitRoot();
 
-  // Ensure there are files before trying to access files[0]
   const languageName = files.length > 0 ? getLanguageName(files[0].fileName) : 'default';
 
   const languageToInstructionPrompt = instructionPrompt
     .replace('{ProgrammingLanguage}', languageName)
     .replace('{ReviewLanguage}', reviewLanguage);
 
-  // Pass the ReviewFile array and workspaceRoot
   const fileInfo = createFileInfo(files, workspaceRoot);
 
   return `${languageToInstructionPrompt}\n${fileInfo}`;
