@@ -48,7 +48,7 @@ const parseCombinedDiff = (rawDiff: string, gitRoot: string): Map<string, LineRa
         const endLine = newStartLine + newLineCount - 1;
         const ranges = fileMap.get(currentFileName);
         if (ranges) {
-          ranges.push({ start: newStartLine, end: endLine, fileVersion: 'current' });
+          ranges.push({ start: newStartLine, end: endLine });
         }
       }
 

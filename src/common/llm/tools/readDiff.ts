@@ -1,5 +1,5 @@
-import { exec } from 'child_process';
 import { tool } from 'ai';
+import { exec } from 'child_process';
 import { z } from 'zod';
 import { getDiffCommand } from '../../git/getChangedFilesNames';
 import type { PlatformProvider } from '../../platform/provider';
@@ -18,7 +18,7 @@ export const createReadDiffTool = (platformProvider: PlatformProvider) =>
         const diffCommandBase = getDiffCommand(platformOption);
         const diffCommand = `${diffCommandBase} -- "${path}"`;
 
-        const diffOutput = await new Promise<string>((resolve, reject) => {
+        return await new Promise<string>((resolve, reject) => {
           // Use exec like other git commands in the codebase
           exec(diffCommand, { maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
             if (error && error.code !== 0 && error.code !== 1) {
@@ -34,9 +34,6 @@ export const createReadDiffTool = (platformProvider: PlatformProvider) =>
             resolve(stdout || 'No changes detected');
           });
         });
-
-        const prefix = `Diff for: ${path} (platform: ${platformOption}):\n\n`;
-        return `${prefix}\`\`\`diff\n${diffOutput}\`\`\``;
       } catch (error) {
         logger.error(`Failed to generate diff: ${error}`);
         return `Error generating diff: ${error instanceof Error ? error.message : String(error)}`;

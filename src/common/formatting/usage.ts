@@ -71,13 +71,12 @@ ${toolUsage
     (toolCall) => `
 #### \`${toolCall.name}\`
 
-**Arguments:**
 \`\`\`json
 ${JSON.stringify(toolCall.args, null, 4)}
 \`\`\`
 
 <details>
-<summary>**Result:**</summary>
+<summary>Result:</summary>
 
 \`\`\`json
 ${JSON.stringify(toolCall.result, null, 6)}
