@@ -1,9 +1,9 @@
+import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
-import * as fs from 'fs/promises';
-import type { AIUsage } from '../../../review/types';
+import type { TokenUsage, ToolCall } from '../../../review/types';
 import { formatSummary } from '../../formatting/summary';
-import { formatUsageStats } from '../../formatting/usageStats';
+import { formatUsage } from '../../formatting/usage';
 import { getGitRoot } from '../../git/getChangedFilesNames';
 import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
@@ -95,12 +95,12 @@ export const localProvider = async (): Promise<PlatformProvider> => {
       return PlatformOptions.LOCAL;
     },
 
-    submitUsage: async (usage: AIUsage): Promise<void> => {
+    submitUsage: async (tokenUsage: TokenUsage, toolUsage: ToolCall[]): Promise<void> => {
       logger.info('Local Provider: Adding usage information to review file.');
 
       try {
         // Format the usage data with just the current run stats
-        const usageSection = `${formatUsageStats(usage)}\n`;
+        const usageSection = `${formatUsage(tokenUsage, toolUsage)}\n`;
         await appendToFile(usageSection);
 
         logger.info(`Usage data added to local review file: ${reviewFilePath}`);

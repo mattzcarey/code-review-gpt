@@ -1,8 +1,8 @@
 import type { GenerateTextResult, LanguageModelV1 } from 'ai';
-import { addUsage } from '../../common/formatting/usageStats';
+import { accumulateTokenUsage, formatToolUsage } from '../../common/formatting/usage';
 import type { PlatformProvider } from '../../common/platform/provider';
 import { logger } from '../../common/utils/logger';
-import type { AIUsage } from '../types';
+import type { TokenUsage, ToolCall } from '../types';
 import { reviewAgent } from './generate';
 
 export const runAgenticReview = async (
@@ -20,11 +20,12 @@ export const runAgenticReview = async (
   let accumulatedContext = '';
   let summaryToolCalled = false;
 
-  let runUsage: AIUsage = {
+  let tokenUsage: TokenUsage = {
     promptTokens: 0,
     completionTokens: 0,
     totalTokens: 0,
   };
+  let toolUsage: ToolCall[] = [];
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     logger.info(`Attempt ${attempt}/${maxRetries}...`);
@@ -34,7 +35,8 @@ export const runAgenticReview = async (
       summaryToolCalled = true;
     });
 
-    runUsage = addUsage(runUsage, latestResult.usage);
+    tokenUsage = accumulateTokenUsage(tokenUsage, latestResult.steps);
+    toolUsage = formatToolUsage(toolUsage, latestResult.steps, attempt);
 
     if (summaryToolCalled) {
       logger.info(`Agent submitted summary on attempt ${attempt} (detected via callback).`);
@@ -61,7 +63,7 @@ export const runAgenticReview = async (
   if (!summaryToolCalled) {
     logger.error(`Agent failed to submit summary after ${maxRetries} attempts. Proceeding anyway.`);
   } else {
-    await platformProvider.submitUsage(runUsage);
+    await platformProvider.submitUsage(tokenUsage, toolUsage);
   }
 
   return latestResult.text;

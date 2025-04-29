@@ -1,9 +1,9 @@
 import { context, getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
 import { getGitHubEnvVariables } from '../../../config';
-import type { AIUsage } from '../../../review/types';
+import type { TokenUsage, ToolCall } from '../../../review/types';
 import { FORMATTING, formatSummary } from '../../formatting/summary';
-import { formatUsageStats } from '../../formatting/usageStats';
+import { formatUsage } from '../../formatting/usage';
 import { PlatformOptions } from '../../types';
 import { logger } from '../../utils/logger';
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider';
@@ -168,7 +168,7 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
       return PlatformOptions.GITHUB;
     },
 
-    submitUsage: async (usage: AIUsage): Promise<void> => {
+    submitUsage: async (tokenUsage: TokenUsage, toolUsage: ToolCall[]): Promise<void> => {
       const octokit = getOctokitInstance();
       if (!octokit) return;
 
@@ -199,7 +199,7 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
           const currentBody = existingComment.body || '';
 
           // Format the usage data with both current and accumulated stats
-          const usageSection = formatUsageStats(usage, currentBody);
+          const usageSection = formatUsage(tokenUsage, toolUsage, currentBody);
 
           // Check if there's already a usage section
           let newBody = currentBody;
