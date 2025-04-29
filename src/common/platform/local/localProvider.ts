@@ -1,6 +1,6 @@
-import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 import type { TokenUsage, ToolCall } from '../../../review/types';
 import { formatSummary } from '../../formatting/summary';
 import { formatUsage } from '../../formatting/usage';

@@ -114,10 +114,7 @@ const formatTreeToString = (node: TreeNode, prefix = '', isLast = true): string 
  * @param goal - Optional review goal string.
  * @returns A markdown formatted string to be prepended to the AI prompt.
  */
-export const createFileInfo = (
-  files: ReviewFile[],
-  workspaceRoot: string,
-): string => {
+export const createFileInfo = (files: ReviewFile[], workspaceRoot: string): string => {
   const fileTree = buildFileTree(files, workspaceRoot || '');
   const fileTreeString = formatTreeToString(fileTree, '', true).trim();
 

@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
-import { readFile } from 'fs/promises';
 import { join } from 'path';
+import { readFile } from 'fs/promises';
 import { exit } from 'process';
 
 import type { LineRange, ReviewFile } from '../types';
