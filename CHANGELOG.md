@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/mattzcarey/shippie/compare/v0.11.0...v0.12.0) (2025-04-30)
+
+
+### Features
+
+* azure ai provider ([#409](https://github.com/mattzcarey/shippie/issues/409)) ([69e9d43](https://github.com/mattzcarey/shippie/commit/69e9d43310d54ea646740e73aa08b8d1076e4a73))
+
 ## [0.11.0](https://github.com/mattzcarey/shippie/compare/v0.10.0...v0.11.0) (2025-04-29)
 
 
