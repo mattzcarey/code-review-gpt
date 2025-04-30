@@ -1,19 +1,14 @@
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createAzure } from '@ai-sdk/azure';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
 import type { LanguageModel, LanguageModelV1 } from 'ai';
-import { generateObject, generateText } from 'ai';
-import type { ZodSchema } from 'zod';
 
-// Type for the function returned by createOpenAI, etc.
-// Takes modelId, returns the LanguageModel object.
 type ProviderInstance = (modelId: string) => LanguageModel;
-
-// Type for the creator functions themselves (createOpenAI, etc.)
-// Takes options, returns the ProviderInstance function.
-type ProviderCreator = (options?: Record<string, unknown>) => ProviderInstance;
+type ProviderCreator = (options?: ModelCreationOptions) => ProviderInstance;
 
 const providerMap: Record<string, ProviderCreator> = {
+  azure: createAzure,
   openai: createOpenAI,
   google: createGoogleGenerativeAI,
   anthropic: createAnthropic,
@@ -30,10 +25,12 @@ const createModelProvider = (
 ): ProviderInstance => {
   const creator = providerMap[providerKey];
   if (!creator) {
-    throw new Error(`Unsupported provider: ${providerKey}`);
+    throw new Error(
+      `Unsupported provider: ${providerKey}. The supported providers are: ${Object.keys(providerMap).join(', ')}`
+    );
   }
-  if (options?.baseURL) {
-    return creator({ baseURL: options.baseURL });
+  if (options) {
+    return creator(options);
   }
   return creator();
 };

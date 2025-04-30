@@ -14,6 +14,10 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Platform: ${yargs.platform}`);
   logger.debug(`Max steps: ${yargs.maxSteps}`);
 
+  if (yargs.baseUrl) {
+    logger.debug(`Base URL: ${yargs.baseUrl}`);
+  }
+
   const files: ReviewFile[] = await getFilesWithChanges(yargs.platform);
   logger.debug(`Found ${files.length} changed files.`);
   const filteredFiles = filterFiles(files);
@@ -28,7 +32,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   const platformProvider = await getPlatformProvider(yargs.platform);
   logger.debug('Platform provider:', platformProvider);
 
-  const model = createModel(yargs.modelString);
+  const model = createModel(yargs.modelString, { baseURL: yargs.baseUrl });
   const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage);
   logger.debug('Prompt:', prompt);
 

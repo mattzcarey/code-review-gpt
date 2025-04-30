@@ -16,8 +16,8 @@ inputs:
   GITHUB_TOKEN:
     description: 'Github token'
     required: true
-  OPENAI_BASE_URL:
-    description: 'OpenAI API Base URL'
+  BASE_URL:
+    description: 'AI Provider Base URL'
     required: false
   MAX_STEPS:
     description: 'Maximum number of agentic steps to take'
@@ -38,14 +38,14 @@ runs:
       shell: bash
       run: |
         bun add shippie@latest
-        bun shippie review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS
+        bun shippie review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL
       env:
         MODEL_STRING: ${{ inputs.MODEL_STRING }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OPENAI_BASE_URL: ${{ inputs.OPENAI_BASE_URL }}
+        BASE_URL: ${{ inputs.BASE_URL }}
         MAX_STEPS: ${{ inputs.MAX_STEPS }}
         DEBUG: ${{ inputs.DEBUG }}
 

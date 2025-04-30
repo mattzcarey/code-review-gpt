@@ -45,7 +45,7 @@
 
 ### Features
 
-* **azureai:** Add support for azure open Ai ([#377](https://github.com/mattzcarey/code-review-gpt/issues/377)) ([989c26a](https://github.com/mattzcarey/code-review-gpt/commit/989c26ae511ef35f03545a836f00984979a9a673))
+* **azure:** Add support for azure open Ai ([#377](https://github.com/mattzcarey/code-review-gpt/issues/377)) ([989c26a](https://github.com/mattzcarey/code-review-gpt/commit/989c26ae511ef35f03545a836f00984979a9a673))
 * use picocolors and tinyglobby and biome check fix  ([#375](https://github.com/mattzcarey/code-review-gpt/issues/375)) ([760e830](https://github.com/mattzcarey/code-review-gpt/commit/760e830e200f7d88687b3b3e79497efe9badc058))
 
 
