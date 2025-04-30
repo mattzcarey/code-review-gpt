@@ -1,16 +1,4 @@
-# Shippie Action
-
-## Setup
-
-Run the following command in your repo root to add the shippie workflow to your repo.
-
-```bash
-npx shippie configure
-```
-
-The setup script automatically adds an `OPENAI_API_KEY` secret to your repo. More info on secrets can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions).
-
-You can configure the workflow to run however you like, but here are some examples.
+# Shippie CI/CD 
 
 ### Option 1: Review every PR to main
 
@@ -37,7 +25,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           MODEL_STRING: "openai:gpt-4o"
-          REVIEW_LANGUAGE: "English"
 ```
 
 ### Option 2: Assign a shippie bot

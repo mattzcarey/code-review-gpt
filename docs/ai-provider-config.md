@@ -1,6 +1,17 @@
 # Provider Configuration
 
-## Using the Azure OpenAI Provider
+Shippie support OpenAI, Anthropic, Google Gemini and local models through an OpenAI compatible API.
+
+Just change the `modelString` to the model you want to use.
+
+eg.
+
+```yaml
+- name: Run shippie review
+  run: bun review --platform=github --modelString=azure:gpt-4o
+```
+
+## Azure OpenAI Provider
 
 This section will guide you through configuring and using the Azure OpenAI provider in your Code Review project, which leverages Large Language Models (LLMs) to enhance your code quality and prevent bugs before they reach production.
 
@@ -14,8 +25,8 @@ Before you begin, make sure you have the following:
 To set up the code review script with the Azure OpenAI provider on GitHub CI, add the following configuration in your GitHub Actions workflow file (e.g., .github/workflows/review.yml):
 
 ```yaml
-- name: Run code review script
-  run: bun run start review --ci=github --provider=azureai
+- name: Run shippie review
+  run: bun review --platform=github --modelString=azure:gpt-4o
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     BASE_SHA: ${{ github.event.pull_request.base.sha }}

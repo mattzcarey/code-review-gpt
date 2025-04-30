@@ -37,6 +37,7 @@ export type ReviewArgs = BaseArgs & {
   reviewLanguage: string;
   platform: PlatformOptions | string;
   maxSteps: number;
+  baseUrl?: string;
 };
 
 export type ParsedArgs = ConfigureArgs | ReviewArgs;

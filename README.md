@@ -16,6 +16,10 @@ Shippie uses Large Language Models to review code in your CI/CD pipeline. It sho
 
 It can also be run locally in your command line to review staged files.
 
+```bash
+npx shippie review
+```
+
 ## Demo
 
 https://github.com/mattzcarey/shippie/assets/77928207/92029baf-f691-465f-8d15-e1363fcb808e
@@ -29,11 +33,7 @@ https://github.com/mattzcarey/shippie/assets/77928207/92029baf-f691-465f-8d15-e1
 
 ## Setup Instructions 💫
 
-See the [setup instructions](setup.md) for more information.
-
-## Action Usage 🚀
-
-See the [action documentation](action.md) for more information.
+See the [setup instructions](docs/setup.md) for more docs on how to set up shippie in your CI/CD pipeline and use it locally.
 
 ## Development 🔧
 
@@ -54,21 +54,11 @@ See the [action documentation](action.md) for more information.
    - Rename the `.env.example` file to `.env`.
    - Open the `.env` file and replace `YOUR_API_KEY` with your actual OPENAI API key.
 
-When used globally you should run `export OPENAI_API_KEY=YOUR_API_KEY` (or similar for your operating system) in your terminal to set the API key.
-
-To use an OpenAI compatible API, you can set the `OPENAI_API_KEY` and `OPENAI_BASE_URL` environment variables and specify the model name when running the review command:
-
-```shell
-export OPENAI_API_KEY=<YOUR_API_KEY>
-export OPENAI_BASE_URL=<YOUR_ENDPOINT>
-bun review --model <YOUR_MODEL_NAME>
-```
-
 4. Run the application:
 
-   ```shell
-   bun start
-   ```
+```shell
+bun start
+```
 
 See the package.json file for all the npm commands you can run.
 

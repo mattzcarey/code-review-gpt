@@ -38,6 +38,10 @@ export const getYargs = async () => {
           description: 'Maximum number of agentic steps to take',
           type: 'number',
           default: 25,
+        })
+        .option('baseUrl', {
+          description: 'Base URL for the platform',
+          type: 'string',
         });
     })
     .demandCommand(1, 'Please specify a command: configure or review')
