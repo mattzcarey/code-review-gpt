@@ -41,7 +41,6 @@ const parseCombinedDiff = (
 
     const hunkMatch = line.match(hunkHeaderRegex)
     if (hunkMatch) {
-      const oldStartLine = Number.parseInt(hunkMatch[1], 10)
       const oldLineCount = hunkMatch[2] ? Number.parseInt(hunkMatch[2], 10) : 1
       const newStartLine = Number.parseInt(hunkMatch[3], 10)
       const newLineCount = hunkMatch[4] ? Number.parseInt(hunkMatch[4], 10) : 1

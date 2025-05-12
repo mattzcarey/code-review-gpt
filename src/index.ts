@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import dotenv from 'dotenv'
 
 import { getYargs } from './args'
@@ -27,6 +28,8 @@ const main = async () => {
         logger.error('Unknown command')
         process.exit(1)
     }
+
+    process.exit(0)
   } catch (error) {
     logger.error(`Error: ${error}`)
     process.exit(1)
