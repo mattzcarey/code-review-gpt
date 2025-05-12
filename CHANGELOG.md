@@ -7,6 +7,7 @@
 
 * some basic telemetry data ([#416](https://github.com/mattzcarey/shippie/issues/416)) ([10676a8](https://github.com/mattzcarey/shippie/commit/10676a877e92addccdd59ca676027d506a8cef74))
 * thinking tool ([#418](https://github.com/mattzcarey/shippie/issues/418)) ([8aa4a5e](https://github.com/mattzcarey/shippie/commit/8aa4a5eb40a892c95a5bddc92c3210565369afc9))
+* **tools:** mcp client and client manager ([#419](https://github.com/mattzcarey/shippie/issues/419)) ([3ad39b2](https://github.com/mattzcarey/shippie/commit/3ad39b26f7c26c040d6cf2dd55fa8c0e11d87671))
 
 ## [0.12.2](https://github.com/mattzcarey/shippie/compare/v0.12.1...v0.12.2) (2025-05-12)
 
