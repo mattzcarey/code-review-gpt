@@ -13,7 +13,6 @@ interface MCPClient {
 interface MCPServerConfig {
   command?: string
   args?: string[]
-  type?: string
   url?: string
   headers?: Record<string, string>
 }
@@ -29,9 +28,40 @@ export class MCPClientManager {
   async loadConfig(): Promise<void> {
     try {
       const workspacePath = await getGitRoot()
-      const configPath = join(workspacePath, '.shippie', 'mcp.json')
-      const configContent = await readFile(configPath, 'utf-8')
-      this.config = JSON.parse(configContent) as MCPConfig
+      const config: MCPConfig = { mcpServers: {} }
+
+      // Try to load from .shippie/mcp.json
+      try {
+        const shippieConfigPath = join(workspacePath, '.shippie', 'mcp.json')
+        const shippieConfigContent = await readFile(shippieConfigPath, 'utf-8')
+        const shippieConfig = JSON.parse(shippieConfigContent) as MCPConfig
+        config.mcpServers = { ...config.mcpServers, ...shippieConfig.mcpServers }
+        logger.info('Loaded MCP config from .shippie/mcp.json')
+      } catch (error) {
+        logger.debug(`No .shippie/mcp.json found or error reading it: ${error}`)
+      }
+
+      // Try to load from .cursor/mcp.json
+      try {
+        const cursorConfigPath = join(workspacePath, '.cursor', 'mcp.json')
+        const cursorConfigContent = await readFile(cursorConfigPath, 'utf-8')
+        const cursorConfig = JSON.parse(cursorConfigContent) as MCPConfig
+        config.mcpServers = { ...config.mcpServers, ...cursorConfig.mcpServers }
+        logger.info('Loaded MCP config from .cursor/mcp.json')
+      } catch (error) {
+        logger.debug(`No .cursor/mcp.json found or error reading it: ${error}`)
+      }
+
+      // If no configs were found, set config to null
+      if (Object.keys(config.mcpServers).length === 0) {
+        logger.error(
+          'No MCP configuration found in .shippie/mcp.json or .cursor/mcp.json'
+        )
+        this.config = null
+        return
+      }
+
+      this.config = config
     } catch (error) {
       logger.error(`Failed to load MCP config: ${error}`)
       this.config = null
@@ -46,7 +76,7 @@ export class MCPClientManager {
 
     for (const [serverName, serverConfig] of Object.entries(this.config.mcpServers)) {
       try {
-        if (serverConfig.command && serverConfig.args) {
+        if (serverConfig.command) {
           // Use StdioMCPTransport for command-based configuration
           const transport = new StdioMCPTransport({
             command: serverConfig.command,
@@ -57,7 +87,7 @@ export class MCPClientManager {
             transport,
           })
           logger.info(`Started MCP client for ${serverName}`)
-        } else if (serverConfig.type === 'sse' && serverConfig.url) {
+        } else if (serverConfig.url) {
           // Use SSE transport directly for URL-based configuration
           this.clients[serverName] = await experimental_createMCPClient({
             transport: {
