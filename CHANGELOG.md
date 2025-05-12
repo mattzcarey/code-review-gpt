@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.1](https://github.com/mattzcarey/shippie/compare/v0.12.0...v0.12.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* **cicd:** npm token ([#414](https://github.com/mattzcarey/shippie/issues/414)) ([a72f00d](https://github.com/mattzcarey/shippie/commit/a72f00d9dd630b541d511f20682cbdfe6f4f514b))
+* **review:** use node fs for readFile tool ([#412](https://github.com/mattzcarey/shippie/issues/412)) ([75f083f](https://github.com/mattzcarey/shippie/commit/75f083fd44952d22a046f00960cb66853c785561))
+
 ## [0.12.0](https://github.com/mattzcarey/shippie/compare/v0.11.0...v0.12.0) (2025-04-30)
 
 
