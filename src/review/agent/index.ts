@@ -1,9 +1,5 @@
 import type { GenerateTextResult, LanguageModelV1, Tool } from 'ai'
 import { accumulateTokenUsage, formatToolUsage } from '../../common/formatting/usage'
-import type { PlatformProvider } from '../../common/platform/provider'
-import { logger } from '../../common/utils/logger'
-import type { TokenUsage, ToolCall } from '../types'
-import { reviewAgent } from './generate'
 import { MCPClientManager } from '../../common/llm/mcp/client'
 import {
   bashTool,
@@ -17,6 +13,10 @@ import {
   readFileTool,
   thinkingTool,
 } from '../../common/llm/tools'
+import type { PlatformProvider } from '../../common/platform/provider'
+import { logger } from '../../common/utils/logger'
+import type { TokenUsage, ToolCall } from '../types'
+import { reviewAgent } from './generate'
 
 export const runAgenticReview = async (
   initialPrompt: string,
