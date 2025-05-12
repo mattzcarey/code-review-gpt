@@ -24,8 +24,8 @@ jobs:
       - name: Install shippie
         run: bun i shippie
 
-      - name: Run code review script
-        run: bun shippie review --ci=github
+      - name: Run shippie review
+        run: bun shippie review --platform=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}

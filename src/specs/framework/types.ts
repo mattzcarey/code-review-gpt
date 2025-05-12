@@ -12,7 +12,7 @@ export type FrameworkScorerExtraArgs = {
   model?: string
 }
 
-export type ConfiguredScorer<Input = string, Output = string> = AutoevalsScorer<
+export type ConfiguredScorer<Output = string> = AutoevalsScorer<
   Output,
   FrameworkScorerExtraArgs
 >
@@ -20,7 +20,7 @@ export type ConfiguredScorer<Input = string, Output = string> = AutoevalsScorer<
 export type EvalOptions<Input = string, Output = string> = {
   data: () => Promise<TestCase<Input, Output>[]>
   task: TaskFn<Input, Output>
-  scorers: ConfiguredScorer<Input, Output>[]
+  scorers: ConfiguredScorer<Output>[]
   threshold?: number | null
   timeout?: number
   modelString?: string
