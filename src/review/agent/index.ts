@@ -1,5 +1,18 @@
-import type { GenerateTextResult, LanguageModelV1 } from 'ai'
+import type { GenerateTextResult, LanguageModelV1, Tool } from 'ai'
 import { accumulateTokenUsage, formatToolUsage } from '../../common/formatting/usage'
+import { MCPClientManager } from '../../common/llm/mcp/client'
+import {
+  bashTool,
+  createReadDiffTool,
+  createSubmitSummaryTool,
+  createSuggestChangesTool,
+  fetchTool,
+  globTool,
+  grepTool,
+  lsTool,
+  readFileTool,
+  thinkingTool,
+} from '../../common/llm/tools'
 import type { PlatformProvider } from '../../common/platform/provider'
 import { logger } from '../../common/utils/logger'
 import type { TokenUsage, ToolCall } from '../types'
@@ -13,6 +26,33 @@ export const runAgenticReview = async (
   maxRetries = 3
 ): Promise<string> => {
   logger.info(`Running agentic review (max retries: ${maxRetries})...`)
+
+  const clients = new MCPClientManager()
+  await clients.loadConfig()
+  await clients.startClients()
+
+  const mcpTools: Record<string, Tool> = {}
+  for (const [serverName, tools] of Object.entries(await clients.getTools())) {
+    for (const [toolName, tool] of Object.entries(tools)) {
+      mcpTools[`${serverName}-${toolName}`] = tool
+    }
+  }
+
+  const tools = {
+    read_file: readFileTool,
+    read_diff: createReadDiffTool(platformProvider),
+    suggest_change: createSuggestChangesTool(platformProvider),
+    submit_summary: createSubmitSummaryTool(platformProvider),
+    fetch: fetchTool,
+    glob: globTool,
+    grep: grepTool,
+    ls: lsTool,
+    bash: bashTool,
+    thinking: thinkingTool,
+    ...mcpTools,
+  }
+
+  logger.debug('Tools:', Object.keys(tools))
 
   // biome-ignore lint/suspicious/noExplicitAny: fine for GenerateTextResult generics
   let latestResult: GenerateTextResult<Record<string, any>, string> | null = null
@@ -31,15 +71,9 @@ export const runAgenticReview = async (
     logger.info(`Attempt ${attempt}/${maxRetries}...`)
     summaryToolCalled = false
 
-    latestResult = await reviewAgent(
-      currentPrompt,
-      model,
-      platformProvider,
-      maxSteps,
-      () => {
-        summaryToolCalled = true
-      }
-    )
+    latestResult = await reviewAgent(currentPrompt, model, maxSteps, tools, () => {
+      summaryToolCalled = true
+    })
 
     tokenUsage = accumulateTokenUsage(tokenUsage, latestResult.steps)
     toolUsage = formatToolUsage(toolUsage, latestResult.steps, attempt)
@@ -77,6 +111,8 @@ export const runAgenticReview = async (
   } else {
     await platformProvider.submitUsage(tokenUsage, toolUsage)
   }
+
+  await clients.closeClients()
 
   return latestResult.text
 }

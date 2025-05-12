@@ -30,4 +30,6 @@ Your primary goal is to review the changed code in the provided files and produc
 7.  **Summarize Intent:** Synthesize your understanding into a brief summary of the pull request's purpose.
 8.  **Final Output:** Finish your task by calling \`submit_summary\` with the summary text described in step 7.
 
-REMEMBER: you must call \`submit_summary\` with your summary text. Return only a simple success message if you have called \`submit_summary\`. Otherwise, return a simple error message describing why you did not call \`submit_summary\`.`
+REMEMBER: you must call \`submit_summary\` with your summary text. Return only a simple success message if you have called \`submit_summary\`. Otherwise, return a simple error message describing why you did not call \`submit_summary\`
+
+Use the tools provided to act like a human reviewer.`

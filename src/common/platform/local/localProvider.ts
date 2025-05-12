@@ -18,14 +18,15 @@ export const localProvider = async (): Promise<PlatformProvider> => {
   const workspaceRoot = await getGitRoot()
 
   const timestamp = new Date().toISOString().replace(/:/g, '-')
-  const reviewFileName = `local_review_${timestamp}.md`
+  const reviewFileName = `local_${timestamp}.md`
   const shippieDirPath = join(workspaceRoot, SHIPPIE_DIR_NAME)
-  const reviewFilePath = join(shippieDirPath, reviewFileName)
-  const gitignorePath = join(shippieDirPath, '.gitignore')
+  const reviewDirPath = join(shippieDirPath, 'review')
+  const reviewFilePath = join(reviewDirPath, reviewFileName)
+  const gitignorePath = join(reviewDirPath, '.gitignore')
 
   const ensureShippieDirExists = async (): Promise<void> => {
     try {
-      await mkdir(shippieDirPath, { recursive: true })
+      await mkdir(reviewDirPath, { recursive: true })
 
       try {
         await access(gitignorePath)
@@ -36,7 +37,7 @@ export const localProvider = async (): Promise<PlatformProvider> => {
     } catch (error: unknown) {
       const nodeError = error as NodeJS.ErrnoException
       if (nodeError?.code !== 'EEXIST') {
-        logger.error(`Failed to create .shippie directory at ${shippieDirPath}: ${error}`)
+        logger.error(`Failed to create review directory at ${reviewDirPath}: ${error}`)
         throw error
       }
 
@@ -50,7 +51,6 @@ export const localProvider = async (): Promise<PlatformProvider> => {
   }
 
   const appendToFile = async (content: string): Promise<void> => {
-    logger.debug('appendToFile', content)
     await ensureShippieDirExists()
 
     try {
@@ -87,15 +87,11 @@ export const localProvider = async (): Promise<PlatformProvider> => {
 
   return {
     postReviewComment: async (commentDetails: ReviewComment): Promise<string> => {
-      logger.info(
-        `LocalProvider: Adding review comment for ${commentDetails.filePath} to ${reviewFilePath}`
-      )
       await appendToFile(`${commentDetails.comment}\n`)
       return `Suggestion added to local review file: ${reviewFilePath}`
     },
 
     postThreadComment: async (commentDetails: ThreadComment): Promise<string> => {
-      logger.info(`Local Provider: Adding general thread comment to ${reviewFilePath}.`)
       const formattedComment = formatSummary(commentDetails.comment)
       await appendToFile(`${formattedComment}\n`)
       return `General comment added to local review file: ${reviewFilePath}`
@@ -104,8 +100,6 @@ export const localProvider = async (): Promise<PlatformProvider> => {
     getPlatformOption: (): PlatformOptions => PlatformOptions.LOCAL,
 
     submitUsage: async (tokenUsage: TokenUsage, toolUsage: ToolCall[]): Promise<void> => {
-      logger.info('Local Provider: Adding usage information to review file.')
-
       try {
         const usageSection = `${formatUsage(tokenUsage, toolUsage)}\n`
         await appendToFile(usageSection)
