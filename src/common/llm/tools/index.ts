@@ -1,4 +1,5 @@
 export { bashTool } from './bash'
+export { thinkingTool } from './thinking'
 export { fetchTool } from './fetch'
 export { globTool } from './glob'
 export { grepTool } from './grep'

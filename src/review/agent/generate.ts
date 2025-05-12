@@ -9,9 +9,11 @@ import {
   grepTool,
   lsTool,
   readFileTool,
+  thinkingTool,
 } from '../../common/llm/tools'
 import type { PlatformProvider } from '../../common/platform/provider'
 import { logger } from '../../common/utils/logger'
+
 export const reviewAgent = async (
   prompt: string,
   model: LanguageModelV1,
@@ -30,6 +32,7 @@ export const reviewAgent = async (
     grep: grepTool,
     ls: lsTool,
     bash: bashTool,
+    thinking: thinkingTool,
   }
 
   return generateText({
