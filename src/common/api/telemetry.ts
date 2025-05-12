@@ -28,7 +28,6 @@ export class Telemetry {
       event_type: EventType.REVIEW_STARTED,
       repo_id: this.repo_id,
       run_id: this.run_id,
-      timestamp: new Date().toISOString(),
       args: this.args,
       system: {
         platform: process.platform,
