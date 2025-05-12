@@ -17,7 +17,7 @@ const REPO_IDS_FILE = join(SHIPPIE_CONFIG_DIR, 'repo_ids.json')
 export const localProvider = async (): Promise<PlatformProvider> => {
   const workspaceRoot = await getGitRoot()
 
-  const timestamp = new Date().toISOString()
+  const timestamp = new Date().toISOString().replace(/:/g, '-')
   const reviewFileName = `local_review_${timestamp}.md`
   const shippieDirPath = join(workspaceRoot, SHIPPIE_DIR_NAME)
   const reviewFilePath = join(shippieDirPath, reviewFileName)
