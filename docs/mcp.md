@@ -1,6 +1,10 @@
 # Model Context Protocol (MCP) Configuration
 
-This document outlines how to configure MCP servers for your project.
+Shippie can debug failures in obscure browsers, perform QA testing, understand the original goal of the ticket and generally do all the things a human would do using external tools supplied via MCP servers.
+
+You can give the shippie agent access to a web browser, database, documentation, project management systems or any other external tools.
+
+Shippie acts as an MCP client, like Cursor, Windsurf, VSCode and Claude.
 
 ## Configuration File
 
