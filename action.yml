@@ -33,12 +33,12 @@ runs:
     - uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
-    
+
     - name: Install and Run Shippie 🚢
       shell: bash
       run: |
         bun add shippie@latest
-        bun shippie review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL
+        bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL
       env:
         MODEL_STRING: ${{ inputs.MODEL_STRING }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
