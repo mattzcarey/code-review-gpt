@@ -33,13 +33,15 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      
+
       - name: Setup Node.js for npm
         uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           node-version: "latest"
           registry-url: "https://registry.npmjs.org"
-      
+
       - name: 💫 Install dependencies
         run: bun i
 
