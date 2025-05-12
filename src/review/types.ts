@@ -1,14 +1,14 @@
 export interface TokenUsage {
-  promptTokens: number;
-  completionTokens: number;
-  totalTokens: number;
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
 }
 
 export interface ToolCall {
-  name: string;
+  name: string
   // biome-ignore lint/suspicious/noExplicitAny: fine for ToolCall generics
-  args: any;
+  args: any
   // biome-ignore lint/suspicious/noExplicitAny: fine for ToolCall generics
-  result: any;
-  retry: number;
+  result: any
+  retry: number
 }

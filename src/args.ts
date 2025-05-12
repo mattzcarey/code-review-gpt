@@ -1,8 +1,8 @@
-import dotenv from 'dotenv';
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
+import dotenv from 'dotenv'
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
 
-dotenv.config();
+dotenv.config()
 
 export const getYargs = async () => {
   return yargs(hideBin(process.argv))
@@ -13,7 +13,7 @@ export const getYargs = async () => {
         choices: ['github', 'gitlab', 'azdev'],
         type: 'string',
         default: 'github',
-      });
+      })
     })
     .command('review', 'Review code changes', (yargs) => {
       return yargs
@@ -42,7 +42,7 @@ export const getYargs = async () => {
         .option('baseUrl', {
           description: 'Base URL for the platform',
           type: 'string',
-        });
+        })
     })
     .demandCommand(1, 'Please specify a command: configure or review')
     .option('debug', {
@@ -51,5 +51,5 @@ export const getYargs = async () => {
       default: false,
     })
     .help()
-    .parse();
-};
+    .parse()
+}

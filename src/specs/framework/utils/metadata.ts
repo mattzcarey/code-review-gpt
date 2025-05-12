@@ -1,6 +1,6 @@
 export interface TestCaseMetadata {
-  name: string;
-  description: string;
+  name: string
+  description: string
 }
 
 export const isTestCaseMetadata = (input: unknown): input is TestCaseMetadata =>
@@ -9,4 +9,4 @@ export const isTestCaseMetadata = (input: unknown): input is TestCaseMetadata =>
   'name' in input &&
   typeof input.name === 'string' &&
   'description' in input &&
-  typeof input.description === 'string';
+  typeof input.description === 'string'

@@ -1,13 +1,13 @@
-import { relative } from 'path';
-import type { LineRange, ReviewFile } from '../../common/types';
+import { relative } from 'node:path'
+import type { LineRange, ReviewFile } from '../../common/types'
 
 // Define the structure for a node in the file tree
 interface TreeNode {
-  name: string;
-  children: { [key: string]: TreeNode };
-  isEndOfPath?: boolean; // Mark if a node represents a file
-  changedLines?: LineRange[]; // Store changed lines for file nodes
-  fullPath?: string; // Optional: Store full path for context if needed
+  name: string
+  children: { [key: string]: TreeNode }
+  isEndOfPath?: boolean // Mark if a node represents a file
+  changedLines?: LineRange[] // Store changed lines for file nodes
+  fullPath?: string // Optional: Store full path for context if needed
 }
 
 /**
@@ -18,31 +18,31 @@ interface TreeNode {
  * @returns The root TreeNode of the generated file tree.
  */
 const buildFileTree = (files: ReviewFile[], workspaceRoot: string): TreeNode => {
-  const root: TreeNode = { name: 'root', children: {} };
+  const root: TreeNode = { name: 'root', children: {} }
 
   for (const file of files) {
     // Use path relative to workspace root for building the tree structure
-    const relativePath = relative(workspaceRoot, file.fileName);
-    const parts = relativePath.split('/');
-    let currentNode = root;
+    const relativePath = relative(workspaceRoot, file.fileName)
+    const parts = relativePath.split('/')
+    let currentNode = root
 
     for (const [index, part] of parts.entries()) {
-      if (!part) continue; // Skip empty parts (e.g., from multiple slashes)
+      if (!part) continue // Skip empty parts (e.g., from multiple slashes)
 
       if (!currentNode.children[part]) {
-        currentNode.children[part] = { name: part, children: {} };
+        currentNode.children[part] = { name: part, children: {} }
       }
-      currentNode = currentNode.children[part];
+      currentNode = currentNode.children[part]
       if (index === parts.length - 1) {
-        currentNode.isEndOfPath = true; // Mark as a file
-        currentNode.changedLines = file.changedLines; // Store the changed lines
-        currentNode.fullPath = file.fileName; // Store original full path if needed
+        currentNode.isEndOfPath = true // Mark as a file
+        currentNode.changedLines = file.changedLines // Store the changed lines
+        currentNode.fullPath = file.fileName // Store original full path if needed
       }
     }
   }
 
-  return root;
-};
+  return root
+}
 
 /**
  * Formats line ranges into a compact string.
@@ -53,19 +53,19 @@ const buildFileTree = (files: ReviewFile[], workspaceRoot: string): TreeNode => 
  */
 const formatLineRanges = (ranges?: LineRange[]): string => {
   if (!ranges || ranges.length === 0) {
-    return '';
+    return ''
   }
   // Sort ranges just in case they aren't
-  ranges.sort((a, b) => a.start - b.start);
+  ranges.sort((a, b) => a.start - b.start)
   return ranges
     .map((range) => {
       if (range.isPureDeletion) {
-        return `${range.start} (deletion)`;
+        return `${range.start} (deletion)`
       }
-      return range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`;
+      return range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`
     })
-    .join(', ');
-};
+    .join(', ')
+}
 
 /**
  * Formats a file tree node and its children into a string representation.
@@ -76,33 +76,33 @@ const formatLineRanges = (ranges?: LineRange[]): string => {
  * @returns A string representation of the file tree branch.
  */
 const formatTreeToString = (node: TreeNode, prefix = '', isLast = true): string => {
-  let output = '';
+  let output = ''
   // Only add the node itself to the output if it's not the root
   if (node.name !== 'root') {
-    let nodeString = `${prefix}${isLast ? '└── ' : '├── '}${node.name}`;
+    let nodeString = `${prefix}${isLast ? '└── ' : '├── '}${node.name}`
     // If it's a file node, append the formatted line ranges
     if (node.isEndOfPath) {
-      const formattedLines = formatLineRanges(node.changedLines);
+      const formattedLines = formatLineRanges(node.changedLines)
       if (formattedLines) {
-        nodeString += `: ${formattedLines}`;
+        nodeString += `: ${formattedLines}`
       }
     }
-    output += `${nodeString}\n`;
+    output += `${nodeString}\n`
   }
 
-  const childrenKeys = Object.keys(node.children).sort(); // Sort for consistent order
+  const childrenKeys = Object.keys(node.children).sort() // Sort for consistent order
   for (const [index, key] of childrenKeys.entries()) {
-    const child = node.children[key];
-    const isLastChild = index === childrenKeys.length - 1;
+    const child = node.children[key]
+    const isLastChild = index === childrenKeys.length - 1
     // Adjust prefix for children:
     // - If the current node is not root, add padding based on whether it was the last child.
     // - If the current node is root, children start with no padding.
-    const childPrefix = node.name === 'root' ? '' : `${prefix}${isLast ? '    ' : '│   '}`;
-    output += formatTreeToString(child, childPrefix, isLastChild);
+    const childPrefix = node.name === 'root' ? '' : `${prefix}${isLast ? '    ' : '│   '}`
+    output += formatTreeToString(child, childPrefix, isLastChild)
   }
 
-  return output;
-};
+  return output
+}
 
 /**
  * Creates a preamble string containing context for the AI review.
@@ -115,8 +115,8 @@ const formatTreeToString = (node: TreeNode, prefix = '', isLast = true): string 
  * @returns A markdown formatted string to be prepended to the AI prompt.
  */
 export const createFileInfo = (files: ReviewFile[], workspaceRoot: string): string => {
-  const fileTree = buildFileTree(files, workspaceRoot || '');
-  const fileTreeString = formatTreeToString(fileTree, '', true).trim();
+  const fileTree = buildFileTree(files, workspaceRoot || '')
+  const fileTreeString = formatTreeToString(fileTree, '', true).trim()
 
-  return `Files changed for this review (paths relative to root, includes line ranges):\n${fileTreeString}\n---\n`;
-};
+  return `Files changed for this review (paths relative to root, includes line ranges):\n${fileTreeString}\n---\n`
+}
