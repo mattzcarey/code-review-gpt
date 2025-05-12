@@ -32,14 +32,14 @@ export class MCPClientManager {
       const configContent = await readFile(configPath, 'utf-8')
       this.config = JSON.parse(configContent) as MCPConfig
     } catch (error) {
-      console.error(`Failed to load MCP config: ${error}`)
+      logger.error(`Failed to load MCP config: ${error}`)
       this.config = null
     }
   }
 
   async startClients(): Promise<void> {
     if (!this.config) {
-      console.error('Cannot start clients: MCP config not loaded')
+      logger.error('Cannot start clients: MCP config not loaded')
       return
     }
 
@@ -66,11 +66,11 @@ export class MCPClientManager {
             },
           })
         } else {
-          console.error(`Invalid MCP server configuration for ${serverName}`)
+          logger.error(`Invalid MCP server configuration for ${serverName}`)
           this.clients[serverName] = null
         }
       } catch (error) {
-        console.error(`Failed to create MCP client for ${serverName}: ${error}`)
+        logger.error(`Failed to create MCP client for ${serverName}: ${error}`)
         this.clients[serverName] = null
       }
     }
@@ -84,7 +84,7 @@ export class MCPClientManager {
         try {
           allTools[serverName] = await client.tools()
         } catch (error) {
-          console.error(`Failed to get tools from ${serverName}: ${error}`)
+          logger.error(`Failed to get tools from ${serverName}: ${error}`)
           allTools[serverName] = {}
         }
       }
@@ -99,7 +99,7 @@ export class MCPClientManager {
         try {
           await client.close()
         } catch (error) {
-          console.error(`Failed to close MCP client ${serverName}: ${error}`)
+          logger.error(`Failed to close MCP client ${serverName}: ${error}`)
         }
       }
     }
