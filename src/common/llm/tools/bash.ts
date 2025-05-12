@@ -7,7 +7,7 @@ const execAsync = promisify(exec)
 
 export const bashTool = tool({
   description:
-    'Execute a bash command and get its output. Use with caution and only when necessary.',
+    'Execute a bash command and get its output. Use this tool to run commands such as git commands to step through changes made to get to the current state of the codebase or to run tests or build scripts.',
   parameters: z.object({
     command: z.string().describe('The bash command to execute'),
     cwd: z

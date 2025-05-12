@@ -36,5 +36,10 @@
     },
     "files": {
         "ignore": ["node_modules/**", "dist/**", "examples/**", "specs/cases/.cache/**"]
+    },
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
     }
 }
