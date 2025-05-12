@@ -1,6 +1,6 @@
-import { defineConfig } from 'tsup'
-import { join } from 'node:path'
 import fs from 'node:fs'
+import { join } from 'node:path'
+import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: ['src/index.ts'],
