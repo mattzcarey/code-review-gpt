@@ -1,4 +1,4 @@
-import { type GenerateTextResult, type LanguageModelV1, generateText } from 'ai';
+import { type GenerateTextResult, type LanguageModelV1, generateText } from 'ai'
 import {
   bashTool,
   createReadDiffTool,
@@ -9,9 +9,9 @@ import {
   grepTool,
   lsTool,
   readFileTool,
-} from '../../common/llm/tools';
-import type { PlatformProvider } from '../../common/platform/provider';
-import { logger } from '../../common/utils/logger';
+} from '../../common/llm/tools'
+import type { PlatformProvider } from '../../common/platform/provider'
+import { logger } from '../../common/utils/logger'
 export const reviewAgent = async (
   prompt: string,
   model: LanguageModelV1,
@@ -30,7 +30,7 @@ export const reviewAgent = async (
     grep: grepTool,
     ls: lsTool,
     bash: bashTool,
-  };
+  }
 
   return generateText({
     model,
@@ -38,15 +38,15 @@ export const reviewAgent = async (
     tools,
     maxSteps,
     onStepFinish: (step) => {
-      logger.debug('Step finished:', step);
+      logger.debug('Step finished:', step)
       const summaryToolUsed =
         step.toolCalls?.some((tc) => tc.toolName === 'submit_summary') ||
-        step.toolResults?.some((tr) => tr.toolName === 'submit_summary');
+        step.toolResults?.some((tr) => tr.toolName === 'submit_summary')
 
       if (summaryToolUsed && onSummarySubmit) {
-        logger.debug('Detected submit_summary tool usage in step, triggering callback.');
-        onSummarySubmit();
+        logger.debug('Detected submit_summary tool usage in step, triggering callback.')
+        onSummarySubmit()
       }
     },
-  });
-};
+  })
+}

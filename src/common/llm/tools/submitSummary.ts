@@ -1,7 +1,7 @@
-import { tool } from 'ai';
-import { z } from 'zod';
-import type { PlatformProvider, ThreadComment } from '../../platform/provider';
-import { logger } from '../../utils/logger';
+import { tool } from 'ai'
+import { z } from 'zod'
+import type { PlatformProvider, ThreadComment } from '../../platform/provider'
+import { logger } from '../../utils/logger'
 
 /**
  * Factory function to create the postReportTool.
@@ -21,15 +21,15 @@ export const createSubmitSummaryTool = (platformProvider: PlatformProvider) =>
     }),
     execute: async ({ report }): Promise<string> => {
       try {
-        const commentDetails: ThreadComment = { comment: report };
-        const result = await platformProvider.postThreadComment(commentDetails);
-        logger.info(`Report posted via tool. Result: ${result ?? 'No URL'}`);
+        const commentDetails: ThreadComment = { comment: report }
+        const result = await platformProvider.postThreadComment(commentDetails)
+        logger.info(`Report posted via tool. Result: ${result ?? 'No URL'}`)
         return result
           ? `Report posted successfully: ${result}`
-          : 'Report posted, but no URL returned.';
+          : 'Report posted, but no URL returned.'
       } catch (error) {
-        logger.error(`Failed to post report via tool: ${error}`);
-        return `Error posting report: ${error}`;
+        logger.error(`Failed to post report via tool: ${error}`)
+        return `Error posting report: ${error}`
       }
     },
-  });
+  })

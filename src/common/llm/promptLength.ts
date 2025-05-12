@@ -1,4 +1,4 @@
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger'
 
 export const modelInfo = [
   {
@@ -41,19 +41,21 @@ export const modelInfo = [
     model: 'openai:gpt-3.5-turbo-16k',
     maxPromptLength: 45000, //16k tokens
   },
-]; // Response needs about 1k tokens ~= 3k characters
+] // Response needs about 1k tokens ~= 3k characters
 
-const DEFAULT_MAX_PROMPT_LENGTH = 65536;
+const DEFAULT_MAX_PROMPT_LENGTH = 65536
 
 export const getMaxPromptLength = (modelName: string): number => {
-  const maxPromptLength = modelInfo.find((info) => info.model === modelName)?.maxPromptLength;
+  const maxPromptLength = modelInfo.find(
+    (info) => info.model === modelName
+  )?.maxPromptLength
 
   if (!maxPromptLength) {
     logger.warn(
       `Model ${modelName} not found in predefined list. Using default max prompt length (${DEFAULT_MAX_PROMPT_LENGTH} chars).`
-    );
-    return DEFAULT_MAX_PROMPT_LENGTH;
+    )
+    return DEFAULT_MAX_PROMPT_LENGTH
   }
 
-  return maxPromptLength;
-};
+  return maxPromptLength
+}

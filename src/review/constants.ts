@@ -24,9 +24,9 @@ export const languageMap: { [key: string]: string } = {
   '.tf': 'Terraform',
   '.hcl': 'Terraform',
   '.swift': 'Swift',
-};
+}
 
-export const supportedFiles = new Set(Object.keys(languageMap));
+export const supportedFiles = new Set(Object.keys(languageMap))
 
 export const excludedKeywords = new Set([
   '.d.ts',
@@ -34,4 +34,4 @@ export const excludedKeywords = new Set([
   'node_modules',
   'package-lock.json',
   '.lock',
-]);
+])

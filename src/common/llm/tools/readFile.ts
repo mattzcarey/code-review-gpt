@@ -1,7 +1,7 @@
-import { tool } from 'ai';
-import { z } from 'zod';
-import { promises as fs } from 'fs';
-import { getLanguageName } from '../../../review/prompt/utils/fileLanguage';
+import { promises as fs } from 'node:fs'
+import { tool } from 'ai'
+import { z } from 'zod'
+import { getLanguageName } from '../../../review/prompt/utils/fileLanguage'
 
 export const readFileTool = tool({
   description:
@@ -12,20 +12,20 @@ export const readFileTool = tool({
     endLine: z.number().optional().describe('The line number to end reading at.'),
   }),
   execute: async ({ path, startLine, endLine }) => {
-    const file = await fs.readFile(path, 'utf-8');
-    const lines = file.split('\n');
+    const file = await fs.readFile(path, 'utf-8')
+    const lines = file.split('\n')
 
-    const defaultLinesToRead = 200;
+    const defaultLinesToRead = 200
 
-    const startIndex = startLine ? startLine - 1 : 0;
-    const endIndex = endLine ? endLine - 1 : startIndex + defaultLinesToRead;
+    const startIndex = startLine ? startLine - 1 : 0
+    const endIndex = endLine ? endLine - 1 : startIndex + defaultLinesToRead
 
-    const selectedLines = lines.slice(startIndex, endIndex + 1);
-    const content = selectedLines.join('\n');
+    const selectedLines = lines.slice(startIndex, endIndex + 1)
+    const content = selectedLines.join('\n')
 
-    const prefix = `Here is the file excerpt you requested. NOTE that unless an EOF is shown, the file is not complete. File path: ${path}\nLines Selected: ${startIndex + 1} to ${endIndex + 1}:\n\n`;
-    const language = getLanguageName(path, '');
+    const prefix = `Here is the file excerpt you requested. NOTE that unless an EOF is shown, the file is not complete. File path: ${path}\nLines Selected: ${startIndex + 1} to ${endIndex + 1}:\n\n`
+    const language = getLanguageName(path, '')
 
-    return `${prefix}\`\`\`${language.toLowerCase()}\n${content}\`\`\``;
+    return `${prefix}\`\`\`${language.toLowerCase()}\n${content}\`\`\``
   },
-});
+})
