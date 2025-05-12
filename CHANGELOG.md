@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://github.com/mattzcarey/shippie/compare/v0.12.1...v0.12.2) (2025-05-12)
+
+
+### Bug Fixes
+
+* **action:** add debug argument ([#411](https://github.com/mattzcarey/shippie/issues/411)) ([e24ed7f](https://github.com/mattzcarey/shippie/commit/e24ed7ff94cc0e56f752e02b2da35be14299257a))
+
 ## [0.12.1](https://github.com/mattzcarey/shippie/compare/v0.12.0...v0.12.1) (2025-05-12)
 
 
