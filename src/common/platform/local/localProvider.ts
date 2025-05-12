@@ -1,6 +1,7 @@
-import * as fs from 'node:fs/promises'
-import * as os from 'node:os'
-import * as path from 'node:path'
+import { createHash } from 'node:crypto'
+import { access, appendFile, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { EOL, homedir } from 'node:os'
+import { join } from 'node:path'
 import type { TokenUsage, ToolCall } from '../../../review/types'
 import { formatSummary } from '../../formatting/summary'
 import { formatUsage } from '../../formatting/usage'
@@ -10,54 +11,39 @@ import { logger } from '../../utils/logger'
 import type { PlatformProvider, ReviewComment, ThreadComment } from '../provider'
 
 const SHIPPIE_DIR_NAME = '.shippie'
-
-// Helper function to get timestamp string
-const getTimestamp = (): string => {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0') // Months are 0-indexed
-  const day = String(now.getDate()).padStart(2, '0')
-  const hours = String(now.getHours()).padStart(2, '0')
-  const minutes = String(now.getMinutes()).padStart(2, '0')
-  const seconds = String(now.getSeconds()).padStart(2, '0')
-  return `${year}${month}${day}_${hours}${minutes}${seconds}`
-}
+const SHIPPIE_CONFIG_DIR = join(homedir(), SHIPPIE_DIR_NAME)
+const REPO_IDS_FILE = join(SHIPPIE_CONFIG_DIR, 'repo_ids.json')
 
 export const localProvider = async (): Promise<PlatformProvider> => {
-  // Get workspace root dynamically
   const workspaceRoot = await getGitRoot()
 
-  // Generate dynamic filename and path within the factory function
-  const timestamp = getTimestamp()
+  const timestamp = new Date().toISOString()
   const reviewFileName = `local_review_${timestamp}.md`
-  const reviewFilePath = path.join(workspaceRoot, SHIPPIE_DIR_NAME, reviewFileName)
-  const shippieDirPath = path.dirname(reviewFilePath)
-  const gitignorePath = path.join(shippieDirPath, '.gitignore')
+  const shippieDirPath = join(workspaceRoot, SHIPPIE_DIR_NAME)
+  const reviewFilePath = join(shippieDirPath, reviewFileName)
+  const gitignorePath = join(shippieDirPath, '.gitignore')
 
-  // Define helper functions inside the factory to close over reviewFilePath
   const ensureShippieDirExists = async (): Promise<void> => {
     try {
-      await fs.mkdir(shippieDirPath, { recursive: true })
-      // Create .gitignore if it doesn't exist
+      await mkdir(shippieDirPath, { recursive: true })
+
       try {
-        await fs.access(gitignorePath)
+        await access(gitignorePath)
       } catch {
-        // File doesn't exist, create it
-        await fs.writeFile(gitignorePath, '*')
+        await writeFile(gitignorePath, '*')
         logger.debug(`Created .gitignore file at ${gitignorePath}`)
       }
     } catch (error: unknown) {
-      // Ignore EEXIST error (directory already exists)
-      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') {
+      const nodeError = error as NodeJS.ErrnoException
+      if (nodeError?.code !== 'EEXIST') {
         logger.error(`Failed to create .shippie directory at ${shippieDirPath}: ${error}`)
-        throw error // Re-throw other errors
+        throw error
       }
-      // Even if directory existed, ensure .gitignore is present
+
       try {
-        await fs.access(gitignorePath)
+        await access(gitignorePath)
       } catch {
-        // File doesn't exist, create it
-        await fs.writeFile(gitignorePath, '*')
+        await writeFile(gitignorePath, '*')
         logger.debug(`Created .gitignore file at ${gitignorePath}`)
       }
     }
@@ -65,17 +51,41 @@ export const localProvider = async (): Promise<PlatformProvider> => {
 
   const appendToFile = async (content: string): Promise<void> => {
     logger.debug('appendToFile', content)
-    await ensureShippieDirExists() // Uses the enclosed shippieDirPath and gitignorePath
+    await ensureShippieDirExists()
+
     try {
-      await fs.appendFile(reviewFilePath, content + os.EOL) // Uses the enclosed reviewFilePath
+      await appendFile(reviewFilePath, content + EOL)
     } catch (error) {
       logger.error(`Failed to append to local review file ${reviewFilePath}: ${error}`)
       throw error
     }
   }
 
-  // Return the provider object
-  const provider = {
+  const updateRepoIdMapping = async (
+    repoPath: string,
+    repoHash: string
+  ): Promise<void> => {
+    try {
+      await mkdir(SHIPPIE_CONFIG_DIR, { recursive: true })
+
+      try {
+        const content = await readFile(REPO_IDS_FILE, 'utf-8')
+        const repoIds = JSON.parse(content)
+
+        if (repoIds[repoPath] === repoHash) return
+
+        repoIds[repoPath] = repoHash
+        await writeFile(REPO_IDS_FILE, JSON.stringify(repoIds, null, 2))
+      } catch (err) {
+        const repoIds = { [repoPath]: repoHash }
+        await writeFile(REPO_IDS_FILE, JSON.stringify(repoIds, null, 2))
+      }
+    } catch (err) {
+      logger.error(`Failed to update repo ID mapping: ${err}`)
+    }
+  }
+
+  return {
     postReviewComment: async (commentDetails: ReviewComment): Promise<string> => {
       logger.info(
         `LocalProvider: Adding review comment for ${commentDetails.filePath} to ${reviewFilePath}`
@@ -91,24 +101,37 @@ export const localProvider = async (): Promise<PlatformProvider> => {
       return `General comment added to local review file: ${reviewFilePath}`
     },
 
-    getPlatformOption: (): PlatformOptions => {
-      return PlatformOptions.LOCAL
-    },
+    getPlatformOption: (): PlatformOptions => PlatformOptions.LOCAL,
 
     submitUsage: async (tokenUsage: TokenUsage, toolUsage: ToolCall[]): Promise<void> => {
       logger.info('Local Provider: Adding usage information to review file.')
 
       try {
-        // Format the usage data with just the current run stats
         const usageSection = `${formatUsage(tokenUsage, toolUsage)}\n`
         await appendToFile(usageSection)
-
         logger.info(`Usage data added to local review file: ${reviewFilePath}`)
       } catch (error) {
         logger.error(`Failed to add usage data to local review file: ${error}`)
       }
     },
-  }
 
-  return provider
+    getRepoId: (): string => {
+      try {
+        const repoPath = workspaceRoot
+        const repoHash = createHash('sha256')
+          .update(repoPath)
+          .digest('hex')
+          .substring(0, 32)
+
+        updateRepoIdMapping(repoPath, repoHash).catch((err) =>
+          logger.error(`Failed to update repo ID mapping: ${err}`)
+        )
+
+        return repoHash
+      } catch (error) {
+        logger.error(`Failed to get repo ID: ${error}`)
+        return 'local_repo_anonymous'
+      }
+    },
+  }
 }

@@ -1,3 +1,4 @@
+import { Telemetry } from '../common/api/telemetry'
 import { getFilesWithChanges } from '../common/git/getFilesWithChanges'
 import { createModel } from '../common/llm/models'
 import { getPlatformProvider } from '../common/platform/factory'
@@ -13,9 +14,21 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Review language: ${yargs.reviewLanguage}`)
   logger.debug(`Platform: ${yargs.platform}`)
   logger.debug(`Max steps: ${yargs.maxSteps}`)
+  logger.debug(`Telemetry: ${yargs.telemetry}`)
 
   if (yargs.baseUrl) {
     logger.debug(`Base URL: ${yargs.baseUrl}`)
+  }
+
+  const platformProvider = await getPlatformProvider(yargs.platform)
+  logger.debug('Platform provider:', platformProvider)
+
+  if (yargs.telemetry) {
+    logger.info(
+      'Shippie collects anonymous usage data to help improve the product. You can opt out by setting --telemetry false when running Shippie.'
+    )
+    const telemetry = new Telemetry(yargs, platformProvider)
+    telemetry.startReview()
   }
 
   const files: ReviewFile[] = await getFilesWithChanges(yargs.platform)
@@ -30,9 +43,6 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(
     `Files to review after filtering: ${filteredFiles.map((file) => file.fileName)}`
   )
-
-  const platformProvider = await getPlatformProvider(yargs.platform)
-  logger.debug('Platform provider:', platformProvider)
 
   const model = createModel(yargs.modelString, { baseURL: yargs.baseUrl })
   const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage)

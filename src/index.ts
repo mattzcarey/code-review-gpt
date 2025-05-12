@@ -8,7 +8,7 @@ dotenv.config()
 
 const main = async () => {
   const argv = (await getYargs()) as ParsedArgs
-  logger.settings.minLevel = argv.debug ? 2 : argv.ci ? 4 : 3
+  logger.settings.minLevel = argv.debug ? 2 : 3
 
   logger.debug(`Args: ${JSON.stringify(argv)}`)
   try {
