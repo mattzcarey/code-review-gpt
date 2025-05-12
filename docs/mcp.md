@@ -4,9 +4,9 @@ This document outlines how to configure MCP servers for your project.
 
 ## Configuration File
 
-MCP servers are configured using a JSON configuration file at `.shippie/mcp.json`. This file defines the MCP servers available to the shippie agent.
+MCP servers are configured using a JSON configuration file using the `.shippie/mcp.json` or `.cursor/mcp.json` file. This file defines the MCP servers available to the shippie agent.
 
-Shippie will also pick up servers from a `.cursor/mcp.json` file in the root of your project. See more details [here](https://docs.cursor.com/context/model-context-protocol).
+See the [Cursor MCP documentation](https://docs.cursor.com/context/model-context-protocol).
 
 ```json
 {
