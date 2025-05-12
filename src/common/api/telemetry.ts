@@ -34,7 +34,7 @@ export class Telemetry {
         platform: process.platform,
         arch: process.arch,
         node_version: process.version,
-        package_version: packageJson.version,
+        shippie_version: packageJson.version,
       },
     }
 
