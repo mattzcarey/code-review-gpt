@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/mattzcarey/shippie/compare/v0.13.0...v0.14.0) (2025-05-12)
+
+
+### Features
+
+* **cli:** move to tsup ([#421](https://github.com/mattzcarey/shippie/issues/421)) ([4a55214](https://github.com/mattzcarey/shippie/commit/4a55214e95a4017975736d67dd6732046ef0d648))
+
 ## [0.13.0](https://github.com/mattzcarey/shippie/compare/v0.12.2...v0.13.0) (2025-05-12)
 
 
