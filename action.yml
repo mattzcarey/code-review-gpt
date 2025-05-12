@@ -1,34 +1,38 @@
-name: 'Shippie 🚢'
-description: 'an extensible code review agent'
-author: 'Matt Carey'
+name: "Shippie 🚢"
+description: "an extensible code review agent"
+author: "Matt Carey"
 inputs:
   MODEL_STRING:
-    description: 'Model name to use for review'
+    description: "Model name to use for review"
     required: true
-    default: 'openai:gpt-4.1-mini'
+    default: "openai:gpt-4.1-mini"
   REVIEW_LANGUAGE:
-    description: 'Target natural language for translation'
+    description: "Target natural language for translation"
     required: false
-    default: 'English'
+    default: "English"
   OPENAI_API_KEY:
-    description: 'OpenAI API Key'
+    description: "OpenAI API Key"
     required: true
   GITHUB_TOKEN:
-    description: 'Github token'
+    description: "Github token"
     required: true
   BASE_URL:
-    description: 'AI Provider Base URL'
+    description: "AI Provider Base URL"
     required: false
   MAX_STEPS:
-    description: 'Maximum number of agentic steps to take'
+    description: "Maximum number of agentic steps to take"
     required: false
-    default: '25'
+    default: "25"
+  TELEMETRY:
+    description: "Enables anonymous telemetry"
+    required: false
+    default: "true"
   DEBUG:
-    description: 'Enables debug logging'
+    description: "Enables debug logging"
     required: false
-    default: 'false'
+    default: "false"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: oven-sh/setup-bun@v2
       with:
@@ -38,7 +42,7 @@ runs:
       shell: bash
       run: |
         bun add shippie@latest
-        bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL
+        bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
       env:
         MODEL_STRING: ${{ inputs.MODEL_STRING }}
         REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
@@ -48,7 +52,7 @@ runs:
         BASE_URL: ${{ inputs.BASE_URL }}
         MAX_STEPS: ${{ inputs.MAX_STEPS }}
         DEBUG: ${{ inputs.DEBUG }}
-
+        TELEMETRY: ${{ inputs.TELEMETRY }}
 branding:
-  icon: 'code'
-  color: 'blue'
+  icon: "code"
+  color: "blue"

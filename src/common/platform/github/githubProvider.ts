@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { context, getOctokit } from '@actions/github'
 import type { GitHub } from '@actions/github/lib/utils'
 import { getGitHubEnvVariables } from '../../../config'
@@ -244,6 +245,18 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
         logger.error(
           `Failed to update thread comment with usage data: ${JSON.stringify(error)}`
         )
+      }
+    },
+
+    getRepoId: (): string => {
+      try {
+        const { owner, repo } = context.repo
+        const repoIdentifier = `${owner}/${repo}`
+
+        return createHash('sha256').update(repoIdentifier).digest('hex').substring(0, 32)
+      } catch (error) {
+        logger.error(`Failed to get repo ID: ${error}`)
+        return 'github_repo_anonymous'
       }
     },
   }

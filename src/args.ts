@@ -50,6 +50,11 @@ export const getYargs = async () => {
       type: 'boolean',
       default: false,
     })
+    .option('telemetry', {
+      description: 'Enables anonymous telemetry.',
+      type: 'boolean',
+      default: true,
+    })
     .help()
     .parse()
 }

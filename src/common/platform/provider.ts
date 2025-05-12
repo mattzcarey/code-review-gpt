@@ -44,4 +44,10 @@ export interface PlatformProvider {
    * @returns The platform option enum value.
    */
   getPlatformOption: () => PlatformOptions
+
+  /**
+   * Gets an anonymous identifier for the repository.
+   * @returns The 32 character repository ID.
+   */
+  getRepoId: () => string
 }

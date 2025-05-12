@@ -20,10 +20,10 @@ export enum PlatformOptions {
 
 // Base arguments provided by yargs and global options
 type BaseArgs = {
-  ci?: PlatformOptions | string | undefined // Allow string initially, will be validated
-  debug?: boolean
   _?: (string | number)[]
   $0?: string
+  debug: boolean
+  telemetry: boolean
 }
 
 // Arguments for the configure command
