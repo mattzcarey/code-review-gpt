@@ -53,7 +53,7 @@ runs:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY || env.OPENAI_API_KEY }}
         GOOGLE_GENERATIVE_AI_API_KEY: ${{ inputs.GOOGLE_GENERATIVE_AI_API_KEY || env.GOOGLE_GENERATIVE_AI_API_KEY }}
         ANTHROPIC_API_KEY: ${{ inputs.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY }}
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || env.GITHUB_TOKEN }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         GITHUB_SHA: ${{ github.sha }}
 branding:
