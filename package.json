@@ -70,7 +70,5 @@
         "tsup": "^8.4.0",
         "typescript": "^5.1.6"
     },
-    "files": [
-        "dist/*"
-    ]
+    "files": ["dist/*"]
 }
