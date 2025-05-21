@@ -44,21 +44,24 @@ runs:
       with:
         bun-version: latest
 
-    - name: Install and Run Shippie 🚢
+    - name: Install dependencies
       shell: bash
       run: |
         bun install --frozen-lockfile
 
+    - name: Install and Run Shippie 🚢
+      shell: bash
+      run: |
         cmd_args="review --platform=github"
 
         # Inputs with defaults in action.yml - these will always have a value.
-        cmd_args="$cmd_args --modelString=\\"${{ inputs.MODEL_STRING }}\\""
-        cmd_args="$cmd_args --reviewLanguage=\\"${{ inputs.REVIEW_LANGUAGE }}\\""
-        cmd_args="$cmd_args --maxSteps=${{ inputs.MAX_STEPS }}" # Numeric, no quotes needed
+        cmd_args="$cmd_args --modelString=${{ inputs.MODEL_STRING }}"
+        cmd_args="$cmd_args --reviewLanguage=${{ inputs.REVIEW_LANGUAGE }}"
+        cmd_args="$cmd_args --maxSteps=${{ inputs.MAX_STEPS }}"
 
         # Input with no default in action.yml - only add if user provides it and it's non-empty.
         if [ -n "${{ inputs.BASE_URL }}" ]; then
-          cmd_args="$cmd_args --baseUrl=\\"${{ inputs.BASE_URL }}\\""
+          cmd_args="$cmd_args --baseUrl="${{ inputs.BASE_URL }}""
         fi
 
         # Boolean flags:
