@@ -41,7 +41,7 @@ runs:
     - name: Install and Run Shippie 🚢
       shell: bash
       run: |
-        bun add shippie@latest
+        bun install --frozen-lockfile
         bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
       env:
         MODEL_STRING: ${{ inputs.MODEL_STRING }}
@@ -54,5 +54,5 @@ runs:
         DEBUG: ${{ inputs.DEBUG }}
         TELEMETRY: ${{ inputs.TELEMETRY }}
 branding:
-  icon: "code"
-  color: "blue"
+  icon: "git-pull-request"
+  color: "red"

@@ -13,9 +13,10 @@ Ethos of the package:
 Go through these todos, one by one. When they are complete add a ✅ to the left of the todo. If you fail to do them add a ❌ to the left of the todo.
 
 TODO:
-- mcp client - users can add their own servers.
+
 - context window management - ie we should know if we are getting dangerously close to the end and we should automatically try and compress the context window before resuming the review.
-- telemetry
-- model gateway
-- website
-- docs
+- landing page
+- premium mcp servers
+- better docs
+- telemetry on errors
+- telemetry on ai usage

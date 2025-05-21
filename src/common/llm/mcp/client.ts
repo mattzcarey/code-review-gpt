@@ -54,9 +54,7 @@ export class MCPClientManager {
 
       // If no configs were found, set config to null
       if (Object.keys(config.mcpServers).length === 0) {
-        logger.error(
-          'No MCP configuration found in .shippie/mcp.json or .cursor/mcp.json'
-        )
+        logger.warn('No MCP configuration found in .shippie/mcp.json or .cursor/mcp.json')
         this.config = null
         return
       }
@@ -70,7 +68,7 @@ export class MCPClientManager {
 
   async startClients(): Promise<void> {
     if (!this.config) {
-      logger.error('Cannot start clients: MCP config not loaded')
+      logger.warn('Cannot start clients: MCP config not loaded')
       return
     }
 
