@@ -7,7 +7,7 @@ dotenv.config()
 export const getYargs = async () => {
   return yargs(hideBin(process.argv))
     .command('configure', 'Configure the tool', (yargs) => {
-      return yargs.option('setupTarget', {
+      return yargs.option('platform', {
         description:
           "Specifies for which platform ('github', 'gitlab' or 'azdev') the project should be configured for. Defaults to 'github'.",
         choices: ['github', 'gitlab', 'azdev'],

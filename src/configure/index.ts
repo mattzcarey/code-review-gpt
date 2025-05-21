@@ -8,13 +8,13 @@ import { logger } from '../common/utils/logger'
 import { findTemplateFile } from './findTemplateFile'
 
 export const configure = async (yargs: ConfigureArgs): Promise<void> => {
-  if (yargs.setupTarget === PlatformOptions.GITHUB) {
+  if (yargs.platform === PlatformOptions.GITHUB) {
     await configureGitHub()
   }
-  if (yargs.setupTarget === PlatformOptions.GITLAB) {
+  if (yargs.platform === PlatformOptions.GITLAB) {
     await configureGitLab()
   }
-  if (yargs.setupTarget === PlatformOptions.AZDEV) {
+  if (yargs.platform === PlatformOptions.AZDEV) {
     await configureAzureDevOps()
   }
 }
