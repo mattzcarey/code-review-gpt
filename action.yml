@@ -4,7 +4,7 @@ author: "Matt Carey"
 inputs:
   MODEL_STRING:
     description: "Model name to use for review"
-    required: true
+    required: false
     default: "openai:gpt-4.1-mini"
   REVIEW_LANGUAGE:
     description: "Target natural language for translation"
@@ -12,7 +12,13 @@ inputs:
     default: "English"
   OPENAI_API_KEY:
     description: "OpenAI API Key"
-    required: true
+    required: false
+  GOOGLE_GENERATIVE_AI_API_KEY:
+    description: "Google API Key"
+    required: false
+  ANTHROPIC_API_KEY:
+    description: "Anthropic API Key"
+    required: false
   GITHUB_TOKEN:
     description: "Github token"
     required: true
@@ -44,15 +50,12 @@ runs:
         bun install --frozen-lockfile
         bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
       env:
-        MODEL_STRING: ${{ inputs.MODEL_STRING }}
-        REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
-        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
-        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY || env.OPENAI_API_KEY }}
+        GOOGLE_GENERATIVE_AI_API_KEY: ${{ inputs.GOOGLE_GENERATIVE_AI_API_KEY || env.GOOGLE_GENERATIVE_AI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ inputs.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        BASE_URL: ${{ inputs.BASE_URL }}
-        MAX_STEPS: ${{ inputs.MAX_STEPS }}
-        DEBUG: ${{ inputs.DEBUG }}
-        TELEMETRY: ${{ inputs.TELEMETRY }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        GITHUB_SHA: ${{ github.sha }}
 branding:
   icon: "git-pull-request"
   color: "red"
