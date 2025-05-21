@@ -36,6 +36,9 @@ jobs:
       - name: Type check
         run: bun check:types
 
+      - name: Build package
+        run: bun run build
+
       - name: Run unit tests
         run: bun test:unit
 
