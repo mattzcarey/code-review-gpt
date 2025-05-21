@@ -28,7 +28,7 @@ type BaseArgs = {
 
 // Arguments for the configure command
 export type ConfigureArgs = BaseArgs & {
-  setupTarget?: PlatformOptions | string // Allow string initially
+  platform?: PlatformOptions | string // Allow string initially
 }
 
 // Arguments for the review command

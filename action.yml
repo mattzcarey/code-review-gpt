@@ -4,7 +4,7 @@ author: "Matt Carey"
 inputs:
   MODEL_STRING:
     description: "Model name to use for review"
-    required: true
+    required: false
     default: "openai:gpt-4.1-mini"
   REVIEW_LANGUAGE:
     description: "Target natural language for translation"
@@ -12,7 +12,13 @@ inputs:
     default: "English"
   OPENAI_API_KEY:
     description: "OpenAI API Key"
-    required: true
+    required: false
+  GOOGLE_GENERATIVE_AI_API_KEY:
+    description: "Google API Key"
+    required: false
+  ANTHROPIC_API_KEY:
+    description: "Anthropic API Key"
+    required: false
   GITHUB_TOKEN:
     description: "Github token"
     required: true
@@ -38,21 +44,44 @@ runs:
       with:
         bun-version: latest
 
-    - name: Install and Run Shippie 🚢
+    - name: Install dependencies
       shell: bash
       run: |
         bun install --frozen-lockfile
-        bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
+
+    - name: Install and Run Shippie 🚢
+      shell: bash
+      run: |
+        cmd_args="review --platform=github"
+
+        # Inputs with defaults in action.yml - these will always have a value.
+        cmd_args="$cmd_args --modelString=${{ inputs.MODEL_STRING }}"
+        cmd_args="$cmd_args --reviewLanguage=${{ inputs.REVIEW_LANGUAGE }}"
+        cmd_args="$cmd_args --maxSteps=${{ inputs.MAX_STEPS }}"
+
+        # Input with no default in action.yml - only add if user provides it and it's non-empty.
+        if [ -n "${{ inputs.BASE_URL }}" ]; then
+          cmd_args="$cmd_args --baseUrl="${{ inputs.BASE_URL }}""
+        fi
+
+        # Boolean flags:
+        if [ "${{ inputs.DEBUG }}" = "true" ]; then
+          cmd_args="$cmd_args --debug"
+        fi
+
+        if [ "${{ inputs.TELEMETRY }}" = "false" ]; then
+          cmd_args="$cmd_args --telemetry=false"
+        fi
+
+        echo "Executing: bun $cmd_args"
+        bun $cmd_args
       env:
-        MODEL_STRING: ${{ inputs.MODEL_STRING }}
-        REVIEW_LANGUAGE: ${{ inputs.REVIEW_LANGUAGE }}
-        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY || env.OPENAI_API_KEY }}
+        GOOGLE_GENERATIVE_AI_API_KEY: ${{ inputs.GOOGLE_GENERATIVE_AI_API_KEY || env.GOOGLE_GENERATIVE_AI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ inputs.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || env.GITHUB_TOKEN }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        BASE_URL: ${{ inputs.BASE_URL }}
-        MAX_STEPS: ${{ inputs.MAX_STEPS }}
-        DEBUG: ${{ inputs.DEBUG }}
-        TELEMETRY: ${{ inputs.TELEMETRY }}
+        GITHUB_SHA: ${{ github.sha }}
 branding:
   icon: "git-pull-request"
   color: "red"

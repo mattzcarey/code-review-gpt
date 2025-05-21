@@ -7,6 +7,6 @@ gpt-review:
   before_script:
     - npm install -g shippie
   script:
-    - shippie review --ci=gitlab
+    - shippie review --platform=gitlab
   only:
     - merge_requests

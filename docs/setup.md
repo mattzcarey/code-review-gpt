@@ -13,13 +13,12 @@ Shippie 🚢 is a NodeJS package that uses LLMs to provide feedback on code. It 
 In the root of your git repository run:
 
 ```shell
-npx shippie configure --setupTarget=github
+npx shippie configure --platform=github
 ```
 
 The setup script automatically adds an `OPENAI_API_KEY` secret to your repo. More info on secrets can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions).
 
 See [templates](https://github.com/mattzcarey/shippie/tree/main/templates) for the example yaml files. You can copy and paste them to perform a manual setup or have a look at the [action configuration options](https://github.com/mattzcarey/shippie/tree/main/docs/action-options.md).
-
 
 ## Package Commands
 
@@ -44,7 +43,7 @@ Run `npx shippie --help` to see all the options available.
 
 ## Local Usage 🌈
 
-Shippie 🚢 also works locally to review files staged for commit. Just add some files to the staging area. 
+Shippie 🚢 also works locally to review files staged for commit. Just add some files to the staging area.
 
 Export your OPENAI_API_KEY to the shell
 
@@ -57,4 +56,3 @@ and run:
 ```shell
 npx shippie review
 ```
-
