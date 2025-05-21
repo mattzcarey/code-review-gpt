@@ -1,6 +1,6 @@
 import { Telemetry } from '../common/api/telemetry'
 import { getFilesWithChanges } from '../common/git/getFilesWithChanges'
-import { createModel } from '../common/llm/models'
+import { createModel, type ModelCreationOptions } from '../common/llm/models'
 import { getPlatformProvider } from '../common/platform/factory'
 import type { ReviewArgs, ReviewFile } from '../common/types'
 import { logger } from '../common/utils/logger'
@@ -16,9 +16,11 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Max steps: ${yargs.maxSteps}`)
   logger.debug(`Telemetry: ${yargs.telemetry}`)
 
-  if (yargs.baseUrl) {
-    logger.debug(`Base URL: ${yargs.baseUrl}`)
-  }
+  const trimmedBaseUrl = yargs.baseUrl?.trim()
+  const modelCreationOptions: ModelCreationOptions = trimmedBaseUrl
+    ? { baseURL: trimmedBaseUrl }
+    : {}
+  logger.debug(`Model Options: ${JSON.stringify(modelCreationOptions)}`)
 
   const platformProvider = await getPlatformProvider(yargs.platform)
   logger.debug('Platform provider:', platformProvider)
@@ -44,7 +46,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
     `Files to review after filtering: ${filteredFiles.map((file) => file.fileName)}`
   )
 
-  const model = createModel(yargs.modelString, { baseURL: yargs.baseUrl })
+  const model = createModel(yargs.modelString, modelCreationOptions)
   const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage)
   logger.debug('Prompt:', prompt)
 
