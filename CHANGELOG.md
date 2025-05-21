@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.2](https://github.com/mattzcarey/shippie/compare/v0.14.1...v0.14.2) (2025-05-21)
+
+
+### Bug Fixes
+
+* **cicd:** action.yml tested on pull request ([#428](https://github.com/mattzcarey/shippie/issues/428)) ([ae53718](https://github.com/mattzcarey/shippie/commit/ae537189b124584a66d03f66c3af0ce41675f75f))
+
 ## [0.14.1](https://github.com/mattzcarey/shippie/compare/v0.14.0...v0.14.1) (2025-05-21)
 
 
