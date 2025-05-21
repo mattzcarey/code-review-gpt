@@ -1,6 +1,6 @@
 {
     "name": "shippie",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "description": "an extensible code review agent",
     "bin": {
         "shippie": "./dist/index.js"
@@ -70,5 +70,7 @@
         "tsup": "^8.4.0",
         "typescript": "^5.1.6"
     },
-    "files": ["dist/*"]
+    "files": [
+        "dist/*"
+    ]
 }

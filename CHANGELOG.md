@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/mattzcarey/shippie/compare/v0.14.0...v0.14.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* base url default to empty string in action.yml ([#426](https://github.com/mattzcarey/shippie/issues/426)) ([36653b7](https://github.com/mattzcarey/shippie/commit/36653b7c48bfd57f7a4bfb4655fb9da3d43b212a))
+
 ## [0.14.0](https://github.com/mattzcarey/shippie/compare/v0.13.0...v0.14.0) (2025-05-12)
 
 
