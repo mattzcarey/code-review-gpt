@@ -48,7 +48,30 @@ runs:
       shell: bash
       run: |
         bun install --frozen-lockfile
-        bun review --debug=$DEBUG --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
+
+        cmd_args="review --platform=github"
+
+        # Inputs with defaults in action.yml - these will always have a value.
+        cmd_args="$cmd_args --modelString=\\"${{ inputs.MODEL_STRING }}\\""
+        cmd_args="$cmd_args --reviewLanguage=\\"${{ inputs.REVIEW_LANGUAGE }}\\""
+        cmd_args="$cmd_args --maxSteps=${{ inputs.MAX_STEPS }}" # Numeric, no quotes needed
+
+        # Input with no default in action.yml - only add if user provides it and it's non-empty.
+        if [ -n "${{ inputs.BASE_URL }}" ]; then
+          cmd_args="$cmd_args --baseUrl=\\"${{ inputs.BASE_URL }}\\""
+        fi
+
+        # Boolean flags:
+        if [ "${{ inputs.DEBUG }}" = "true" ]; then
+          cmd_args="$cmd_args --debug"
+        fi
+
+        if [ "${{ inputs.TELEMETRY }}" = "false" ]; then
+          cmd_args="$cmd_args --telemetry=false"
+        fi
+
+        echo "Executing: bun $cmd_args"
+        bun $cmd_args
       env:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY || env.OPENAI_API_KEY }}
         GOOGLE_GENERATIVE_AI_API_KEY: ${{ inputs.GOOGLE_GENERATIVE_AI_API_KEY || env.GOOGLE_GENERATIVE_AI_API_KEY }}
