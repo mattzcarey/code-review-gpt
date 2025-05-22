@@ -47,9 +47,9 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        bun install --production
+        bun install
 
-    - name: Install and Run Shippie 🚢
+    - name: Run Shippie Review 🚢
       shell: bash
       run: |
         cmd_args="review --platform=github"
