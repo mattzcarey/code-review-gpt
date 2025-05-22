@@ -47,7 +47,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        bun install --frozen-lockfile
+        bun install --production
 
     - name: Install and Run Shippie 🚢
       shell: bash
