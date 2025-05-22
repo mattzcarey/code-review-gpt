@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.3](https://github.com/mattzcarey/shippie/compare/v0.14.2...v0.14.3) (2025-05-22)
+
+
+### Bug Fixes
+
+* **action.yml:** action hates a frozen lockfile ([#431](https://github.com/mattzcarey/shippie/issues/431)) ([3d699a6](https://github.com/mattzcarey/shippie/commit/3d699a67cefe5e301f54b7c210f1890cf9e946ec))
+
 ## [0.14.2](https://github.com/mattzcarey/shippie/compare/v0.14.1...v0.14.2) (2025-05-21)
 
 
