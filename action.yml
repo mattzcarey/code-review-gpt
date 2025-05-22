@@ -47,12 +47,12 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        bun install
+        bun install shippie
 
     - name: Run Shippie Review 🚢
       shell: bash
       run: |
-        cmd_args="review --platform=github"
+        cmd_args="shippie review --platform=github"
 
         # Inputs with defaults in action.yml - these will always have a value.
         cmd_args="$cmd_args --modelString=${{ inputs.MODEL_STRING }}"
