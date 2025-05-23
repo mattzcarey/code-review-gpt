@@ -6,7 +6,12 @@ export const FORMATTING = {
   SEPARATOR: '\n\n---\n\n',
   SIGN_OFF:
     '### Review powered by [Shippie 🚢](https://github.com/mattzcarey/shippie) - The open source, extensible review agent.',
-  CTA: '<details>\n<summary>Enjoying Shippie? 🚢</summary>\n\n🤝 Sponsored by: [Your Company Here] → https://sustain.dev/sponsor/shippie\n</details>',
+  CTA: `<details>
+<summary>Enjoying Shippie? 🚢</summary>
+
+🤝 Sponsored by: [Your Company Here](https://sustain.dev/sponsor/shippie)
+
+</details>`,
   TOOL_CALLS_TITLE: '🛠️ Tool Calls',
   TOKEN_USAGE_TITLE: '📊 Token Usage',
 }
