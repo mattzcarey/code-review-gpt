@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://github.com/mattzcarey/shippie/compare/v0.14.3...v0.15.0) (2025-05-23)
+
+
+### Features
+
+* use context from rules ([#435](https://github.com/mattzcarey/shippie/issues/435)) ([066cd64](https://github.com/mattzcarey/shippie/commit/066cd64d5fc4d03d6a60d5451470aec50f219002))
+
 ## [0.14.3](https://github.com/mattzcarey/shippie/compare/v0.14.2...v0.14.3) (2025-05-22)
 
 
