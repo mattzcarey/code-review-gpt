@@ -35,6 +35,13 @@ https://github.com/mattzcarey/shippie/assets/77928207/92029baf-f691-465f-8d15-e1
 
 See the [setup instructions](docs/setup.md) for more docs on how to set up shippie in your CI/CD pipeline and use it locally.
 
+### Additional Documentation
+
+- [Rules Files](docs/rules-files.md) - How to use rules files to get the most out of Shippie
+- [AI Provider Configuration](docs/ai-provider-config.md) - Configure different AI providers
+- [Action Options](docs/action-options.md) - GitHub Action configuration options
+- [Model Context Protocol (MCP)](docs/mcp.md) - Give Shippie access to external tools
+
 ## Development 🔧
 
 1. Clone the repository:
@@ -51,6 +58,7 @@ See the [setup instructions](docs/setup.md) for more docs on how to set up shipp
    ```
 
 3. Set up the API key:
+
    - Rename the `.env.example` file to `.env`.
    - Open the `.env` file and replace `YOUR_API_KEY` with your actual OPENAI API key.
 
