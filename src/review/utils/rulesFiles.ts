@@ -161,7 +161,7 @@ export const formatRulesContext = (
   }
 
   if (importantFiles.length > 0) {
-    context += '## Important project documentation\n'
+    context += 'Important project documentation:\n'
     for (const file of importantFiles) {
       context += `\n## ${file.path}\n${file.content}\n`
     }
