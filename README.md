@@ -90,15 +90,6 @@ Thanks to our wonderful contributors!
 
 Have a look at the [discussion tab](https://github.com/mattzcarey/shippie/discussions) for the latest chat and ideas. I am actively working on the items in [todo.md](todo.md).
 
-## Sponsors ❤️
-
-<a href="https://www.quivr.app/">
-    <img src="https://github.com/mattzcarey/shippie/assets/77928207/30361248-3159-4535-8efb-b114989ae886" alt="quivr logo" width="150" height="150">
-</a>
-
-<a href="https://www.aleios.com/">
-    <img src="https://github.com/mattzcarey/shippie/assets/77928207/a47c2460-b866-433f-a4c9-efb5737d4fed" alt="aleios logo" width="150" height="150">
-</a>
 
 ## Star History ⭐️
 
