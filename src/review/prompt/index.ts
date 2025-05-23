@@ -1,5 +1,10 @@
 import { getGitRoot } from '../../common/git/getChangedFilesNames'
 import type { ReviewFile } from '../../common/types'
+import {
+  findImportantFiles,
+  findRulesFiles,
+  formatRulesContext,
+} from '../utils/rulesFiles'
 import { createFileInfo } from './fileInfo'
 import { instructionPrompt } from './prompts'
 import { getLanguageName } from './utils/fileLanguage'
@@ -18,5 +23,12 @@ export const constructPrompt = async (
 
   const fileInfo = createFileInfo(files, workspaceRoot)
 
-  return `${languageToInstructionPrompt}\n${fileInfo}`
+  const [rulesFiles, importantFiles] = await Promise.all([
+    findRulesFiles(workspaceRoot),
+    findImportantFiles(workspaceRoot),
+  ])
+
+  const rulesContext = formatRulesContext(rulesFiles, importantFiles)
+
+  return `${languageToInstructionPrompt}${rulesContext}\n${fileInfo}`
 }
