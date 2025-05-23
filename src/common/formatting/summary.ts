@@ -7,9 +7,11 @@ export const FORMATTING = {
   SIGN_OFF:
     '### Review powered by [Shippie 🚢](https://github.com/mattzcarey/shippie) - The open source, extensible review agent.',
   CTA: `<details>
-<summary>Enjoying Shippie? 🚢</summary>
+<summary>Good review?</summary>
 
-🤝 Sponsored by: [Your Company Here](https://sustain.dev/sponsor/shippie)
+Sponsor the project to preview features and influence the roadmap
+
+👉 [YOUR COMPANY HERE](https://sustain.dev/sponsor/shippie) 👈
 
 </details>`,
   TOOL_CALLS_TITLE: '🛠️ Tool Calls',
