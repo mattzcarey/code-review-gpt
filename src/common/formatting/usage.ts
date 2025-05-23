@@ -1,5 +1,6 @@
 import type { StepResult } from 'ai'
 import type { TokenUsage, ToolCall } from '../../review/types'
+import { FORMATTING } from './summary'
 
 /**
  * Adds up the usage from a list of steps and adds it to the past usage
@@ -34,7 +35,7 @@ export const addTokenUsage = (a: TokenUsage, b: TokenUsage): TokenUsage => ({
  */
 const extractPreviousTokenUsage = (commentBody: string): TokenUsage | null => {
   const match = commentBody.match(
-    /Total \(Accumulated\)\s*\|\s*(\d+(?:,\d+)*)\s*\|\s*(\d+(?:,\d+)*)\s*\|\s*(\d+(?:,\d+)*)/
+    /Total for PR\s*\|\s*(\d+(?:,\d+)*)\s*\|\s*(\d+(?:,\d+)*)\s*\|\s*(\d+(?:,\d+)*)/
   )
   if (!match) return null
 
@@ -66,7 +67,7 @@ export const formatUsage = (
 
   return `
 <details>
-<summary>🛠️ Tool Calls</summary>
+<summary>${FORMATTING.TOOL_CALLS_TITLE}</summary>
 
 ${toolUsage
   .map(
@@ -90,12 +91,12 @@ ${JSON.stringify(toolCall.result, null, 6)}
 </details>
 
 <details>
-<summary>📊 Token Usage</summary>
+<summary>${FORMATTING.TOKEN_USAGE_TITLE}</summary>
 
 | Usage | Prompt Tokens | Completion Tokens | Total Tokens |
 |-------|--------------|------------------|-------------|
 | Current Run | ${currentUsage.promptTokens.toLocaleString()} | ${currentUsage.completionTokens.toLocaleString()} | ${currentUsage.totalTokens.toLocaleString()} |
-| Total (Accumulated) | ${accumulatedTokenUsage.promptTokens.toLocaleString()} | ${accumulatedTokenUsage.completionTokens.toLocaleString()} | ${accumulatedTokenUsage.totalTokens.toLocaleString()} |
+| Total for PR | ${accumulatedTokenUsage.promptTokens.toLocaleString()} | ${accumulatedTokenUsage.completionTokens.toLocaleString()} | ${accumulatedTokenUsage.totalTokens.toLocaleString()} |
 
 </details>`
 }
