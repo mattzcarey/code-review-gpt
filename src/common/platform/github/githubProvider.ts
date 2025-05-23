@@ -210,10 +210,12 @@ export const githubProvider = async (): Promise<PlatformProvider> => {
 
           // Check if there's already a usage section
           let newBody = currentBody
-          if (newBody.includes('<summary>📊 Usage Stats</summary>')) {
+          if (newBody.includes(`<summary>${FORMATTING.TOKEN_USAGE_TITLE}</summary>`)) {
             // Replace the existing usage section
             newBody = newBody.replace(
-              /<details>\s*<summary>📊 Usage Stats<\/summary>[\s\S]*?<\/details>/,
+              new RegExp(
+                `<details>\\s*<summary>${FORMATTING.TOKEN_USAGE_TITLE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}<\\/summary>[\\s\\S]*?<\\/details>`
+              ),
               usageSection
             )
           } else {
