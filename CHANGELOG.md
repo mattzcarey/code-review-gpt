@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/mattzcarey/shippie/compare/v0.15.0...v0.16.0) (2025-05-25)
+
+
+### Features
+
+* **prompt sizes:** Update model info ([#438](https://github.com/mattzcarey/shippie/issues/438)) ([bc08b6d](https://github.com/mattzcarey/shippie/commit/bc08b6d159091e1ab92c7349afce92c113f68f61))
+
 ## [0.15.0](https://github.com/mattzcarey/shippie/compare/v0.14.3...v0.15.0) (2025-05-23)
 
 
