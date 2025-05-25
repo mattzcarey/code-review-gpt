@@ -2,7 +2,15 @@ import { logger } from '../utils/logger'
 
 export const modelInfo = [
   {
+    model: 'openai:o3',
+    maxPromptLength: 300000, //100k tokens
+  },
+  {
     model: 'openai:o3-mini',
+    maxPromptLength: 300000, //100k tokens
+  },
+  {
+    model: 'openai:o4-mini',
     maxPromptLength: 300000, //100k tokens
   },
   {
@@ -16,6 +24,18 @@ export const modelInfo = [
   {
     model: 'openai:gpt-4o',
     maxPromptLength: 300000, //128k tokens
+  },
+  {
+    model: 'openai:gpt-4.1',
+    maxPromptLength: 2400000, //1024k tokens (1M context window)
+  },
+  {
+    model: 'openai:gpt-4.1-mini',
+    maxPromptLength: 2400000, //1024k tokens (1M context window)
+  },
+  {
+    model: 'openai:gpt-4.1-nano',
+    maxPromptLength: 2400000, //1024k tokens (1M context window)
   },
   {
     model: 'openai:gpt-4-turbo',
@@ -35,7 +55,7 @@ export const modelInfo = [
   },
   {
     model: 'openai:gpt-3.5-turbo',
-    maxPromptLength: 9000, //4k tokens
+    maxPromptLength: 45000, //16k tokens
   },
   {
     model: 'openai:gpt-3.5-turbo-16k',
