@@ -1,6 +1,6 @@
+import picomatch from 'picomatch'
 import type { ReviewFile } from '../../common/types'
 import { defaultIgnoredGlobs } from '../constants'
-import picomatch from 'picomatch'
 
 export const filterFiles = (
   files: ReviewFile[],
