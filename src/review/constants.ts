@@ -24,14 +24,21 @@ export const languageMap: { [key: string]: string } = {
   '.tf': 'Terraform',
   '.hcl': 'Terraform',
   '.swift': 'Swift',
+  '.md': 'Markdown',
+  '.mdx': 'Markdown',
+  '.mdc': 'Markdown (Cursor rules)',
+  '.txt': 'Text',
+  '.json': 'JSON',
+  '.yaml': 'YAML',
+  '.yml': 'YAML',
+  '.toml': 'TOML',
+  '.html': 'HTML',
 }
 
-export const supportedFiles = new Set(Object.keys(languageMap))
-
-export const excludedKeywords = new Set([
-  '.d.ts',
-  'dist',
-  'node_modules',
-  'package-lock.json',
-  '.lock',
+export const defaultIgnoredGlobs = new Set([
+  '**/*.d.ts',
+  'dist/**',
+  'node_modules/**',
+  '**/package-lock.json',
+  '**/*.lock',
 ])

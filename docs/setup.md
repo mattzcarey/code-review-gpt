@@ -38,6 +38,9 @@ Shippie supports a bunch of setup options. This is a work in progress so check o
 - Model String - The model you want to use eg. openai:gpt-4o, azure:gpt-4o, anthropic:claude-3-5-sonnet-20240620.
 - (optional) Max Steps - The maximum number of steps the bot will take. defaults to 25.
 - (optional) Base URL - The base URL for the AI provider. You can change this to use OpenAI compatible providers like DeepSeek or local models with LM Studio or Ollama.
+- (optional) Ignore - A list of globs to ignore when reviewing the code. Defaults to `dist/**, node_modules/**, **/*.d.ts, **/*.lock, **/package-lock.json`.
+- (optional) Telemetry - Toggle anonymous telemetry. Defaults to True
+- (optional) Debug - Toggle debug logging. Defaults to False.
 
 Run `npx shippie --help` to see all the options available.
 

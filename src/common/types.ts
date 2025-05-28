@@ -38,7 +38,7 @@ export type ReviewArgs = BaseArgs & {
   platform: PlatformOptions | string
   maxSteps: number
   baseUrl?: string
-  checkFileTypes: string[]
+  ignore?: string[]
 }
 
 export type ParsedArgs = ConfigureArgs | ReviewArgs

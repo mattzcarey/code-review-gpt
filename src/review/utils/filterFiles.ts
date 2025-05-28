@@ -1,26 +1,20 @@
-import { extname } from 'node:path'
-
 import type { ReviewFile } from '../../common/types'
-import {excludedKeywords, supportedFiles} from '../constants'
+import { defaultIgnoredGlobs } from '../constants'
+import picomatch from 'picomatch'
 
-export const filterFiles = (files: ReviewFile[], checkFileTypes: string[]): ReviewFile[] => {
-  const filteredFiles = files.filter((file) => {
-    const ext = extname(file.fileName)
+export const filterFiles = (
+  files: ReviewFile[],
+  ignoredGlobs?: string[]
+): ReviewFile[] => {
+  const globs = ignoredGlobs ?? Array.from(defaultIgnoredGlobs)
 
-    // use the default
-    let allowedFiles = supportedFiles
+  if (globs.length === 0) {
+    return files
+  }
 
-    if (checkFileTypes.length > 0) {
-      // overwrite with user input
-      allowedFiles =  new Set(checkFileTypes)
-    }
+  const isMatch = picomatch(globs)
 
-    return (
-        allowedFiles.has(ext) &&
-        ![...excludedKeywords].some((keyword) => file.fileName.includes(keyword)) &&
-        file.fileName.trim() !== ''
-    )
+  return files.filter((file) => {
+    return !isMatch(file.fileName)
   })
-
-  return filteredFiles
 }

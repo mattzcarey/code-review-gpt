@@ -43,10 +43,10 @@ export const getYargs = async () => {
           description: 'Base URL for the platform',
           type: 'string',
         })
-        .option('checkFileTypes', {
-          description: 'Array of file types which shippie checks. If you dont provide any, a sensible default will be used',
+        .option('ignore', {
+          description:
+            "Array of globs which shippie ignores. If you don't provide any, sensible default will be used",
           type: 'array',
-          default: []
         })
     })
     .demandCommand(1, 'Please specify a command: configure or review')
