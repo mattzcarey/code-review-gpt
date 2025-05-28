@@ -43,6 +43,11 @@ export const getYargs = async () => {
           description: 'Base URL for the platform',
           type: 'string',
         })
+        .option('ignore', {
+          description:
+            "Array of globs which shippie ignores. If you don't provide any, sensible default will be used",
+          type: 'array',
+        })
     })
     .demandCommand(1, 'Please specify a command: configure or review')
     .option('debug', {

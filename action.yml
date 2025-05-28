@@ -33,6 +33,9 @@ inputs:
     description: "Enables anonymous telemetry"
     required: false
     default: "true"
+  IGNORE:
+    description: "Comma-separated list of glob patterns to ignore (e.g., '**/*.test.ts,dist/**,*.md'). If not provided, sensible defaults will be used."
+    required: false
   DEBUG:
     description: "Enables debug logging"
     required: false
@@ -62,6 +65,18 @@ runs:
         # Input with no default in action.yml - only add if user provides it and it's non-empty.
         if [ -n "${{ inputs.BASE_URL }}" ]; then
           cmd_args="$cmd_args --baseUrl="${{ inputs.BASE_URL }}""
+        fi
+
+        if [ -n "${{ inputs.IGNORE }}" ]; then
+          # Parse the IGNORE input as a space or comma-separated list and add multiple --ignore flags
+          IFS=',' read -ra IGNORE_ARRAY <<< "${{ inputs.IGNORE }}"
+          for pattern in "${IGNORE_ARRAY[@]}"; do
+            # Trim whitespace and add --ignore flag for each pattern
+            pattern=$(echo "$pattern" | xargs)
+            if [ -n "$pattern" ]; then
+              cmd_args="$cmd_args --ignore=\"$pattern\""
+            fi
+          done
         fi
 
         # Boolean flags:

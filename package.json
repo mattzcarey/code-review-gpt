@@ -58,6 +58,7 @@
         "gray-matter": "^4.0.3",
         "octokit": "^3.1.0",
         "picocolors": "^1.1.1",
+        "picomatch": "^4.0.2",
         "tinyglobby": "^0.2.10",
         "tslog": "^4.8.2",
         "ulid": "^3.0.0",
@@ -67,12 +68,11 @@
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@types/bun": "^1.1.16",
+        "@types/picomatch": "^4.0.0",
         "@types/yargs": "^17.0.33",
         "autoevals": "^0.0.127",
         "tsup": "^8.4.0",
         "typescript": "^5.1.6"
     },
-    "files": [
-        "dist/*"
-    ]
+    "files": ["dist/*"]
 }
