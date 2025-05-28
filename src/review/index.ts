@@ -15,6 +15,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Platform: ${yargs.platform}`)
   logger.debug(`Max steps: ${yargs.maxSteps}`)
   logger.debug(`Telemetry: ${yargs.telemetry}`)
+  logger.debug(`File Types: ${yargs.checkFileTypes}`)
 
   const trimmedBaseUrl = yargs.baseUrl?.trim()
   const modelCreationOptions: ModelCreationOptions = trimmedBaseUrl
@@ -35,7 +36,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
 
   const files: ReviewFile[] = await getFilesWithChanges(yargs.platform)
   logger.debug(`Found ${files.length} changed files.`)
-  const filteredFiles = filterFiles(files)
+  const filteredFiles = filterFiles(files, yargs.checkFileTypes)
   logger.debug(`Filtered ${filteredFiles.length} files to review.`)
 
   if (filteredFiles.length === 0) {

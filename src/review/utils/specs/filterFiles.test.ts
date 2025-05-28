@@ -33,3 +33,31 @@ describe('filterFiles unit test', () => {
     expect(result[1].fileName).toMatch(filesRegex)
   })
 })
+
+describe('filterFiles unit test with user file ending', () => {
+  test('returns only supported files with user file ending', async () => {
+    const testDir = join(__dirname, 'examples')
+
+    const testFiles: ReviewFile[] = []
+
+    const readDir = await readdir(testDir)
+
+    await Promise.all(
+      readDir.map(async (file) => {
+        const fileName = join(testDir, file)
+        const fileContent = await readFile(fileName, 'utf8')
+        testFiles.push({
+          fileName: fileName,
+          fileContent: fileContent,
+          changedLines: [],
+        })
+      })
+    )
+
+    const result = filterFiles(testFiles, [".gitignore"])
+    const filesRegex = /examples\/(\.gitignore)$/i
+
+    expect(result.length).toEqual(1)
+    expect(result[0].fileName).toMatch(filesRegex)
+  })
+})
