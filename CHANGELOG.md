@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/mattzcarey/shippie/compare/v0.16.0...v0.17.0) (2025-05-28)
+
+
+### Features
+
+* support for custom file endings ([#442](https://github.com/mattzcarey/shippie/issues/442)) ([8198fa3](https://github.com/mattzcarey/shippie/commit/8198fa35696653819e1c58b76aff4f14915f08e1))
+
 ## [0.16.0](https://github.com/mattzcarey/shippie/compare/v0.15.0...v0.16.0) (2025-05-25)
 
 
