@@ -34,7 +34,7 @@ inputs:
     required: false
     default: "true"
   IGNORE:
-    description: "Array of globs which shippie ignores. If you don't provide any, sensible default will be used"
+    description: "Comma-separated list of glob patterns to ignore (e.g., '**/*.test.ts,dist/**,*.md'). If not provided, sensible defaults will be used."
     required: false
   DEBUG:
     description: "Enables debug logging"
@@ -68,7 +68,15 @@ runs:
         fi
 
         if [ -n "${{ inputs.IGNORE }}" ]; then
-          cmd_args="$cmd_args --ignore="${{ inputs.IGNORE }}""
+          # Parse the IGNORE input as a space or comma-separated list and add multiple --ignore flags
+          IFS=',' read -ra IGNORE_ARRAY <<< "${{ inputs.IGNORE }}"
+          for pattern in "${IGNORE_ARRAY[@]}"; do
+            # Trim whitespace and add --ignore flag for each pattern
+            pattern=$(echo "$pattern" | xargs)
+            if [ -n "$pattern" ]; then
+              cmd_args="$cmd_args --ignore=\"$pattern\""
+            fi
+          done
         fi
 
         # Boolean flags:
