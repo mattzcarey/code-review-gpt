@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.1](https://github.com/mattzcarey/shippie/compare/v0.17.0...v0.17.1) (2025-06-02)
+
+
+### Bug Fixes
+
+* re-add support for azure openai ([#444](https://github.com/mattzcarey/shippie/issues/444)) ([2c850b5](https://github.com/mattzcarey/shippie/commit/2c850b5f1ab672ebda9a32e16f57c88f228700f8))
+
 ## [0.17.0](https://github.com/mattzcarey/shippie/compare/v0.16.0...v0.17.0) (2025-05-28)
 
 
