@@ -16,18 +16,24 @@ const providerMap: Record<string, ProviderCreator> = {
 
 export interface ModelCreationOptions {
   baseURL?: string
+  apiVersion?: string
 }
 
 // Internal helper to create the provider function
 const createModelProvider = (
   providerKey: string,
-  options?: ModelCreationOptions
+  options: ModelCreationOptions
 ): ProviderInstance => {
   const creator = providerMap[providerKey]
   if (!creator) {
     throw new Error(
       `Unsupported provider: ${providerKey}. The supported providers are: ${Object.keys(providerMap).join(', ')}`
     )
+  }
+  if (providerKey === 'azure') {
+    if (process.env.AZURE_API_VERSION) {
+      options.apiVersion = process.env.AZURE_API_VERSION
+    }
   }
   if (options) {
     return creator(options)
@@ -46,7 +52,7 @@ export const createModel = (
     )
   }
   const [providerKey, modelName] = parts
-  const providerInstance = createModelProvider(providerKey, options)
+  const providerInstance = createModelProvider(providerKey, options ?? {})
 
   return providerInstance(modelName)
 }
