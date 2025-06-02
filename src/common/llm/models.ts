@@ -30,7 +30,7 @@ const createModelProvider = (
       `Unsupported provider: ${providerKey}. The supported providers are: ${Object.keys(providerMap).join(', ')}`
     )
   }
-  if (providerKey == "azure") {
+  if (providerKey === 'azure') {
     if (process.env.AZURE_API_VERSION) {
       options.apiVersion = process.env.AZURE_API_VERSION
     }
@@ -52,10 +52,7 @@ export const createModel = (
     )
   }
   const [providerKey, modelName] = parts
-  if (options === undefined) {
-    options = {}
-  }
-  const providerInstance = createModelProvider(providerKey, options)
+  const providerInstance = createModelProvider(providerKey, options ?? {})
 
   return providerInstance(modelName)
 }
