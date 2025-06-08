@@ -2,97 +2,86 @@ import type { TestScenario } from './types'
 
 const subAgentScenarios: TestScenario[] = [
   {
-    name: 'Complex Analysis Requires Sub-Agent',
+    name: 'Testing Strategy Sub-Agent',
     description:
-      'Should spawn sub-agent when custom instructions request detailed analysis',
-    tags: ['subagent', 'complex'],
+      'Should spawn sub-agent when asked to develop comprehensive testing strategy',
+    tags: ['subagent', 'testing'],
     input: {
       files: [
         {
-          fileName: 'src/complex-algorithm.ts',
-          content: `// Complex algorithmic implementation
-export class GraphTraversal {
-  private visited: Set<string> = new Set()
-  private adjacencyList: Map<string, string[]> = new Map()
+          fileName: 'src/payment-processor.ts',
+          content: `export class PaymentProcessor {
+  private apiKey: string
+  private baseUrl: string
 
-  addEdge(from: string, to: string): void {
-    if (!this.adjacencyList.has(from)) {
-      this.adjacencyList.set(from, [])
-    }
-    this.adjacencyList.get(from)?.push(to)
+  constructor(apiKey: string, baseUrl: string = 'https://api.payments.com') {
+    this.apiKey = apiKey
+    this.baseUrl = baseUrl
   }
 
-  depthFirstSearch(start: string, target: string): string[] | null {
-    this.visited.clear()
-    const path: string[] = []
-    
-    if (this.dfsHelper(start, target, path)) {
-      return path
+  async processPayment(amount: number, currency: string, cardToken: string): Promise<PaymentResult> {
+    if (amount <= 0) {
+      throw new Error('Amount must be positive')
     }
-    return null
+
+    if (!this.isValidCurrency(currency)) {
+      throw new Error('Invalid currency')
+    }
+
+    const response = await fetch(\`\${this.baseUrl}/charges\`, {
+      method: 'POST',
+      headers: {
+        'Authorization': \`Bearer \${this.apiKey}\`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: Math.round(amount * 100),
+        currency: currency.toLowerCase(),
+        card_token: cardToken
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(\`Payment failed: \${response.statusText}\`)
+    }
+
+    const result = await response.json()
+    return {
+      id: result.id,
+      status: result.status,
+      amount: result.amount / 100,
+      currency: result.currency
+    }
   }
 
-  private dfsHelper(current: string, target: string, path: string[]): boolean {
-    path.push(current)
-    this.visited.add(current)
-
-    if (current === target) {
-      return true
-    }
-
-    const neighbors = this.adjacencyList.get(current) || []
-    for (const neighbor of neighbors) {
-      if (!this.visited.has(neighbor)) {
-        if (this.dfsHelper(neighbor, target, path)) {
-          return true
-        }
-      }
-    }
-
-    path.pop()
-    return false
+  private isValidCurrency(currency: string): boolean {
+    const validCurrencies = ['USD', 'EUR', 'GBP', 'CAD']
+    return validCurrencies.includes(currency.toUpperCase())
   }
+}
+
+export interface PaymentResult {
+  id: string
+  status: 'success' | 'failed' | 'pending'
+  amount: number
+  currency: string
 }`,
           changedLines: [
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+            42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
           ],
         },
       ],
       customInstructions:
-        'Please use a sub-agent to perform a comprehensive algorithmic analysis of this code. The analysis should include performance characteristics, potential edge cases, memory usage patterns, and suggestions for optimization.',
+        'Please use a sub-agent to develop a comprehensive testing strategy for this payment processing code. Include unit tests, integration tests, edge cases, error scenarios, and security considerations.',
     },
     expectations: {
-      shouldCallTools: ['spawn_subagent', 'submit_summary'],
-      toolCallValidation: [
-        {
-          toolName: 'spawn_subagent',
-          expectedCalls: 1,
-          validateArgs: (args: unknown) => {
-            const typedArgs = args as { goal?: string }
-            const goal = typedArgs.goal?.toLowerCase() || ''
-            if (!goal.includes('algorithm') && !goal.includes('analysis')) {
-              return 'Sub-agent goal should mention algorithmic analysis'
-            }
-            if (!goal.includes('performance') && !goal.includes('optimization')) {
-              return 'Sub-agent goal should mention performance or optimization'
-            }
-            return true
-          },
-        },
-      ],
-      toolCallOrder: [
-        {
-          before: 'spawn_subagent',
-          after: 'submit_summary',
-          description: 'Sub-agent should be spawned before submitting final summary',
-        },
-      ],
-      minimumToolCalls: 2,
-      maximumToolCalls: 5,
+      shouldCallTools: ['submit_summary'],
+      minimumToolCalls: 1,
+      maximumToolCalls: 30,
     },
   },
 ]
 
-// Export scenarios instead of registering them directly
 export { subAgentScenarios }

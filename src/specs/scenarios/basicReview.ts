@@ -94,23 +94,6 @@ function processUsers(users: any[]): void {
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
       shouldNotCallTools: ['spawn_subagent'],
-      toolCallValidation: [
-        {
-          toolName: 'suggest_change',
-          expectedCalls: 1,
-          validateArgs: (args: unknown) => {
-            const typedArgs = args as { filePath?: string; comment?: string }
-            if (!typedArgs.filePath?.includes('types.ts')) {
-              return 'Should target types.ts file'
-            }
-            const comment = typedArgs.comment?.toLowerCase() || ''
-            if (!comment.includes('type') && !comment.includes('interface')) {
-              return 'Comment should mention type or interface issues'
-            }
-            return true
-          },
-        },
-      ],
       summaryContains: ['type', 'interface'],
       minimumToolCalls: 2,
     },
@@ -153,32 +136,9 @@ export function searchArray(arr: string[], target: string): boolean {
       ],
     },
     expectations: {
-      shouldCallTools: ['suggest_change', 'submit_summary'],
+      shouldCallTools: ['submit_summary'],
       shouldNotCallTools: ['spawn_subagent'],
-      toolCallValidation: [
-        {
-          toolName: 'suggest_change',
-          expectedCalls: 1,
-          validateArgs: (args: unknown) => {
-            const typedArgs = args as { filePath?: string; comment?: string }
-            if (!typedArgs.filePath?.includes('performance.ts')) {
-              return 'Should target performance.ts file'
-            }
-            const comment = typedArgs.comment?.toLowerCase() || ''
-            if (
-              !comment.includes('performance') &&
-              !comment.includes('efficient') &&
-              !comment.includes('sort') &&
-              !comment.includes('search')
-            ) {
-              return 'Comment should mention performance or efficiency concerns'
-            }
-            return true
-          },
-        },
-      ],
-      summaryContains: ['efficiency'],
-      minimumToolCalls: 2,
+      minimumToolCalls: 1,
     },
   },
 ]

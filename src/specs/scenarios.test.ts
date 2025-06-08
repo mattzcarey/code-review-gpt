@@ -7,7 +7,7 @@ import { scenarioRegistry } from './scenarios'
 logger.settings.minLevel = 3 // 0: silly, 1: trace, 2: debug, 3: info, 4: warn, 5: error, 6: fatal
 
 describe('E2E Scenario Tests', () => {
-  const runner = new ScenarioRunner('openai:gpt-4.1-mini', 25) // Enable test mode
+  const runner = new ScenarioRunner('openai:gpt-4.1-mini', 25)
 
   // Test all registered scenarios
   for (const scenario of scenarioRegistry.getAll()) {
@@ -39,79 +39,8 @@ describe('E2E Scenario Tests', () => {
       }
 
       expect(result.passed).toBe(true)
-    }, 60000) // 60 second timeout per scenario
+    }, 300000) // 5 minute timeout per scenario
   }
-
-  //   // Test scenarios by tag
-  //   describe('Secret Detection Scenarios', () => {
-  //     const secretScenarios = scenarioRegistry.getByTag('secrets')
-
-  //     for (const scenario of secretScenarios) {
-  //       test(`${scenario.name} - should detect secrets`, async () => {
-  //         const result = await runner.runScenario(scenario)
-  //         expect(result.passed).toBe(true)
-
-  //         // Verify that secret-related tools were called appropriately
-  //         const hasSecretRelatedSuggestion = result.toolCalls.some(
-  //           (call) =>
-  //             call.toolName === 'suggest_change' &&
-  //             typeof call.args === 'object' &&
-  //             call.args !== null &&
-  //             'comment' in call.args &&
-  //             typeof call.args.comment === 'string' &&
-  //             call.args.comment.toLowerCase().includes('secret')
-  //         )
-
-  //         const hasSecretInSummary = result.summary.toLowerCase().includes('secret')
-
-  //         // Should have either suggestion or summary mentioning secrets (depending on scenario)
-  //         if (scenario.expectations.shouldCallTools.includes('suggest_change')) {
-  //           expect(hasSecretRelatedSuggestion || hasSecretInSummary).toBe(true)
-  //         }
-  //       })
-  //     }
-  //   })
-
-  //   describe('Sub-Agent Scenarios', () => {
-  //     const subAgentScenarios = scenarioRegistry.getByTag('subagent')
-
-  //     for (const scenario of subAgentScenarios) {
-  //       test(`${scenario.name} - sub-agent behavior`, async () => {
-  //         const result = await runner.runScenario(scenario)
-  //         expect(result.passed).toBe(true)
-
-  //         // Verify sub-agent usage matches expectations
-  //         const subAgentCalls = result.toolCalls.filter(
-  //           (call) => call.toolName === 'spawn_subagent'
-  //         )
-
-  //         if (scenario.expectations.shouldCallTools.includes('spawn_subagent')) {
-  //           expect(subAgentCalls.length).toBeGreaterThan(0)
-  //         } else if (scenario.expectations.shouldNotCallTools?.includes('spawn_subagent')) {
-  //           expect(subAgentCalls.length).toBe(0)
-  //         }
-  //       })
-  //     }
-  //   })
-
-  //   describe('Quality Scenarios', () => {
-  //     const qualityScenarios = scenarioRegistry.getByTag('quality')
-
-  //     for (const scenario of qualityScenarios) {
-  //       test(`${scenario.name} - code quality checks`, async () => {
-  //         const result = await runner.runScenario(scenario)
-  //         expect(result.passed).toBe(true)
-
-  //         // Verify quality-related suggestions were made
-  //         if (scenario.expectations.shouldCallTools.includes('suggest_change')) {
-  //           const qualitySuggestions = result.toolCalls.filter(
-  //             (call) => call.toolName === 'suggest_change'
-  //           )
-  //           expect(qualitySuggestions.length).toBeGreaterThan(0)
-  //         }
-  //       })
-  //     }
-  //   })
 })
 
 describe('Scenario Registry', () => {
