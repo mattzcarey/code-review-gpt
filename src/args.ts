@@ -37,7 +37,7 @@ export const getYargs = async () => {
         .option('maxSteps', {
           description: 'Maximum number of agentic steps to take',
           type: 'number',
-          default: 25,
+          default: 50,
         })
         .option('baseUrl', {
           description: 'Base URL for the platform',
@@ -47,6 +47,10 @@ export const getYargs = async () => {
           description:
             "Array of globs which shippie ignores. If you don't provide any, sensible default will be used",
           type: 'array',
+        })
+        .option('customInstructions', {
+          description: 'Custom instructions to be added to the review prompt',
+          type: 'string',
         })
     })
     .demandCommand(1, 'Please specify a command: configure or review')

@@ -39,6 +39,7 @@ export type ReviewArgs = BaseArgs & {
   maxSteps: number
   baseUrl?: string
   ignore?: string[]
+  customInstructions?: string
 }
 
 export type ParsedArgs = ConfigureArgs | ReviewArgs

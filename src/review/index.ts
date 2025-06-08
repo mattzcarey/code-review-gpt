@@ -16,6 +16,7 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   logger.debug(`Max steps: ${yargs.maxSteps}`)
   logger.debug(`Telemetry: ${yargs.telemetry}`)
   logger.debug(`Ignored file globs: ${yargs.ignore}`)
+  logger.debug(`Custom instructions: ${yargs.customInstructions}`)
 
   const trimmedBaseUrl = yargs.baseUrl?.trim()
   const modelCreationOptions: ModelCreationOptions = trimmedBaseUrl
@@ -49,7 +50,11 @@ export const review = async (yargs: ReviewArgs): Promise<void> => {
   )
 
   const model = createModel(yargs.modelString, modelCreationOptions)
-  const prompt = await constructPrompt(filteredFiles, yargs.reviewLanguage)
+  const prompt = await constructPrompt(
+    filteredFiles,
+    yargs.reviewLanguage,
+    yargs.customInstructions
+  )
   logger.debug('Prompt:', prompt)
 
   try {
