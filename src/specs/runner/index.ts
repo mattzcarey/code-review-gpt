@@ -129,12 +129,17 @@ export class ScenarioRunner {
     // Validate tool call order
     if (expectations.toolCallOrder) {
       for (const orderExpectation of expectations.toolCallOrder) {
-        const beforeIndex = toolCalls.findIndex(call => call.toolName === orderExpectation.before)
-        const afterIndex = toolCalls.findIndex(call => call.toolName === orderExpectation.after)
-        
+        const beforeIndex = toolCalls.findIndex(
+          (call) => call.toolName === orderExpectation.before
+        )
+        const afterIndex = toolCalls.findIndex(
+          (call) => call.toolName === orderExpectation.after
+        )
+
         if (beforeIndex !== -1 && afterIndex !== -1) {
           if (beforeIndex >= afterIndex) {
-            const description = orderExpectation.description || 
+            const description =
+              orderExpectation.description ||
               `'${orderExpectation.before}' should be called before '${orderExpectation.after}'`
             errors.push(`Tool call order violation: ${description}`)
           }

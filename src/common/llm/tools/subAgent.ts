@@ -1,8 +1,8 @@
 import { type LanguageModelV1, type Tool, generateText, tool } from 'ai'
 import { z } from 'zod'
 import { logger } from '../../utils/logger'
+import { getAllTools } from './index'
 import { MCPClientManager } from '../mcp/client'
-import { getBaseTools } from './index'
 
 const submitReportTool = tool({
   description: 'Submit a report to the main agent. This is how you finish your work.',
@@ -27,23 +27,18 @@ export const createSubAgentTool = (parentModel: LanguageModelV1, maxSteps: numbe
         logger.info(`Spawning sub-agent with goal: ${goal}`)
         const model: LanguageModelV1 = parentModel
 
-        // Initialize MCP clients for additional tools
-        const clients = new MCPClientManager()
-        await clients.loadConfig()
-        await clients.startClients()
+        const mcpClientManager = new MCPClientManager()
+        await mcpClientManager.loadConfig()
+        await mcpClientManager.startClients()
 
-        const mcpTools: Record<string, Tool> = {}
-        for (const [serverName, tools] of Object.entries(await clients.getTools())) {
-          for (const [toolName, tool] of Object.entries(tools)) {
-            mcpTools[`${serverName}-${toolName}`] = tool
-          }
-        }
+        const allTools = await getAllTools({
+          model,
+          mcpClientManager,
+        })
 
-        // Prepare all available tools
         const tools = {
           submit_report: submitReportTool,
-          ...getBaseTools(),
-          ...mcpTools,
+          ...allTools,
         }
 
         logger.debug('Sub-agent tools available:', Object.keys(tools))
@@ -77,8 +72,7 @@ Submit the report to the main agent using the 'submit_report' tool.`
           maxSteps,
         })
 
-        // Clean up MCP clients
-        await clients.closeClients()
+        await mcpClientManager.closeClients()
 
         if (result.toolCalls.length > 0) {
           return result.toolCalls[0].args.report
