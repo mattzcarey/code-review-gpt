@@ -21,9 +21,9 @@ import type { LanguageModelV1 } from 'ai'
 import type { PlatformProvider } from '../../platform/provider'
 import type { MCPClientManager } from '../mcp/client'
 import { createReadDiffTool } from './readDiff'
+import { createSubAgentTool } from './subAgent'
 import { createSubmitSummaryTool } from './submitSummary'
 import { createSuggestChangesTool } from './suggestChanges'
-import { createSubAgentTool } from './subAgent'
 
 export interface GetAllToolsOptions {
   platformProvider?: PlatformProvider
