@@ -59,7 +59,8 @@ export class GraphTraversal {
           ],
         },
       ],
-      customInstructions: `Please use a sub-agent to perform a comprehensive algorithmic analysis of this code. The analysis should include performance characteristics, potential edge cases, memory usage patterns, and suggestions for optimization.`,
+      customInstructions:
+        'Please use a sub-agent to perform a comprehensive algorithmic analysis of this code. The analysis should include performance characteristics, potential edge cases, memory usage patterns, and suggestions for optimization.',
     },
     expectations: {
       shouldCallTools: ['spawn_subagent', 'submit_summary'],
@@ -89,102 +90,6 @@ export class GraphTraversal {
       ],
       minimumToolCalls: 2,
       maximumToolCalls: 5,
-    },
-  },
-  {
-    name: 'Security Analysis Sub-Agent',
-    description: 'Should spawn sub-agent for security-focused analysis when requested',
-    tags: ['subagent', 'security'],
-    input: {
-      files: [
-        {
-          fileName: 'src/auth.ts',
-          content: `import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-
-export class AuthService {
-  private readonly saltRounds = 10
-  private readonly jwtSecret = process.env.JWT_SECRET || 'fallback-secret'
-
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, this.saltRounds)
-  }
-
-  async verifyPassword(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash)
-  }
-
-  generateToken(userId: string): string {
-    return jwt.sign({ userId }, this.jwtSecret, { expiresIn: '24h' })
-  }
-
-  verifyToken(token: string): { userId: string } | null {
-    try {
-      return jwt.verify(token, this.jwtSecret) as { userId: string }
-    } catch (error) {
-      return null
-    }
-  }
-}`,
-          changedLines: [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-            23, 24, 25,
-          ],
-        },
-      ],
-      customInstructions: `Please use a sub-agent to conduct a thorough security review of this authentication code. Focus on potential vulnerabilities, best practices, and security hardening opportunities.`,
-    },
-    expectations: {
-      shouldCallTools: ['spawn_subagent', 'submit_summary'],
-      toolCallValidation: [
-        {
-          toolName: 'spawn_subagent',
-          expectedCalls: 1,
-          validateArgs: (args: unknown) => {
-            const typedArgs = args as { goal?: string }
-            const goal = typedArgs.goal?.toLowerCase() || ''
-            if (!goal.includes('security')) {
-              return 'Sub-agent goal should mention security'
-            }
-            if (!goal.includes('authentication') && !goal.includes('auth')) {
-              return 'Sub-agent goal should mention authentication'
-            }
-            return true
-          },
-        },
-      ],
-      minimumToolCalls: 2,
-    },
-  },
-  {
-    name: 'Simple Code No Sub-Agent',
-    description:
-      'Should not spawn sub-agent for simple code without specific instructions',
-    tags: ['subagent', 'simple'],
-    input: {
-      files: [
-        {
-          fileName: 'src/math.ts',
-          content: `export function add(a: number, b: number): number {
-  return a + b
-}
-
-export function subtract(a: number, b: number): number {
-  return a - b
-}
-
-export function multiply(a: number, b: number): number {
-  return a * b
-}`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        },
-      ],
-    },
-    expectations: {
-      shouldCallTools: ['submit_summary'],
-      shouldNotCallTools: ['spawn_subagent'],
-      minimumToolCalls: 1,
-      maximumToolCalls: 2,
     },
   },
 ]

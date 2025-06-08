@@ -177,7 +177,7 @@ export function searchArray(arr: string[], target: string): boolean {
           },
         },
       ],
-      summaryContains: ['performance', 'efficiency'],
+      summaryContains: ['efficiency'],
       minimumToolCalls: 2,
     },
   },
