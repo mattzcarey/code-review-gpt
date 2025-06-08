@@ -4,6 +4,7 @@ import { MCPClientManager } from '../../common/llm/mcp/client'
 import {
   bashTool,
   createReadDiffTool,
+  createSubAgentTool,
   createSubmitSummaryTool,
   createSuggestChangesTool,
   fetchTool,
@@ -49,6 +50,7 @@ export const runAgenticReview = async (
     ls: lsTool,
     bash: bashTool,
     thinking: thinkingTool,
+    sub_agent: createSubAgentTool(model),
     ...mcpTools,
   }
 
