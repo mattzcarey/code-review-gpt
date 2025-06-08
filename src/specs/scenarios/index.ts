@@ -43,10 +43,10 @@ for (const scenario of secretDetectionScenarios) {
   scenarioRegistry.register(scenario)
 }
 
-for (const scenario of subAgentScenarios) {
-  scenarioRegistry.register(scenario)
-}
+// for (const scenario of subAgentScenarios) {
+//   scenarioRegistry.register(scenario)
+// }
 
-for (const scenario of basicReviewScenarios) {
-  scenarioRegistry.register(scenario)
-}
+// for (const scenario of basicReviewScenarios) {
+//   scenarioRegistry.register(scenario)
+// }
