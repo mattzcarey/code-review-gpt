@@ -12,20 +12,36 @@ export const readFileTool = tool({
     endLine: z.number().optional().describe('The line number to end reading at.'),
   }),
   execute: async ({ path, startLine, endLine }) => {
-    const file = await fs.readFile(path, 'utf-8')
-    const lines = file.split('\n')
+    try {
+      const file = await fs.readFile(path, 'utf-8')
+      const lines = file.split('\n')
 
-    const defaultLinesToRead = 200
+      const defaultLinesToRead = 200
 
-    const startIndex = startLine ? startLine - 1 : 0
-    const endIndex = endLine ? endLine - 1 : startIndex + defaultLinesToRead
+      const startIndex = startLine ? startLine - 1 : 0
+      const endIndex = endLine ? endLine - 1 : startIndex + defaultLinesToRead
 
-    const selectedLines = lines.slice(startIndex, endIndex + 1)
-    const content = selectedLines.join('\n')
+      const selectedLines = lines.slice(startIndex, endIndex + 1)
+      const content = selectedLines.join('\n')
 
-    const prefix = `Here is the file excerpt you requested. NOTE that unless an EOF is shown, the file is not complete. File path: ${path}\nLines Selected: ${startIndex + 1} to ${endIndex + 1}:\n\n`
-    const language = getLanguageName(path, '')
+      const prefix = `Here is the file excerpt you requested. NOTE that unless an EOF is shown, the file is not complete. File path: ${path}\nLines Selected: ${startIndex + 1} to ${endIndex + 1}:\n\n`
+      const language = getLanguageName(path, '')
 
-    return `${prefix}\`\`\`${language.toLowerCase()}\n${content}\`\`\``
+      return `${prefix}\`\`\`${language.toLowerCase()}\n${content}\`\`\``
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('ENOENT') || error.message.includes('no such file')) {
+          return `Error: File not found at path '${path}'. The file does not exist or the path is incorrect. Use the 'ls' tool to explore the directory structure and find the correct path.`
+        }
+        if (error.message.includes('EACCES')) {
+          return `Error: Permission denied when trying to read file '${path}'. You don't have read access to this file.`
+        }
+        if (error.message.includes('EISDIR')) {
+          return `Error: '${path}' is a directory, not a file. Use the 'ls' tool to list directory contents instead.`
+        }
+        return `Error reading file '${path}': ${error.message}`
+      }
+      return `Unknown error occurred while reading file '${path}'`
+    }
   },
 })

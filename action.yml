@@ -28,7 +28,7 @@ inputs:
   MAX_STEPS:
     description: "Maximum number of agentic steps to take"
     required: false
-    default: "25"
+    default: "50"
   TELEMETRY:
     description: "Enables anonymous telemetry"
     required: false

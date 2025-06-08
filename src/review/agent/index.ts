@@ -1,18 +1,7 @@
-import type { GenerateTextResult, LanguageModelV1, Tool } from 'ai'
+import type { GenerateTextResult, LanguageModelV1 } from 'ai'
 import { accumulateTokenUsage, formatToolUsage } from '../../common/formatting/usage'
 import { MCPClientManager } from '../../common/llm/mcp/client'
-import {
-  bashTool,
-  createReadDiffTool,
-  createSubmitSummaryTool,
-  createSuggestChangesTool,
-  fetchTool,
-  globTool,
-  grepTool,
-  lsTool,
-  readFileTool,
-  thinkingTool,
-} from '../../common/llm/tools'
+import { getAllTools } from '../../common/llm/tools'
 import type { PlatformProvider } from '../../common/platform/provider'
 import { logger } from '../../common/utils/logger'
 import type { TokenUsage, ToolCall } from '../types'
@@ -31,26 +20,13 @@ export const runAgenticReview = async (
   await clients.loadConfig()
   await clients.startClients()
 
-  const mcpTools: Record<string, Tool> = {}
-  for (const [serverName, tools] of Object.entries(await clients.getTools())) {
-    for (const [toolName, tool] of Object.entries(tools)) {
-      mcpTools[`${serverName}-${toolName}`] = tool
-    }
-  }
-
-  const tools = {
-    read_file: readFileTool,
-    read_diff: createReadDiffTool(platformProvider),
-    suggest_change: createSuggestChangesTool(platformProvider),
-    submit_summary: createSubmitSummaryTool(platformProvider),
-    fetch: fetchTool,
-    glob: globTool,
-    grep: grepTool,
-    ls: lsTool,
-    bash: bashTool,
-    thinking: thinkingTool,
-    ...mcpTools,
-  }
+  const tools = await getAllTools({
+    platformProvider,
+    model,
+    mcpClientManager: clients,
+    includeSubAgent: true,
+    maxSteps,
+  })
 
   logger.debug('Tools:', Object.keys(tools))
 

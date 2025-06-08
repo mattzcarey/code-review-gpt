@@ -11,7 +11,8 @@ import { getLanguageName } from './utils/fileLanguage'
 
 export const constructPrompt = async (
   files: ReviewFile[],
-  reviewLanguage: string
+  reviewLanguage: string,
+  customInstructions?: string
 ): Promise<string> => {
   const workspaceRoot = await getGitRoot()
 
@@ -30,5 +31,9 @@ export const constructPrompt = async (
 
   const rulesContext = formatRulesContext(rulesFiles, importantFiles)
 
-  return `${languageToInstructionPrompt}${rulesContext}\n${fileInfo}`
+  const customInstructionsSection = customInstructions
+    ? `\n\n// Custom Instructions\n${customInstructions}\n`
+    : ''
+
+  return `${languageToInstructionPrompt}${customInstructionsSection}${rulesContext}\n${fileInfo}`
 }
