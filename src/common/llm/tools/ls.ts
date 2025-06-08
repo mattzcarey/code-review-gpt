@@ -31,7 +31,7 @@ export const lsTool = tool({
         const entryPath = path.join(dirPath, entry.name)
 
         if (entry.isDirectory()) {
-          output.push(`📁 ${entry.name}/`)
+          output.push(`${entry.name}/`)
 
           if (recursive) {
             const nestedResult = await listDirectory(entryPath, recursive, includeHidden)
@@ -47,7 +47,7 @@ export const lsTool = tool({
             }
           }
         } else {
-          output.push(`📄 ${entry.name}`)
+          output.push(`${entry.name}`)
         }
       }
 
@@ -77,7 +77,7 @@ const listDirectory = async (
       const entryPath = path.join(dirPath, entry.name)
 
       if (entry.isDirectory()) {
-        output.push(`📁 ${entry.name}/`)
+        output.push(`${entry.name}/`)
 
         if (recursive) {
           const nestedResult = await listDirectory(entryPath, recursive, includeHidden)
@@ -93,7 +93,7 @@ const listDirectory = async (
           }
         }
       } else {
-        output.push(`📄 ${entry.name}`)
+        output.push(`${entry.name}`)
       }
     }
 

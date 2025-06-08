@@ -1,10 +1,10 @@
-import { scenarioRegistry } from './index'
 import type { TestScenario } from './types'
 
 const secretDetectionScenarios: TestScenario[] = [
   {
     name: 'Exposed API Key Detection',
-    description: 'Should detect exposed API keys and suggest changes with secret-related comments',
+    description:
+      'Should detect exposed API keys and suggest changes with secret-related comments',
     tags: ['security', 'secrets'],
     input: {
       files: [
@@ -19,9 +19,9 @@ const secretDetectionScenarios: TestScenario[] = [
   },
   jwtSecret: 'my-jwt-secret-key-that-should-not-be-hardcoded'
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        }
-      ]
+          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
@@ -39,17 +39,18 @@ const secretDetectionScenarios: TestScenario[] = [
               return 'Comment should mention secrets'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       summaryContains: ['secret', 'security'],
       minimumToolCalls: 2,
-      maximumToolCalls: 5
-    }
+      maximumToolCalls: 5,
+    },
   },
   {
     name: 'Environment Variable Hardcoding',
-    description: 'Should detect hardcoded credentials that should use environment variables',
+    description:
+      'Should detect hardcoded credentials that should use environment variables',
     tags: ['security', 'secrets', 'env'],
     input: {
       files: [
@@ -66,9 +67,9 @@ const pool = new Pool({
 })
 
 export default pool`,
-          changedLines: [3, 4, 5, 6, 7, 8]
-        }
-      ]
+          changedLines: [3, 4, 5, 6, 7, 8],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
@@ -87,12 +88,12 @@ export default pool`,
               return 'Comment should mention password or credentials'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       summaryContains: ['credential', 'environment'],
-      minimumToolCalls: 2
-    }
+      minimumToolCalls: 2,
+    },
   },
   {
     name: 'No Secrets Clean File',
@@ -112,21 +113,19 @@ export function validateEmail(email: string): boolean {
 }
 
 export const DEFAULT_TIMEOUT = 5000`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        }
-      ]
+          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['submit_summary'],
       shouldNotCallTools: ['suggest_change', 'spawn_subagent'],
       summaryContains: ['no issues', 'looks good'],
       minimumToolCalls: 1,
-      maximumToolCalls: 2
-    }
-  }
+      maximumToolCalls: 2,
+    },
+  },
 ]
 
-// Register all secret detection scenarios
-for (const scenario of secretDetectionScenarios) {
-  scenarioRegistry.register(scenario)
-}
+// Export scenarios instead of registering them directly
+export { secretDetectionScenarios }

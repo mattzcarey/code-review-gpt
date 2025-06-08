@@ -1,4 +1,3 @@
-import { scenarioRegistry } from './index'
 import type { TestScenario } from './types'
 
 const basicReviewScenarios: TestScenario[] = [
@@ -27,9 +26,9 @@ async function fetchUserData() {
   const data = response.json()
   return data
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-        }
-      ]
+          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
@@ -44,17 +43,21 @@ async function fetchUserData() {
               return 'Should target bad-code.ts file'
             }
             const comment = typedArgs.comment?.toLowerCase() || ''
-            if (!comment.includes('await') && !comment.includes('async') && 
-                !comment.includes('const') && !comment.includes('===')) {
+            if (
+              !comment.includes('await') &&
+              !comment.includes('async') &&
+              !comment.includes('const') &&
+              !comment.includes('===')
+            ) {
               return 'Comment should address async/await or variable declaration issues'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       minimumToolCalls: 2,
-      maximumToolCalls: 4
-    }
+      maximumToolCalls: 4,
+    },
   },
   {
     name: 'TypeScript Type Issues',
@@ -84,9 +87,9 @@ function processUsers(users: any[]): void {
     console.log(user.nonExistentProperty)
   })
 }`,
-          changedLines: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-        }
-      ]
+          changedLines: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
@@ -105,12 +108,12 @@ function processUsers(users: any[]): void {
               return 'Comment should mention type or interface issues'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       summaryContains: ['type', 'interface'],
-      minimumToolCalls: 2
-    }
+      minimumToolCalls: 2,
+    },
   },
   {
     name: 'Performance Concerns',
@@ -143,9 +146,11 @@ export function searchArray(arr: string[], target: string): boolean {
   }
   return false
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
-        }
-      ]
+          changedLines: [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+          ],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['suggest_change', 'submit_summary'],
@@ -160,21 +165,23 @@ export function searchArray(arr: string[], target: string): boolean {
               return 'Should target performance.ts file'
             }
             const comment = typedArgs.comment?.toLowerCase() || ''
-            if (!comment.includes('performance') && !comment.includes('efficient') && 
-                !comment.includes('sort') && !comment.includes('search')) {
+            if (
+              !comment.includes('performance') &&
+              !comment.includes('efficient') &&
+              !comment.includes('sort') &&
+              !comment.includes('search')
+            ) {
               return 'Comment should mention performance or efficiency concerns'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       summaryContains: ['performance', 'efficiency'],
-      minimumToolCalls: 2
-    }
-  }
+      minimumToolCalls: 2,
+    },
+  },
 ]
 
-// Register all basic review scenarios
-for (const scenario of basicReviewScenarios) {
-  scenarioRegistry.register(scenario)
-}
+// Export scenarios instead of registering them directly
+export { basicReviewScenarios }

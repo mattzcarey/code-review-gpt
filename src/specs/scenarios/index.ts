@@ -22,7 +22,7 @@ export class ScenarioRegistry {
   }
 
   getByTag(tag: string): TestScenario[] {
-    return this.getAll().filter(scenario => scenario.tags?.includes(tag))
+    return this.getAll().filter((scenario) => scenario.tags?.includes(tag))
   }
 
   clear(): void {
@@ -34,6 +34,19 @@ export class ScenarioRegistry {
 export const scenarioRegistry = new ScenarioRegistry()
 
 // Import and register all scenarios
-import './secretDetection'
-import './subAgentSpawning'
-import './basicReview'
+import { secretDetectionScenarios } from './secretDetection'
+import { subAgentScenarios } from './subAgentSpawning'
+import { basicReviewScenarios } from './basicReview'
+
+// Register all scenarios
+for (const scenario of secretDetectionScenarios) {
+  scenarioRegistry.register(scenario)
+}
+
+for (const scenario of subAgentScenarios) {
+  scenarioRegistry.register(scenario)
+}
+
+for (const scenario of basicReviewScenarios) {
+  scenarioRegistry.register(scenario)
+}

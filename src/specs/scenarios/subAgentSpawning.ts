@@ -1,10 +1,10 @@
-import { scenarioRegistry } from './index'
 import type { TestScenario } from './types'
 
 const subAgentScenarios: TestScenario[] = [
   {
     name: 'Complex Analysis Requires Sub-Agent',
-    description: 'Should spawn sub-agent when custom instructions request detailed analysis',
+    description:
+      'Should spawn sub-agent when custom instructions request detailed analysis',
     tags: ['subagent', 'complex'],
     input: {
       files: [
@@ -53,10 +53,13 @@ export class GraphTraversal {
     return false
   }
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]
-        }
+          changedLines: [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+          ],
+        },
       ],
-      customInstructions: `Please use a sub-agent to perform a comprehensive algorithmic analysis of this code. The analysis should include performance characteristics, potential edge cases, memory usage patterns, and suggestions for optimization.`
+      customInstructions: `Please use a sub-agent to perform a comprehensive algorithmic analysis of this code. The analysis should include performance characteristics, potential edge cases, memory usage patterns, and suggestions for optimization.`,
     },
     expectations: {
       shouldCallTools: ['spawn_subagent', 'submit_summary'],
@@ -74,19 +77,19 @@ export class GraphTraversal {
               return 'Sub-agent goal should mention performance or optimization'
             }
             return true
-          }
-        }
+          },
+        },
       ],
       toolCallOrder: [
         {
           before: 'spawn_subagent',
           after: 'submit_summary',
-          description: 'Sub-agent should be spawned before submitting final summary'
-        }
+          description: 'Sub-agent should be spawned before submitting final summary',
+        },
       ],
       minimumToolCalls: 2,
-      maximumToolCalls: 5
-    }
+      maximumToolCalls: 5,
+    },
   },
   {
     name: 'Security Analysis Sub-Agent',
@@ -123,10 +126,13 @@ export class AuthService {
     }
   }
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-        }
+          changedLines: [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25,
+          ],
+        },
       ],
-      customInstructions: `Please use a sub-agent to conduct a thorough security review of this authentication code. Focus on potential vulnerabilities, best practices, and security hardening opportunities.`
+      customInstructions: `Please use a sub-agent to conduct a thorough security review of this authentication code. Focus on potential vulnerabilities, best practices, and security hardening opportunities.`,
     },
     expectations: {
       shouldCallTools: ['spawn_subagent', 'submit_summary'],
@@ -144,15 +150,16 @@ export class AuthService {
               return 'Sub-agent goal should mention authentication'
             }
             return true
-          }
-        }
+          },
+        },
       ],
-      minimumToolCalls: 2
-    }
+      minimumToolCalls: 2,
+    },
   },
   {
     name: 'Simple Code No Sub-Agent',
-    description: 'Should not spawn sub-agent for simple code without specific instructions',
+    description:
+      'Should not spawn sub-agent for simple code without specific instructions',
     tags: ['subagent', 'simple'],
     input: {
       files: [
@@ -169,20 +176,18 @@ export function subtract(a: number, b: number): number {
 export function multiply(a: number, b: number): number {
   return a * b
 }`,
-          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        }
-      ]
+          changedLines: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        },
+      ],
     },
     expectations: {
       shouldCallTools: ['submit_summary'],
       shouldNotCallTools: ['spawn_subagent'],
       minimumToolCalls: 1,
-      maximumToolCalls: 2
-    }
-  }
+      maximumToolCalls: 2,
+    },
+  },
 ]
 
-// Register all sub-agent scenarios
-for (const scenario of subAgentScenarios) {
-  scenarioRegistry.register(scenario)
-}
+// Export scenarios instead of registering them directly
+export { subAgentScenarios }
