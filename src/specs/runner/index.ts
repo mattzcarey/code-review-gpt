@@ -95,12 +95,14 @@ export class ScenarioRunner {
       toolCallCounts.set(call.toolName, (toolCallCounts.get(call.toolName) || 0) + 1)
     }
 
+    // Validate required tools
     for (const expectedTool of expectations.shouldCallTools) {
       if (!toolCallCounts.has(expectedTool)) {
         errors.push(`Expected tool '${expectedTool}' was not called`)
       }
     }
 
+    // Validate forbidden tools
     if (expectations.shouldNotCallTools) {
       for (const forbiddenTool of expectations.shouldNotCallTools) {
         if (toolCallCounts.has(forbiddenTool)) {
@@ -111,6 +113,36 @@ export class ScenarioRunner {
       }
     }
 
+    // Validate minimum/maximum tool calls
+    const totalCalls = toolCalls.length
+    if (expectations.minimumToolCalls && totalCalls < expectations.minimumToolCalls) {
+      errors.push(
+        `Expected at least ${expectations.minimumToolCalls} tool calls, but got ${totalCalls}`
+      )
+    }
+    if (expectations.maximumToolCalls && totalCalls > expectations.maximumToolCalls) {
+      errors.push(
+        `Expected at most ${expectations.maximumToolCalls} tool calls, but got ${totalCalls}`
+      )
+    }
+
+    // Validate tool call order
+    if (expectations.toolCallOrder) {
+      for (const orderExpectation of expectations.toolCallOrder) {
+        const beforeIndex = toolCalls.findIndex(call => call.toolName === orderExpectation.before)
+        const afterIndex = toolCalls.findIndex(call => call.toolName === orderExpectation.after)
+        
+        if (beforeIndex !== -1 && afterIndex !== -1) {
+          if (beforeIndex >= afterIndex) {
+            const description = orderExpectation.description || 
+              `'${orderExpectation.before}' should be called before '${orderExpectation.after}'`
+            errors.push(`Tool call order violation: ${description}`)
+          }
+        }
+      }
+    }
+
+    // Validate specific tool calls
     if (expectations.toolCallValidation) {
       for (const validation of expectations.toolCallValidation) {
         const actualCalls = toolCallCounts.get(validation.toolName) || 0

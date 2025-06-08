@@ -15,7 +15,7 @@
         "start": "bun run ./src/index.ts",
         "review": "bun run ./src/index.ts review",
         "configure": "bun run ./src/index.ts configure",
-        "test:e2e": "bun test e2e",
+        "test:e2e": "bun test scenarios",
         "test:unit": "bun test review configure common",
         "build": "tsup",
         "publish:build": "bun run build && bun publish --access public",
