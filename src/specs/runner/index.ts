@@ -1,18 +1,19 @@
-import type { GenerateTextResult, LanguageModelV1 } from 'ai'
+import type { GenerateTextResult, LanguageModelV1, Tool } from 'ai'
 import { createModel } from '../../common/llm'
-import { getAllTools } from '../../common/llm/tools'
-import { getPlatformProvider } from '../../common/platform/factory'
+import type { PlatformProvider } from '../../common/platform/provider'
 import type { ReviewFile } from '../../common/types'
 import { logger } from '../../common/utils/logger'
 import { reviewAgent } from '../../review/agent/generate'
 import { constructPrompt } from '../../review/prompt'
 import type { TestResult, TestScenario, ToolCallInfo } from '../scenarios/types'
+import { createTestPlatformProviderWithData } from '../utils/testPlatformProvider'
+import { createTestTools, createTestToolsConfig } from '../utils/testTools'
 
 export class ScenarioRunner {
   private model: LanguageModelV1
   private maxSteps: number
 
-  constructor(modelString = 'openai:gpt-4o-mini', maxSteps = 25) {
+  constructor(modelString = 'openai:gpt-4.1-mini', maxSteps = 25) {
     this.model = createModel(modelString)
     this.maxSteps = maxSteps
   }
@@ -32,13 +33,32 @@ export class ScenarioRunner {
       scenario.input.customInstructions
     )
 
-    const platformProvider = await getPlatformProvider('local')
-    const tools = await getAllTools({
-      platformProvider,
-      model: this.model,
-      includeSubAgent: true,
-      maxSteps: this.maxSteps,
+    let tools: Record<string, Tool>
+
+    // Use test platform provider and tools with controlled data
+    const platformProvider: PlatformProvider = createTestPlatformProviderWithData({
+      files: scenario.input.files.map((file) => ({
+        fileName: file.fileName,
+        content: file.content,
+        diff: `+++ ${file.fileName}\n@@ -1,${file.content.split('\n').length} +1,${file.content.split('\n').length} @@\n${file.content
+          .split('\n')
+          .map((line) => `+${line}`)
+          .join('\n')}`,
+      })),
     })
+
+    const testConfig = createTestToolsConfig({
+      files: scenario.input.files.map((file) => ({
+        fileName: file.fileName,
+        content: file.content,
+        diff: `+++ ${file.fileName}\n@@ -1,${file.content.split('\n').length} +1,${file.content.split('\n').length} @@\n${file.content
+          .split('\n')
+          .map((line) => `+${line}`)
+          .join('\n')}`,
+      })),
+    })
+
+    tools = createTestTools(testConfig, platformProvider, this.model, true, this.maxSteps)
 
     // biome-ignore lint/suspicious/noExplicitAny: Testing utility needs flexible types
     let result: GenerateTextResult<Record<string, any>, string>
@@ -59,12 +79,24 @@ export class ScenarioRunner {
       }
     }
 
-    const toolCalls: ToolCallInfo[] =
-      result.toolResults?.map((call) => ({
-        toolName: call.toolName,
-        args: call.args,
-        result: call.result,
-      })) || []
+    // Extract tool calls from all steps
+    const toolCalls: ToolCallInfo[] = []
+
+    if (result.steps) {
+      for (const step of result.steps) {
+        if (step.toolCalls) {
+          for (const toolCall of step.toolCalls) {
+            toolCalls.push({
+              toolName: toolCall.toolName,
+              args: toolCall.args,
+              result: step.toolResults?.find(
+                (tr) => tr.toolCallId === toolCall.toolCallId
+              )?.result,
+            })
+          }
+        }
+      }
+    }
 
     const summary = result.text || ''
     const errors: string[] = []
@@ -95,12 +127,14 @@ export class ScenarioRunner {
       toolCallCounts.set(call.toolName, (toolCallCounts.get(call.toolName) || 0) + 1)
     }
 
+    // Validate required tools
     for (const expectedTool of expectations.shouldCallTools) {
       if (!toolCallCounts.has(expectedTool)) {
         errors.push(`Expected tool '${expectedTool}' was not called`)
       }
     }
 
+    // Validate forbidden tools
     if (expectations.shouldNotCallTools) {
       for (const forbiddenTool of expectations.shouldNotCallTools) {
         if (toolCallCounts.has(forbiddenTool)) {
@@ -111,6 +145,41 @@ export class ScenarioRunner {
       }
     }
 
+    // Validate minimum/maximum tool calls
+    const totalCalls = toolCalls.length
+    if (expectations.minimumToolCalls && totalCalls < expectations.minimumToolCalls) {
+      errors.push(
+        `Expected at least ${expectations.minimumToolCalls} tool calls, but got ${totalCalls}`
+      )
+    }
+    if (expectations.maximumToolCalls && totalCalls > expectations.maximumToolCalls) {
+      errors.push(
+        `Expected at most ${expectations.maximumToolCalls} tool calls, but got ${totalCalls}`
+      )
+    }
+
+    // Validate tool call order
+    if (expectations.toolCallOrder) {
+      for (const orderExpectation of expectations.toolCallOrder) {
+        const beforeIndex = toolCalls.findIndex(
+          (call) => call.toolName === orderExpectation.before
+        )
+        const afterIndex = toolCalls.findIndex(
+          (call) => call.toolName === orderExpectation.after
+        )
+
+        if (beforeIndex !== -1 && afterIndex !== -1) {
+          if (beforeIndex >= afterIndex) {
+            const description =
+              orderExpectation.description ||
+              `'${orderExpectation.before}' should be called before '${orderExpectation.after}'`
+            errors.push(`Tool call order violation: ${description}`)
+          }
+        }
+      }
+    }
+
+    // Validate specific tool calls
     if (expectations.toolCallValidation) {
       for (const validation of expectations.toolCallValidation) {
         const actualCalls = toolCallCounts.get(validation.toolName) || 0

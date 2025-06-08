@@ -48,5 +48,5 @@ jobs:
       - name: Run shippie review
         run: bun review --platform=github --debug
 
-      # - name: Run e2e tests
-      #   run: bun test:e2e
+      - name: Run e2e tests (optional)
+        run: bun test:e2e

@@ -75,13 +75,13 @@ export const globTool = tool({
 
       for (const [dir, files] of Object.entries(filesByDir)) {
         if (dir === '.') {
-          output.push(`📁 ./ (${files.length} files):`)
+          output.push(`./ (${files.length} files):`)
         } else {
-          output.push(`📁 ${dir}/ (${files.length} files):`)
+          output.push(`${dir}/ (${files.length} files):`)
         }
 
         for (const file of files) {
-          output.push(`  📄 ${file}`)
+          output.push(`  ${file}`)
         }
 
         output.push('')
