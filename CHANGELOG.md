@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.18.0](https://github.com/mattzcarey/shippie/compare/v0.17.1...v0.18.0) (2025-06-08)
+
+
+### Features
+
+* sub agent ([#446](https://github.com/mattzcarey/shippie/issues/446)) ([b1b2651](https://github.com/mattzcarey/shippie/commit/b1b2651e7ae2fd4752eb602647e4c5832e106392))
+* **testing:** scenario-based E2E testing framework ([#450](https://github.com/mattzcarey/shippie/issues/450)) ([1e423be](https://github.com/mattzcarey/shippie/commit/1e423be35b9d30a3220f4c01082a8832a9caae9a))
+
 ## [0.17.1](https://github.com/mattzcarey/shippie/compare/v0.17.0...v0.17.1) (2025-06-02)
 
 
