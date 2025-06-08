@@ -1,8 +1,8 @@
 import { type LanguageModelV1, type Tool, generateText, tool } from 'ai'
 import { z } from 'zod'
 import { logger } from '../../utils/logger'
-import { getAllTools } from './index'
 import { MCPClientManager } from '../mcp/client'
+import { getAllTools } from './index'
 
 const submitReportTool = tool({
   description: 'Submit a report to the main agent. This is how you finish your work.',

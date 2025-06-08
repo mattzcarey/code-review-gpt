@@ -1,14 +1,14 @@
 import { tool } from 'ai'
-import { z } from 'zod'
 import type { Tool } from 'ai'
+import type { LanguageModelV1 } from 'ai'
+import { z } from 'zod'
 import {
-  getBaseTools,
-  createSuggestChangesTool,
-  createSubmitSummaryTool,
   createSubAgentTool,
+  createSubmitSummaryTool,
+  createSuggestChangesTool,
+  getBaseTools,
 } from '../../common/llm/tools'
 import type { PlatformProvider } from '../../common/platform/provider'
-import type { LanguageModelV1 } from 'ai'
 
 interface TestToolConfig {
   mockDiffs: Record<string, string>
@@ -107,7 +107,7 @@ export const createTestToolsConfig = (scenarioData: {
 
   mockLsResults['..'] = ['shippie/', 'other-projects/']
 
-  mockLsResults['src'] = ['common/', 'configure/', 'review/', 'specs/']
+  mockLsResults.src = ['common/', 'configure/', 'review/', 'specs/']
 
   // Add common project files
   mockFileContents['package.json'] = JSON.stringify(

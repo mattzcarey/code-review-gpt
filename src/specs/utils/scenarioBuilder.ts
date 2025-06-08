@@ -1,4 +1,4 @@
-import type { TestScenario, TestFile, ToolCallValidation } from '../scenarios/types'
+import type { TestFile, TestScenario, ToolCallValidation } from '../scenarios/types'
 
 /**
  * Builder pattern for creating test scenarios
@@ -7,7 +7,7 @@ export class ScenarioBuilder {
   private scenario: Partial<TestScenario> = {
     expectations: {
       shouldCallTools: [],
-    }
+    },
   }
 
   static create(name: string): ScenarioBuilder {
@@ -30,13 +30,13 @@ export class ScenarioBuilder {
     if (!this.scenario.input) {
       this.scenario.input = { files: [] }
     }
-    
+
     const file: TestFile = {
       fileName,
       content,
-      changedLines
+      changedLines,
     }
-    
+
     this.scenario.input.files.push(file)
     return this
   }
@@ -104,8 +104,8 @@ export class ScenarioBuilder {
   }
 
   validateTool(
-    toolName: string, 
-    expectedCalls: number, 
+    toolName: string,
+    expectedCalls: number,
     validateArgs?: (args: unknown) => boolean | string
   ): ScenarioBuilder {
     if (!this.scenario.expectations) {
@@ -114,13 +114,13 @@ export class ScenarioBuilder {
     if (!this.scenario.expectations.toolCallValidation) {
       this.scenario.expectations.toolCallValidation = []
     }
-    
+
     const validation: ToolCallValidation = {
       toolName,
       expectedCalls,
-      validateArgs
+      validateArgs,
     }
-    
+
     this.scenario.expectations.toolCallValidation.push(validation)
     return this
   }
@@ -132,11 +132,11 @@ export class ScenarioBuilder {
     if (!this.scenario.expectations.toolCallOrder) {
       this.scenario.expectations.toolCallOrder = []
     }
-    
+
     this.scenario.expectations.toolCallOrder.push({
       before,
       after,
-      description
+      description,
     })
     return this
   }
@@ -173,7 +173,7 @@ export const TestFiles = {
   },
   jwtSecret: 'my-jwt-secret-key'
 }`,
-    changedLines: [1, 2, 3, 4, 5, 6, 7, 8]
+    changedLines: [1, 2, 3, 4, 5, 6, 7, 8],
   }),
 
   /**
@@ -193,7 +193,7 @@ function createUser(data: any): User {
     invalidProperty: data.invalid  // Property doesn't exist on User
   }
 }`,
-    changedLines: [5, 6, 7, 8, 9, 10, 11]
+    changedLines: [5, 6, 7, 8, 9, 10, 11],
   }),
 
   /**
@@ -209,7 +209,7 @@ export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/
   return emailRegex.test(email)
 }`,
-    changedLines: [1, 2, 3, 4, 5, 6, 7, 8]
+    changedLines: [1, 2, 3, 4, 5, 6, 7, 8],
   }),
 
   /**
@@ -256,8 +256,8 @@ export function isValidEmail(email: string): boolean {
     return null
   }
 }`,
-    changedLines: Array.from({ length: 33 }, (_, i) => i + 1)
-  })
+    changedLines: Array.from({ length: 33 }, (_, i) => i + 1),
+  }),
 }
 
 /**
@@ -281,30 +281,34 @@ export const Validators = {
   /**
    * Validates that spawn_subagent has appropriate goal
    */
-  subAgentGoal: (...requiredTerms: string[]) => (args: unknown) => {
-    const typedArgs = args as { goal?: string }
-    const goal = typedArgs.goal?.toLowerCase() || ''
-    
-    for (const term of requiredTerms) {
-      if (!goal.includes(term.toLowerCase())) {
-        return `Sub-agent goal should include '${term}'`
+  subAgentGoal:
+    (...requiredTerms: string[]) =>
+    (args: unknown) => {
+      const typedArgs = args as { goal?: string }
+      const goal = typedArgs.goal?.toLowerCase() || ''
+
+      for (const term of requiredTerms) {
+        if (!goal.includes(term.toLowerCase())) {
+          return `Sub-agent goal should include '${term}'`
+        }
       }
-    }
-    return true
-  },
+      return true
+    },
 
   /**
    * Validates that a comment contains specific terms
    */
-  commentContains: (...terms: string[]) => (args: unknown) => {
-    const typedArgs = args as { comment?: string }
-    const comment = typedArgs.comment?.toLowerCase() || ''
-    
-    for (const term of terms) {
-      if (!comment.includes(term.toLowerCase())) {
-        return `Comment should contain '${term}'`
+  commentContains:
+    (...terms: string[]) =>
+    (args: unknown) => {
+      const typedArgs = args as { comment?: string }
+      const comment = typedArgs.comment?.toLowerCase() || ''
+
+      for (const term of terms) {
+        if (!comment.includes(term.toLowerCase())) {
+          return `Comment should contain '${term}'`
+        }
       }
-    }
-    return true
-  }
+      return true
+    },
 }

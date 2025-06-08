@@ -1,10 +1,10 @@
-import type { TokenUsage, ToolCall } from '../../review/types'
-import { PlatformOptions } from '../../common/types'
 import type {
   PlatformProvider,
   ReviewComment,
   ThreadComment,
 } from '../../common/platform/provider'
+import { PlatformOptions } from '../../common/types'
+import type { TokenUsage, ToolCall } from '../../review/types'
 
 interface TestPlatformConfig {
   mockDiffs?: Record<string, string>

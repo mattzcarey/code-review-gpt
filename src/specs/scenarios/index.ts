@@ -33,10 +33,10 @@ export class ScenarioRegistry {
 // Global registry instance
 export const scenarioRegistry = new ScenarioRegistry()
 
+import { basicReviewScenarios } from './basicReview'
 // Import and register all scenarios
 import { secretDetectionScenarios } from './secretDetection'
 import { subAgentScenarios } from './subAgentSpawning'
-import { basicReviewScenarios } from './basicReview'
 
 // Register all scenarios
 for (const scenario of secretDetectionScenarios) {
